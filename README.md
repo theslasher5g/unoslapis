@@ -22,6 +22,7 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `merch.unoslapis.ch` | Fake-Shop mit Warenkorb, Sale-Countdown und „Bestellung" (fragt nichts ab, verschickt nichts) |
 | `discord.unoslapis.ch` | Nachgebauter Chat-Server mit Kanälen wie #baden-gehen und #goon-logs; man kann selbst schreiben und unoslapis antwortet |
 | `wordle.unoslapis.ch` | unoslapis Wordle: Wort des Tages (für alle gleich) + Endlos-Modus, Statistik, Teilen als Emoji-Raster |
+| `bewertungen.unoslapis.ch` | „Goongle"-Unternehmensprofil: Big H als Sehenswürdigkeit mit Öffnungszeiten, Stosszeiten, Q&A. Besucher können **echte Rezensionen** mit Sternen schreiben (gespeichert im Backend) |
 | `tinder.unoslapis.ch` | „Hinder"-Dating-Profil von Alastor: Karte wischen, Fotos durchtippen, Nope bringt nichts, bei Match antwortet er im Chat |
 
 Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `alastor`, `stecher`, `unoslapis`, `goon`, `nani`, `uwu`, `gg` (und ein geheimes Wort) tippen.
@@ -30,19 +31,19 @@ Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` 
 
 ```
 Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx      (alle Seiten, Routing per Hostname)
-                                                     └──► guestbook  (nur guestbook.…/api/*, speichert JSON)
+                                                     └──► guestbook  (nur guestbook.…/api/* und bewertungen.…/api/*, speichert JSON)
 ```
 
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
-guestbook/             # Gästebuch-Backend (Node, ohne Abhängigkeiten)
+guestbook/             # Backend für Gästebuch + Bewertungen (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
   shared/              # style.css, fun.js, 404.html (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
-  excuses/  horoskop/  merch/  discord/  wordle/  tinder/
+  excuses/  horoskop/  merch/  discord/  wordle/  tinder/  bewertungen/
 ```
 
 ## Deploy auf dem VPS
@@ -59,7 +60,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 
@@ -92,12 +93,12 @@ Die Seiten sind nur read-only eingebunden. HTML ändern, `git pull`, fertig, ohn
 Nach Änderungen an `Caddyfile` oder `default.conf`: `docker compose restart`.
 Nach Änderungen am Gästebuch-Backend oder neuen Services: `docker compose up -d --build`.
 
-### Gästebuch moderieren
+### Gästebuch & Bewertungen moderieren
 
 1. In `.env` ein geheimes `GUESTBOOK_ADMIN_TOKEN` setzen (z.B. `openssl rand -hex 24`) und `docker compose up -d`.
-2. `https://guestbook.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint 🗑️, beim ersten Löschen wird nach dem Token gefragt.
+2. `https://guestbook.unoslapis.ch/#admin` bzw. `https://bewertungen.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint 🗑️, beim ersten Löschen wird nach dem Token gefragt.
 
-Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Einträge liegen im Docker-Volume `guestbook_data` (bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json`.
+Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json` und `reviews.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
 
 ## Anpassen
 
@@ -114,6 +115,7 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Merch** (`sites/merch/index.html`): `PRODUCTS`
 - **Discord** (`sites/discord/index.html`): `USERS`, `CHANNELS` (Nachrichten), `REPLIES` (Antworten des Bots)
 - **Wordle** (`sites/wordle/index.html`): Liste `WORDS` (5 Buchstaben A–Z + Erklärung)
+- **Bewertungen** (`sites/bewertungen/index.html`): erfundene „Local Guide"-Rezensionen in `SEED`
 - **Tinder** (`sites/tinder/index.html`): `PHOTOS`, `REPLIES`, Profiltexte direkt im HTML
 - **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`

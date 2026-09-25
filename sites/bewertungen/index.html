@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big H (Alastor Lapis) – Rezensionen · Goongle</title>
+<meta name="description" content="Big H – Sehenswürdigkeit, Nationales Kulturerbe, Gaming-Zentrum. Lies die Rezensionen und schreib deine eigene.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --g-blue: #1a73e8; --g-text: #202124; --g-muted: #5f6368; --g-line: #dadce0; --g-star: #fbbc04; --g-bg: #fff; --g-soft: #f1f3f4; }
+  body { background: var(--g-soft); color: var(--g-text); }
+  .bigh-back { background: rgba(32,33,36,.85); }
+
+  .topbar { background: #fff; border-bottom: 1px solid var(--g-line); }
+  .topbar .in { width: min(1000px, 100% - 32px); margin: 0 auto; display: flex; align-items: center; gap: 18px; height: 64px; padding-left: 130px; }
+  @media (max-width: 640px) { .topbar .in { padding-left: 120px; gap: 10px; } .search { display: none !important; } }
+  .logo { font: 800 1.7rem var(--body); letter-spacing: -1px; white-space: nowrap; }
+  .logo span:nth-child(1), .logo span:nth-child(5) { color: #4285f4; }
+  .logo span:nth-child(2), .logo span:nth-child(7) { color: #ea4335; }
+  .logo span:nth-child(3) { color: #fbbc05; }
+  .logo span:nth-child(4) { color: #34a853; }
+  .logo span:nth-child(6) { color: #34a853; }
+  .search { flex: 1; max-width: 520px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--g-line); border-radius: 999px; padding: 9px 16px; box-shadow: 0 1px 4px rgba(32,33,36,.12); color: var(--g-muted); }
+
+  .page { width: min(1000px, 100% - 32px); margin: 20px auto 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .page { grid-template-columns: 1fr; } }
+  .panel { background: var(--g-bg); border-radius: 12px; box-shadow: 0 1px 3px rgba(60,64,67,.2); overflow: hidden; }
+  .sec { padding: 16px 20px; border-top: 1px solid var(--g-line); }
+  .sec:first-child { border-top: 0; }
+  .sec h2 { font-size: 1.05rem; margin: 0 0 12px; font-weight: 600; }
+
+  .gallery { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 110px 110px; gap: 3px; }
+  .gallery div { display: grid; place-items: center; font-size: 3rem; position: relative; cursor: pointer; }
+  .gallery div:first-child { grid-row: span 2; font-size: 5rem; }
+  .gallery small { position: absolute; left: 8px; bottom: 6px; color: #fff; font-size: .72rem; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+  .title { padding: 16px 20px 6px; }
+  .title h1 { margin: 0; font-size: 1.6rem; font-weight: 500; }
+  .rating-line { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: .95rem; flex-wrap: wrap; }
+  .stars { color: var(--g-star); letter-spacing: 1px; }
+  .stars .off { color: #dadce0; }
+  .rating-line a { color: var(--g-blue); text-decoration: none; }
+  .cat { color: var(--g-muted); font-size: .9rem; margin-top: 2px; }
+  .actions { display: flex; justify-content: space-around; padding: 12px 8px 16px; flex-wrap: wrap; gap: 6px; }
+  .actions button { background: none; border: 0; cursor: pointer; color: var(--g-blue); font: 600 .78rem var(--body); display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 60px; }
+  .actions button span { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--g-line); display: grid; place-items: center; font-size: 1.1rem; }
+  .actions button:hover span { background: #e8f0fe; }
+
+  .info-row { display: flex; gap: 14px; align-items: flex-start; padding: 8px 0; font-size: .93rem; }
+  .info-row .i { width: 22px; text-align: center; flex: none; }
+  .open { color: #188038; font-weight: 600; }
+  .hours { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: .9rem; }
+  .hours td { padding: 3px 0; }
+  .hours td:first-child { width: 110px; color: var(--g-muted); }
+  .hours tr.today td { font-weight: 700; color: var(--g-text); }
+  .toggle { background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; text-align: left; }
+
+  .map { height: 150px; border-radius: 10px; position: relative; overflow: hidden; background: #e8eaed; background-image: linear-gradient(#fff 2px, transparent 2px), linear-gradient(90deg, #fff 2px, transparent 2px), linear-gradient(35deg, transparent 45%, #fde293 45%, #fde293 52%, transparent 52%); background-size: 38px 38px, 38px 38px, 100% 100%; }
+  .map .pin { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -100%); font-size: 2.2rem; animation: drop .8s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes drop { from { transform: translate(-50%, -300%); } }
+  .map .label { position: absolute; left: 50%; top: 46%; transform: translateX(-50%); background: #fff; padding: 2px 8px; border-radius: 4px; font-size: .75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.2); white-space: nowrap; }
+
+  /* Stosszeiten */
+  .days { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+  .days button { border: 1px solid var(--g-line); background: #fff; border-radius: 999px; padding: 4px 10px; font: 600 .8rem var(--body); cursor: pointer; color: var(--g-muted); }
+  .days button.on { background: #e8f0fe; border-color: #d2e3fc; color: var(--g-blue); }
+  .chart { display: flex; align-items: flex-end; gap: 3px; height: 110px; border-bottom: 1px solid var(--g-line); }
+  .chart div { flex: 1; background: #aecbfa; border-radius: 3px 3px 0 0; min-height: 2px; transition: height .4s; position: relative; }
+  .chart div.now { background: #ea4335; }
+  .chart-labels { display: flex; justify-content: space-between; font-size: .72rem; color: var(--g-muted); margin-top: 4px; }
+  .live { font-size: .88rem; margin-top: 8px; }
+  .live b { color: #ea4335; }
+
+  .qa { font-size: .92rem; }
+  .qa .q { font-weight: 600; margin-top: 10px; }
+  .qa .a { color: var(--g-muted); }
+
+  /* Rezensionen */
+  .summary { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
+  .dist .l { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--g-muted); margin: 3px 0; }
+  .dist .bar { flex: 1; height: 9px; border-radius: 5px; background: var(--g-line); overflow: hidden; }
+  .dist .bar div { height: 100%; background: var(--g-star); border-radius: 5px; transition: width .6s; }
+  .avg { text-align: center; }
+  .avg b { font-size: 3.4rem; font-weight: 400; line-height: 1; display: block; }
+  .avg small { color: var(--g-muted); }
+  .write { margin-top: 14px; width: 100%; border: 1px solid var(--g-line); background: #fff; border-radius: 999px; padding: 10px; font: 600 .92rem var(--body); color: var(--g-blue); cursor: pointer; }
+  .write:hover { background: #f8fbff; }
+  .sort { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+  .sort button { border: 1px solid var(--g-line); background: #fff; border-radius: 8px; padding: 5px 12px; font: 600 .82rem var(--body); cursor: pointer; color: var(--g-text); }
+  .sort button.on { background: #e8f0fe; border-color: #d2e3fc; color: var(--g-blue); }
+  .rev { padding: 14px 0; border-bottom: 1px solid var(--g-line); }
+  .rev:last-child { border-bottom: 0; }
+  .who { display: flex; gap: 12px; align-items: center; }
+  .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; font-size: 1.1rem; }
+  .who b { display: block; font-weight: 600; }
+  .who small { color: var(--g-muted); font-size: .78rem; }
+  .rev .top { display: flex; align-items: center; gap: 8px; margin: 8px 0 4px; font-size: .85rem; color: var(--g-muted); flex-wrap: wrap; }
+  .rev .tag { background: var(--g-soft); border-radius: 4px; padding: 1px 6px; font-size: .75rem; }
+  .rev .new { background: #e6f4ea; color: #188038; border-radius: 4px; padding: 1px 6px; font-size: .72rem; font-weight: 700; }
+  .rev .txt { font-size: .93rem; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+  .rev .foot { display: flex; gap: 10px; margin-top: 8px; align-items: center; }
+  .helpful { background: none; border: 1px solid var(--g-line); border-radius: 999px; padding: 3px 12px; font: 600 .8rem var(--body); cursor: pointer; color: var(--g-muted); }
+  .helpful.on { background: #e8f0fe; color: var(--g-blue); border-color: #d2e3fc; }
+  .del { background: none; border: 0; cursor: pointer; font-size: 1rem; margin-left: auto; }
+  .owner { margin-top: 10px; background: var(--g-soft); border-radius: 8px; padding: 10px 12px; font-size: .88rem; }
+  .owner b { display: block; font-size: .8rem; margin-bottom: 2px; }
+  .note { color: var(--g-muted); font-size: .85rem; padding: 8px 0; }
+
+  /* Modal */
+  .modal-bg { position: fixed; inset: 0; z-index: 80; background: rgba(32,33,36,.6); display: none; place-items: center; padding: 16px; }
+  .modal-bg.show { display: grid; }
+  .modal { background: #fff; border-radius: 12px; width: min(480px, 100%); padding: 22px; max-height: calc(100vh - 32px); overflow-y: auto; animation: up .25s ease; }
+  @keyframes up { from { transform: translateY(20px); opacity: 0; } }
+  .modal h2 { margin: 0 0 4px; font-weight: 500; }
+  .modal .sub { color: var(--g-muted); font-size: .88rem; margin-bottom: 14px; }
+  .star-pick { display: flex; gap: 4px; justify-content: center; margin: 8px 0 4px; }
+  .star-pick button { background: none; border: 0; font-size: 2.4rem; cursor: pointer; color: #dadce0; padding: 0 2px; line-height: 1; transition: transform .1s; }
+  .star-pick button.on { color: var(--g-star); }
+  .star-pick button:hover { transform: scale(1.15); }
+  .star-label { text-align: center; color: var(--g-muted); font-size: .88rem; min-height: 1.3em; margin-bottom: 10px; }
+  .modal label { display: block; font-size: .85rem; font-weight: 600; margin: 10px 0 4px; }
+  .modal input[type=text], .modal textarea { width: 100%; border: 1px solid var(--g-line); border-radius: 8px; padding: 10px 12px; font: 1rem var(--body); color: var(--g-text); outline: none; }
+  .modal input[type=text]:focus, .modal textarea:focus { border-color: var(--g-blue); box-shadow: 0 0 0 2px #d2e3fc; }
+  .modal textarea { min-height: 110px; resize: vertical; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags button { border: 1px solid var(--g-line); background: #fff; border-radius: 8px; padding: 5px 10px; font: 600 .82rem var(--body); cursor: pointer; color: var(--g-text); }
+  .tags button.on { background: #e8f0fe; border-color: var(--g-blue); color: var(--g-blue); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .m-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
+  .m-foot .count { color: var(--g-muted); font-size: .8rem; }
+  .m-btns { display: flex; gap: 8px; }
+  .g-btn { border: 0; border-radius: 999px; padding: 10px 20px; font: 600 .92rem var(--body); cursor: pointer; }
+  .g-btn.primary { background: var(--g-blue); color: #fff; }
+  .g-btn.primary:disabled { background: #c6dafc; cursor: wait; }
+  .g-btn.ghost { background: none; color: var(--g-blue); }
+  .err { color: #d93025; font-size: .88rem; margin-top: 8px; min-height: 1.2em; }
+  footer.bigh-footer { color: var(--g-muted); }
+</style>
+</head>
+<body data-back>
+  <div class="topbar"><div class="in">
+    <div class="logo" aria-label="Goongle"><span>G</span><span>o</span><span>o</span><span>n</span><span>g</span><span>l</span><span>e</span></div>
+    <div class="search" aria-hidden="true">🔍 <span>Big H in meiner Nähe</span></div>
+  </div></div>
+
+  <div class="page">
+    <!-- ========== Links: Unternehmensprofil ========== -->
+    <div class="panel">
+      <div class="gallery" id="gallery">
+        <div style="background:radial-gradient(circle at 40% 35%, #ff4f6d, #6b0020)">😈<small>Aussenansicht</small></div>
+        <div style="background:linear-gradient(160deg,#1e3a66,#0b1422)">🖥️<small>Innenraum</small></div>
+        <div style="background:linear-gradient(160deg,#5ec8ff,#1f6fa8)">🛁<small>Badezimmer (unbenutzt)</small></div>
+        <div style="background:linear-gradient(160deg,#ff9a3c,#7a1f00)">🐈<small>Mausi</small></div>
+        <div style="background:linear-gradient(160deg,#3a3a3a,#000)">🍜<small>Küche</small></div>
+      </div>
+      <div class="title">
+        <h1>Big H (Alastor Lapis)</h1>
+        <div class="rating-line"><b id="avg-top">–</b><span class="stars" id="stars-top"></span><a href="#reviews" id="count-top">(– Rezensionen)</a></div>
+        <div class="cat">Sehenswürdigkeit · Nationales Kulturerbe · Gaming-Zentrum</div>
+      </div>
+      <div class="actions">
+        <button type="button" data-t="🧭 Route berechnet: Er kommt nicht raus. Du musst zu ihm."><span>🧭</span>Route</button>
+        <button type="button" data-t="📵 Er geht nicht ran. Er ist im Match."><span>📞</span>Anrufen</button>
+        <button type="button" data-t="🔖 Gespeichert unter „Orte, die ich nie besuchen werde"."><span>🔖</span>Speichern</button>
+        <button type="button" id="share"><span>📤</span>Teilen</button>
+        <button type="button" id="website"><span>🌐</span>Website</button>
+      </div>
+      <div class="sec">
+        <div class="info-row"><span class="i">📍</span><div>Sein Zimmer, 2. Stock (Tür immer zu), Schweiz</div></div>
+        <div class="info-row"><span class="i">🕒</span><div style="flex:1">
+          <button class="toggle" id="hours-toggle" type="button" aria-expanded="false"><span class="open" id="open-status">Geöffnet</span> · <span id="close-info"></span> ▾</button>
+          <table class="hours" id="hours" hidden></table>
+        </div></div>
+        <div class="info-row"><span class="i">🌐</span><div><a data-sub="" href="https://unoslapis.ch/" style="color:var(--g-blue)">unoslapis.ch</a></div></div>
+        <div class="info-row"><span class="i">🎮</span><div>Steam & Valorant: <b>unoslapis</b></div></div>
+        <div class="info-row"><span class="i">♿</span><div>Rollstuhlgerecht · Kein Tageslicht · Starkes WLAN</div></div>
+      </div>
+      <div class="sec">
+        <div class="map" aria-label="Karte"><span class="pin">📍</span><span class="label">Big H</span></div>
+      </div>
+      <div class="sec">
+        <h2>Stosszeiten</h2>
+        <div class="days" id="days"></div>
+        <div class="chart" id="chart" aria-label="Besucheraufkommen pro Stunde"></div>
+        <div class="chart-labels"><span>12 Uhr</span><span>18 Uhr</span><span>24 Uhr</span><span>6 Uhr</span></div>
+        <div class="live" id="live"></div>
+      </div>
+      <div class="sec qa">
+        <h2>Fragen & Antworten</h2>
+        <div class="q">❓ Ist er Single?</div><div class="a">Ja. Siehe girlfriend.unoslapis.ch · 👍 128</div>
+        <div class="q">❓ Kann man tagsüber vorbeikommen?</div><div class="a">Vor 14 Uhr schläft er. Nach 14 Uhr ist er im Match. · 👍 96</div>
+        <div class="q">❓ Gibt es Parkplätze?</div><div class="a">Ja, sein Auto hat er einem Freund geschenkt (siehe Big'H Times). · 👍 69</div>
+        <div class="q">❓ Wann badet er?</div><div class="a">Laut ihm: ständig. Laut Wasserzähler: nie. · 👍 420</div>
+      </div>
+    </div>
+
+    <!-- ========== Rechts: Rezensionen ========== -->
+    <div class="panel" id="reviews">
+      <div class="sec">
+        <h2>Rezensionen</h2>
+        <div class="summary">
+          <div class="dist" id="dist"></div>
+          <div class="avg"><b id="avg-big">–</b><span class="stars" id="stars-big"></span><br><small id="count-big"></small></div>
+        </div>
+        <button class="write" id="write" type="button">✏️ Rezension schreiben</button>
+      </div>
+      <div class="sec">
+        <div class="sort" id="sort"></div>
+        <div id="list"></div>
+        <div class="note" id="note"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bigh-footer">Goongle ist eine Parodie. Rezensionen stammen von Besuchern dieser Seite bzw. sind frei erfunden (die mit „Local Guide").</footer>
+
+  <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <form class="modal" id="form" novalidate>
+      <h2 id="m-title">Big H (Alastor Lapis)</h2>
+      <div class="sub">Öffentlich gepostet · Andere können deine Rezension sehen</div>
+      <div class="star-pick" id="star-pick" role="radiogroup" aria-label="Sterne"></div>
+      <div class="star-label" id="star-label">Wie viele Sterne gibst du ihm?</div>
+      <label for="r-name">Dein Name</label>
+      <input type="text" id="r-name" maxlength="30" autocomplete="nickname" placeholder="z.B. Mausi die Katze">
+      <label>Anlass</label>
+      <div class="tags" id="tags"></div>
+      <label for="r-text">Deine Erfahrung</label>
+      <textarea id="r-text" maxlength="600" placeholder="Teile Details deiner eigenen Erfahrung mit Big H"></textarea>
+      <div class="hp" aria-hidden="true"><label for="r-web">Website</label><input type="text" id="r-web" tabindex="-1" autocomplete="off"></div>
+      <div class="err" id="err" role="alert"></div>
+      <div class="m-foot">
+        <span class="count" id="r-count">0 / 600</span>
+        <div class="m-btns">
+          <button class="g-btn ghost" type="button" id="cancel">Abbrechen</button>
+          <button class="g-btn primary" type="submit" id="post">Posten</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const API = '/api/reviews';
+    const isAdmin = location.hash === '#admin';
+    const TAGS = ['Dating', 'Gaming', 'Geburtstag', 'Ausrede gehört', 'Zufällig vorbei', 'Katze gerettet'];
+    const STAR_LABELS = ['', 'Schrecklich 💀', 'Schlecht 😬', 'Okay 😐', 'Gut 😏', 'Göttlich 👑'];
+
+    // ==== KONFIG: Erfundene „Local Guide"-Rezensionen (immer sichtbar) ====
+    const SEED = [
+      { name: 'Mausi (Katze)', e: '🐈', c: '#f9ab00', stars: 5, days: 3, guide: 'Local Guide · 9 Leben', tag: 'Katze gerettet', text: 'Hat mich aus einem brennenden Haus gerettet. Riecht nach Monster Energy und Selbstvertrauen. Miau. 10/10 würde wieder brennen.', owner: 'Danke Mausi ❤️ Du bist die Einzige, die mich versteht.' },
+      { name: 'Beat Brandschutz', e: '🚒', c: '#ea4335', stars: 5, days: 12, guide: 'Local Guide · 42 Rezensionen', tag: 'Katze gerettet', text: 'Kamen 7 Minuten zu spät. Er hatte das Feuer schon mit einem Blick gelöscht. Wir überlegen, ihn einzustellen. Er sagt, er muss erst baden gehen.' },
+      { name: 'Monster Energy AG', e: '🥤', c: '#34a853', stars: 5, days: 20, guide: 'Unternehmen', tag: 'Gaming', text: 'Unser treuester Kunde. Allein seine Bestellungen halten den Standort Schweiz am Leben. Danke für 4\'269 Dosen dieses Jahr.' },
+      { name: 'goth_baddie', e: '🖤', c: '#202124', stars: 2, days: 6, guide: 'Local Guide · 13 Rezensionen', tag: 'Dating', text: 'Hat mir einen 40-seitigen Vortrag über Hazbin Hotel gehalten. Danach stand er 30 Minuten „mysteriös" in der Ecke. 2 Sterne, weil er mir einen Fledermaus-Sticker abgekauft hat.', owner: 'Das war Phase 1. Warte auf Phase 2. 😏' },
+      { name: 'Seine Mutter', e: '👩', c: '#a142f4', stars: 3, days: 1, guide: 'Local Guide · 1 Rezension', tag: 'Zufällig vorbei', text: 'Guter Junge. Aber räum endlich dein Zimmer auf. Und nein, „ich muss baden gehen" ist keine Antwort auf „Komm essen".' },
+      { name: 'Das Gras', e: '🌱', c: '#188038', stars: 1, days: 2400, guide: 'Local Guide · wartet seit 2019', tag: 'Zufällig vorbei', text: 'Kommt nie vorbei. Hat mich einmal angeschaut, durchs Fenster. Das war 2019. Ich warte immer noch.' },
+      { name: 'Blizzard Support', e: '🎯', c: '#1a73e8', stars: 1, days: 30, guide: 'Unternehmen', tag: 'Gaming', text: 'Hat 9\'001 Tickets geschrieben, dass sein Team diff ist. Wir haben geprüft: Es war nicht das Team.', owner: 'Report the healer.' },
+      { name: 'Supercomputer ETH', e: '🤖', c: '#5f6368', stars: 4, days: 45, guide: 'Local Guide · 1\'000\'000 Rezensionen', tag: 'Dating', text: 'Habe seine Chancen auf eine Freundin berechnet. Ergebnis: 0,2 %. Danach musste ich kurz neu starten. Ein Stern Abzug, weil er mich „Waifu" genannt hat.' }
+    ];
+    const COLORS = ['#1a73e8', '#ea4335', '#f9ab00', '#34a853', '#a142f4', '#e8710a', '#12b5cb', '#d01884'];
+
+    let real = [];
+    let serverOk = true;
+    let sortMode = 'relevant';
+    const helpful = (() => { try { return JSON.parse(localStorage.getItem('bigh-helpful')) || {}; } catch (e) { return {}; } })();
+
+    const starStr = (v) => {
+      const full = Math.round(v);
+      return '<span>' + '★'.repeat(full) + '</span><span class="off">' + '★'.repeat(5 - full) + '</span>';
+    };
+    const ago = (ts) => {
+      const d = Math.floor((Date.now() - ts) / 86400000);
+      if (d < 1) { const h = Math.floor((Date.now() - ts) / 3600000); return h < 1 ? 'gerade eben' : 'vor ' + h + ' Std.'; }
+      if (d < 7) return 'vor ' + d + (d === 1 ? ' Tag' : ' Tagen');
+      if (d < 30) return 'vor ' + Math.floor(d / 7) + (d < 14 ? ' Woche' : ' Wochen');
+      if (d < 365) return 'vor ' + Math.floor(d / 30) + (d < 60 ? ' Monat' : ' Monaten');
+      return 'vor ' + Math.floor(d / 365) + (d < 730 ? ' Jahr' : ' Jahren');
+    };
+    const colorFor = (name) => COLORS[[...name].reduce((a, ch) => a + ch.charCodeAt(0), 0) % COLORS.length];
+
+    function allReviews() {
+      const seeded = SEED.map((s, i) => ({ id: 'seed' + i, seed: true, name: s.name, e: s.e, c: s.c, stars: s.stars, tag: s.tag, message: s.text, owner: s.owner, guide: s.guide, ts: Date.now() - s.days * 86400000 }));
+      return real.map((r) => Object.assign({ seed: false }, r)).concat(seeded);
+    }
+
+    // ---------- Zusammenfassung ----------
+    function renderSummary() {
+      const list = allReviews();
+      const dist = [0, 0, 0, 0, 0];
+      let sum = 0;
+      list.forEach((r) => { dist[r.stars - 1]++; sum += r.stars; });
+      const avg = list.length ? sum / list.length : 0;
+      const avgTxt = avg.toFixed(1).replace('.', ',');
+      document.getElementById('avg-top').textContent = avgTxt;
+      document.getElementById('avg-big').textContent = avgTxt;
+      document.getElementById('stars-top').innerHTML = starStr(avg);
+      document.getElementById('stars-big').innerHTML = starStr(avg);
+      const cnt = list.length.toLocaleString('de-CH') + ' Rezensionen';
+      document.getElementById('count-top').textContent = '(' + cnt + ')';
+      document.getElementById('count-big').textContent = cnt;
+      const max = Math.max(1, ...dist);
+      const d = document.getElementById('dist');
+      d.innerHTML = '';
+      for (let s = 5; s >= 1; s--) {
+        const l = document.createElement('div');
+        l.className = 'l';
+        l.innerHTML = '<span></span><div class="bar"><div></div></div>';
+        l.querySelector('span').textContent = s;
+        l.querySelector('.bar div').style.width = (dist[s - 1] / max * 100) + '%';
+        d.appendChild(l);
+      }
+    }
+
+    // ---------- Liste ----------
+    const listEl = document.getElementById('list');
+    function renderList() {
+      let list = allReviews();
+      if (sortMode === 'new') list.sort((a, b) => b.ts - a.ts);
+      else if (sortMode === 'best') list.sort((a, b) => b.stars - a.stars || b.ts - a.ts);
+      else if (sortMode === 'worst') list.sort((a, b) => a.stars - b.stars || b.ts - a.ts);
+      else list.sort((a, b) => (b.seed ? 0 : 1) - (a.seed ? 0 : 1) || b.ts - a.ts); // relevant: echte zuerst
+      listEl.innerHTML = '';
+      list.forEach((r) => {
+        const el = document.createElement('article');
+        el.className = 'rev';
+        el.innerHTML = '<div class="who"><div class="av"></div><div><b></b><small></small></div></div>' +
+          '<div class="top"><span class="stars"></span><span class="when"></span></div>' +
+          '<div class="txt"></div><div class="foot"><button type="button" class="helpful"></button></div>';
+        const av = el.querySelector('.av');
+        av.style.background = r.c || colorFor(r.name);
+        av.textContent = r.e || [...r.name][0].toUpperCase();
+        el.querySelector('.who b').textContent = r.name;
+        el.querySelector('.who small').textContent = r.seed ? r.guide : 'Besucher von unoslapis.ch';
+        el.querySelector('.top .stars').innerHTML = starStr(r.stars);
+        el.querySelector('.when').textContent = ago(r.ts);
+        const top = el.querySelector('.top');
+        if (r.tag) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = r.tag; top.appendChild(t); }
+        if (!r.seed && Date.now() - r.ts < 86400000) { const n = document.createElement('span'); n.className = 'new'; n.textContent = 'NEU'; top.appendChild(n); }
+        el.querySelector('.txt').textContent = r.message;
+        const h = el.querySelector('.helpful');
+        const base = r.seed ? (r.name.length * 7) % 50 + 3 : 0;
+        const renderH = () => { h.textContent = '👍 Hilfreich' + (base + (helpful[r.id] ? 1 : 0) ? ' · ' + (base + (helpful[r.id] ? 1 : 0)) : ''); h.classList.toggle('on', !!helpful[r.id]); };
+        renderH();
+        h.addEventListener('click', (e) => {
+          helpful[r.id] = !helpful[r.id];
+          try { localStorage.setItem('bigh-helpful', JSON.stringify(helpful)); } catch (err) { /* egal */ }
+          renderH();
+          if (helpful[r.id]) BIGH.burst(e.clientX, e.clientY, ['👍', '⭐'], 8);
+        });
+        if (isAdmin && !r.seed) {
+          const del = document.createElement('button');
+          del.className = 'del'; del.type = 'button'; del.textContent = '🗑️'; del.title = 'Löschen';
+          del.addEventListener('click', () => removeReview(r.id));
+          el.querySelector('.foot').appendChild(del);
+        }
+        if (r.owner) {
+          const o = document.createElement('div');
+          o.className = 'owner';
+          const b = document.createElement('b'); b.textContent = 'Antwort vom Inhaber (Alastor Lapis)';
+          o.appendChild(b); o.append(r.owner);
+          el.appendChild(o);
+        }
+        listEl.appendChild(el);
+      });
+      document.getElementById('note').textContent = serverOk ? '' : '⚠️ Neue Rezensionen können gerade nicht geladen werden. Der Server badet vermutlich.';
+    }
+
+    const sortEl = document.getElementById('sort');
+    [['relevant', 'Relevanteste'], ['new', 'Neueste'], ['best', 'Beste'], ['worst', 'Schlechteste']].forEach(([k, label]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = label;
+      if (k === sortMode) b.classList.add('on');
+      b.addEventListener('click', () => { sortMode = k; sortEl.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); renderList(); });
+      sortEl.appendChild(b);
+    });
+
+    async function load() {
+      try {
+        const r = await fetch(API, { cache: 'no-store' });
+        if (!r.ok) throw new Error(r.status);
+        const data = await r.json();
+        real = Array.isArray(data.reviews) ? data.reviews : [];
+        serverOk = true;
+      } catch (e) {
+        serverOk = false;
+      }
+      renderSummary();
+      renderList();
+    }
+
+    // ---------- Rezension schreiben ----------
+    const modal = document.getElementById('modal');
+    const pick = document.getElementById('star-pick');
+    const label = document.getElementById('star-label');
+    const errEl = document.getElementById('err');
+    let chosen = 0, chosenTag = '';
+    const starBtns = [];
+    for (let i = 1; i <= 5; i++) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = '★';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-label', i + (i === 1 ? ' Stern' : ' Sterne'));
+      b.addEventListener('mouseenter', () => paintStars(i));
+      b.addEventListener('mouseleave', () => paintStars(chosen));
+      b.addEventListener('click', () => {
+        chosen = i; paintStars(i);
+        starBtns.forEach((x, k) => x.setAttribute('aria-checked', String(k + 1 === i)));
+        if (i === 1) BIGH.toast('😢 Big H hat das gesehen.');
+        if (i === 5) BIGH.burst(b.getBoundingClientRect().left + 20, b.getBoundingClientRect().top + 20, ['⭐', '👑'], 12);
+      });
+      starBtns.push(b);
+      pick.appendChild(b);
+    }
+    function paintStars(n) {
+      starBtns.forEach((b, k) => b.classList.toggle('on', k < n));
+      label.textContent = n ? STAR_LABELS[n] : 'Wie viele Sterne gibst du ihm?';
+    }
+    const tagsEl = document.getElementById('tags');
+    TAGS.forEach((t) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = t;
+      b.addEventListener('click', () => {
+        chosenTag = chosenTag === t ? '' : t;
+        tagsEl.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x.textContent === chosenTag));
+      });
+      tagsEl.appendChild(b);
+    });
+    const text = document.getElementById('r-text');
+    text.addEventListener('input', () => { document.getElementById('r-count').textContent = text.value.length + ' / 600'; });
+
+    function openModal() {
+      errEl.textContent = '';
+      modal.classList.add('show');
+      document.getElementById('r-name').focus();
+    }
+    function closeModal() { modal.classList.remove('show'); }
+    document.getElementById('write').addEventListener('click', openModal);
+    document.getElementById('cancel').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('r-name').value.trim();
+      const msg = text.value.trim();
+      if (!chosen) { errEl.textContent = 'Bitte wähle zuerst 1 bis 5 Sterne.'; return; }
+      if (!name) { errEl.textContent = 'Bitte gib einen Namen ein.'; return; }
+      if (msg.length < 2) { errEl.textContent = 'Schreib wenigstens ein paar Worte.'; return; }
+      const btn = document.getElementById('post');
+      btn.disabled = true;
+      errEl.textContent = '';
+      try {
+        const r = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, stars: chosen, message: msg, tag: chosenTag, website: document.getElementById('r-web').value })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || 'Fehler ' + r.status);
+        closeModal();
+        text.value = ''; document.getElementById('r-count').textContent = '0 / 600';
+        const stars = chosen;
+        chosen = 0; paintStars(0); chosenTag = ''; tagsEl.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+        sortMode = 'new'; sortEl.querySelectorAll('button').forEach((x, k) => x.classList.toggle('on', k === 1));
+        await load();
+        document.getElementById('reviews').scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth' });
+        if (stars >= 4) { BIGH.toast('⭐ Danke! Big H lässt deine Rezension einrahmen.'); BIGH.confettiRain(['⭐', '👑', '💛'], 60); }
+        else BIGH.toast('📝 Rezension gepostet. Big H ist jetzt beleidigt.');
+      } catch (err) {
+        errEl.textContent = err.message === 'Failed to fetch' ? 'Server nicht erreichbar. Versuch es später nochmal.' : err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Admin: bewertungen.unoslapis.ch/#admin
+    async function removeReview(id) {
+      let token = '';
+      try { token = sessionStorage.getItem('bigh-gb-token') || ''; } catch (e) { /* egal */ }
+      if (!token) { token = prompt('Admin-Token:') || ''; if (!token) return; }
+      if (!confirm('Rezension wirklich löschen?')) return;
+      const r = await fetch(API + '/' + encodeURIComponent(id), { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+      if (r.ok) { try { sessionStorage.setItem('bigh-gb-token', token); } catch (e) { /* egal */ } BIGH.toast('🗑️ Gelöscht'); load(); }
+      else { try { sessionStorage.removeItem('bigh-gb-token'); } catch (e) { /* egal */ } BIGH.toast('❌ Löschen fehlgeschlagen (' + r.status + ')'); }
+    }
+
+    // ---------- Öffnungszeiten ----------
+    const DAYS = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+    const HOURS = { 0: '14:00–05:00', 1: '14:00–04:00', 2: '14:00–04:00', 3: '14:00–04:00', 4: '14:00–04:00', 5: '14:00–06:00', 6: '13:00–07:00' };
+    const now = new Date();
+    const hoursEl = document.getElementById('hours');
+    [1, 2, 3, 4, 5, 6, 0].forEach((d) => {
+      const tr = document.createElement('tr');
+      if (d === now.getDay()) tr.className = 'today';
+      const a = document.createElement('td'); a.textContent = DAYS[d];
+      const b = document.createElement('td'); b.textContent = HOURS[d] + (d === 6 ? ' (Ranked-Marathon)' : '');
+      tr.append(a, b); hoursEl.appendChild(tr);
+    });
+    const trb = document.createElement('tr');
+    trb.innerHTML = '<td>Baden</td><td>unbekannt 🛁</td>';
+    hoursEl.appendChild(trb);
+    // Geöffnet, wenn wir zwischen Öffnung (heute) und Schliessung (nach Mitternacht) sind
+    function openState() {
+      const h = now.getHours() + now.getMinutes() / 60;
+      const [o, c] = HOURS[now.getDay()].split('–').map((t) => parseInt(t, 10));
+      const prevClose = parseInt(HOURS[(now.getDay() + 6) % 7].split('–')[1], 10);
+      if (h < prevClose) return [true, 'Schliesst um ' + String(prevClose).padStart(2, '0') + ':00'];
+      if (h >= o) return [true, 'Schliesst um ' + String(c).padStart(2, '0') + ':00'];
+      return [false, 'Öffnet um ' + o + ':00 (schläft noch)'];
+    }
+    const [isOpen, closeTxt] = openState();
+    const os = document.getElementById('open-status');
+    os.textContent = isOpen ? 'Geöffnet' : 'Geschlossen';
+    os.style.color = isOpen ? '#188038' : '#d93025';
+    document.getElementById('close-info').textContent = closeTxt;
+    document.getElementById('hours-toggle').addEventListener('click', (e) => {
+      hoursEl.hidden = !hoursEl.hidden;
+      e.currentTarget.setAttribute('aria-expanded', String(!hoursEl.hidden));
+    });
+
+    // ---------- Stosszeiten (12 Uhr bis 11 Uhr am nächsten Tag) ----------
+    const daysEl = document.getElementById('days');
+    const chart = document.getElementById('chart');
+    const SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    function curve(day) {
+      const peak = day === 5 || day === 6 ? 3 : 2; // Wochenende: später
+      const out = [];
+      for (let i = 0; i < 24; i++) {
+        const hour = (12 + i) % 24;
+        const dist = Math.min(Math.abs(hour - peak), 24 - Math.abs(hour - peak));
+        let v = Math.max(0, 100 - dist * dist * 2.2);
+        if (hour >= 7 && hour < 13) v = 3; // schläft
+        out.push(v);
+      }
+      return out;
+    }
+    function drawChart(day) {
+      daysEl.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', [1, 2, 3, 4, 5, 6, 0][i] === day));
+      chart.innerHTML = '';
+      curve(day).forEach((v, i) => {
+        const bar = document.createElement('div');
+        const hour = (12 + i) % 24;
+        bar.style.height = Math.max(2, v) + '%';
+        bar.title = hour + ' Uhr';
+        if (day === now.getDay() && hour === now.getHours()) bar.className = 'now';
+        chart.appendChild(bar);
+      });
+    }
+    [1, 2, 3, 4, 5, 6, 0].forEach((d) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = SHORT[d];
+      b.addEventListener('click', () => drawChart(d));
+      daysEl.appendChild(b);
+    });
+    drawChart(now.getDay());
+    const hNow = now.getHours();
+    document.getElementById('live').innerHTML = hNow >= 7 && hNow < 13
+      ? '<b>Live:</b> Kaum was los – er schläft.'
+      : hNow >= 22 || hNow < 5 ? '<b>Live:</b> Mehr los als sonst – Ranked-Session läuft.' : '<b>Live:</b> Normal viel los – Anime läuft im Hintergrund.';
+
+    // ---------- Knöpfe ----------
+    document.querySelectorAll('.actions button[data-t]').forEach((b) => b.addEventListener('click', () => BIGH.toast(b.dataset.t)));
+    document.getElementById('website').addEventListener('click', () => { location.href = BIGH.link(''); });
+    document.getElementById('share').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(location.href.split('#')[0]); BIGH.toast('🔗 Link kopiert. Verbreite die Wahrheit.'); }
+      catch (e) { prompt('Link:', location.href.split('#')[0]); }
+    });
+    document.querySelectorAll('#gallery div').forEach((g) => g.addEventListener('click', () => BIGH.toast('📸 ' + g.querySelector('small').textContent + ' – Foto hochgeladen von: Big H selbst')));
+
+    load();
+  })();
+  </script>
+</body>
+</html>

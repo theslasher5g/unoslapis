@@ -26,8 +26,8 @@
 	reverse_proxy web:80
 }
 
-# Gästebuch: Seite von nginx, /api/* vom Gästebuch-Backend
-guestbook.{$DOMAIN} {
+# Gästebuch + Bewertungen: Seite von nginx, /api/* vom Backend
+guestbook.{$DOMAIN}, bewertungen.{$DOMAIN} {
 	import common
 	handle /api/* {
 		request_body {

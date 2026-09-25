@@ -41,7 +41,7 @@ services:
     networks:
       - unoslapis
 
-  # Mini-Backend für guestbook.unoslapis.ch (speichert Einträge als JSON)
+  # Mini-Backend für guestbook. und bewertungen.unoslapis.ch (speichert als JSON)
   guestbook:
     build: ./guestbook
     container_name: unoslapis-guestbook
