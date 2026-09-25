@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 – Big H hat diese Seite gegoont</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐎</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { display: grid; place-items: center; text-align: center; padding: 24px; }
+  h1 { font-family: var(--title); font-size: clamp(5rem, 22vw, 12rem); margin: 0; line-height: 1; color: var(--pink); }
+  .sad { font-size: 4rem; animation: spin 3s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  p { font-size: 1.2rem; color: var(--muted); max-width: 520px; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <div class="sad" aria-hidden="true">🐎</div>
+    <h1 class="glitch" data-text="404">404</h1>
+    <p><strong>Seite nicht gefunden.</strong><br>Big H war 3 Stunden hier drauf und jetzt ist sie weg. Niemand weiss, was passiert ist. Niemand will es wissen.</p>
+    <p class="pixel" style="font-size:.7rem">MISSION FAILED – WE'LL GET 'EM NEXT TIME</p>
+  </main>
+  <script src="/shared/fun.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+/* ============ Big H Universe – Shared Styles ============ */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --bg: #0d0b1a;
+  --bg2: #17132b;
+  --card: #1f1a3a;
+  --text: #f4f1ff;
+  --muted: #a79fc9;
+  --pink: #ff3e9a;
+  --cyan: #2de2e6;
+  --yellow: #ffd23f;
+  --purple: #9b5cff;
+  --green: #3dff8a;
+  --radius: 18px;
+  --title: 'Bangers', 'Impact', system-ui, sans-serif;
+  --pixel: 'Press Start 2P', ui-monospace, monospace;
+  --body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  line-height: 1.5;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+a { color: var(--cyan); }
+img { max-width: 100%; }
+
+.wrap { width: min(1100px, 100% - 32px); margin-inline: auto; position: relative; z-index: 2; }
+
+.title-font { font-family: var(--title); letter-spacing: 2px; }
+.pixel { font-family: var(--pixel); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 800 1rem var(--body); color: #120d24; background: var(--yellow);
+  text-decoration: none; box-shadow: 0 6px 0 rgba(0,0,0,.35);
+  transition: transform .15s, box-shadow .15s, filter .15s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.35); }
+.btn.pink { background: var(--pink); color: #fff; }
+.btn.cyan { background: var(--cyan); }
+.btn.ghost { background: transparent; color: var(--text); border: 2px solid var(--muted); box-shadow: none; }
+
+/* ---------- Back-Button (wird per JS eingefügt) ---------- */
+.bigh-back {
+  position: fixed; top: 14px; left: 14px; z-index: 50;
+  padding: 8px 14px; border-radius: 999px; text-decoration: none;
+  background: rgba(13,11,26,.8); color: var(--text); border: 1px solid rgba(255,255,255,.2);
+  font: 600 .9rem var(--body); backdrop-filter: blur(6px);
+  transition: transform .2s;
+}
+.bigh-back:hover { transform: scale(1.06) rotate(-2deg); }
+
+/* ---------- Meme-Ticker ---------- */
+.ticker {
+  position: relative; z-index: 3; overflow: hidden; white-space: nowrap;
+  background: var(--yellow); color: #120d24; font: 800 .95rem var(--body);
+  padding: 8px 0; transform: rotate(-1deg);
+  box-shadow: 0 6px 20px rgba(0,0,0,.4);
+}
+.ticker span { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; }
+@keyframes ticker { to { transform: translateX(-100%); } }
+
+/* ---------- Hintergrund-Emojis ---------- */
+.bg-emoji {
+  position: fixed; top: -60px; z-index: 0; pointer-events: none; user-select: none;
+  animation: fall linear forwards; opacity: .5;
+}
+@keyframes fall {
+  to { transform: translateY(calc(100vh + 120px)) rotate(var(--rot, 360deg)); }
+}
+
+/* ---------- Partikel / Konfetti ---------- */
+.particle {
+  position: fixed; z-index: 9998; pointer-events: none; user-select: none;
+  will-change: transform, opacity;
+}
+
+/* ---------- Toasts ---------- */
+.toast-box {
+  position: fixed; bottom: 18px; right: 18px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+  max-width: calc(100vw - 36px);
+}
+.toast {
+  background: var(--card); border: 2px solid var(--pink); color: var(--text);
+  padding: 10px 16px; border-radius: 12px; font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+  animation: toast-in .35s cubic-bezier(.2,1.6,.4,1), toast-out .4s ease-in 3.2s forwards;
+}
+@keyframes toast-in { from { transform: translateX(120%) scale(.6); } }
+@keyframes toast-out { to { transform: translateX(130%); opacity: 0; } }
+
+/* ---------- Big H Mode (Konami-Code) ---------- */
+body.bigh-mode { animation: rainbow 2s linear infinite; }
+body.bigh-mode .wrap { animation: wobble .6s ease-in-out infinite alternate; }
+@keyframes rainbow { to { filter: hue-rotate(360deg); } }
+@keyframes wobble { from { transform: rotate(-1deg); } to { transform: rotate(1deg); } }
+
+.gallop {
+  position: fixed; bottom: 10%; left: -150px; z-index: 9997; font-size: 5rem;
+  pointer-events: none; animation: gallop 3s linear forwards;
+}
+@keyframes gallop {
+  0% { transform: translateX(0) scaleX(-1) translateY(0); }
+  25% { transform: translateX(30vw) scaleX(-1) translateY(-30px); }
+  50% { transform: translateX(60vw) scaleX(-1) translateY(0); }
+  75% { transform: translateX(90vw) scaleX(-1) translateY(-30px); }
+  100% { transform: translateX(calc(100vw + 300px)) scaleX(-1) translateY(0); }
+}
+
+/* ---------- Karten ---------- */
+.card {
+  background: var(--card); border-radius: var(--radius); padding: 22px;
+  border: 1px solid rgba(255,255,255,.08); box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+
+/* ---------- Glitch-Text ---------- */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+}
+.glitch::before { color: var(--cyan); animation: glitch 2.5s infinite steps(1); clip-path: inset(0 0 60% 0); }
+.glitch::after  { color: var(--pink); animation: glitch 2s infinite reverse steps(1); clip-path: inset(55% 0 0 0); }
+@keyframes glitch {
+  0%, 88%, 100% { transform: translate(0); }
+  90% { transform: translate(-4px, 2px); }
+  93% { transform: translate(4px, -2px); }
+  96% { transform: translate(-2px, -1px); }
+}
+
+footer.bigh-footer {
+  position: relative; z-index: 2; text-align: center; color: var(--muted);
+  padding: 40px 16px 60px; font-size: .9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .bg-emoji { display: none; }
+  .ticker span { animation: none; padding-left: 16px; }
+}

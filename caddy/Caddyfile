@@ -1,0 +1,32 @@
+# Caddy holt sich für jede hier gelistete Domain automatisch ein
+# Let's-Encrypt-Zertifikat. Voraussetzung: DNS-A-Record zeigt auf den VPS
+# und Port 80 + 443 sind offen.
+
+{
+	# Optional: E-Mail für Let's-Encrypt-Benachrichtigungen
+	# email deine@mail.ch
+}
+
+(common) {
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options SAMEORIGIN
+		-Server
+	}
+}
+
+{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN} {
+	import common
+	reverse_proxy web:80
+}
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
+
+# Neue Subdomain? 1) hier oben in die Liste eintragen
+#                 2) in nginx/default.conf in die map eintragen
+#                 3) Ordner sites/<name>/index.html anlegen
+#                 4) docker compose restart

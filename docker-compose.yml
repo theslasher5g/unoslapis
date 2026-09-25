@@ -1,0 +1,48 @@
+# unoslapis.ch – Big H Universe
+# Start:   docker compose up -d
+# Logs:    docker compose logs -f
+# Stop:    docker compose down
+
+services:
+  # Reverse Proxy mit automatischem HTTPS (Let's Encrypt)
+  caddy:
+    image: caddy:2-alpine
+    container_name: unoslapis-caddy
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      DOMAIN: ${DOMAIN:-unoslapis.ch}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # Zertifikate – NICHT löschen (Let's Encrypt Rate-Limits!)
+      - caddy_config:/config
+    networks:
+      - unoslapis
+
+  # Statischer Webserver für alle Seiten (Routing per Hostname)
+  web:
+    image: nginx:stable-alpine
+    container_name: unoslapis-web
+    restart: unless-stopped
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./sites:/usr/share/nginx/html:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - unoslapis
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  unoslapis:

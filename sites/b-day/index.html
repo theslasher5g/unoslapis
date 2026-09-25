@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎂 Big H B-Day – 4. Oktober</title>
+<meta name="description" content="Am 4. Oktober levelt Big H auf. Das muss gefeiert werden.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body {
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,210,63,.18), transparent 40%),
+      radial-gradient(circle at 85% 60%, rgba(155,92,255,.25), transparent 45%),
+      linear-gradient(180deg, #1a0f33, #0d0b1a);
+  }
+  .wrap { padding: 70px 0 20px; text-align: center; }
+  h1 {
+    font-family: var(--title); font-size: clamp(3rem, 12vw, 7rem); margin: 0; line-height: .95; letter-spacing: 3px;
+    color: var(--yellow); text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 var(--purple);
+  }
+  h1 .wave { display: inline-block; animation: wave 1.4s ease-in-out infinite; }
+  @keyframes wave { 50% { transform: translateY(-14px); } }
+  .date-tag { font-family: var(--pixel); font-size: clamp(.7rem, 2.5vw, 1rem); color: var(--cyan); margin: 18px 0 30px; }
+
+  /* ---------- Countdown ---------- */
+  .countdown { display: flex; justify-content: center; gap: clamp(8px, 2vw, 18px); flex-wrap: wrap; }
+  .cd { background: var(--card); border-radius: 14px; padding: 16px 10px; min-width: clamp(72px, 20vw, 120px); border-bottom: 5px solid var(--pink); }
+  .cd .n { font-family: var(--pixel); font-size: clamp(1.4rem, 5vw, 2.6rem); color: var(--yellow); }
+  .cd .u { color: var(--muted); font-weight: 600; margin-top: 8px; font-size: .85rem; text-transform: uppercase; }
+  .party-now { display: none; font-family: var(--title); font-size: clamp(2.4rem, 9vw, 5rem); color: var(--pink); animation: shake .3s infinite; }
+  @keyframes shake { 25% { transform: rotate(-3deg) scale(1.03); } 75% { transform: rotate(3deg) scale(1.03); } }
+  body.party .countdown { display: none; }
+  body.party .party-now { display: block; }
+
+  /* ---------- XP-Bar ---------- */
+  .xp { max-width: 640px; margin: 40px auto 0; text-align: left; }
+  .xp .row { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 8px; font-family: var(--pixel); font-size: .7rem; }
+  .xp .bar { height: 26px; background: #000; border: 3px solid #fff; border-radius: 4px; padding: 3px; }
+  .xp .fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--green) 0 14px, #2bd872 14px 16px); transition: width 2s cubic-bezier(.2,.9,.3,1); }
+
+  h2.sec { font-family: var(--title); font-size: clamp(2.2rem, 7vw, 3.2rem); letter-spacing: 2px; margin: 64px 0 10px; }
+  .muted { color: var(--muted); }
+
+  /* ---------- Torte ---------- */
+  .cake-zone { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+  .cake { position: relative; width: min(340px, 90vw); margin-top: 80px; }
+  .candles { position: absolute; bottom: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap-reverse; padding: 0 20px; }
+  .candle {
+    position: relative; width: 16px; height: 56px; border-radius: 4px; cursor: pointer; border: 0; padding: 0;
+    background: repeating-linear-gradient(45deg, #fff 0 6px, var(--pink) 6px 12px);
+  }
+  .candle::before { content: ''; position: absolute; top: -8px; left: 7px; width: 2px; height: 8px; background: #333; }
+  .flame {
+    position: absolute; top: -34px; left: 50%; width: 16px; height: 26px; margin-left: -8px;
+    background: radial-gradient(circle at 50% 70%, #fff 0 15%, #ffd23f 30%, #ff7b00 70%, transparent 72%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker .15s infinite alternate; transform-origin: 50% 90%;
+    box-shadow: 0 0 20px 6px rgba(255,180,0,.45);
+  }
+  @keyframes flicker { from { transform: scaleY(1) rotate(-2deg); } to { transform: scaleY(1.12) rotate(2deg); } }
+  .candle.out .flame { display: none; }
+  .candle.out::after { content: '💨'; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; animation: smoke 1s forwards; }
+  @keyframes smoke { to { transform: translate(-50%, -30px); opacity: 0; } }
+  .tier { border-radius: 14px 14px 8px 8px; position: relative; margin: 0 auto; }
+  .tier.top { width: 70%; height: 70px; background: #ff9ad1; }
+  .tier.bottom { width: 100%; height: 100px; background: #8a4b2a; }
+  .tier.top::after, .tier.bottom::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 22px; border-radius: 14px 14px 0 0;
+    background: radial-gradient(circle at 10px 22px, transparent 10px, #fff 10.5px) 0 0 / 20px 22px repeat-x;
+  }
+  .tier.bottom .txt { position: absolute; inset: 30px 0 0; font-family: var(--title); font-size: 2rem; color: var(--yellow); letter-spacing: 2px; }
+  .plate { width: 115%; height: 18px; margin-left: -7.5%; background: #ddd; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,.5); }
+  .cake-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
+  .wish { display: none; margin-top: 24px; font-size: 1.3rem; font-weight: 800; color: var(--yellow); }
+  .wish.show { display: block; animation: pop .5s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
+
+  /* ---------- Ballons ---------- */
+  .balloon {
+    position: fixed; bottom: -140px; z-index: 5; width: 70px; height: 86px; border-radius: 50% 50% 48% 48%;
+    cursor: pointer; border: 0; padding: 0; animation: rise linear forwards;
+    box-shadow: inset -8px -10px 0 rgba(0,0,0,.12);
+  }
+  .balloon::before { content: ''; position: absolute; top: 14px; left: 16px; width: 12px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.5); }
+  .balloon::after { content: ''; position: absolute; top: 100%; left: 50%; width: 1px; height: 60px; background: rgba(255,255,255,.5); }
+  @keyframes rise { to { transform: translateY(calc(-100vh - 260px)) translateX(var(--drift, 30px)); } }
+
+  /* ---------- Wunschliste ---------- */
+  .gifts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; text-align: left; }
+  .gift { background: var(--card); border-radius: 14px; padding: 18px; cursor: pointer; transition: transform .2s; border: 2px solid transparent; }
+  .gift:hover { transform: translateY(-4px) rotate(-1deg); border-color: var(--yellow); }
+  .gift .e { font-size: 2.4rem; }
+  .gift b { display: block; margin: 6px 0 4px; }
+  .gift span { color: var(--muted); font-size: .9rem; }
+  .gift.claimed { opacity: .55; }
+  .gift.claimed b::after { content: ' ✅ reserviert'; color: var(--green); font-size: .8rem; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1><span class="wave">🎉</span> Big H <span class="wave" style="animation-delay:.2s">B-Day</span> <span class="wave" style="animation-delay:.4s">🎂</span></h1>
+    <div class="date-tag">4. OKTOBER · LEVEL UP INCOMING</div>
+
+    <div class="countdown" id="countdown" aria-live="off">
+      <div class="cd"><div class="n" id="d">00</div><div class="u">Tage</div></div>
+      <div class="cd"><div class="n" id="h">00</div><div class="u">Stunden</div></div>
+      <div class="cd"><div class="n" id="m">00</div><div class="u">Minuten</div></div>
+      <div class="cd"><div class="n" id="s">00</div><div class="u">Sekunden</div></div>
+    </div>
+    <div class="party-now">🥳 HAPPY BIRTHDAY BIG H!!! 🥳</div>
+
+    <div class="xp">
+      <div class="row"><span id="lvl">LVL ??</span><span id="xp-pct">0%</span><span id="lvl-next">LVL ??</span></div>
+      <div class="bar"><div class="fill" id="xp-fill"></div></div>
+      <p class="muted" style="text-align:center;font-size:.9rem">XP-Fortschritt bis zum nächsten Geburtstag</p>
+    </div>
+
+    <h2 class="sec">Puste die Kerzen aus 🕯️</h2>
+    <p class="muted">Klick auf die Kerzen – oder benutz dein Mikrofon und puste richtig!</p>
+    <div class="cake-zone">
+      <div class="cake">
+        <div class="candles" id="candles"></div>
+        <div class="tier top"></div>
+        <div class="tier bottom"><div class="txt">BIG H</div></div>
+        <div class="plate"></div>
+      </div>
+      <div class="cake-btns">
+        <button class="btn" id="mic" type="button">🎤 Mit Mikro auspusten</button>
+        <button class="btn pink" id="song" type="button">🎵 Happy Birthday spielen</button>
+        <button class="btn ghost" id="relight" type="button">🔥 Neu anzünden</button>
+      </div>
+      <div class="wish" id="wish"></div>
+    </div>
+
+    <h2 class="sec">Wunschliste 🎁</h2>
+    <p class="muted">Klick auf ein Geschenk, um es zu „reservieren".</p>
+    <section class="gifts" id="gifts"></section>
+
+    <h2 class="sec">Ballon-Party 🎈</h2>
+    <p class="muted">Lass die Ballons platzen. Jeder hat eine Nachricht für Big H.</p>
+    <button class="btn cyan" id="more-balloons" type="button">🎈 Mehr Ballons!</button>
+  </main>
+
+  <footer class="bigh-footer">Happy Birthday vom ganzen Squad 💜 · b-day.unoslapis.ch</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const BIRTHDAY = { month: 10, day: 4 };
+    const BIRTH_YEAR = null;   // z.B. 2004 eintragen -> Alter/Level und Kerzenzahl werden berechnet
+    const DEFAULT_CANDLES = 9; // Kerzen, falls BIRTH_YEAR nicht gesetzt ist
+
+    const WISHES = [
+      'Big H wünscht sich: Endlich Champion. 🏆',
+      'Wunsch: Eine Waifu, die zurückschreibt. 💌',
+      'Wunsch: 1 Jahr ohne Leaver in Ranked. 🙏',
+      'Wunsch: Unendlich Ramen. 🍜',
+      'Wunsch geheim. Aber wir können es uns denken. 🥵'
+    ];
+    const BALLOON_MSGS = [
+      'Happy Birthday, du Hengst! 🐎',
+      'Ein Jahr älter, null Jahre erwachsener. 🎉',
+      'Level Up! +1 Weisheit, +10 Goon-Energie',
+      'Möge deine Aim nie schwächer werden 🎯',
+      'Noch ein Jahr ohne Gras berührt. Respekt 🌱',
+      'Alles Gute zum Wiegenfest! 🥳',
+      'お誕生日おめでとう！ (Otanjōbi omedetō!)',
+      'Du bist der Main Character 🌟',
+      'Heute darfst du 24h goonen. Ausnahmsweise.',
+      'GG WP zum Leben 💜'
+    ];
+    const GIFTS = [
+      { e: '🌱', t: 'Touch-Grass-Gutschein', d: 'Einmal Gras anfassen, begleitet. Premium-Erlebnis.' },
+      { e: '💎', t: 'Overwatch Coins', d: 'Für den nächsten Genji-Skin, den er eh schon hat.' },
+      { e: '🛏️', t: 'Body-Pillow Upgrade', d: 'Neues Waifu-Motiv. Das alte ist… abgenutzt.' },
+      { e: '😴', t: '1 Tag Schlaf', d: 'Hat er seit 2019 nicht mehr gehabt.' },
+      { e: '🍜', t: 'Ramen-Jahresvorrat', d: 'Grundnahrungsmittel eines Otakus.' },
+      { e: '🧴', t: 'Tempo-Jumbopack', d: 'Für die… Allergie. Ja genau. Allergie.' }
+    ];
+
+    // ---------- Datum-Helfer ----------
+    function nextBirthday(from) {
+      let d = new Date(from.getFullYear(), BIRTHDAY.month - 1, BIRTHDAY.day);
+      const today = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+      if (d < today) d = new Date(from.getFullYear() + 1, BIRTHDAY.month - 1, BIRTHDAY.day);
+      return d;
+    }
+    function isBirthday(now) { return now.getMonth() === BIRTHDAY.month - 1 && now.getDate() === BIRTHDAY.day; }
+    const pad = (n) => String(n).padStart(2, '0');
+
+    // ---------- Countdown ----------
+    let partyStarted = false;
+    function startParty() {
+      if (partyStarted) return;
+      partyStarted = true;
+      document.body.classList.add('party');
+      BIGH.confettiRain(['🎉', '🎊', '🥳', '🎂', '🐎', '🎈'], 120);
+      setInterval(() => { if (!document.hidden) BIGH.confettiRain(['🎉', '🎊', '🥳'], 30); }, 15000);
+    }
+    function updateCountdown() {
+      const now = new Date();
+      if (isBirthday(now)) { startParty(); return; }
+      if (partyStarted) { location.reload(); return; }
+      const diff = nextBirthday(now) - now;
+      const s = Math.floor(diff / 1000);
+      document.getElementById('d').textContent = pad(Math.floor(s / 86400));
+      document.getElementById('h').textContent = pad(Math.floor(s % 86400 / 3600));
+      document.getElementById('m').textContent = pad(Math.floor(s % 3600 / 60));
+      document.getElementById('s').textContent = pad(s % 60);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ---------- XP-Bar ----------
+    (function () {
+      const now = new Date();
+      const next = nextBirthday(now);
+      let last = new Date(next.getFullYear() - 1, BIRTHDAY.month - 1, BIRTHDAY.day);
+      let pct = isBirthday(now) ? 100 : (now - last) / (next - last) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      const lvlNow = BIRTH_YEAR ? (isBirthday(now) ? next.getFullYear() : last.getFullYear()) - BIRTH_YEAR : null;
+      document.getElementById('lvl').textContent = 'LVL ' + (lvlNow !== null ? lvlNow : '??');
+      document.getElementById('lvl-next').textContent = 'LVL ' + (lvlNow !== null ? lvlNow + (isBirthday(now) ? 0 : 1) : '??');
+      document.getElementById('xp-pct').textContent = pct.toFixed(1) + '%';
+      setTimeout(() => { document.getElementById('xp-fill').style.width = pct + '%'; }, 300);
+    })();
+
+    // ---------- Torte ----------
+    const candleBox = document.getElementById('candles');
+    const wish = document.getElementById('wish');
+    const age = BIRTH_YEAR ? new Date().getFullYear() - BIRTH_YEAR : 0;
+    const candleCount = age > 0 ? Math.min(age, 30) : DEFAULT_CANDLES;
+    let candles = [];
+
+    function buildCandles() {
+      candleBox.innerHTML = '';
+      wish.classList.remove('show');
+      candles = [];
+      for (let i = 0; i < candleCount; i++) {
+        const c = document.createElement('button');
+        c.type = 'button';
+        c.className = 'candle';
+        c.setAttribute('aria-label', 'Kerze ' + (i + 1) + ' auspusten');
+        c.innerHTML = '<span class="flame"></span>';
+        c.addEventListener('click', () => blowOut(c));
+        candleBox.appendChild(c);
+        candles.push(c);
+      }
+    }
+    function blowOut(c) {
+      if (c.classList.contains('out')) return;
+      c.classList.add('out');
+      BIGH.beep(BIGH.rand(200, 320), 0.12, 'triangle', 0.04);
+      if (candles.every((x) => x.classList.contains('out'))) allOut();
+    }
+    function allOut() {
+      stopMic();
+      wish.textContent = '🎉 Alle Kerzen aus! ' + BIGH.pick(WISHES);
+      wish.classList.add('show');
+      BIGH.confettiRain(['🎉', '🎊', '🥳', '🎂', '✨'], 90);
+      playSong();
+    }
+    buildCandles();
+    document.getElementById('relight').addEventListener('click', buildCandles);
+
+    // ---------- Mikrofon: echtes Auspusten ----------
+    let micStream = null, micRaf = 0;
+    const micBtn = document.getElementById('mic');
+    function stopMic() {
+      if (micStream) micStream.getTracks().forEach((t) => t.stop());
+      micStream = null;
+      cancelAnimationFrame(micRaf);
+      micBtn.textContent = '🎤 Mit Mikro auspusten';
+    }
+    micBtn.addEventListener('click', async () => {
+      if (micStream) { stopMic(); return; }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        BIGH.toast('🎤 Dein Browser kann kein Mikro. Klick die Kerzen einfach an.');
+        return;
+      }
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        BIGH.toast('🎤 Kein Mikro-Zugriff. Dann halt klicken!');
+        return;
+      }
+      micBtn.textContent = '🛑 Mikro stoppen (jetzt pusten!)';
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = ctx.createMediaStreamSource(micStream);
+      const an = ctx.createAnalyser();
+      an.fftSize = 512;
+      src.connect(an);
+      const data = new Uint8Array(an.fftSize);
+      let loud = 0;
+      (function listen() {
+        if (!micStream) { ctx.close(); return; }
+        an.getByteTimeDomainData(data);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) { const v = (data[i] - 128) / 128; sum += v * v; }
+        const rms = Math.sqrt(sum / data.length);
+        loud = rms > 0.2 ? loud + 1 : 0;
+        if (loud > 4) {
+          const lit = candles.filter((c) => !c.classList.contains('out'));
+          if (lit.length) blowOut(BIGH.pick(lit));
+          loud = 0;
+        }
+        micRaf = requestAnimationFrame(listen);
+      })();
+    });
+
+    // ---------- Happy Birthday Melodie (Web Audio) ----------
+    const N = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+    const SONG = [
+      ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['C5', 1], ['B4', 2],
+      ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['D5', 1], ['C5', 2],
+      ['G4', .75], ['G4', .25], ['G5', 1], ['E5', 1], ['C5', 1], ['B4', 1], ['A4', 2],
+      ['F5', .75], ['F5', .25], ['E5', 1], ['C5', 1], ['D5', 1], ['C5', 2]
+    ];
+    let songPlaying = false;
+    function playSong() {
+      if (songPlaying) return;
+      songPlaying = true;
+      const beat = 0.42;
+      let t = 0;
+      SONG.forEach(([n, d]) => {
+        setTimeout(() => BIGH.beep(N[n], d * beat * 0.95, 'triangle', 0.08), t * 1000);
+        t += d * beat;
+      });
+      setTimeout(() => { songPlaying = false; }, t * 1000);
+    }
+    document.getElementById('song').addEventListener('click', (e) => {
+      playSong();
+      BIGH.burst(e.clientX, e.clientY, ['🎵', '🎶', '🎂'], 16);
+    });
+
+    // ---------- Wunschliste ----------
+    const giftBox = document.getElementById('gifts');
+    GIFTS.forEach((g) => {
+      const d = document.createElement('div');
+      d.className = 'gift';
+      d.innerHTML = '<div class="e"></div><b></b><span></span>';
+      d.querySelector('.e').textContent = g.e;
+      d.querySelector('b').textContent = g.t;
+      d.querySelector('span').textContent = g.d;
+      d.addEventListener('click', (e) => {
+        d.classList.toggle('claimed');
+        if (d.classList.contains('claimed')) {
+          BIGH.burst(e.clientX, e.clientY, ['🎁', '🎀', '✨'], 14);
+          BIGH.toast('🎁 „' + g.t + '" reserviert!');
+        }
+      });
+      giftBox.appendChild(d);
+    });
+
+    // ---------- Ballons ----------
+    const COLORS = ['#ff3e9a', '#2de2e6', '#ffd23f', '#9b5cff', '#3dff8a', '#ff7b00'];
+    function spawnBalloon() {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'balloon';
+      b.setAttribute('aria-label', 'Ballon platzen lassen');
+      b.style.background = BIGH.pick(COLORS);
+      b.style.left = BIGH.rand(2, 90) + 'vw';
+      b.style.setProperty('--drift', BIGH.rand(-80, 80) + 'px');
+      const dur = BIGH.rand(9, 15);
+      b.style.animationDuration = dur + 's';
+      b.addEventListener('click', (e) => {
+        BIGH.burst(e.clientX, e.clientY, ['💥', '🎊', '✨'], 16);
+        BIGH.beep(90, 0.08, 'square', 0.1);
+        BIGH.toast('🎈 ' + BIGH.pick(BALLOON_MSGS));
+        b.remove();
+      });
+      b.addEventListener('animationend', () => b.remove());
+      document.body.appendChild(b);
+    }
+    if (!BIGH.reduced) {
+      for (let i = 0; i < 5; i++) setTimeout(spawnBalloon, i * 900);
+      setInterval(() => { if (!document.hidden && document.querySelectorAll('.balloon').length < 8) spawnBalloon(); }, 3500);
+    }
+    document.getElementById('more-balloons').addEventListener('click', () => {
+      for (let i = 0; i < 6; i++) setTimeout(spawnBalloon, i * 200);
+    });
+
+    BIGH.emojiBackground(['🎉', '🎂', '🎁', '🎈', '✨', '🥳'], 1300);
+  })();
+  </script>
+</body>
+</html>

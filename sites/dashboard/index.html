@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big H HQ – unoslapis.ch</title>
+<meta name="description" content="Das offizielle Hauptquartier von Big H. Hengst. Nerd. Legende.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐎</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body {
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,62,154,.18), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(45,226,230,.15), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(155,92,255,.2), transparent 50%),
+      var(--bg);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: 60px 0 30px; }
+  .crown { font-size: 3rem; display: inline-block; animation: float 2.5s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-12px) rotate(8deg); } }
+  .big-h {
+    font-family: var(--title); font-size: clamp(5rem, 20vw, 13rem); line-height: .9; margin: 0;
+    background: linear-gradient(90deg, var(--pink), var(--yellow), var(--cyan), var(--purple), var(--pink));
+    background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shine 6s linear infinite; filter: drop-shadow(0 8px 0 rgba(0,0,0,.4));
+    cursor: pointer; user-select: none;
+  }
+  .big-h span { display: inline-block; transition: transform .2s; }
+  .big-h span:hover { transform: translateY(-18px) rotate(-6deg) scale(1.1); }
+  @keyframes shine { to { background-position: 300% 0; } }
+  .tagline { font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 800; margin: 10px 0 4px; }
+  .tagline b { color: var(--pink); }
+  .status {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 14px;
+    background: var(--card); border: 1px solid rgba(255,255,255,.1); padding: 10px 18px; border-radius: 999px;
+    font-weight: 600; min-height: 46px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 1.2s infinite; flex: none; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  #status-text { transition: opacity .3s; }
+
+  /* ---------- Stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 40px 0; }
+  .stat { text-align: center; }
+  .stat .num { font-family: var(--title); font-size: 3rem; color: var(--yellow); line-height: 1; }
+  .stat .lbl { color: var(--muted); font-weight: 600; }
+  .over9000 { display: none; color: var(--pink); font-family: var(--title); font-size: 1.3rem; animation: shake .15s infinite; }
+  @keyframes shake { 25% { transform: translate(2px, -2px) rotate(-2deg); } 75% { transform: translate(-2px, 2px) rotate(2deg); } }
+
+  h2.section { font-family: var(--title); font-size: clamp(2.2rem, 6vw, 3.4rem); letter-spacing: 2px; margin: 60px 0 20px; text-align: center; }
+  h2.section small { display: block; font-family: var(--body); font-size: 1rem; color: var(--muted); letter-spacing: 0; font-weight: 600; }
+
+  /* ---------- Portal-Karten ---------- */
+  .portals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; perspective: 900px; }
+  .portal {
+    position: relative; display: block; text-decoration: none; color: var(--text);
+    padding: 26px 22px; border-radius: var(--radius); overflow: hidden;
+    background: var(--card); border: 2px solid transparent;
+    transition: transform .15s ease-out, border-color .2s, box-shadow .2s;
+    transform-style: preserve-3d;
+  }
+  .portal::before {
+    content: ''; position: absolute; inset: 0; opacity: .25; z-index: 0;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    transition: opacity .2s;
+  }
+  .portal:hover { border-color: var(--c1); box-shadow: 0 0 40px color-mix(in srgb, var(--c1) 50%, transparent); }
+  .portal:hover::before { opacity: .45; }
+  .portal > * { position: relative; z-index: 1; }
+  .portal .ico { font-size: 3.2rem; display: inline-block; transition: transform .3s; }
+  .portal:hover .ico { transform: scale(1.25) rotate(-12deg); }
+  .portal h3 { font-family: var(--title); font-size: 2rem; letter-spacing: 1px; margin: 8px 0 4px; }
+  .portal .url { font-family: var(--pixel); font-size: .6rem; color: var(--yellow); word-break: break-all; }
+  .portal p { margin: 10px 0 0; color: #ddd6ff; }
+  .badge {
+    position: absolute; top: 14px; right: 14px; z-index: 2;
+    background: var(--pink); color: #fff; font-weight: 800; font-size: .75rem; padding: 4px 10px; border-radius: 999px;
+    transform: rotate(8deg);
+  }
+
+  /* ---------- Meme Wall ---------- */
+  .memes { columns: 3 280px; column-gap: 18px; }
+  .meme {
+    break-inside: avoid; margin-bottom: 18px; background: #fff; color: #111; border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: transform .2s; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    font-family: 'Impact', 'Arial Black', var(--body);
+  }
+  .meme:nth-child(odd) { transform: rotate(-1.2deg); }
+  .meme:nth-child(even) { transform: rotate(1.2deg); }
+  .meme:hover { transform: rotate(0) scale(1.03); }
+  .meme .cap { padding: 10px 14px; font-size: 1.1rem; text-transform: uppercase; }
+  .meme .credit { font-family: var(--body); font-size: .72rem; color: #777; padding: 0 14px 10px; text-transform: none; }
+  .drake { display: grid; grid-template-columns: 90px 1fr; }
+  .drake > div { padding: 14px; display: flex; align-items: center; min-height: 90px; font-size: 1rem; text-transform: none; font-family: var(--body); font-weight: 800; }
+  .drake .face { font-size: 3.2rem; justify-content: center; background: #f5c542; }
+  .drake .face.yes { background: #7fd86b; }
+  .drake > div:nth-child(2) { border-bottom: 2px solid #111; }
+  .drake > div:nth-child(1) { border-bottom: 2px solid #111; }
+  .bigemoji { font-size: 4.5rem; text-align: center; padding: 18px 0 4px; background: linear-gradient(#ffe7a8, #ffb3d1); }
+  .dark-meme { background: #111; color: #fff; }
+  .dark-meme .bigemoji { background: linear-gradient(#27204a, #111); }
+  .dark-meme .credit { color: #999; }
+  .meme img { display: block; width: 100%; }
+
+  /* ---------- Nicht-drücken-Button ---------- */
+  .danger-zone { text-align: center; margin: 70px 0 20px; }
+  .red-btn {
+    width: 170px; height: 170px; border-radius: 50%; border: 0; cursor: pointer;
+    background: radial-gradient(circle at 35% 30%, #ff8a8a, #e0001b 55%, #8a0010);
+    box-shadow: 0 14px 0 #5a000a, 0 20px 40px rgba(0,0,0,.6);
+    color: #fff; font: 800 1.05rem var(--body); text-transform: uppercase; line-height: 1.2;
+    transition: transform .08s, box-shadow .08s;
+  }
+  .red-btn:active { transform: translateY(10px); box-shadow: 0 4px 0 #5a000a, 0 8px 20px rgba(0,0,0,.6); }
+  .press-count { color: var(--muted); margin-top: 22px; min-height: 1.5em; }
+
+  .counter { display: inline-flex; gap: 3px; margin-top: 8px; }
+  .counter span { background: #000; color: var(--green); font-family: var(--pixel); font-size: .8rem; padding: 6px 5px; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <div class="ticker" aria-hidden="true"><span>
+    +++ EILMELDUNG: Big H erneut beim Goonen erwischt +++ Wissenschaftler bestätigen: Big H ist ein Hengst +++ "Nur noch eine Folge" – Big H, vor 14 Folgen +++ Overwatch-Server überlastet, weil Big H online ist +++ Gras meldet: "Wurde seit 2019 nicht berührt" +++ Anime-Watchlist hat eigene Postleitzahl bekommen +++ IT'S OVER 9000!!! +++ Omae wa mou shindeiru +++
+  </span></div>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="crown" aria-hidden="true">👑</div>
+      <h1 class="big-h" id="bigh" aria-label="Big H"><span>B</span><span>I</span><span>G</span>&nbsp;<span>H</span></h1>
+      <p class="tagline">Der <b>Hengst</b>. Der <b>Nerd</b>. Der <b>Weeb</b>. Die <b>Legende</b>.</p>
+      <div class="status" role="status"><span class="dot"></span><span id="status-text">Status: lädt...</span></div>
+    </section>
+
+    <section class="stats">
+      <div class="card stat">
+        <div class="num" id="power">0</div>
+        <div class="lbl">Power Level</div>
+        <div class="over9000" id="over9000">IT'S OVER 9000!!!</div>
+      </div>
+      <div class="card stat">
+        <div class="num">100%</div>
+        <div class="lbl">Hengst-Faktor 🐎</div>
+      </div>
+      <div class="card stat">
+        <div class="num">∞</div>
+        <div class="lbl">Gesehene Animes</div>
+      </div>
+      <div class="card stat">
+        <div class="num" id="bday-days">?</div>
+        <div class="lbl" id="bday-lbl">Tage bis zum B-Day 🎂</div>
+      </div>
+    </section>
+
+    <h2 class="section">Wähle dein Abenteuer<small>Jede Subdomain ein neues Kapitel der Big-H-Saga</small></h2>
+    <section class="portals">
+      <a class="portal" href="https://dating.unoslapis.ch/" data-sub="dating" style="--c1:#ff3e9a;--c2:#ff9ad1">
+        <span class="badge">❤️ SINGLE</span>
+        <span class="ico">💌</span>
+        <h3>Big H Dating</h3>
+        <div class="url">dating.unoslapis.ch</div>
+        <p>Füll den Liebesbrief aus. „Nein" ist keine Option. Wirklich nicht.</p>
+      </a>
+      <a class="portal" href="https://overwatch.unoslapis.ch/" data-sub="overwatch" style="--c1:#f99e1a;--c2:#2de2e6">
+        <span class="badge">🎮 CRACKED</span>
+        <span class="ico">🎯</span>
+        <h3>Overwatch</h3>
+        <div class="url">overwatch.unoslapis.ch</div>
+        <p>Career Profile, Play of the Game & Beweise, wie absurd cracked er ist.</p>
+      </a>
+      <a class="portal" href="https://b-day.unoslapis.ch/" data-sub="b-day" style="--c1:#ffd23f;--c2:#9b5cff">
+        <span class="badge" id="bday-badge">📅 4. OKT</span>
+        <span class="ico">🎂</span>
+        <h3>B-Day</h3>
+        <div class="url">b-day.unoslapis.ch</div>
+        <p>Countdown, Torte, Kerzen auspusten. Der Hengst wird ein Jahr älter.</p>
+      </a>
+      <a class="portal" href="https://goon.unoslapis.ch/" data-sub="goon" style="--c1:#e0001b;--c2:#3a0010">
+        <span class="badge">🔞 FSK 18</span>
+        <span class="ico">🥵</span>
+        <h3>Goon Zone</h3>
+        <div class="url">goon.unoslapis.ch</div>
+        <p>Die Steam-Library of Shame. Betreten auf eigene Gefahr.</p>
+      </a>
+    </section>
+
+    <h2 class="section">Meme Wall<small>Klick drauf. Du weisst, dass du willst.</small></h2>
+    <section class="memes" id="memes">
+      <div class="meme">
+        <div class="drake">
+          <div class="face">🙅‍♂️</div><div>Um 23 Uhr schlafen gehen</div>
+          <div class="face yes">👉</div><div>„Nur noch ein Ranked Game" (es ist 04:37)</div>
+        </div>
+      </div>
+      <div class="meme dark-meme">
+        <div class="cap">Niemand:<br>Absolut niemand:<br>Big H um 3 Uhr nachts:</div>
+        <div class="bigemoji">📺🍜</div>
+        <div class="cap">„Folge 1 von 1122 One Piece. Let's go."</div>
+      </div>
+      <div class="meme">
+        <div class="bigemoji">🦋🧍‍♂️</div>
+        <div class="cap">Ist das eine Freundin?</div>
+        <div class="credit">Big H zu seinem Waifu-Kissen</div>
+      </div>
+      <div class="meme dark-meme">
+        <div class="bigemoji">🔥🐶☕🔥</div>
+        <div class="cap">This is fine.</div>
+        <div class="credit">Big H nach 12 Losses in Folge, weil „Team diff"</div>
+      </div>
+      <div class="meme">
+        <div class="bigemoji">👀💃🙎‍♀️</div>
+        <div class="cap">Big H · Neue Anime-Season · Schlaf</div>
+        <div class="credit">Distracted Boyfriend, aber es ist jede Season</div>
+      </div>
+      <div class="meme dark-meme">
+        <div class="cap">お前はもう死んでいる</div>
+        <div class="bigemoji">👊😐</div>
+        <div class="cap">„Omae wa mou shindeiru"<br>Gegnerisches Team: NANI?!</div>
+      </div>
+      <div class="meme">
+        <div class="bigemoji">🌍👨‍🚀🔫👨‍🚀</div>
+        <div class="cap">„Warte, es ist alles Anime?"<br>„Always has been."</div>
+      </div>
+      <div class="meme dark-meme">
+        <div class="bigemoji">🧠✨</div>
+        <div class="cap">Kleines Gehirn: Gras anfassen<br>Galaxy Brain: Anime-Gras anschauen</div>
+      </div>
+      <div class="meme">
+        <div class="drake">
+          <div class="face">🙅‍♂️</div><div>Frauen im echten Leben ansprechen</div>
+          <div class="face yes">👉</div><div>2D-Waifu Tier-List erstellen (147 Einträge, S-Tier voll)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="danger-zone">
+      <button class="red-btn" id="red-btn">Nicht<br>drücken</button>
+      <div class="press-count" id="press-count"></div>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">
+    <div>Besucher seit 2026:</div>
+    <div class="counter" id="counter" aria-label="Besucherzähler"></div>
+    <p>Made with ❤️, Monster Energy & zu wenig Schlaf · unoslapis.ch<br>
+    <small>Psst… probier mal ↑ ↑ ↓ ↓ ← → ← → B A – oder tipp „hengst"</small></p>
+  </footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    // Eigene Meme-Bilder: Dateien nach sites/shared/memes/ kopieren und hier eintragen,
+    // z.B. ['/shared/memes/bigh-1.jpg', '/shared/memes/bigh-2.png']
+    const MEME_IMAGES = [];
+    const BIRTHDAY = { month: 10, day: 4 };
+
+    const STATUSES = [
+      '🟢 Online – am Goonen',
+      '🎮 In der Ranked Queue (seit 4 Stunden)',
+      '📺 Schaut Folge 847 von irgendwas',
+      '🐎 Macht Hengst-Sachen',
+      '😴 Schläft nicht. Hat er nie.',
+      '🍜 Isst Instant-Ramen wie ein echter Otaku',
+      '💬 „Bin in 5 Min on" (Lüge)',
+      '🌱 Gras anfassen: 0% geladen',
+      '🎯 Hitscan-Diff am verteilen',
+      '🛐 Betet zu seiner Waifu'
+    ];
+
+    // Status rotieren
+    const st = document.getElementById('status-text');
+    let si = Math.floor(Math.random() * STATUSES.length);
+    function nextStatus() {
+      st.style.opacity = 0;
+      setTimeout(() => { st.textContent = 'Status: ' + STATUSES[si]; st.style.opacity = 1; si = (si + 1) % STATUSES.length; }, 300);
+    }
+    nextStatus();
+    setInterval(nextStatus, 3200);
+
+    // Power Level zählt hoch -> IT'S OVER 9000
+    const power = document.getElementById('power');
+    const target = 9001;
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / 2500);
+      power.textContent = Math.floor(target * (1 - Math.pow(1 - t, 3))).toLocaleString('de-CH');
+      if (t < 1) requestAnimationFrame(tick);
+      else document.getElementById('over9000').style.display = 'block';
+    }
+    requestAnimationFrame(tick);
+
+    // Geburtstags-Countdown
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let next = new Date(now.getFullYear(), BIRTHDAY.month - 1, BIRTHDAY.day);
+    if (next < today) next = new Date(now.getFullYear() + 1, BIRTHDAY.month - 1, BIRTHDAY.day);
+    const days = Math.round((next - today) / 86400000);
+    if (days === 0) {
+      document.getElementById('bday-days').textContent = '🎉';
+      document.getElementById('bday-lbl').textContent = 'HEUTE IST B-DAY!!!';
+      document.getElementById('bday-badge').textContent = '🎉 HEUTE!';
+      setTimeout(() => BIGH.confettiRain(), 800);
+    } else {
+      document.getElementById('bday-days').textContent = days;
+      document.getElementById('bday-lbl').textContent = (days === 1 ? 'Tag' : 'Tage') + ' bis zum B-Day 🎂';
+    }
+
+    // Eigene Meme-Bilder einfügen
+    const wall = document.getElementById('memes');
+    MEME_IMAGES.forEach((src) => {
+      const d = document.createElement('div');
+      d.className = 'meme';
+      const img = document.createElement('img');
+      img.src = src; img.alt = 'Big H Meme'; img.loading = 'lazy';
+      d.appendChild(img);
+      wall.prepend(d);
+    });
+
+    // Memes: Klick -> Partikel + Sound
+    const MEME_REACTIONS = ['💀', '😂', '🤣', '💯', '🔥', '😭'];
+    wall.addEventListener('click', (e) => {
+      const m = e.target.closest('.meme');
+      if (!m) return;
+      BIGH.burst(e.clientX, e.clientY, MEME_REACTIONS, 18);
+      BIGH.beep(BIGH.rand(300, 900), 0.12, 'triangle');
+    });
+
+    // BIG H Titel klicken
+    const title = document.getElementById('bigh');
+    title.addEventListener('click', (e) => {
+      BIGH.burst(e.clientX, e.clientY, ['🐎', '👑', 'H', '💪', '🔥'], 30);
+      BIGH.beep(110, 0.3, 'sawtooth', 0.06);
+      BIGH.beep(165, 0.3, 'sawtooth', 0.04);
+    });
+
+    // 3D-Tilt auf den Portal-Karten
+    if (!BIGH.reduced && window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('.portal').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          card.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 14}deg) translateZ(10px)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+      });
+    }
+
+    // Nicht-drücken-Button
+    const PRESS_MSGS = [
+      'Warum hast du gedrückt? 😐',
+      'Es stand doch „NICHT drücken"…',
+      'Okay, jetzt bist du einfach respektlos.',
+      'Big H wurde über dein Verhalten informiert. 📨',
+      'Du hast jetzt offiziell Goon-Energie. 🥵',
+      'Hör auf. Das ist nicht gesund.',
+      'Du bist genauso schlimm wie Big H.',
+      'Fine. Hier, nimm ein Pferd. 🐎'
+    ];
+    let presses = 0;
+    const btn = document.getElementById('red-btn');
+    const pc = document.getElementById('press-count');
+    btn.addEventListener('click', (e) => {
+      presses++;
+      pc.textContent = PRESS_MSGS[Math.min(presses - 1, PRESS_MSGS.length - 1)] + ' (' + presses + '×)';
+      const r = btn.getBoundingClientRect();
+      BIGH.burst(r.left + r.width / 2, r.top + r.height / 2, ['💥', '⚠️', '🚨', '🐎'], 26);
+      BIGH.beep(80 + presses * 20, 0.25, 'sawtooth', 0.07);
+      if (presses % 8 === 0) { BIGH.gallop(); BIGH.confettiRain(['🐎', '👑', '💯'], 40); }
+      if (presses === 3) BIGH.toast('🚨 Big H wurde benachrichtigt');
+    });
+
+    // Fake-Besucherzähler im 2000er-Stil
+    let visits = 420069;
+    try {
+      visits += parseInt(localStorage.getItem('bigh-visits') || '0', 10) + 1;
+      localStorage.setItem('bigh-visits', String(visits - 420069));
+    } catch (err) { /* privates Fenster o.ä. */ }
+    const c = document.getElementById('counter');
+    String(visits).padStart(7, '0').split('').forEach((d) => {
+      const s = document.createElement('span'); s.textContent = d; c.appendChild(s);
+    });
+
+    BIGH.emojiBackground(['🐎', '🎮', '🍜', '⭐', '💜', '🗡️', '🎌', '👾', '🔥'], 1100);
+  })();
+  </script>
+</body>
+</html>

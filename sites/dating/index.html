@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💌 Big H Dating – Willst du mit mir gehen?</title>
+<meta name="description" content="Ein Liebesbrief von Big H. Nein ist keine Option.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&display=swap">
+<style>
+  body {
+    background: linear-gradient(160deg, #ffd6e8 0%, #ffb3d1 45%, #ff8fbf 100%);
+    color: #5a1036;
+  }
+  .bg-emoji { opacity: .7; }
+  .wrap { width: min(720px, 100% - 32px); padding: 70px 0 40px; }
+
+  h1 {
+    font-family: 'Pacifico', cursive; font-weight: 400; text-align: center; color: #d6006b;
+    font-size: clamp(2.2rem, 8vw, 3.6rem); margin: 0 0 10px;
+    text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(214,0,107,.2);
+    animation: heartbeat 1.6s ease-in-out infinite;
+  }
+  @keyframes heartbeat { 0%, 40%, 100% { transform: scale(1); } 20% { transform: scale(1.05); } 30% { transform: scale(.98); } }
+  .sub { text-align: center; font-weight: 600; margin-bottom: 30px; }
+
+  .letter {
+    position: relative; background: #fffaf3; border-radius: 6px; padding: 42px clamp(20px, 5vw, 48px);
+    box-shadow: 0 25px 60px rgba(120,0,60,.35);
+    background-image: repeating-linear-gradient(transparent 0 31px, rgba(214,0,107,.12) 31px 32px);
+    transform: rotate(-.6deg);
+    border: 10px solid #fff; outline: 3px dashed #ff8fbf; outline-offset: -18px;
+  }
+  .letter::before { content: '💝'; position: absolute; top: -34px; right: -18px; font-size: 3.6rem; transform: rotate(18deg); }
+  .letter::after  { content: '🌹'; position: absolute; bottom: -26px; left: -20px; font-size: 3.2rem; transform: rotate(-20deg); }
+  .hand { font-family: 'Dancing Script', cursive; font-size: 1.55rem; line-height: 1.35; }
+  .hand p { margin: 0 0 16px; }
+
+  fieldset { border: 0; padding: 0; margin: 26px 0 0; }
+  legend, label.q { font-family: 'Dancing Script', cursive; font-size: 1.5rem; font-weight: 700; color: #d6006b; margin-bottom: 8px; display: block; padding: 0; }
+  input[type=text], select {
+    width: 100%; padding: 12px 14px; font: 600 1.05rem var(--body); color: #5a1036;
+    border: 2px solid #ffb3d1; border-radius: 12px; background: #fff; outline: none;
+  }
+  input[type=text]:focus, select:focus { border-color: #d6006b; box-shadow: 0 0 0 4px rgba(214,0,107,.15); }
+  .opt { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: background .15s; }
+  .opt:hover { background: #ffe3ef; }
+  .opt input { width: 20px; height: 20px; accent-color: #d6006b; flex: none; }
+
+  .ask {
+    text-align: center; margin-top: 40px; padding-top: 26px; border-top: 2px dashed #ffb3d1;
+  }
+  .ask h2 { font-family: 'Pacifico', cursive; font-weight: 400; color: #d6006b; font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 0 0 22px; }
+  .choices { display: flex; justify-content: center; align-items: center; gap: 30px; min-height: 90px; flex-wrap: wrap; }
+  .yes, .no {
+    font: 800 1.3rem var(--body); border: 0; border-radius: 999px; padding: 14px 34px; cursor: pointer;
+    box-shadow: 0 6px 0 rgba(0,0,0,.2);
+  }
+  .yes { background: linear-gradient(135deg, #ff3e9a, #d6006b); color: #fff; transition: transform .25s cubic-bezier(.2,1.6,.4,1); transform-origin: center; }
+  .yes:hover { filter: brightness(1.1); }
+  .no { background: #8d8d8d; color: #fff; }
+  .no.fleeing { position: fixed; z-index: 1000; transition: left .22s ease-out, top .22s ease-out; margin: 0; }
+
+  .hint { font-size: .9rem; margin-top: 18px; min-height: 1.4em; font-style: italic; }
+
+  /* ---------- Urkunde ---------- */
+  .certificate { display: none; text-align: center; }
+  .certificate.show { display: block; animation: pop .6s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform: scale(.3) rotate(-10deg); opacity: 0; } }
+  .certificate .seal { font-size: 5rem; animation: heartbeat 1s infinite; display: inline-block; }
+  .certificate h2 { font-family: 'Pacifico', cursive; font-weight: 400; color: #d6006b; font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 6px 0; }
+  .certificate .names { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 7vw, 3rem); font-weight: 700; margin: 10px 0; }
+  .certificate ul { text-align: left; display: inline-block; font-weight: 600; margin: 10px 0 20px; }
+  .certificate .sig { font-family: 'Dancing Script', cursive; font-size: 2rem; margin-top: 16px; }
+  .stamp {
+    display: inline-block; border: 4px solid #d6006b; color: #d6006b; padding: 6px 16px; border-radius: 8px;
+    font: 800 1.2rem var(--body); transform: rotate(-12deg); margin: 10px 0 20px; letter-spacing: 2px;
+  }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1>Ein Brief für dich 💌</h1>
+    <p class="sub">von Big H, mit ganz viel Liebe (und etwas Goon-Energie)</p>
+
+    <div class="letter">
+      <form id="love-form" novalidate>
+        <div class="hand">
+          <p>Hallo du Schöne/r,</p>
+          <p>ich weiss, wir kennen uns noch nicht so gut (ausser du bist in meinem Discord), aber seit ich dich gesehen habe, kann ich an nichts anderes mehr denken. Nicht mal an Overwatch. Okay… ein bisschen an Overwatch.</p>
+          <p>Du bist wie ein Legendary Skin: selten, wunderschön und ich würde alles dafür grinden. 🥺</p>
+          <p>Bitte füll diesen Brief aus und gib ihn mir zurück.</p>
+        </div>
+
+        <fieldset>
+          <label class="q" for="name">Wie heisst du, du Engel? 😇</label>
+          <input type="text" id="name" maxlength="40" placeholder="Dein Name" autocomplete="off">
+        </fieldset>
+
+        <fieldset>
+          <legend>Wie findest du Big H?</legend>
+          <label class="opt"><input type="radio" name="rating" value="Ein Hengst 🐎" checked> Ein Hengst 🐎</label>
+          <label class="opt"><input type="radio" name="rating" value="Ein sehr grosser Hengst 🐎🐎"> Ein sehr grosser Hengst 🐎🐎</label>
+          <label class="opt"><input type="radio" name="rating" value="Der Hengst aller Hengste 👑🐎"> Der Hengst aller Hengste 👑🐎</label>
+        </fieldset>
+
+        <fieldset>
+          <label class="q" for="anime">Dein Lieblingsanime?</label>
+          <select id="anime">
+            <option>One Piece</option>
+            <option>Naruto</option>
+            <option>Attack on Titan</option>
+            <option>Demon Slayer</option>
+            <option>Jujutsu Kaisen</option>
+            <option>Chainsaw Man</option>
+            <option>Frieren</option>
+            <option value="none">Ich schaue kein Anime</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <legend>Unser perfektes erstes Date?</legend>
+          <label class="opt"><input type="checkbox" name="date" value="Duo-Queue in Overwatch"> Duo-Queue in Overwatch 🎮</label>
+          <label class="opt"><input type="checkbox" name="date" value="12h Anime-Marathon"> 12h Anime-Marathon 📺</label>
+          <label class="opt"><input type="checkbox" name="date" value="Ramen essen wie in Naruto"> Ramen essen wie in Naruto 🍜</label>
+          <label class="opt"><input type="checkbox" name="date" value="Zusammen Gras anfassen (sein erstes Mal)"> Zusammen Gras anfassen (sein erstes Mal) 🌱</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kleingedrucktes</legend>
+          <label class="opt"><input type="checkbox" id="accept"> Ich akzeptiere, dass er mich während Ranked ignoriert. ⚠️</label>
+        </fieldset>
+
+        <div class="ask">
+          <h2>Willst du mit mir gehen?</h2>
+          <div class="choices" id="choices">
+            <button type="submit" class="yes" id="yes">Ja 💖</button>
+            <button type="button" class="no" id="no">Nein 💔</button>
+          </div>
+          <p class="hint" id="hint"></p>
+        </div>
+      </form>
+
+      <section class="certificate" id="certificate" aria-live="polite">
+        <div class="seal">💞</div>
+        <h2>Offizielle Beziehungsurkunde</h2>
+        <div class="stamp">IT'S A MATCH</div>
+        <p>Hiermit wird feierlich bestätigt, dass</p>
+        <div class="names"><span id="c-name"></span> ❤️ Big H</div>
+        <p>ab dem <strong id="c-date"></strong> offiziell zusammen sind.</p>
+        <p>Bewertung von Big H: <strong id="c-rating"></strong><br>
+           Gemeinsamer Lieblingsanime: <strong id="c-anime"></strong></p>
+        <div id="c-dates"></div>
+        <p id="c-tries"></p>
+        <div class="sig">~ Big H 🐎</div>
+        <p style="margin-top:24px">📸 Mach einen Screenshot und schick ihn Big H!</p>
+        <button class="btn pink" type="button" id="again">Nochmal ausfüllen 💌</button>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bigh-footer" style="color:#8a2a5a">Big H Dating™ · Keine Rückerstattung bei gebrochenem Herzen</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const NO_TEXTS = [
+      'Nein 💔', 'Sicher? 🥺', 'Überleg nochmal!', 'Bist du blind?', 'Er ist ein HENGST 🐎',
+      'Falscher Knopf!', 'Nope 😤', 'Big H weint jetzt 😭', 'Das tut weh…', 'Fang mich doch 😜',
+      'Zu langsam!', 'Gib auf 😏', 'Ja wäre besser', 'Error 404: Nein nicht gefunden', 'Skill Issue'
+    ];
+    const HINTS = [
+      '', 'Hmm, der Knopf ist wohl schüchtern…', 'Der „Nein"-Knopf hat Angst vor dir.',
+      'Vielleicht ist das ein Zeichen? 👀', 'Das Universum will, dass du „Ja" drückst.',
+      'Der „Ja"-Knopf wird immer grösser. Nur so als Hinweis.', 'Big H hat mehr Aim als du. Gib auf.'
+    ];
+
+    const form = document.getElementById('love-form');
+    const yes = document.getElementById('yes');
+    const no = document.getElementById('no');
+    const hint = document.getElementById('hint');
+    const anime = document.getElementById('anime');
+    let tries = 0;
+    let lastFlee = 0;
+    let done = false;
+
+    // „Kein Anime" ist keine gültige Antwort
+    anime.addEventListener('change', () => {
+      if (anime.value === 'none') {
+        BIGH.toast('❌ Falsche Antwort. Versuch es nochmal.');
+        anime.selectedIndex = 0;
+      }
+    });
+
+    function flee(px, py) {
+      if (done) return;
+      const now = performance.now();
+      if (now - lastFlee < 120) return; // nicht bei jedem Pixel neu springen
+      lastFlee = now;
+
+      // Beim ersten Mal: aus dem Layout lösen und direkt an <body> hängen,
+      // damit „position: fixed" sich am Viewport orientiert (Brief ist rotiert).
+      if (!no.classList.contains('fleeing')) {
+        const r = no.getBoundingClientRect();
+        const spacer = document.createElement('span');
+        spacer.style.cssText = `display:inline-block;width:${r.width}px;height:${r.height}px`;
+        spacer.setAttribute('aria-hidden', 'true');
+        no.replaceWith(spacer);
+        no.style.left = r.left + 'px';
+        no.style.top = r.top + 'px';
+        no.classList.add('fleeing');
+        document.body.appendChild(no);
+        no.getBoundingClientRect(); // Reflow, damit die Transition greift
+      }
+
+      tries++;
+      no.textContent = NO_TEXTS[tries % NO_TEXTS.length];
+      hint.textContent = HINTS[Math.min(Math.floor(tries / 2), HINTS.length - 1)];
+
+      const bw = no.offsetWidth, bh = no.offsetHeight;
+      const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      const pad = 12;
+      if (px === undefined) {
+        const r = no.getBoundingClientRect();
+        px = r.left + bw / 2; py = r.top + bh / 2;
+      }
+      let x, y, i = 0;
+      do {
+        x = BIGH.rand(pad, Math.max(pad, vw - bw - pad));
+        y = BIGH.rand(pad + 50, Math.max(pad + 50, vh - bh - pad));
+        i++;
+      } while (i < 40 && Math.hypot(x + bw / 2 - px, y + bh / 2 - py) < Math.min(vw, vh) * 0.35);
+      no.style.left = x + 'px';
+      no.style.top = y + 'px';
+
+      // Ja-Knopf wächst mit jedem Versuch
+      yes.style.transform = `scale(${Math.min(1 + tries * 0.08, 2.2)})`;
+      BIGH.beep(BIGH.rand(600, 1200), 0.06, 'square', 0.03);
+      if (tries === 10) BIGH.toast('😏 Du weisst schon, dass das nicht klappt, oder?');
+      if (tries === 25) BIGH.toast('🏆 Achievement: Hartnäckig (25× Nein versucht)');
+    }
+
+    // Maus kommt zu nahe -> weg!
+    document.addEventListener('mousemove', (e) => {
+      const r = no.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const d = Math.hypot(e.clientX - cx, e.clientY - cy);
+      if (d < Math.max(r.width, r.height) * 0.9 + 20) flee(e.clientX, e.clientY);
+    });
+    // Touch / Stift / Maus-Klick
+    no.addEventListener('pointerdown', (e) => { e.preventDefault(); flee(e.clientX, e.clientY); });
+    no.addEventListener('touchstart', (e) => { e.preventDefault(); const t = e.touches[0]; flee(t.clientX, t.clientY); }, { passive: false });
+    // Falls doch „geklickt" (z.B. mit Tastatur): trotzdem kein Nein
+    no.addEventListener('click', (e) => { e.preventDefault(); flee(); });
+
+    // Nach Resize im sichtbaren Bereich halten
+    window.addEventListener('resize', () => {
+      if (!no.classList.contains('fleeing')) return;
+      const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      no.style.left = Math.min(parseFloat(no.style.left), vw - no.offsetWidth - 12) + 'px';
+      no.style.top = Math.min(parseFloat(no.style.top), vh - no.offsetHeight - 12) + 'px';
+    });
+
+    // JA!
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const accept = document.getElementById('accept');
+      if (!accept.checked) {
+        BIGH.toast('⚠️ Du musst noch das Kleingedruckte akzeptieren. Ranked geht vor.');
+        accept.closest('.opt').animate(
+          [{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }],
+          { duration: 300, iterations: 2 }
+        );
+        accept.focus();
+        return;
+      }
+
+      const name = document.getElementById('name').value.trim() || 'Unbekannte Schönheit';
+      const rating = form.querySelector('input[name=rating]:checked').value;
+      const dates = [...form.querySelectorAll('input[name=date]:checked')].map((c) => c.value);
+
+      document.getElementById('c-name').textContent = name;
+      document.getElementById('c-date').textContent = new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('c-rating').textContent = rating;
+      document.getElementById('c-anime').textContent = anime.value;
+
+      const dBox = document.getElementById('c-dates');
+      dBox.innerHTML = '';
+      const p = document.createElement('p');
+      if (dates.length) {
+        p.textContent = 'Geplante Dates:';
+        const ul = document.createElement('ul');
+        dates.forEach((d) => { const li = document.createElement('li'); li.textContent = d; ul.appendChild(li); });
+        dBox.append(p, ul);
+      } else {
+        p.textContent = 'Geplante Dates: keine – also wird es Overwatch. 🎮';
+        dBox.append(p);
+      }
+      document.getElementById('c-tries').textContent = tries
+        ? `Du hast ${tries}× versucht, „Nein" zu drücken. Big H verzeiht dir. Vielleicht. 😤`
+        : 'Ohne ein einziges Mal zu zögern. Respekt. 🫡';
+
+      done = true;
+      form.style.display = 'none';
+      if (no.classList.contains('fleeing')) no.remove();
+      document.getElementById('certificate').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      BIGH.confettiRain(['💖', '💕', '💘', '💞', '🌹', '💍', '🐎'], 110);
+      [523, 659, 784, 1046, 784, 1046].forEach((f, i) => setTimeout(() => BIGH.beep(f, 0.2, 'triangle', 0.06), i * 160));
+    });
+
+    document.getElementById('again').addEventListener('click', () => location.reload());
+
+    BIGH.emojiBackground(['💖', '💕', '💘', '🌹', '💌', '🥰', '💝'], 700);
+  })();
+  </script>
+</body>
+</html>

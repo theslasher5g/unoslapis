@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎯 Big H – Overwatch Career Profile</title>
+<meta name="description" content="Der Beweis, wie absurd cracked Big H in Overwatch ist.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&display=swap">
+<style>
+  :root { --ow: #f99e1a; --ow2: #218ffe; --owbg: #0b1422; --owcard: #152238; }
+  body {
+    background:
+      linear-gradient(115deg, transparent 0 60%, rgba(249,158,26,.06) 60% 70%, transparent 70%),
+      radial-gradient(circle at 80% 0%, rgba(33,143,254,.25), transparent 50%),
+      var(--owbg);
+  }
+  .ow { font-family: 'Teko', var(--title); text-transform: uppercase; letter-spacing: 1px; font-style: italic; }
+  .wrap { padding: 70px 0 20px; }
+
+  /* ---------- POTG ---------- */
+  .potg { position: relative; height: 340px; overflow: hidden; border-radius: var(--radius); background: #000; margin-bottom: 40px; }
+  .potg .stripe { position: absolute; left: -10%; width: 120%; height: 70px; transform: skewY(-8deg) translateX(-110%); }
+  .potg .s1 { top: 70px; background: var(--ow); }
+  .potg .s2 { top: 150px; background: #fff; }
+  .potg .s3 { top: 225px; background: var(--ow2); height: 30px; }
+  .potg .text { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding-left: 8%; z-index: 2; }
+  .potg .t1 { font-size: clamp(2.4rem, 9vw, 5rem); color: #fff; text-shadow: 3px 3px 0 #000; line-height: .9; opacity: 0; }
+  .potg .t2 { font-size: clamp(3rem, 12vw, 7rem); color: var(--ow); line-height: .9; opacity: 0; -webkit-text-stroke: 2px #000; }
+  .potg .t3 { font-size: clamp(1.1rem, 3.5vw, 1.8rem); color: #fff; background: #000; padding: 2px 12px; align-self: flex-start; opacity: 0; }
+  .potg .hero-emoji { position: absolute; right: 6%; bottom: 20px; font-size: clamp(5rem, 18vw, 10rem); z-index: 1; opacity: 0; }
+  .potg.play .stripe { animation: slide .5s cubic-bezier(.2,.9,.3,1) forwards; }
+  .potg.play .s2 { animation-delay: .12s; }
+  .potg.play .s3 { animation-delay: .24s; }
+  .potg.play .t1 { animation: zoomin .4s .5s forwards; }
+  .potg.play .t2 { animation: zoomin .4s .8s forwards; }
+  .potg.play .t3 { animation: fadein .5s 1.2s forwards; }
+  .potg.play .hero-emoji { animation: heroin .6s 1s forwards; }
+  @keyframes slide { to { transform: skewY(-8deg) translateX(0); } }
+  @keyframes zoomin { from { opacity: 0; transform: scale(2.5) skewX(-10deg); } to { opacity: 1; transform: scale(1) skewX(-10deg); } }
+  @keyframes fadein { to { opacity: 1; } }
+  @keyframes heroin { from { opacity: 0; transform: translateX(200px) rotate(20deg); } to { opacity: 1; transform: none; } }
+  .potg .replay { position: absolute; right: 14px; top: 14px; z-index: 3; }
+
+  /* ---------- Profil ---------- */
+  .profile { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; background: var(--owcard); border-left: 6px solid var(--ow); }
+  @media (max-width: 700px) { .profile { grid-template-columns: 1fr; text-align: center; } }
+  .avatar { width: 120px; height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--ow), var(--ow2)); display: grid; place-items: center; font-size: 4.5rem; margin-inline: auto; box-shadow: 0 0 0 4px #fff; }
+  .btag { font-size: 3rem; line-height: 1; }
+  .btag small { color: var(--muted); font-size: 1.6rem; }
+  .title-tag { color: var(--ow); font-size: 1.5rem; }
+  .rank { text-align: center; }
+  .rank .icon { font-size: 4rem; animation: glow 2s ease-in-out infinite; display: inline-block; }
+  @keyframes glow { 50% { filter: drop-shadow(0 0 16px var(--ow)); transform: scale(1.08); } }
+  .rank .name { font-size: 1.8rem; line-height: 1; }
+  .rank button { margin-top: 8px; font-size: .8rem; padding: 6px 12px; }
+
+  h2.sec { font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; font-size: clamp(2.4rem, 7vw, 3.4rem); margin: 56px 0 16px; line-height: 1; }
+  h2.sec span { color: var(--ow); }
+
+  /* ---------- Stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .stat { background: var(--owcard); border-radius: 12px; padding: 18px; border-bottom: 4px solid var(--ow2); transition: transform .2s; }
+  .stat:hover { transform: translateY(-4px) skewX(-2deg); }
+  .stat .v { font-family: 'Teko', var(--title); font-size: 2.8rem; line-height: 1; color: #fff; }
+  .stat .l { color: var(--muted); font-weight: 600; font-size: .9rem; text-transform: uppercase; }
+
+  /* ---------- Heroes ---------- */
+  .heroes { display: grid; gap: 12px; }
+  .hero-row { display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center; background: var(--owcard); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
+  .hero-row .e { font-size: 2.4rem; text-align: center; }
+  .hero-row .top { display: flex; justify-content: space-between; gap: 10px; font-weight: 800; }
+  .hero-row .top span:last-child { color: var(--muted); font-weight: 600; }
+  .bar { height: 12px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin-top: 6px; }
+  .bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--ow), #ffd06b); border-radius: 6px; transition: width 1.4s cubic-bezier(.2,.9,.3,1); }
+  .hero-row .quote { color: var(--ow); font-style: italic; font-size: .9rem; margin-top: 4px; min-height: 1.3em; }
+
+  /* ---------- Clips ---------- */
+  .clips { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .clip { background: var(--owcard); border-radius: 12px; overflow: hidden; }
+  .clip .thumb { height: 140px; display: grid; place-items: center; font-size: 4rem; position: relative; background: linear-gradient(135deg, #1e3a66, #0b1422); }
+  .clip .thumb::after { content: '▶'; position: absolute; font-size: 2rem; width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,.6); display: grid; place-items: center; opacity: 0; transition: opacity .2s; }
+  .clip:hover .thumb::after { opacity: 1; }
+  .clip .info { padding: 14px; }
+  .clip .info b { display: block; margin-bottom: 4px; }
+  .clip .info span { color: var(--muted); font-size: .9rem; }
+  .clip .views { color: var(--ow) !important; font-weight: 700; }
+
+  /* ---------- Soundboard ---------- */
+  .board { display: flex; flex-wrap: wrap; gap: 10px; }
+  .board button { background: var(--owcard); color: #fff; border: 2px solid var(--ow2); border-radius: 10px; padding: 10px 14px; font: 700 .95rem var(--body); cursor: pointer; transition: transform .1s, background .2s; }
+  .board button:hover { background: var(--ow2); }
+  .board button:active { transform: scale(.94); }
+  .shout {
+    position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 60;
+    font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; text-align: center;
+    font-size: clamp(2.5rem, 10vw, 7rem); line-height: .95; color: var(--ow); -webkit-text-stroke: 2px #000;
+    padding: 20px; animation: shout 1.6s forwards;
+  }
+  @keyframes shout { 0% { transform: scale(3); opacity: 0; } 15% { transform: scale(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: scale(.9) translateY(-40px); opacity: 0; } }
+
+  /* ---------- Patch Notes ---------- */
+  .patch { background: var(--owcard); border-radius: 12px; padding: 22px; border-top: 4px solid var(--ow); }
+  .patch h3 { margin: 0 0 12px; font-family: 'Teko', var(--title); font-size: 2rem; font-style: italic; }
+  .patch li { margin-bottom: 8px; list-style: none; padding-left: 0; }
+  .patch ul { padding: 0; margin: 0; }
+  .buff { color: var(--green); font-weight: 800; }
+  .nerf { color: #ff5470; font-weight: 800; }
+
+  .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 50px; }
+  .endorse-count { text-align: center; margin-top: 12px; color: var(--muted); }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+
+    <section class="potg" id="potg" aria-label="Play of the Game">
+      <div class="stripe s1"></div><div class="stripe s2"></div><div class="stripe s3"></div>
+      <div class="text">
+        <div class="t1 ow">Play of the Game</div>
+        <div class="t2 ow" id="potg-name">Big H</div>
+        <div class="t3 ow" id="potg-sub">als Genji · 6 Eliminierungen in 4 Sekunden</div>
+      </div>
+      <div class="hero-emoji" id="potg-emoji">🗡️</div>
+      <button class="btn cyan replay" id="replay" type="button">↻ Replay</button>
+    </section>
+
+    <section class="card profile">
+      <div class="avatar">🐎</div>
+      <div>
+        <div class="btag ow" id="btag">Big H<small>#1337</small></div>
+        <div class="title-tag ow">„Der Hengst von Numbani"</div>
+        <div style="color:var(--muted);font-weight:600">Level ∞ · Endorsement-Level 5 · Stunden auf Anime-Maps: alle</div>
+      </div>
+      <div class="rank">
+        <div class="icon" id="rank-icon">💎</div>
+        <div class="name ow" id="rank-name">Champion 1</div>
+        <div style="color:var(--muted);font-size:.8rem" id="rank-src">laut Big H</div>
+        <button class="btn ghost" id="rank-toggle" type="button">Echten Rank zeigen</button>
+      </div>
+    </section>
+
+    <h2 class="sec">Career <span>Stats</span></h2>
+    <section class="stats" id="stats"></section>
+
+    <h2 class="sec">Top <span>Heroes</span></h2>
+    <section class="heroes" id="heroes"></section>
+
+    <h2 class="sec">Highlight <span>Clips</span></h2>
+    <section class="clips" id="clips"></section>
+
+    <h2 class="sec">Voice-Line <span>Soundboard</span></h2>
+    <p style="color:var(--muted);margin-top:-6px">Klicken = Big H schreit es in den Voice-Chat (Ton an! 🔊)</p>
+    <section class="board" id="board"></section>
+
+    <h2 class="sec">Patch <span>Notes</span></h2>
+    <section class="patch">
+      <h3>Big H – Patch 69.4.20</h3>
+      <ul>
+        <li><span class="buff">▲ BUFF</span> Aim: jetzt 100% Hitscan, auch mit Projektil-Helden.</li>
+        <li><span class="buff">▲ BUFF</span> Hengst-Aura: Gegner in 10 m Umkreis verlieren automatisch das Selbstvertrauen.</li>
+        <li><span class="buff">▲ BUFF</span> Nacht-Performance: +300% Mechanics nach 02:00 Uhr.</li>
+        <li><span class="nerf">▼ NERF</span> Schlaf: von 8 auf 3 Stunden reduziert (Bugfix, war nie beabsichtigt).</li>
+        <li><span class="nerf">▼ NERF</span> Geduld mit Supports: -95%.</li>
+        <li><span class="nerf">▼ NERF</span> Gras-Kontakt: entfernt. Niemand hat es benutzt.</li>
+        <li>🐞 <b>BUGFIX</b> „gg ez" wird jetzt nicht mehr 6× pro Match gesendet. Nur noch 5×.</li>
+      </ul>
+    </section>
+
+    <div class="actions">
+      <button class="btn" id="endorse" type="button">👍 Big H endorsen</button>
+      <button class="btn pink" id="report" type="button">🚩 Big H melden</button>
+    </div>
+    <div class="endorse-count" id="endorse-count"></div>
+  </main>
+
+  <footer class="bigh-footer">Nicht mit Blizzard verbunden. Nur mit dem Hengst. · Alle Stats zu 100% echt*<br><small>*nicht echt</small></footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG – hier einfach Werte anpassen ====
+    const PLAYER = { name: 'Big H', tag: '#1337' };
+    const RANK_CLAIMED = { name: 'Champion 1', icon: '💎', src: 'laut Big H' };
+    const RANK_REAL    = { name: '[ZENSIERT]', icon: '🙈', src: 'laut Blizzard' };
+
+    const STATS = [
+      { v: 1337420, l: 'Eliminierungen' },
+      { v: 4269,    l: 'Gespielte Stunden' },
+      { v: 6969,    l: 'Goldmedaillen' },
+      { v: 42069,   l: 'Solo-Kills' },
+      { v: 9001,    l: 'Supports angeschrien' },
+      { v: 777,     l: 'Mal „diff" im Chat' },
+      { v: 0,       l: 'Mal Heal-Pack genommen' },
+      { v: 3,       l: 'Stunden Schlaf pro Nacht' }
+    ];
+
+    const HEROES = [
+      { e: '🗡️', n: 'Genji',      h: 1204, q: 'Ryūjin no ken wo kurae!' },
+      { e: '🦊', n: 'Kiriko',     h: 988,  q: 'Weeb-Healer. Natürlich.' },
+      { e: '🏹', n: 'Hanzo',      h: 756,  q: 'Ryū ga waga teki wo kurau! (Random Arrow = Headshot)' },
+      { e: '🐰', n: 'D.Va',       h: 540,  q: 'Nerf this! – er hat es gesagt, der Gegner hat es gefühlt.' },
+      { e: '🎯', n: 'Widowmaker', h: 431,  q: 'Un tir, une mort. Der Hengst verfehlt nie.' }
+    ];
+
+    const CLIPS = [
+      { e: '🐉', t: '6K Dragonblade in 4 Sekunden', v: '2.4 Mio. Aufrufe · vor 2 Tagen' },
+      { e: '🏹', t: 'Pharah mit Random-Arrow aus Spawn gesnipt', v: '901k Aufrufe · vor 1 Woche' },
+      { e: '🐰', t: 'Self-Destruct: ganzes Team auf dem Punkt ausgelöscht', v: '1.3 Mio. Aufrufe · vor 3 Wochen' },
+      { e: '📺', t: '1v5 Clutch – während im 2. Bildschirm Anime lief', v: '4.2 Mio. Aufrufe · vor 1 Monat' },
+      { e: '🐎', t: 'Hengst-Movement: Gegner verlässt das Spiel', v: '69k Aufrufe · vor 4 Monaten' },
+      { e: '🌙', t: '04:00 Uhr Ranked – Gegner schlafen, er nicht', v: '420k Aufrufe · vor 5 Monaten' }
+    ];
+
+    const VOICE = [
+      { b: '🐉 Dragonblade', s: 'Ryūjin no ken wo kurae!', say: '竜神の剣を喰らえ！', lang: 'ja-JP' },
+      { b: '🏹 Dragonstrike', s: 'Ryū ga waga teki wo kurau!', say: '竜が我が敵を喰らう！', lang: 'ja-JP' },
+      { b: '🐰 Nerf this!', s: 'NERF THIS!', say: 'Nerf this!', lang: 'en-US' },
+      { b: '🩹 I need healing', s: 'I NEED HEALING', say: 'I need healing!', lang: 'en-US' },
+      { b: '🕰️ High Noon', s: "IT'S HIGH NOON", say: "It's high noon.", lang: 'en-US' },
+      { b: '🦊 Kiriko Ult', s: 'Kitsune Rush!', say: 'Kitsune Rush!', lang: 'en-US' },
+      { b: '💀 Die Die Die', s: 'DIE! DIE! DIE!', say: 'Die! Die! Die!', lang: 'en-US' },
+      { b: '🐎 Big H', s: 'DER HENGST IST ONLINE', say: 'Der Hengst ist online!', lang: 'de-DE' },
+      { b: '😤 Team diff', s: 'TEAM DIFF', say: 'Team diff. Ich kann nicht alles alleine machen.', lang: 'de-DE' }
+    ];
+
+    // ---------- POTG ----------
+    const potg = document.getElementById('potg');
+    document.getElementById('potg-name').textContent = PLAYER.name;
+    function playPotg() {
+      potg.classList.remove('play');
+      void potg.offsetWidth;
+      potg.classList.add('play');
+      [196, 247, 294, 392].forEach((f, i) => setTimeout(() => BIGH.beep(f, 0.25, 'sawtooth', 0.04), 500 + i * 120));
+    }
+    // Erst nach Nutzer-Interaktion mit Ton; Animation direkt
+    potg.classList.add('play');
+    document.getElementById('replay').addEventListener('click', playPotg);
+
+    // ---------- Profil ----------
+    document.getElementById('btag').firstChild.textContent = PLAYER.name;
+    document.querySelector('#btag small').textContent = PLAYER.tag;
+    let showReal = false;
+    const rIcon = document.getElementById('rank-icon'), rName = document.getElementById('rank-name'), rSrc = document.getElementById('rank-src');
+    function setRank(r) { rIcon.textContent = r.icon; rName.textContent = r.name; rSrc.textContent = r.src; }
+    setRank(RANK_CLAIMED);
+    document.getElementById('rank-toggle').addEventListener('click', (e) => {
+      showReal = !showReal;
+      setRank(showReal ? RANK_REAL : RANK_CLAIMED);
+      e.target.textContent = showReal ? 'Zurück zur Wahrheit' : 'Echten Rank zeigen';
+      if (showReal) BIGH.toast('🚨 Diese Information wurde von Big H zensiert.');
+    });
+
+    // ---------- Stats mit Hochzähl-Animation ----------
+    const statBox = document.getElementById('stats');
+    STATS.forEach((s) => {
+      const d = document.createElement('div');
+      d.className = 'stat';
+      d.innerHTML = '<div class="v" data-v="' + s.v + '">0</div><div class="l"></div>';
+      d.querySelector('.l').textContent = s.l;
+      statBox.appendChild(d);
+    });
+    function countUp(el) {
+      const target = Number(el.dataset.v);
+      const t0 = performance.now();
+      (function step(now) {
+        const t = Math.min(1, (now - t0) / 1800);
+        el.textContent = Math.floor(target * (1 - Math.pow(1 - t, 3))).toLocaleString('de-CH');
+        if (t < 1) requestAnimationFrame(step);
+      })(t0);
+    }
+
+    // ---------- Heroes ----------
+    const heroBox = document.getElementById('heroes');
+    const maxH = Math.max.apply(null, HEROES.map((h) => h.h));
+    HEROES.forEach((h) => {
+      const row = document.createElement('div');
+      row.className = 'hero-row';
+      row.title = 'Klick für Voice-Line';
+      row.innerHTML = '<div class="e"></div><div><div class="top"><span></span><span></span></div><div class="bar"><div></div></div><div class="quote"></div></div>';
+      row.querySelector('.e').textContent = h.e;
+      row.querySelector('.top span:first-child').textContent = h.n;
+      row.querySelector('.top span:last-child').textContent = h.h.toLocaleString('de-CH') + ' Std.';
+      row.querySelector('.bar div').dataset.w = (h.h / maxH * 100) + '%';
+      row.addEventListener('click', (e) => {
+        row.querySelector('.quote').textContent = '„' + h.q + '"';
+        BIGH.burst(e.clientX, e.clientY, [h.e, '💥', '⭐'], 14);
+      });
+      heroBox.appendChild(row);
+    });
+
+    // Animation starten, wenn sichtbar
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.querySelectorAll('.v[data-v]').forEach(countUp);
+        en.target.querySelectorAll('.bar div').forEach((b) => { b.style.width = b.dataset.w; });
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.2 });
+    io.observe(statBox);
+    io.observe(heroBox);
+
+    // ---------- Clips ----------
+    const clipBox = document.getElementById('clips');
+    CLIPS.forEach((c) => {
+      const d = document.createElement('div');
+      d.className = 'clip';
+      d.innerHTML = '<div class="thumb"></div><div class="info"><b></b><span class="views"></span></div>';
+      d.querySelector('.thumb').textContent = c.e;
+      d.querySelector('b').textContent = c.t;
+      d.querySelector('.views').textContent = c.v;
+      d.style.cursor = 'pointer';
+      d.addEventListener('click', () => BIGH.toast('📼 Clip wurde von Big H gelöscht, weil er „zu cracked" war.'));
+      clipBox.appendChild(d);
+    });
+
+    // ---------- Soundboard ----------
+    const board = document.getElementById('board');
+    function shout(text) {
+      const s = document.createElement('div');
+      s.className = 'shout';
+      s.textContent = text;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 1650);
+    }
+    function speak(text, lang) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 1.05;
+      u.pitch = 0.8;
+      speechSynthesis.speak(u);
+    }
+    VOICE.forEach((v) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = v.b;
+      b.addEventListener('click', () => { shout(v.s); speak(v.say, v.lang); });
+      board.appendChild(b);
+    });
+
+    // ---------- Endorse / Report ----------
+    let endorsements = 0;
+    const ec = document.getElementById('endorse-count');
+    document.getElementById('endorse').addEventListener('click', (e) => {
+      endorsements++;
+      ec.textContent = `Du hast Big H ${endorsements}× endorsed. Er weiss das zu schätzen. 🐎`;
+      BIGH.burst(e.clientX, e.clientY, ['👍', '🧡', '⭐', '🎯'], 18);
+      BIGH.beep(880, 0.08, 'triangle');
+    });
+    const REPORT = [
+      '🚩 Report abgelehnt: Big H ist einfach zu gut.',
+      '🚩 Blizzard hat geprüft: Kein Cheat, nur Hengst.',
+      '🚩 Big H hat DICH zurück gemeldet. 💀',
+      '🚩 Report wurde an seine Waifu weitergeleitet.',
+      '🚩 Skill Issue erkannt – bei dir.'
+    ];
+    let ri = 0;
+    document.getElementById('report').addEventListener('click', () => {
+      BIGH.toast(REPORT[ri++ % REPORT.length]);
+      BIGH.beep(150, 0.3, 'sawtooth', 0.05);
+    });
+
+    BIGH.emojiBackground(['🎯', '🧡', '⚡', '🐉', '🏹', '🐎'], 1600);
+  })();
+  </script>
+</body>
+</html>

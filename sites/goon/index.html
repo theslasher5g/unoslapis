@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔞 The Goon Zone – Big H's Steam Library of Shame</title>
+<meta name="description" content="FSK 18. Big H's Steam-Bibliothek. Du wurdest gewarnt.">
+<meta name="robots" content="noindex">
+<meta name="rating" content="adult">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔞</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --st-dark: #171a21; --st-bg: #1b2838; --st-card: #16202d; --st-blue: #66c0f4; --st-green: #a4d007; --st-text: #c7d5e0; }
+  body { background: linear-gradient(180deg, var(--st-dark) 0, var(--st-bg) 400px); color: var(--st-text); }
+  body.locked { overflow: hidden; }
+  body.locked main, body.locked footer { filter: blur(24px); pointer-events: none; user-select: none; }
+
+  /* ---------- FSK-Gate ---------- */
+  .gate {
+    position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 16px;
+    background: rgba(5,5,10,.88); backdrop-filter: blur(6px);
+  }
+  body.locked .gate { display: grid; }
+  .gate-box {
+    background: #111; border: 3px solid #e0001b; border-radius: 18px; max-width: 520px; width: 100%;
+    padding: 34px 26px; text-align: center; box-shadow: 0 0 80px rgba(224,0,27,.4);
+    animation: gate-in .5s cubic-bezier(.2,1.6,.4,1);
+  }
+  @keyframes gate-in { from { transform: scale(.5) rotate(-4deg); opacity: 0; } }
+  .fsk {
+    display: inline-grid; place-items: center; width: 110px; height: 110px; border-radius: 12px;
+    background: #e0001b; color: #fff; font: 900 3.6rem/1 var(--body); position: relative;
+    box-shadow: 0 0 0 5px #fff, 0 0 0 8px #e0001b;
+  }
+  .fsk small { position: absolute; top: 8px; font-size: .65rem; letter-spacing: 2px; font-weight: 800; }
+  .gate h1 { font-family: var(--title); font-size: 2.4rem; letter-spacing: 2px; color: #fff; margin: 26px 0 6px; }
+  .gate p { color: #bbb; margin: 0 0 22px; }
+  .gate-btns { display: flex; flex-direction: column; gap: 12px; }
+  .gate .btn.red { background: #e0001b; color: #fff; }
+
+  /* ---------- Steam-Look ---------- */
+  .wrap { padding: 70px 0 20px; }
+  .topbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 26px; }
+  .topbar h1 { font-family: var(--title); font-size: clamp(2.6rem, 9vw, 4.6rem); margin: 0; letter-spacing: 3px; color: #fff; line-height: 1; }
+  .topbar h1 span { color: #ff3355; }
+  .fsk-mini { background: #e0001b; color: #fff; font-weight: 900; border-radius: 6px; padding: 4px 8px; font-size: .9rem; }
+
+  .profile { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; background: linear-gradient(90deg, rgba(102,192,244,.12), transparent); border-radius: 6px; padding: 18px; }
+  @media (max-width: 640px) { .profile { grid-template-columns: 1fr; text-align: center; } }
+  .pfp { width: 100px; height: 100px; border: 3px solid var(--st-blue); display: grid; place-items: center; font-size: 3.5rem; background: #0e141b; margin-inline: auto; }
+  .pname { font-size: 1.8rem; color: #fff; font-weight: 800; }
+  .online { color: var(--st-blue); font-weight: 600; }
+  .level { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #e0001b; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 1.5rem; margin-inline: auto; animation: lvlglow 1.5s ease-in-out infinite; }
+  @keyframes lvlglow { 50% { box-shadow: 0 0 20px #e0001b; } }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .badges span { background: #0e141b; border: 1px solid #2a475e; padding: 3px 10px; border-radius: 4px; font-size: .8rem; }
+  @media (max-width: 640px) { .badges { justify-content: center; } }
+
+  h2.sec { color: #fff; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; border-bottom: 1px solid #2a475e; padding-bottom: 8px; margin: 44px 0 16px; }
+
+  /* ---------- Spiele ---------- */
+  .games { display: grid; gap: 14px; }
+  .game { display: grid; grid-template-columns: 230px 1fr; gap: 0; background: var(--st-card); border-radius: 4px; overflow: hidden; transition: transform .15s, box-shadow .15s; }
+  .game:hover { transform: translateX(6px); box-shadow: -6px 0 0 var(--st-blue); }
+  @media (max-width: 640px) { .game { grid-template-columns: 1fr; } }
+  .capsule { min-height: 130px; display: grid; place-items: center; font-size: 3.6rem; position: relative; }
+  .capsule .tag { position: absolute; top: 8px; left: 8px; background: #e0001b; color: #fff; font-size: .7rem; font-weight: 800; padding: 2px 6px; border-radius: 3px; }
+  .ginfo { padding: 14px 18px; }
+  .gtitle { color: #fff; font-size: 1.25rem; font-weight: 800; }
+  .gmeta { font-size: .85rem; color: #8f98a0; margin: 2px 0 8px; }
+  .gmeta b { color: var(--st-blue); }
+  .ach { display: flex; align-items: center; gap: 10px; font-size: .85rem; }
+  .ach .abar { flex: 1; max-width: 220px; height: 8px; background: #0e141b; border-radius: 4px; overflow: hidden; }
+  .ach .abar div { height: 100%; background: linear-gradient(90deg, #47bfff, #1a44c2); }
+  .review { margin-top: 10px; background: rgba(0,0,0,.2); border-left: 3px solid var(--st-green); padding: 8px 12px; font-style: italic; font-size: .92rem; }
+  .review.neg { border-left-color: #c35c2c; }
+  .glink { display: inline-block; margin-top: 10px; font-size: .85rem; color: var(--st-blue); text-decoration: none; }
+  .glink:hover { text-decoration: underline; }
+
+  /* ---------- Goon-Stats ---------- */
+  .gstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .gs { background: var(--st-card); border-radius: 4px; padding: 16px; }
+  .gs .v { color: #fff; font-size: 1.6rem; font-weight: 900; }
+  .gs .l { font-size: .85rem; color: #8f98a0; }
+
+  /* ---------- Goon-o-Meter ---------- */
+  .meter-box { text-align: center; }
+  .meter { width: min(360px, 90vw); aspect-ratio: 2 / 1; margin: 0 auto; position: relative; overflow: hidden; }
+  .meter .arc { position: absolute; inset: 0 0 -100% 0; border-radius: 50%; background: conic-gradient(from 270deg, #3dff8a 0 45deg, #ffd23f 45deg 110deg, #e0001b 110deg 180deg, transparent 180deg); }
+  .meter .arc::after { content: ''; position: absolute; inset: 22%; border-radius: 50%; background: var(--st-bg); }
+  .needle { position: absolute; left: 50%; bottom: 0; width: 4px; height: 88%; margin-left: -2px; background: #fff; transform-origin: 50% 100%; transform: rotate(-90deg); transition: transform 2.2s cubic-bezier(.3,1.6,.5,1); border-radius: 2px; }
+  .meter .hub { position: absolute; left: 50%; bottom: -14px; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: #fff; }
+  .meter-label { font-family: var(--title); font-size: 2rem; letter-spacing: 2px; color: #ff3355; margin-top: 10px; opacity: 0; transition: opacity .4s 2s; }
+  .meter-box.go .meter-label { opacity: 1; animation: shake .2s 2.2s 8; }
+  @keyframes shake { 25% { transform: translateX(-4px) rotate(-2deg); } 75% { transform: translateX(4px) rotate(2deg); } }
+
+  /* ---------- Panik-Modus ---------- */
+  .panic-btn { position: fixed; right: 16px; top: 14px; z-index: 50; background: #e0001b; color: #fff; }
+  .boss {
+    position: fixed; inset: 0; z-index: 200; display: none; background: #fff; color: #222; font-family: Calibri, Arial, sans-serif;
+    overflow: auto;
+  }
+  .boss.show { display: block; }
+  .boss .bar { background: #217346; color: #fff; padding: 8px 14px; font-weight: 600; }
+  .boss table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  .boss td, .boss th { border: 1px solid #d4d4d4; padding: 4px 8px; white-space: nowrap; }
+  .boss th { background: #f3f3f3; font-weight: 600; color: #555; }
+  .boss .hint { padding: 10px 14px; color: #888; font-size: 12px; }
+
+  /* ---------- Steam-Achievement-Popup ---------- */
+  .achv {
+    position: fixed; right: 16px; bottom: 16px; z-index: 90; width: min(320px, calc(100vw - 32px));
+    display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 4px;
+    background: linear-gradient(135deg, #2a475e, #171a21); color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    animation: achv 5s forwards;
+  }
+  .achv .ai { font-size: 2.2rem; width: 54px; height: 54px; display: grid; place-items: center; background: #0e141b; border-radius: 4px; flex: none; }
+  .achv small { color: var(--st-blue); display: block; font-size: .72rem; }
+  @keyframes achv { 0% { transform: translateY(150%); } 8%, 90% { transform: translateY(0); } 100% { transform: translateY(150%); } }
+</style>
+</head>
+<body class="locked" data-back>
+
+  <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="gate-box">
+      <div class="fsk" aria-label="FSK 18"><small>FSK</small>18</div>
+      <h1 id="gate-title">⚠️ ACHTUNG ⚠️</h1>
+      <p>Der folgende Bereich enthält Inhalte, die nur für Erwachsene geeignet sind. Und für Big H.<br><br>
+        <strong>Bist du mindestens 18 Jahre alt?</strong></p>
+      <div class="gate-btns">
+        <button class="btn red" id="gate-yes" type="button">🔞 Ja, ich bin 18+ – lass mich rein</button>
+        <a class="btn ghost" id="gate-no" data-sub="" href="https://unoslapis.ch/">🏃 Nein, bring mich hier raus</a>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn panic-btn" id="panic" type="button" title="Oder ESC drücken">🚨 PANIK (ESC)</button>
+
+  <div class="boss" id="boss" aria-hidden="true">
+    <div class="bar">📗 Mappe1 – Excel · Mathe_Hausaufgaben_FINAL_v3.xlsx</div>
+    <table id="boss-table"></table>
+    <div class="hint">Nichts zu sehen hier. Nur Integralrechnung. (ESC oder Klick zum Zurückkehren)</div>
+  </div>
+
+  <main class="wrap" id="main">
+    <div class="topbar">
+      <h1>THE <span>GOON</span> ZONE</h1>
+      <span class="fsk-mini">FSK 18</span>
+    </div>
+
+    <section class="profile">
+      <div class="pfp">🐎</div>
+      <div>
+        <div class="pname">BigH_Hengst69</div>
+        <div class="online">● Aktuell online – im Spiel: „Her New Memory"</div>
+        <div class="badges"><span>👑 Goon Lord</span><span>🥵 Legendärer Grinder</span><span>🧻 Tempo-Grosskunde</span><span>🌙 Nachtschicht</span></div>
+      </div>
+      <div class="level" title="Steam-Level">69</div>
+    </section>
+
+    <h2 class="sec">Library of Shame · Zuletzt gespielt</h2>
+    <section class="games" id="games"></section>
+
+    <h2 class="sec">Goon-Statistiken</h2>
+    <section class="gstats">
+      <div class="gs"><div class="v">7 h 43 min</div><div class="l">Längste Session (Rekord)</div></div>
+      <div class="gs"><div class="v">01.11. · 00:04</div><div class="l">No Nut November gescheitert</div></div>
+      <div class="gs"><div class="v">3 Pack / Woche</div><div class="l">Taschentuch-Verbrauch („Allergie")</div></div>
+      <div class="gs"><div class="v">1'337×</div><div class="l">Browserverlauf gelöscht</div></div>
+      <div class="gs"><div class="v">0</div><div class="l">Mal Gras angefasst</div></div>
+      <div class="gs"><div class="v">100%</div><div class="l">Hengst-Energie</div></div>
+    </section>
+
+    <h2 class="sec">Goon-o-Meter</h2>
+    <section class="meter-box" id="meter-box">
+      <div class="meter">
+        <div class="arc"></div>
+        <div class="needle" id="needle"></div>
+        <div class="hub"></div>
+      </div>
+      <div class="meter-label">MAXIMUM GOON 🥵</div>
+      <button class="btn" id="measure" type="button" style="margin-top:16px">🔄 Neu messen</button>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">Diese Seite ist Satire unter Freunden. Kein Big H wurde beim Erstellen verletzt. Nur seine Würde.</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG: Spiele ====
+    // steam: Suchbegriff für den Steam-Store-Link (null = kein Link)
+    const GAMES = [
+      {
+        title: 'Her New Memory – Hentai Simulator', emoji: '🧠💕', bg: 'linear-gradient(135deg,#ff6fb5,#6a1b9a)', adult: true,
+        hours: 420.7, last: 'Heute, 03:12', ach: [42, 42],
+        review: 'Die Grafik ist wirklich beeindruckend. Ich spiele es nur wegen der Texturen und der Physik-Engine.', positive: true,
+        steam: 'Her New Memory'
+      },
+      {
+        title: 'Freshie Sister', emoji: '💋🌸', bg: 'linear-gradient(135deg,#ffb3d1,#e0001b)', adult: true,
+        hours: 169.4, last: 'Gestern, 02:47', ach: [30, 31],
+        review: 'Ich spiele es wegen der tiefgründigen Story. Wirklich. Hör auf zu lachen.', positive: true,
+        steam: 'Freshie Sister'
+      },
+      {
+        title: 'Overwatch 2', emoji: '🎯', bg: 'linear-gradient(135deg,#f99e1a,#218ffe)', adult: false,
+        hours: 4269.0, last: 'Vor 2 Stunden', ach: [69, 75],
+        review: 'Das einzige Spiel, bei dem er beide Hände benutzt.', positive: true,
+        steam: 'Overwatch 2'
+      },
+      {
+        title: 'Touch Grass Simulator', emoji: '🌱', bg: 'linear-gradient(135deg,#3dff8a,#0b5d2a)', adult: false,
+        hours: 0.1, last: 'Nie wirklich', ach: [0, 50],
+        review: 'Zu schwer. Draussen ist die Grafik komisch und es gibt keinen Pausenknopf. Refund beantragt.', positive: false,
+        steam: null
+      }
+    ];
+
+    // ---------- FSK-18-Gate ----------
+    const KEY = 'bigh-fsk18';
+    function unlock() {
+      document.body.classList.remove('locked');
+      document.getElementById('gate').setAttribute('aria-hidden', 'true');
+      startMeter();
+      setTimeout(() => achievement('🔓', 'Betreten der Goon Zone', 'Du bist jetzt offiziell mitschuldig.'), 1200);
+      setTimeout(() => achievement('⏱️', 'Verdächtig lange hier', '30 Sekunden in der Goon Zone. Hmm. 🤨'), 30000);
+    }
+    let ok = false;
+    try { ok = sessionStorage.getItem(KEY) === '1'; } catch (e) { /* egal */ }
+    if (ok) unlock(); else document.getElementById('gate-yes').focus();
+    document.getElementById('gate-yes').addEventListener('click', () => {
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) { /* egal */ }
+      unlock();
+      BIGH.beep(220, 0.3, 'sawtooth', 0.05);
+    });
+
+    // ---------- Spiele rendern ----------
+    const list = document.getElementById('games');
+    GAMES.forEach((g) => {
+      const el = document.createElement('article');
+      el.className = 'game';
+      el.innerHTML =
+        '<div class="capsule"></div>' +
+        '<div class="ginfo">' +
+          '<div class="gtitle"></div>' +
+          '<div class="gmeta"><b></b> Std. insgesamt · Zuletzt gespielt: <span></span></div>' +
+          '<div class="ach"><span></span><div class="abar"><div></div></div></div>' +
+          '<div class="review"></div>' +
+        '</div>';
+      const cap = el.querySelector('.capsule');
+      cap.style.background = g.bg;
+      cap.textContent = g.emoji;
+      if (g.adult) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = '18+'; cap.appendChild(t); }
+      el.querySelector('.gtitle').textContent = g.title;
+      el.querySelector('.gmeta b').textContent = g.hours.toLocaleString('de-CH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      el.querySelector('.gmeta span').textContent = g.last;
+      el.querySelector('.ach span').textContent = '🏆 ' + g.ach[0] + '/' + g.ach[1] + ' Errungenschaften';
+      el.querySelector('.abar div').style.width = (g.ach[0] / g.ach[1] * 100) + '%';
+      const rv = el.querySelector('.review');
+      rv.textContent = (g.positive ? '👍 Empfohlen – ' : '👎 Nicht empfohlen – ') + '„' + g.review + '"';
+      if (!g.positive) rv.classList.add('neg');
+      if (g.steam) {
+        const a = document.createElement('a');
+        a.className = 'glink';
+        a.href = 'https://store.steampowered.com/search/?term=' + encodeURIComponent(g.steam);
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = '🛒 Im Steam-Store ansehen ↗';
+        el.querySelector('.ginfo').appendChild(a);
+      }
+      list.appendChild(el);
+    });
+
+    // ---------- Goon-o-Meter ----------
+    const needle = document.getElementById('needle');
+    const meterBox = document.getElementById('meter-box');
+    function startMeter() {
+      meterBox.classList.remove('go');
+      needle.style.transform = 'rotate(-90deg)';
+      setTimeout(() => {
+        needle.style.transform = 'rotate(' + BIGH.rand(78, 88) + 'deg)';
+        meterBox.classList.add('go');
+      }, 400);
+    }
+    document.getElementById('measure').addEventListener('click', () => { startMeter(); BIGH.beep(110, 0.5, 'sawtooth', 0.04); });
+
+    // ---------- Steam-Achievement-Popup ----------
+    function achievement(icon, title, desc) {
+      const a = document.createElement('div');
+      a.className = 'achv';
+      a.innerHTML = '<div class="ai"></div><div><small>Errungenschaft freigeschaltet</small><b></b><div class="ad" style="font-size:.85rem;color:#c7d5e0"></div></div>';
+      a.querySelector('.ai').textContent = icon;
+      a.querySelector('b').textContent = title;
+      a.querySelector('.ad').textContent = desc;
+      document.body.appendChild(a);
+      BIGH.beep(988, 0.08, 'sine', 0.05);
+      setTimeout(() => BIGH.beep(1319, 0.15, 'sine', 0.05), 90);
+      setTimeout(() => a.remove(), 5100);
+    }
+
+    // ---------- Panik-Modus (Boss-Key) ----------
+    const boss = document.getElementById('boss');
+    const tbl = document.getElementById('boss-table');
+    (function buildSheet() {
+      const cols = ['', 'A', 'B', 'C', 'D', 'E', 'F'];
+      const rows = [
+        ['Aufgabe', '∫ f(x) dx', 'Grenzen', 'Resultat', 'Kontrolle', 'Notiz'],
+        ['7.1', 'x²', '0 bis 3', '9', '✔', ''],
+        ['7.2', '3x + 2', '1 bis 4', '28.5', '✔', ''],
+        ['7.3', 'sin(x)', '0 bis π', '2', '✔', 'wichtig für Prüfung'],
+        ['7.4', 'eˣ', '0 bis 1', '1.718', '✔', ''],
+        ['7.5', '1/x', '1 bis e', '1', '✔', ''],
+        ['7.6', 'x³ − x', '−1 bis 1', '0', '✔', 'symmetrisch'],
+        ['', '', '', '', '', ''],
+        ['Summe', '', '', '=SUMME(D2:D7)', '', 'Lernen ist toll'],
+      ];
+      const head = document.createElement('tr');
+      cols.forEach((c) => { const th = document.createElement('th'); th.textContent = c; head.appendChild(th); });
+      tbl.appendChild(head);
+      rows.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        const th = document.createElement('th'); th.textContent = i + 1; tr.appendChild(th);
+        r.forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+        tbl.appendChild(tr);
+      });
+    })();
+    const realTitle = document.title;
+    function togglePanic(force) {
+      const show = typeof force === 'boolean' ? force : !boss.classList.contains('show');
+      boss.classList.toggle('show', show);
+      boss.setAttribute('aria-hidden', String(!show));
+      document.title = show ? 'Mathe_Hausaufgaben_FINAL_v3.xlsx – Excel' : realTitle;
+    }
+    document.getElementById('panic').addEventListener('click', () => togglePanic(true));
+    boss.addEventListener('click', () => togglePanic(false));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') togglePanic(); });
+
+    BIGH.emojiBackground(['🥵', '💦', '🍆', '🔞', '🧻', '🐎'], 1500);
+  })();
+  </script>
+</body>
+</html>
