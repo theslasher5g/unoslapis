@@ -1,6 +1,6 @@
 # 🐎 unoslapis.ch – Das Big H Universe
 
-Eine Meme-Website für Big H. Hengst, Nerd, Weeb, Legende.
+Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslapis`). Stecher, Nerd, Goon-König, Legende.
 
 | Domain | Inhalt |
 |---|---|
@@ -9,22 +9,33 @@ Eine Meme-Website für Big H. Hengst, Nerd, Weeb, Legende.
 | `overwatch.unoslapis.ch` | Play-of-the-Game-Intro, Career Profile, Stats, Top Heroes, Clips, Voice-Line-Soundboard (Sprachausgabe), Patch Notes |
 | `b-day.unoslapis.ch` | Countdown bis zum 4. Oktober, XP-Balken, Torte (Kerzen per Klick **oder Mikrofon** auspusten), Happy-Birthday-Melodie, Ballons, Wunschliste |
 | `goon.unoslapis.ch` | FSK-18-Sperre, Steam „Library of Shame", Goon-Statistiken, Goon-o-Meter, **Panik-Knopf/ESC** (wechselt zu einer Fake-Excel-Tabelle) |
+| `news.unoslapis.ch` | **The Big'H Times**: Zeitung zum Umblättern (Eselsohr, Pfeiltasten, Wischen). Katze gerettet, Auto verschenkt, Jagd nach gothischen Schlechties, Rizz-Forschung, Sport, Horoskop, Kleinanzeigen |
+| `girlfriend.unoslapis.ch` | Countdown bis zur ersten Freundin (Ziel: 25.09.2027). Läuft er ab, verlängert er sich automatisch um ein Jahr |
+| `linkedin.unoslapis.ch` | „LinkedOut"-Profil: Alastor Lapis, Senior Goon Engineer. Cringe-Post, Skills zum Bestätigen, Empfehlungen |
+| `nofap.unoslapis.ch` | NoFap-Tracker, der jeden Tag um 00:04 zurückspringt, dazu No-Nut-November-Archiv und Heatmap |
+| `touchgrass.unoslapis.ch` | Tage seit dem letzten Grasskontakt, interaktive Wiese, „nach draussen schicken"-Animation |
+| `waifu.unoslapis.ch` | Waifu-Tierliste mit Drag & Drop (oder antippen), seine „offizielle" Liste, als Text kopieren |
+| `quotes.unoslapis.ch` | Hall of Fame seiner Zitate, Zitat des Tages, Filter, Motivationsposter-Modus |
+| `guestbook.unoslapis.ch` | Gästebuch im 2003-Stil. Einträge werden **wirklich gespeichert** (eigenes Backend) |
 
-Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `hengst`, `goon`, `nani`, `uwu`, `gg` tippen.
+Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `alastor`, `stecher`, `unoslapis`, `goon`, `nani`, `uwu`, `gg` (und ein geheimes Wort) tippen.
 
 ## Aufbau
 
 ```
-Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx (statische Seiten, Routing per Hostname)
+Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx      (alle Seiten, Routing per Hostname)
+                                                     └──► guestbook  (nur guestbook.…/api/*, speichert JSON)
 ```
 
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
+guestbook/             # Gästebuch-Backend (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
   shared/              # style.css, fun.js, 404.html (gilt für alle Subdomains)
-  dashboard/  dating/  overwatch/  b-day/  goon/
+  dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
+  linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
 ```
 
 ## Deploy auf dem VPS
@@ -41,8 +52,11 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook` | `<VPS-IP>` (je ein Eintrag) |
 
-Alternativ ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Falls der VPS eine IPv6-Adresse hat, zusätzlich `AAAA`-Einträge anlegen. Prüfen kannst du das mit `dig +short dating.unoslapis.ch`.
+**Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
+
+> Solange eine Subdomain keinen DNS-Eintrag hat, schreibt Caddy Fehler wie `NXDOMAIN` ins Log und versucht es alle paar Minuten erneut (dabei gegen „acme-staging", das ist normal). Die anderen Subdomains funktionieren trotzdem. Falls der VPS eine IPv6-Adresse hat, zusätzlich `AAAA`-Einträge anlegen. Prüfen kannst du das mit `dig +short dating.unoslapis.ch`.
 
 ### 2. Firewall
 
@@ -58,8 +72,8 @@ Auf dem VPS darf kein anderer Dienst (Apache, nginx, Traefik …) die Ports 80/4
 
 ```bash
 git clone <repo-url> unoslapis && cd unoslapis
-cp .env.example .env          # DOMAIN=unoslapis.ch
-docker compose up -d
+cp .env.example .env          # DOMAIN=unoslapis.ch + GUESTBOOK_ADMIN_TOKEN setzen
+docker compose up -d --build
 docker compose logs -f caddy  # sollte „certificate obtained successfully" zeigen
 ```
 
@@ -69,6 +83,14 @@ Caddy holt die HTTPS-Zertifikate beim ersten Aufruf automatisch. Das Volume `cad
 
 Die Seiten sind nur read-only eingebunden. HTML ändern, `git pull`, fertig, ohne Neustart.
 Nach Änderungen an `Caddyfile` oder `default.conf`: `docker compose restart`.
+Nach Änderungen am Gästebuch-Backend oder neuen Services: `docker compose up -d --build`.
+
+### Gästebuch moderieren
+
+1. In `.env` ein geheimes `GUESTBOOK_ADMIN_TOKEN` setzen (z.B. `openssl rand -hex 24`) und `docker compose up -d`.
+2. `https://guestbook.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint 🗑️, beim ersten Löschen wird nach dem Token gefragt.
+
+Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Einträge liegen im Docker-Volume `guestbook_data` (bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json`.
 
 ## Anpassen
 
@@ -76,15 +98,20 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 
 - **Overwatch** (`sites/overwatch/index.html`): Battletag, Rank, Stats, Heroes, Clips, Voice-Lines
 - **Goon** (`sites/goon/index.html`): Liste `GAMES`, Spiele ergänzen, Stunden, Reviews
-- **B-Day** (`sites/b-day/index.html`): `BIRTH_YEAR = 2004` setzen, dann werden Level und Kerzenzahl automatisch berechnet
+- **B-Day** (`sites/b-day/index.html`): `BIRTH_YEAR` (steht auf 2002) → Level und Kerzenzahl werden automatisch berechnet
+- **Girlfriend** (`sites/girlfriend/index.html`): `TARGET` (Zieldatum), `ROADMAP`, `TIPS`
+- **Quotes** (`sites/quotes/index.html`): Liste `QUOTES`, hier seine **echten** Sprüche eintragen
+- **Touchgrass** (`sites/touchgrass/index.html`): `LAST_TOUCH` (letzter Grasskontakt)
+- **Waifu** (`sites/waifu/index.html`): `CHARS` und seine Liste `PRESET`
+- **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`
 
-### Neue Subdomain hinzufügen (z.B. `waifu`)
+### Neue Subdomain hinzufügen (z.B. `memes`)
 
-1. `caddy/Caddyfile`: `waifu.{$DOMAIN}` in die Liste eintragen
-2. `nginx/default.conf`: in der `map` die Zeile `~^waifu\.  waifu;` ergänzen
-3. `sites/waifu/index.html` anlegen (`/shared/style.css` und `/shared/fun.js` einbinden)
-4. In `sites/shared/fun.js` `'waifu'` in `SUBS` aufnehmen
+1. `caddy/Caddyfile`: `memes.{$DOMAIN}` in die Liste eintragen
+2. `nginx/default.conf`: in der `map` die Zeile `~^memes\.  memes;` ergänzen
+3. `sites/memes/index.html` anlegen (`/shared/style.css` und `/shared/fun.js` einbinden)
+4. In `sites/shared/fun.js` `'memes'` in `SUBS` aufnehmen
 5. DNS-Eintrag anlegen, dann `docker compose restart`
 
 ## Lokal testen

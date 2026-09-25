@@ -61,6 +61,7 @@
   .byline b { font-weight: 700; }
   p.body { text-align: justify; hyphens: auto; -webkit-hyphens: auto; margin: 0 0 10px; font-size: .98rem; line-height: 1.5; }
   p.body:first-of-type::first-letter { font-family: 'Playfair Display', serif; font-weight: 900; float: left; font-size: 3.4rem; line-height: .85; padding: 4px 6px 0 0; }
+  .side p.body::first-letter { float: none; font: inherit; padding: 0; line-height: inherit; }
   .cols-2 { columns: 2 240px; column-gap: 26px; column-rule: 1px solid #999; }
   .cols-3 { columns: 3 200px; column-gap: 22px; column-rule: 1px solid #999; }
   .cols-2 > *, .cols-3 > * { break-inside: avoid-column; }

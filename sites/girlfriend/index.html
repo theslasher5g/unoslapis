@@ -112,7 +112,8 @@
 
     // ==== KONFIG ====
     // Zieldatum für die erste Freundin (Countdown startet am 25.09.2026 -> 1 Jahr)
-    const TARGET = new Date('2027-09-25T00:00:00+02:00');
+    // Format: new Date(Jahr, Monat-1, Tag) – Mitternacht in der Zeitzone des Besuchers
+    const TARGET = new Date(2027, 8, 25);
 
     const ROADMAP = [
       { done: true,  t: 'Eine echte Frau gesehen (auf Twitch)' },
