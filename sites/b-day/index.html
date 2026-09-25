@@ -59,6 +59,16 @@
     box-shadow: 0 0 20px 6px rgba(255,180,0,.45);
   }
   @keyframes flicker { from { transform: scaleY(1) rotate(-2deg); } to { transform: scaleY(1.12) rotate(2deg); } }
+  /* Zahlenkerzen (z.B. „2" und „4") */
+  .candle.num { width: auto; height: auto; background: none; border-radius: 0; padding: 0 2px; }
+  .candle.num::before { left: 50%; margin-left: -1px; top: -6px; }
+  .candle.num .flame { top: -32px; }
+  .candle.num .digit {
+    display: block; font-family: var(--title); font-size: 5.2rem; line-height: .85; letter-spacing: 0;
+    background: repeating-linear-gradient(45deg, #fff 0 8px, var(--pink) 8px 16px);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-text-stroke: 2px #fff; filter: drop-shadow(0 3px 0 rgba(0,0,0,.35));
+  }
   .candle.out .flame { display: none; }
   .candle.out::after { content: '💨'; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; animation: smoke 1s forwards; }
   @keyframes smoke { to { transform: translate(-50%, -30px); opacity: 0; } }
@@ -233,24 +243,42 @@
     const candleBox = document.getElementById('candles');
     const wish = document.getElementById('wish');
     const age = BIRTH_YEAR ? new Date().getFullYear() - BIRTH_YEAR : 0;
-    const candleCount = age > 0 ? Math.min(age, 30) : DEFAULT_CANDLES;
+    // Ab 10 Jahren: Zahlenkerzen (z.B. „2" und „4"), sonst normale Kerzen
+    const digits = age >= 10 ? String(age).split('') : null;
+    const candleCount = age > 0 ? Math.min(age, 9) : DEFAULT_CANDLES;
+    const cake = document.querySelector('.cake');
     let candles = [];
+
+    // Platz über der Torte an die Kerzenhöhe anpassen (Flammen inklusive)
+    function fitCake() {
+      cake.style.marginTop = (candleBox.offsetHeight + 50) + 'px';
+    }
 
     function buildCandles() {
       candleBox.innerHTML = '';
       wish.classList.remove('show');
       candles = [];
-      for (let i = 0; i < candleCount; i++) {
+      const list = digits || Array.from({ length: candleCount }, (_, i) => String(i + 1));
+      list.forEach((label) => {
         const c = document.createElement('button');
         c.type = 'button';
-        c.className = 'candle';
-        c.setAttribute('aria-label', 'Kerze ' + (i + 1) + ' auspusten');
+        c.className = digits ? 'candle num' : 'candle';
+        c.setAttribute('aria-label', 'Kerze ' + label + ' auspusten');
         c.innerHTML = '<span class="flame"></span>';
+        if (digits) {
+          const d = document.createElement('span');
+          d.className = 'digit';
+          d.textContent = label;
+          c.appendChild(d);
+        }
         c.addEventListener('click', () => blowOut(c));
         candleBox.appendChild(c);
         candles.push(c);
-      }
+      });
+      fitCake();
     }
+    window.addEventListener('resize', fitCake);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCake);
     function blowOut(c) {
       if (c.classList.contains('out')) return;
       c.classList.add('out');
