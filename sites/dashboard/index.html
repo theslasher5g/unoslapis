@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Big H HQ – unoslapis.ch</title>
-<meta name="description" content="Das offizielle Hauptquartier von Big H. Hengst. Nerd. Legende.">
+<meta name="description" content="Das offizielle Hauptquartier von Big H alias Alastor Lapis. Stecher. Nerd. Goon-König. Legende.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐎</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap">
 <style>
   body {
     background:
@@ -32,6 +33,8 @@
   @keyframes shine { to { background-position: 300% 0; } }
   .tagline { font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 800; margin: 10px 0 4px; }
   .tagline b { color: var(--pink); }
+  .aka { margin: 0; color: var(--muted); font-weight: 600; }
+  .aka b { color: var(--cyan); }
   .status {
     display: inline-flex; align-items: center; gap: 10px; margin-top: 14px;
     background: var(--card); border: 1px solid rgba(255,255,255,.1); padding: 10px 18px; border-radius: 999px;
@@ -74,6 +77,11 @@
   .portal h3 { font-family: var(--title); font-size: 2rem; letter-spacing: 1px; margin: 8px 0 4px; }
   .portal .url { font-family: var(--pixel); font-size: .6rem; color: var(--yellow); word-break: break-all; }
   .portal p { margin: 10px 0 0; color: #ddd6ff; }
+  .portal.wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; gap: 6px 22px; align-items: center; }
+  .portal.wide .ico { font-size: 4.4rem; grid-row: span 3; }
+  .portal.wide h3 { font-family: 'UnifrakturMaguntia', var(--title); font-size: clamp(2rem, 6vw, 3rem); letter-spacing: 0; margin: 0; }
+  @media (max-width: 560px) { .portal.wide { grid-template-columns: 1fr; } .portal.wide .ico { grid-row: auto; } }
+  h3.quest { font-family: var(--pixel); font-size: .8rem; color: var(--muted); letter-spacing: 1px; margin: 34px 0 14px; text-align: center; font-weight: 400; }
   .badge {
     position: absolute; top: 14px; right: 14px; z-index: 2;
     background: var(--pink); color: #fff; font-weight: 800; font-size: .75rem; padding: 4px 10px; border-radius: 999px;
@@ -122,14 +130,15 @@
 </head>
 <body>
   <div class="ticker" aria-hidden="true"><span>
-    +++ EILMELDUNG: Big H erneut beim Goonen erwischt +++ Wissenschaftler bestätigen: Big H ist ein Hengst +++ "Nur noch eine Folge" – Big H, vor 14 Folgen +++ Overwatch-Server überlastet, weil Big H online ist +++ Gras meldet: "Wurde seit 2019 nicht berührt" +++ Anime-Watchlist hat eigene Postleitzahl bekommen +++ IT'S OVER 9000!!! +++ Omae wa mou shindeiru +++
+    +++ EILMELDUNG: Big H erneut beim Goonen erwischt +++ Wissenschaftler bestätigen: Big H ist ein Sex-Gott +++ "Nur noch eine Folge" – Big H, vor 14 Folgen +++ Overwatch-Server überlastet, weil Big H online ist +++ Gras meldet: "Wurde seit 2019 nicht berührt" +++ Anime-Watchlist hat eigene Postleitzahl bekommen +++ IT'S OVER 9000!!! +++ Omae wa mou shindeiru +++
   </span></div>
 
   <main class="wrap">
     <section class="hero">
       <div class="crown" aria-hidden="true">👑</div>
       <h1 class="big-h" id="bigh" aria-label="Big H"><span>B</span><span>I</span><span>G</span>&nbsp;<span>H</span></h1>
-      <p class="tagline">Der <b>Hengst</b>. Der <b>Nerd</b>. Der <b>Weeb</b>. Die <b>Legende</b>.</p>
+      <p class="tagline">Der <b>Stecher</b>. Der <b>Nerd</b>. Der <b>Goon-König</b>. Die <b>Legende</b>.</p>
+      <p class="aka">a.k.a. <b>Alastor Lapis</b> · Steam & Valorant: <b>unoslapis</b></p>
       <div class="status" role="status"><span class="dot"></span><span id="status-text">Status: lädt...</span></div>
     </section>
 
@@ -141,7 +150,7 @@
       </div>
       <div class="card stat">
         <div class="num">100%</div>
-        <div class="lbl">Hengst-Faktor 🐎</div>
+        <div class="lbl">Sex-Gott-Faktor 😈</div>
       </div>
       <div class="card stat">
         <div class="num">∞</div>
@@ -155,6 +164,13 @@
 
     <h2 class="section">Wähle dein Abenteuer<small>Jede Subdomain ein neues Kapitel der Big-H-Saga</small></h2>
     <section class="portals">
+      <a class="portal wide" href="https://news.unoslapis.ch/" data-sub="news" style="--c1:#f4efe1;--c2:#6b5a3e">
+        <span class="badge">📰 EILMELDUNG</span>
+        <span class="ico">📰</span>
+        <h3>The Big'H Times</h3>
+        <div class="url">news.unoslapis.ch</div>
+        <p>Die seriöseste Zeitung der Welt: Alastor Lapis rettet Katze aus brennendem Haus, verschenkt Autos und jagt gothische Schlechties. Zum Umblättern!</p>
+      </a>
       <a class="portal" href="https://dating.unoslapis.ch/" data-sub="dating" style="--c1:#ff3e9a;--c2:#ff9ad1">
         <span class="badge">❤️ SINGLE</span>
         <span class="ico">💌</span>
@@ -174,7 +190,7 @@
         <span class="ico">🎂</span>
         <h3>B-Day</h3>
         <div class="url">b-day.unoslapis.ch</div>
-        <p>Countdown, Torte, Kerzen auspusten. Der Hengst wird ein Jahr älter.</p>
+        <p>Countdown, Torte, Kerzen auspusten. Der Goon-König wird ein Jahr älter.</p>
       </a>
       <a class="portal" href="https://goon.unoslapis.ch/" data-sub="goon" style="--c1:#e0001b;--c2:#3a0010">
         <span class="badge">🔞 FSK 18</span>
@@ -182,6 +198,59 @@
         <h3>Goon Zone</h3>
         <div class="url">goon.unoslapis.ch</div>
         <p>Die Steam-Library of Shame. Betreten auf eigene Gefahr.</p>
+      </a>
+    </section>
+
+    <h3 class="quest">— NEBENQUESTS —</h3>
+    <section class="portals">
+      <a class="portal" href="https://girlfriend.unoslapis.ch/" data-sub="girlfriend" style="--c1:#ff3e9a;--c2:#4a1030">
+        <span class="badge">⏳ 1 JAHR</span>
+        <span class="ico">💔</span>
+        <h3>Operation Freundin</h3>
+        <div class="url">girlfriend.unoslapis.ch</div>
+        <p>Countdown bis zur ersten Freundin. Verlängert sich automatisch.</p>
+      </a>
+      <a class="portal" href="https://linkedin.unoslapis.ch/" data-sub="linkedin" style="--c1:#0a66c2;--c2:#7a0f3a">
+        <span class="badge">💼 #OPENTOGOON</span>
+        <span class="ico">💼</span>
+        <h3>LinkedOut</h3>
+        <div class="url">linkedin.unoslapis.ch</div>
+        <p>Alastor Lapis, Senior Goon Engineer. Ich bin demütig und dankbar.</p>
+      </a>
+      <a class="portal" href="https://nofap.unoslapis.ch/" data-sub="nofap" style="--c1:#e0001b;--c2:#120a14">
+        <span class="badge">🚨 STREAK: 0</span>
+        <span class="ico">🚫</span>
+        <h3>NoFap Tracker</h3>
+        <div class="url">nofap.unoslapis.ch</div>
+        <p>Rückfall täglich um 00:04. Zuverlässig wie ein Uhrwerk.</p>
+      </a>
+      <a class="portal" href="https://touchgrass.unoslapis.ch/" data-sub="touchgrass" style="--c1:#3dff8a;--c2:#1f7a33">
+        <span class="badge">🌱 SEIT 2019</span>
+        <span class="ico">🌱</span>
+        <h3>Touch Grass</h3>
+        <div class="url">touchgrass.unoslapis.ch</div>
+        <p>Tage seit dem letzten Grasskontakt. Die Zahl wird nur grösser.</p>
+      </a>
+      <a class="portal" href="https://waifu.unoslapis.ch/" data-sub="waifu" style="--c1:#9b5cff;--c2:#ff3e9a">
+        <span class="badge">🏆 S-TIER</span>
+        <span class="ico">🏆</span>
+        <h3>Waifu Tier List</h3>
+        <div class="url">waifu.unoslapis.ch</div>
+        <p>Seine offizielle Liste – oder bau deine eigene.</p>
+      </a>
+      <a class="portal" href="https://quotes.unoslapis.ch/" data-sub="quotes" style="--c1:#ffd23f;--c2:#ff5e62">
+        <span class="badge">📜 WEISHEIT</span>
+        <span class="ico">📜</span>
+        <h3>Hall of Fame</h3>
+        <div class="url">quotes.unoslapis.ch</div>
+        <p>Die grössten Zitate des Alastor Lapis. Als Motivationsposter.</p>
+      </a>
+      <a class="portal" href="https://guestbook.unoslapis.ch/" data-sub="guestbook" style="--c1:#2de2e6;--c2:#000080">
+        <span class="badge">✍️ TRAG DICH EIN</span>
+        <span class="ico">📖</span>
+        <h3>Gästebuch</h3>
+        <div class="url">guestbook.unoslapis.ch</div>
+        <p>Wie 2003. Hinterlass Big H eine Nachricht – sie wird gespeichert!</p>
       </a>
     </section>
 
@@ -244,7 +313,7 @@
     <div>Besucher seit 2026:</div>
     <div class="counter" id="counter" aria-label="Besucherzähler"></div>
     <p>Made with ❤️, Monster Energy & zu wenig Schlaf · unoslapis.ch<br>
-    <small>Psst… probier mal ↑ ↑ ↓ ↓ ← → ← → B A – oder tipp „hengst"</small></p>
+    <small>Psst… probier mal ↑ ↑ ↓ ↓ ← → ← → B A – oder tipp „alastor"</small></p>
   </footer>
 
   <script src="/shared/fun.js"></script>
@@ -262,7 +331,7 @@
       '🟢 Online – am Goonen',
       '🎮 In der Ranked Queue (seit 4 Stunden)',
       '📺 Schaut Folge 847 von irgendwas',
-      '🐎 Macht Hengst-Sachen',
+      '📻 Alastor Lapis betritt den Raum',
       '😴 Schläft nicht. Hat er nie.',
       '🍜 Isst Instant-Ramen wie ein echter Otaku',
       '💬 „Bin in 5 Min on" (Lüge)',

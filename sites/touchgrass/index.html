@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🌱 Touch Grass Tracker – Alastor Lapis</title>
+<meta name="description" content="Tage, seit Big H zuletzt Gras berührt hat. Die Zahl wird nur grösser.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: linear-gradient(180deg, #5ec8ff 0%, #a9e4ff 45%, #d9f5ff 70%); color: #0d2a14; min-height: 100vh; }
+  .sun { position: absolute; top: 40px; right: 8%; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle, #fff6a8, #ffd23f 60%, #ffb000); box-shadow: 0 0 80px 30px rgba(255,210,63,.6); animation: sunpulse 4s ease-in-out infinite; z-index: 1; }
+  .sun::after { content: '😡'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 3rem; }
+  @keyframes sunpulse { 50% { transform: scale(1.08); } }
+  .cloud { position: absolute; font-size: 4rem; opacity: .9; animation: drift linear infinite; z-index: 1; }
+  @keyframes drift { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
+
+  .wrap { padding: 70px 0 0; text-align: center; }
+  .label { font-weight: 800; font-size: clamp(1rem, 3vw, 1.3rem); background: rgba(255,255,255,.7); display: inline-block; padding: 6px 16px; border-radius: 999px; }
+  .days { font-family: var(--title); font-size: clamp(5rem, 24vw, 13rem); line-height: .9; color: #fff; text-shadow: 0 6px 0 #1f7a33, 0 12px 30px rgba(0,0,0,.25); margin: 10px 0 0; transition: transform .3s; }
+  .days.zero { color: #3dff8a; transform: scale(1.1); }
+  .days-sub { font-weight: 800; font-size: 1.2rem; }
+  .last { margin-top: 6px; font-weight: 600; opacity: .8; }
+
+  .btn-row { margin: 22px 0 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn.green { background: #3dff8a; }
+
+  .meadow { position: relative; height: 260px; margin-top: 20px; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+  .actor { position: absolute; bottom: 60px; left: 6%; font-size: 3.6rem; z-index: 3; transition: left 2s linear; }
+  .actor .bubble { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fff; border-radius: 12px; padding: 4px 10px; font: 800 .95rem var(--body); color: #000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+  .actor .bubble.show { display: block; }
+  .pc { position: absolute; bottom: 60px; left: 1%; font-size: 3rem; z-index: 2; }
+
+  .ground { background: linear-gradient(180deg, #2f9e44, #1f7a33 40%, #155724); color: #eaffef; padding: 30px 0 10px; position: relative; z-index: 2; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .gcard { background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; padding: 18px; text-align: left; }
+  .gcard .v { font-family: var(--title); font-size: 2.4rem; line-height: 1; color: #fff; }
+  .gcard .l { font-weight: 600; opacity: .85; }
+  h2.sec { font-family: var(--title); letter-spacing: 2px; font-size: clamp(2rem, 6vw, 2.8rem); margin: 40px 0 14px; color: #fff; }
+  .ach { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; text-align: left; }
+  .ach div { background: rgba(0,0,0,.3); border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
+  .ach div.locked { opacity: .55; filter: grayscale(1); }
+  .ach .i { font-size: 1.8rem; flex: none; }
+  .ach small { display: block; opacity: .8; }
+  .ground .bigh-footer { color: #cfeed6; }
+</style>
+</head>
+<body data-back>
+  <div class="sun" aria-hidden="true"></div>
+  <div class="cloud" style="top:120px;animation-duration:60s" aria-hidden="true">☁️</div>
+  <div class="cloud" style="top:40px;animation-duration:85s;animation-delay:-30s" aria-hidden="true">☁️</div>
+
+  <main class="wrap">
+    <div class="label">🌱 Tage seit Alastor Lapis zuletzt Gras berührt hat</div>
+    <div class="days" id="days">0</div>
+    <div class="days-sub" id="days-sub">Tage</div>
+    <div class="last" id="last"></div>
+    <div class="btn-row">
+      <button class="btn green" id="touch" type="button">🌱 Big H nach draussen schicken</button>
+    </div>
+
+    <div class="meadow" id="meadow">
+      <div class="pc" aria-hidden="true">🖥️</div>
+      <div class="actor" id="actor" aria-hidden="true">🧍<span class="bubble" id="bubble"></span></div>
+      <canvas id="grass" aria-label="Wiese – fahr mit der Maus drüber"></canvas>
+    </div>
+  </main>
+
+  <section class="ground">
+    <div class="wrap" style="padding-top:0">
+      <div class="cards">
+        <div class="gcard"><div class="v">2%</div><div class="l">Vitamin-D-Spiegel</div></div>
+        <div class="gcard"><div class="v">🪟</div><div class="l">Sonnenlicht zuletzt gesehen: durchs Fenster</div></div>
+        <div class="gcard"><div class="v">3 m</div><div class="l">Weiteste Strecke von seinem PC (zum Kühlschrank)</div></div>
+        <div class="gcard"><div class="v">🔴</div><div class="l">Gefahrenstufe „Draussen" laut Big H</div></div>
+      </div>
+
+      <h2 class="sec">Outdoor-Achievements</h2>
+      <div class="ach" id="ach"></div>
+      <footer class="bigh-footer">Fahr mit der Maus übers Gras. Das ist näher dran, als er je sein wird.</footer>
+    </div>
+  </section>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const LAST_TOUCH = new Date('2019-06-12T14:37:00+02:00'); // Das letzte Mal. Angeblich.
+
+    const ACH = [
+      { i: '🚪', t: 'Haustür geöffnet', d: 'Für den Pizzaboten zählt es nicht.', ok: true },
+      { i: '🌤️', t: 'Tageslicht überlebt', d: '5 Minuten draussen ohne zu zischen', ok: false },
+      { i: '🌱', t: 'Gras berührt', d: 'Mit der Hand. Echtes Gras. Kein Kunstrasen.', ok: false },
+      { i: '🚶', t: '10\'000 Schritte', d: 'An einem Tag. Nicht in einem Jahr.', ok: false },
+      { i: '🏔️', t: 'Echter Schweizer', d: 'Einen Berg gesehen (nicht als Wallpaper)', ok: false },
+      { i: '🖥️', t: 'PC-Treue', d: '1000 Tage am Stück drinnen', ok: true }
+    ];
+
+    // ---------- Zähler ----------
+    const daysEl = document.getElementById('days');
+    const subEl = document.getElementById('days-sub');
+    let frozen = false;
+    function daysSince() { return Math.floor((Date.now() - LAST_TOUCH) / 86400000); }
+    function renderDays() {
+      if (frozen) return;
+      const d = daysSince();
+      daysEl.textContent = d.toLocaleString('de-CH');
+      subEl.textContent = d === 1 ? 'Tag' : 'Tage';
+    }
+    renderDays();
+    setInterval(renderDays, 60000);
+    document.getElementById('last').textContent = 'Letzter Kontakt: ' + LAST_TOUCH.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }) + ' (Zeugen unbestätigt)';
+
+    // ---------- Big H nach draussen schicken ----------
+    const actor = document.getElementById('actor');
+    const bubble = document.getElementById('bubble');
+    const touchBtn = document.getElementById('touch');
+    const say = (t) => { bubble.textContent = t; bubble.classList.add('show'); };
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const OUTCOMES = [
+      ['😱 ES BRENNT!!!', '🔥 Die Sonne hat ihn angegriffen. Rückzug.'],
+      ['🤢 Es ist… nass?', '💧 Morgentau. Er hat geschrien.'],
+      ['🐝 EINE BIENE', '🐝 Eine Biene. Mission abgebrochen.'],
+      ['😳 Da sind Menschen', '👥 Soziale Interaktion befürchtet. Flucht.']
+    ];
+    let running = false;
+    touchBtn.addEventListener('click', async () => {
+      if (running) return;
+      running = true;
+      touchBtn.disabled = true;
+      const [shout, result] = BIGH.pick(OUTCOMES);
+      actor.style.transitionDuration = '2s';
+      say('😰 Okay… ich geh raus…');
+      actor.style.left = '55%';
+      await wait(2100);
+      actor.textContent = '🧎';
+      actor.appendChild(bubble);
+      say('🤏 *berührt Gras*');
+      frozen = true;
+      daysEl.textContent = '0';
+      subEl.textContent = 'Tage 🎉';
+      daysEl.classList.add('zero');
+      BIGH.confettiRain(['🌱', '🌿', '🍀', '🎉'], 40);
+      await wait(1600);
+      actor.textContent = '🏃';
+      actor.appendChild(bubble);
+      say(shout);
+      BIGH.beep(900, 0.3, 'sawtooth', 0.06);
+      actor.style.transitionDuration = '.7s';
+      actor.style.left = '6%';
+      await wait(900);
+      actor.textContent = '🧍';
+      actor.appendChild(bubble);
+      bubble.classList.remove('show');
+      BIGH.toast(result);
+      await wait(1200);
+      BIGH.toast('📋 Fehlalarm: Es war Kunstrasen. Zähler wiederhergestellt.');
+      frozen = false;
+      daysEl.classList.remove('zero');
+      renderDays();
+      running = false;
+      touchBtn.disabled = false;
+    });
+
+    // ---------- Achievements ----------
+    const ach = document.getElementById('ach');
+    ACH.forEach((a) => {
+      const d = document.createElement('div');
+      if (!a.ok) d.className = 'locked';
+      d.innerHTML = '<span class="i"></span><span><b></b><small></small></span>';
+      d.querySelector('.i').textContent = a.ok ? a.i : '🔒';
+      d.querySelector('b').textContent = a.t;
+      d.querySelector('small').textContent = a.d;
+      ach.appendChild(d);
+    });
+
+    // ---------- Interaktives Gras (Canvas) ----------
+    const canvas = document.getElementById('grass');
+    const ctx = canvas.getContext('2d');
+    let blades = [], W = 0, H = 0, dpr = 1;
+    const pointer = { x: -9999, y: -9999 };
+
+    function setup() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      blades = [];
+      const n = Math.floor(W / 4);
+      for (let i = 0; i < n; i++) {
+        blades.push({
+          x: (i / n) * W + BIGH.rand(-2, 2),
+          h: BIGH.rand(H * 0.35, H * 0.8),
+          w: BIGH.rand(2, 4.5),
+          phase: BIGH.rand(0, Math.PI * 2),
+          bend: 0,
+          c: 'hsl(' + Math.round(BIGH.rand(95, 135)) + ',' + Math.round(BIGH.rand(55, 75)) + '%,' + Math.round(BIGH.rand(28, 45)) + '%)'
+        });
+      }
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#2f9e44';
+      ctx.fillRect(0, H - 8, W, 8);
+      for (const b of blades) {
+        const wind = BIGH.reduced ? 0 : Math.sin(t / 900 + b.phase) * 6;
+        const dx = b.x - pointer.x;
+        const dy = (H - b.h / 2) - pointer.y;
+        const dist = Math.hypot(dx, dy);
+        const target = dist < 90 ? (dx > 0 ? 1 : -1) * (90 - dist) * 0.9 : 0;
+        b.bend += (target - b.bend) * 0.15;
+        const tipX = b.x + wind + b.bend;
+        const tipY = H - b.h + Math.abs(b.bend) * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(b.x - b.w, H);
+        ctx.quadraticCurveTo(b.x + (wind + b.bend) * 0.3, H - b.h * 0.5, tipX, tipY);
+        ctx.quadraticCurveTo(b.x + (wind + b.bend) * 0.3 + b.w * 0.5, H - b.h * 0.5, b.x + b.w, H);
+        ctx.fillStyle = b.c;
+        ctx.fill();
+      }
+    }
+
+    function loop(t) {
+      if (!document.hidden) draw(t);
+      requestAnimationFrame(loop);
+    }
+
+    function setPointer(clientX, clientY) {
+      const r = canvas.getBoundingClientRect();
+      pointer.x = clientX - r.left;
+      pointer.y = clientY - r.top;
+    }
+    const meadow = document.getElementById('meadow');
+    meadow.addEventListener('pointermove', (e) => setPointer(e.clientX, e.clientY));
+    meadow.addEventListener('pointerdown', (e) => setPointer(e.clientX, e.clientY));
+    meadow.addEventListener('pointerleave', () => { pointer.x = pointer.y = -9999; });
+    let touchedOnce = false;
+    meadow.addEventListener('pointerdown', () => {
+      if (touchedOnce) return;
+      touchedOnce = true;
+      BIGH.toast('🌱 Du hast gerade mehr Gras berührt als Big H seit ' + LAST_TOUCH.getFullYear() + '.');
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(setup, 150); });
+    setup();
+    requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

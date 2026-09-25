@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const SUBS = ['www', 'dating', 'overwatch', 'b-day', 'goon'];
+  const SUBS = ['www', 'dating', 'overwatch', 'b-day', 'goon', 'girlfriend', 'linkedin', 'nofap', 'guestbook', 'touchgrass', 'waifu', 'quotes', 'news'];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Basis-Domain aus aktuellem Host ableiten (funktioniert auch lokal mit *.localhost)
@@ -128,6 +128,9 @@
   const WORDS = {
     goon: () => toast('👀 Ertappt. Wir sehen dich, Goon-Lord.'),
     hengst: () => { gallop(); toast('🐎 HENGST DETECTED'); },
+    stecher: () => toast('😏 Der Stecher ist online.'),
+    alastor: () => toast('📻 Alastor Lapis hat den Raum betreten…'),
+    unoslapis: () => toast('🎮 unoslapis ist jetzt online (Steam & Valorant)'),
     bigh: () => toast('👑 All hail Big H'),
     nani: () => toast('NANI?!?! 😱'),
     gg: () => toast('gg ez no re 😎'),

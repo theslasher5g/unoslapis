@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alastor Lapis – Senior Goon Engineer | LinkedOut</title>
+<meta name="description" content="Das professionelle Profil von Alastor Lapis alias Big H. Offen für neue Herausforderungen (und Goth-Baddies).">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💼</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --li-bg: #f4f2ee; --li-card: #fff; --li-blue: #0a66c2; --li-text: #1d1d1d; --li-muted: #666; --li-line: #e0dfdc; }
+  body { background: var(--li-bg); color: var(--li-text); }
+  .bigh-back { background: rgba(0,0,0,.75); }
+
+  .nav { background: #fff; border-bottom: 1px solid var(--li-line); position: sticky; top: 0; z-index: 40; }
+  .nav .in { width: min(1100px, 100% - 32px); margin: 0 auto; display: flex; align-items: center; gap: 12px; height: 54px; padding-left: 130px; }
+  .logo { background: var(--li-blue); color: #fff; font-weight: 900; border-radius: 4px; padding: 2px 7px; font-size: 1.1rem; }
+  .logo-txt { font-weight: 800; color: var(--li-blue); }
+  .search { flex: 1; max-width: 280px; background: #edf3f8; border-radius: 4px; padding: 7px 12px; color: var(--li-muted); font-size: .9rem; }
+  @media (max-width: 640px) { .nav .in { padding-left: 120px; } .search { display: none; } }
+
+  .layout { width: min(1100px, 100% - 32px); margin: 22px auto 0; display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .box { background: var(--li-card); border: 1px solid var(--li-line); border-radius: 10px; padding: 22px; margin-bottom: 14px; }
+  .box h2 { margin: 0 0 14px; font-size: 1.25rem; }
+
+  .top { padding: 0; overflow: hidden; }
+  .banner { height: 170px; background: linear-gradient(120deg, #1a0b1f, #7a0f3a 45%, #e0001b 75%, #ffb000); position: relative; }
+  .banner::after { content: '📻 GOON · GRIND · GLOW-UP 📻'; position: absolute; right: 18px; bottom: 14px; color: rgba(255,255,255,.85); font-weight: 900; letter-spacing: 2px; font-size: .8rem; }
+  .avatar { width: 150px; height: 150px; border-radius: 50%; border: 5px solid #fff; background: radial-gradient(circle at 40% 35%, #ff4f6d, #6b0020); display: grid; place-items: center; font-size: 5rem; margin: -84px 0 0 24px; position: relative; }
+  .avatar .open { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); background: #057642; color: #fff; font-size: .65rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .top .info { padding: 10px 24px 22px; }
+  .name { font-size: 1.7rem; font-weight: 800; margin: 0; }
+  .name small { font-size: 1rem; color: var(--li-muted); font-weight: 400; }
+  .headline { font-size: 1.05rem; margin: 4px 0 6px; }
+  .loc { color: var(--li-muted); font-size: .9rem; }
+  .loc a { font-weight: 700; text-decoration: none; color: var(--li-blue); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .li-btn { border-radius: 999px; padding: 7px 18px; font: 700 .95rem var(--body); cursor: pointer; border: 1px solid var(--li-blue); background: #fff; color: var(--li-blue); }
+  .li-btn.primary { background: var(--li-blue); color: #fff; }
+  .li-btn:hover { filter: brightness(.95); background-color: #eaf3fc; }
+  .li-btn.primary:hover { background: #004182; }
+  .opento { margin-top: 16px; background: #edf3f8; border-radius: 8px; padding: 12px 14px; font-size: .92rem; }
+  .opento b { display: block; }
+
+  .post-head { display: flex; gap: 10px; align-items: center; }
+  .mini-av { width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #ff4f6d, #6b0020); display: grid; place-items: center; font-size: 1.6rem; flex: none; }
+  .post-head .meta { font-size: .8rem; color: var(--li-muted); }
+  .post-body { margin: 12px 0; white-space: pre-line; font-size: .98rem; }
+  .post-img { border-radius: 8px; background: linear-gradient(135deg, #111, #333); color: #fff; text-align: center; padding: 30px 10px; font-size: 3.4rem; }
+  .post-img small { display: block; font-size: .85rem; color: #ccc; margin-top: 6px; }
+  .reactions { display: flex; justify-content: space-between; color: var(--li-muted); font-size: .85rem; padding: 10px 0; border-bottom: 1px solid var(--li-line); }
+  .react-btns { display: flex; justify-content: space-around; padding-top: 6px; flex-wrap: wrap; }
+  .react-btns button { background: none; border: 0; padding: 10px 12px; border-radius: 6px; font: 700 .9rem var(--body); color: var(--li-muted); cursor: pointer; }
+  .react-btns button:hover { background: #f3f2ef; }
+  .react-btns button.on { color: var(--li-blue); }
+
+  .item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--li-line); }
+  .item:last-child { border-bottom: 0; }
+  .logo-sq { width: 52px; height: 52px; border-radius: 6px; background: #eef3f8; display: grid; place-items: center; font-size: 1.7rem; flex: none; }
+  .item b { display: block; }
+  .item .sub { font-size: .9rem; }
+  .item .dt { font-size: .85rem; color: var(--li-muted); }
+  .item ul { margin: 6px 0 0; padding-left: 18px; font-size: .92rem; }
+
+  .skill { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--li-line); }
+  .skill:last-child { border-bottom: 0; }
+  .skill .cnt { font-size: .85rem; color: var(--li-muted); }
+
+  .reco { border-left: 3px solid var(--li-line); padding: 4px 0 4px 14px; margin-bottom: 16px; font-size: .95rem; }
+  .reco .by { font-weight: 700; margin-top: 6px; font-size: .88rem; }
+  .reco .by span { font-weight: 400; color: var(--li-muted); }
+
+  .side .viewer { display: flex; gap: 10px; align-items: center; padding: 8px 0; font-size: .92rem; }
+  .side .viewer .e { font-size: 1.6rem; }
+  .side .stat { font-size: 1.6rem; font-weight: 900; color: var(--li-blue); }
+  .footer-note { text-align: center; color: var(--li-muted); font-size: .8rem; padding: 26px 16px 40px; }
+</style>
+</head>
+<body data-back>
+  <div class="nav"><div class="in"><span class="logo">out</span><span class="logo-txt">LinkedOut</span><div class="search">🔍 Suche: „Goth Baddies in meiner Nähe"</div></div></div>
+
+  <div class="layout">
+    <main>
+      <section class="box top">
+        <div class="banner"></div>
+        <div class="avatar">😈<span class="open">#OPENTOGOON</span></div>
+        <div class="info">
+          <h1 class="name">Alastor Lapis <small>(er/Big H) · 1.</small></h1>
+          <div class="headline">Senior Goon Engineer 🥵 | Stecher | Chief Rizz Officer | Anime-Enthusiast | Ex-Champion (laut ihm) | Steam & Valorant: <b>unoslapis</b></div>
+          <div class="loc">Schweiz · <a href="#" id="contacts">500+ Kontakte</a></div>
+          <div class="actions">
+            <button class="li-btn primary" id="connect" type="button">➕ Vernetzen</button>
+            <button class="li-btn" id="msg" type="button">✉️ Nachricht</button>
+            <button class="li-btn" id="more" type="button">Mehr</button>
+          </div>
+          <div class="opento"><b>Offen für:</b>Eine Freundin · Goth-Baddies · Sponsoring durch Monster Energy · Remote-Goonen (100%)</div>
+        </div>
+      </section>
+
+      <section class="box">
+        <h2>Info</h2>
+        <p style="margin:0">🚀 Leidenschaftlicher Goon-König mit über 10 Jahren Erfahrung in Nachtschichten, Ranked-Grinding und Anime-Binge-Watching. Ich glaube an <b>Work-Life-Balance</b>: 100% Work (Goonen), 0% Life.<br><br>
+        Bekannt als „Sex-Gott von Zürich" (Quelle: ich). Ich verbinde Rizz mit Datenanalyse, um Synergien zwischen Discord und der echten Welt zu schaffen. Die echte Welt hat noch nicht geantwortet.<br><br>
+        💬 „Ich bin kein Gamer. Ich bin ein Lifestyle."</p>
+      </section>
+
+      <section class="box">
+        <h2>Aktivitäten</h2>
+        <div class="post-head">
+          <div class="mini-av">😈</div>
+          <div><b>Alastor Lapis</b><div class="meta">Senior Goon Engineer · 3 Std. · 🌐</div></div>
+        </div>
+        <div class="post-body">Ich habe heute 12 Stunden am Stück gegoont. 🥵
+
+Hier sind 5 Dinge, die mir das über B2B-Sales beigebracht hat: 🧵
+
+1️⃣ Ausdauer schlägt Talent.
+2️⃣ Du musst deine Zielgruppe kennen (Goth-Baddies 🖤).
+3️⃣ Pausen sind für Schwache.
+4️⃣ Taschentücher sind ein Investment, keine Ausgabe.
+5️⃣ Der Browserverlauf vergisst nie. Du schon.
+
+Ich bin demütig und dankbar. Agree? 👇
+
+#Grindset #Goonset #Leadership #Rizz #OpenToWork</div>
+        <div class="post-img">🧻📈💼<small>Mein Setup nach einem produktiven Arbeitstag</small></div>
+        <div class="reactions"><span id="react-count">👍❤️💡 4'269</span><span>420 Kommentare · 69 Reposts</span></div>
+        <div class="react-btns">
+          <button type="button" data-r="👍">👍 Gefällt mir</button>
+          <button type="button" data-r="🎉">🎉 Gratulieren</button>
+          <button type="button" data-r="💡">💡 Inspirierend</button>
+          <button type="button" data-r="🤮">🤮 Cringe</button>
+        </div>
+      </section>
+
+      <section class="box">
+        <h2>Berufserfahrung</h2>
+        <div id="jobs"></div>
+      </section>
+
+      <section class="box">
+        <h2>Ausbildung</h2>
+        <div class="item"><div class="logo-sq">🎓</div><div><b>Universität von YouTube</b><div class="sub">Master of Arts, Anime-Wissenschaften</div><div class="dt">2016 – heute · Note: S-Tier</div></div></div>
+        <div class="item"><div class="logo-sq">🥋</div><div><b>Konoha Ninja-Akademie</b><div class="sub">Fernstudium, Schattendoppelgänger & Ramen</div><div class="dt">Abschluss: Genin (seit 8 Jahren)</div></div></div>
+      </section>
+
+      <section class="box">
+        <h2>Kenntnisse</h2>
+        <div id="skills"></div>
+      </section>
+
+      <section class="box">
+        <h2>Bescheinigungen & Zertifikate</h2>
+        <div class="item"><div class="logo-sq">📜</div><div><b>Certified Goon Professional (CGP)</b><div class="sub">Internationale Goon-Akademie</div><div class="dt">Ausgestellt: Jan. 2024 · Kein Ablaufdatum</div></div></div>
+        <div class="item"><div class="logo-sq">🛡️</div><div><b>Rizz Level 3 – Advanced Eye Contact</b><div class="sub">Rizz Institute of Technology</div><div class="dt">Ausgestellt: Mär. 2025 · Prüfung 4× wiederholt</div></div></div>
+        <div class="item"><div class="logo-sq">🌱</div><div><b>Grass Touching Fundamentals</b><div class="sub">Pro Natura</div><div class="dt">Status: Kurs abgebrochen</div></div></div>
+      </section>
+
+      <section class="box">
+        <h2>Empfehlungen</h2>
+        <div class="reco">„Ich habe mit Alastor 400 Stunden in Overwatch zusammengearbeitet. Er hat nie geheilt, nie auf den Punkt gespielt und trotzdem jedes Mal POTG bekommen. Eine Naturgewalt."<div class="by">Kiriko-Main · <span>Duo-Partner, 2023–heute</span></div></div>
+        <div class="reco">„Er hat meine Katze aus einem brennenden Haus gerettet und mir danach ein Auto gekauft. Einfach so. Unglaublicher Teamplayer."<div class="by">Anonymer Kollege · <span>Quelle: Big'H Times</span></div></div>
+        <div class="reco">„Wer?"<div class="by">Seine Ex · <span>existiert nicht</span></div></div>
+      </section>
+    </main>
+
+    <aside class="side">
+      <section class="box">
+        <h2>Profilbesucher</h2>
+        <div class="stat" id="views">69</div>
+        <div style="color:var(--li-muted);font-size:.9rem;margin-bottom:8px">Profilaufrufe in den letzten 7 Tagen</div>
+        <div class="viewer"><span class="e">🖤</span><span><b>3 Goth-Baddies</b> aus Ihrer Region</span></div>
+        <div class="viewer"><span class="e">🕵️</span><span><b>1 FBI-Agent</b> (wegen Browserverlauf)</span></div>
+        <div class="viewer"><span class="e">🌱</span><span><b>Gras</b> – vermisst Sie</span></div>
+        <div class="viewer"><span class="e">👩‍💼</span><span><b>HR von Monster Energy</b></span></div>
+      </section>
+      <section class="box">
+        <h2>Das könnte Sie auch interessieren</h2>
+        <div class="viewer"><span class="e">💌</span><a data-sub="dating" href="https://dating.unoslapis.ch/">Big H Dating</a></div>
+        <div class="viewer"><span class="e">📰</span><a data-sub="news" href="https://news.unoslapis.ch/">Big'H Times</a></div>
+        <div class="viewer"><span class="e">🏆</span><a data-sub="waifu" href="https://waifu.unoslapis.ch/">Waifu Tier-List</a></div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="footer-note">LinkedOut ist eine Parodie und hat nichts mit echten Karriere-Netzwerken zu tun. Alastor Lapis sucht trotzdem einen Job.</div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const JOBS = [
+      { e: '🥵', t: 'Senior Goon Engineer', c: 'Selbstständig · Vollzeit', d: 'Jan. 2019 – heute · 7 J. 9 Mon.', p: ['Skalierung von Goon-Sessions auf 7h 43min (Firmenrekord)', 'Einführung agiler Nachtschichten (02:00–06:00)', 'Reduktion des Schlafbedarfs um 62%'] },
+      { e: '🎯', t: 'Professioneller Hitscan-Diff', c: 'Overwatch 2 · Freiberuflich', d: 'Okt. 2022 – heute', p: ['4\'269 Stunden Erfahrung im gegnerischen Backline-Management', 'Supports angeschrien: 9\'001 (KPI übertroffen)'] },
+      { e: '🔫', t: 'Duelist (Jett-Main)', c: 'Valorant · unoslapis', d: 'Jun. 2020 – heute', p: ['Entry-Fragging mit 100% Selbstvertrauen, 12% Trefferquote', '„Ich lurk" – strategische Führung aus dem Hintergrund'] },
+      { e: '🍜', t: 'Ramen-Verkostung (Praktikum)', c: 'Ichiraku Ramen · Konoha', d: '2018 · 6 Mon.', p: ['Qualitätskontrolle von über 900 Schüsseln Instant-Ramen'] },
+      { e: '🐈', t: 'Feuerwehr-Held (ehrenamtlich)', c: 'Big\'H Times berichtete', d: '2025', p: ['Rettung einer Katze aus einem brennenden Haus', 'Danach: Autokauf für einen Freund, einfach so'] }
+    ];
+    const SKILLS = [
+      { n: 'Goonen', c: 99 }, { n: 'Rizz (theoretisch)', c: 42 }, { n: 'Anime-Wissen', c: 88 },
+      { n: 'Hitscan-Aim', c: 77 }, { n: 'Ausreden für Losses', c: 69 }, { n: 'Mit Frauen reden', c: 0 },
+      { n: 'Microsoft Excel (Panik-Modus)', c: 13 }
+    ];
+
+    const jobs = document.getElementById('jobs');
+    JOBS.forEach((j) => {
+      const d = document.createElement('div');
+      d.className = 'item';
+      d.innerHTML = '<div class="logo-sq"></div><div><b></b><div class="sub"></div><div class="dt"></div><ul></ul></div>';
+      d.querySelector('.logo-sq').textContent = j.e;
+      d.querySelector('b').textContent = j.t;
+      d.querySelector('.sub').textContent = j.c;
+      d.querySelector('.dt').textContent = j.d;
+      j.p.forEach((p) => { const li = document.createElement('li'); li.textContent = p; d.querySelector('ul').appendChild(li); });
+      jobs.appendChild(d);
+    });
+
+    const skills = document.getElementById('skills');
+    SKILLS.forEach((s) => {
+      const d = document.createElement('div');
+      d.className = 'skill';
+      d.innerHTML = '<div><b></b><div class="cnt"></div></div><button class="li-btn" type="button">+ Bestätigen</button>';
+      d.querySelector('b').textContent = s.n;
+      const cnt = d.querySelector('.cnt');
+      const btn = d.querySelector('button');
+      let count = s.c, done = false;
+      const render = () => { cnt.textContent = count + ' Bestätigungen' + (s.c === 0 && count === 0 ? ' (niemand will lügen)' : ''); };
+      render();
+      btn.addEventListener('click', (e) => {
+        if (done) { BIGH.toast('Du hast schon bestätigt. Einmal lügen reicht.'); return; }
+        done = true; count++; render();
+        btn.textContent = '✓ Bestätigt';
+        BIGH.burst(e.clientX, e.clientY, ['👍', '💼', '✨'], 12);
+        if (s.c === 0) BIGH.toast('😳 Du bestätigst „Mit Frauen reden"? Mutig.');
+      });
+      skills.appendChild(d);
+    });
+
+    // Reaktionen
+    let reacts = 4269;
+    const rc = document.getElementById('react-count');
+    document.querySelectorAll('.react-btns button').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        const on = !b.classList.contains('on');
+        document.querySelectorAll('.react-btns button').forEach((x) => x.classList.remove('on'));
+        if (on) b.classList.add('on');
+        rc.textContent = '👍❤️💡 ' + (reacts + (on ? 1 : 0)).toLocaleString('de-CH');
+        if (on) BIGH.burst(e.clientX, e.clientY, [b.dataset.r], 10);
+        if (on && b.dataset.r === '🤮') BIGH.toast('Alastor Lapis hat Sie blockiert.');
+      });
+    });
+
+    const MSGS = {
+      connect: ['✅ Anfrage gesendet. Alastor antwortet nach seiner Goon-Session (ca. 7h).', '⏳ Anfrage ausstehend seit 3 Wochen.'],
+      msg: ['✉️ Alastor Lapis ist gerade „Beschäftigt" (Overwatch).', '✉️ Automatische Antwort: „Bin AFK, geh nicht ran."'],
+      more: ['📄 Lebenslauf als PDF? Es ist nur ein Screenshot seiner Steam-Library.', '🚩 Profil melden? Er hat Sie zuerst gemeldet.']
+    };
+    ['connect', 'msg', 'more'].forEach((k) => {
+      let i = 0;
+      document.getElementById(k).addEventListener('click', () => BIGH.toast(MSGS[k][i++ % MSGS[k].length]));
+    });
+    document.getElementById('contacts').addEventListener('click', (e) => { e.preventDefault(); BIGH.toast('🤖 498 davon sind Discord-Bots.'); });
+
+    // Profilaufrufe zählen hoch
+    const v = document.getElementById('views');
+    let n = 69;
+    setInterval(() => { n += Math.random() < 0.3 ? 1 : 0; v.textContent = n; }, 2500);
+  })();
+  </script>
+</body>
+</html>

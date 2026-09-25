@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📜 Hall of Fame – Zitate von Alastor Lapis</title>
+<meta name="description" content="Die grössten Weisheiten von Big H alias Alastor Lapis. Philosophie für die Ewigkeit.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500;1,700&display=swap">
+<style>
+  body { background: linear-gradient(180deg, #120f24, #0d0b1a); }
+  .wrap { padding: 70px 0 20px; }
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+  h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.4rem, 9vw, 4.6rem); text-align: center; margin: 0; line-height: 1.05; }
+  h1 em { color: var(--yellow); }
+  .sub { text-align: center; color: var(--muted); margin: 10px 0 30px; }
+
+  .qotd {
+    position: relative; overflow: hidden; border-radius: 20px; padding: clamp(28px, 6vw, 60px); text-align: center;
+    background: linear-gradient(180deg, #ff9a3c 0%, #ff5e62 40%, #6a3093 100%); min-height: 280px;
+    display: flex; flex-direction: column; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .qotd::before { content: ''; position: absolute; left: 50%; bottom: -120px; width: 260px; height: 260px; margin-left: -130px; border-radius: 50%; background: radial-gradient(circle, #fff6c2, #ffd23f 50%, transparent 70%); opacity: .8; }
+  .qotd .lbl { position: relative; font-family: var(--pixel); font-size: .6rem; letter-spacing: 2px; opacity: .85; }
+  .qotd .q { position: relative; font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 700; font-size: clamp(1.6rem, 5vw, 2.8rem); line-height: 1.2; margin: 14px 0; text-shadow: 0 3px 12px rgba(0,0,0,.35); }
+  .qotd .a { position: relative; font-weight: 700; opacity: .95; }
+  .qotd .btns { position: relative; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 40px 0 18px; }
+  .filters button { background: var(--card); color: var(--text); border: 2px solid rgba(255,255,255,.12); border-radius: 999px; padding: 8px 16px; font: 700 .9rem var(--body); cursor: pointer; }
+  .filters button.on { background: var(--yellow); color: #120d24; border-color: var(--yellow); }
+
+  .quotes { columns: 3 280px; column-gap: 16px; }
+  .qcard { break-inside: avoid; margin-bottom: 16px; background: var(--card); border-radius: 16px; padding: 20px; border-left: 5px solid var(--c, var(--yellow)); cursor: pointer; transition: transform .2s; }
+  .qcard:hover { transform: translateY(-3px) rotate(-.5deg); }
+  .qcard .t { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.25rem; line-height: 1.35; }
+  .qcard .meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: .85rem; }
+  .qcard .cat { background: rgba(255,255,255,.08); padding: 2px 10px; border-radius: 999px; font-weight: 700; }
+  .vote { background: none; border: 1px solid rgba(255,255,255,.2); color: var(--text); border-radius: 999px; padding: 4px 10px; cursor: pointer; font: 700 .85rem var(--body); }
+  .vote.on { background: var(--pink); border-color: var(--pink); }
+
+  /* Demotivations-Poster */
+  .poster-bg { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.9); display: none; place-items: center; padding: 16px; }
+  .poster-bg.show { display: grid; animation: fade .3s; }
+  @keyframes fade { from { opacity: 0; } }
+  .poster { background: #000; border: 2px solid #fff; outline: 12px solid #000; padding: clamp(18px, 4vw, 36px); max-width: 620px; width: 100%; text-align: center; }
+  .poster .img { border: 3px solid #fff; aspect-ratio: 16 / 10; display: grid; place-items: center; font-size: clamp(4rem, 16vw, 7rem); background: linear-gradient(180deg, #2b5876, #4e4376); }
+  .poster h2 { font-family: 'Playfair Display', Georgia, serif; letter-spacing: 8px; font-size: clamp(1.8rem, 7vw, 3rem); margin: 18px 0 6px; text-transform: uppercase; }
+  .poster p { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1rem, 3vw, 1.2rem); margin: 0; }
+  .poster small { display: block; margin-top: 14px; color: #aaa; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1>Die Weisheiten des <em>Alastor Lapis</em></h1>
+    <p class="sub">Hall of Fame · Gesammelt aus Discord, Voice-Chat und 3-Uhr-Nachrichten. Für die Ewigkeit.</p>
+
+    <section class="qotd" id="qotd">
+      <div class="lbl">✨ ZITAT DES TAGES ✨</div>
+      <div class="q" id="q-text"></div>
+      <div class="a" id="q-author"></div>
+      <div class="btns">
+        <button class="btn" id="random" type="button">🎲 Zufälliges Zitat</button>
+        <button class="btn ghost" id="poster" type="button" style="color:#fff;border-color:#fff">🖼️ Als Poster</button>
+      </div>
+    </section>
+
+    <div class="filters" id="filters"></div>
+    <section class="quotes" id="quotes"></section>
+  </main>
+
+  <div class="poster-bg" id="poster-bg" role="dialog" aria-modal="true" aria-label="Zitat-Poster">
+    <div class="poster">
+      <div class="img" id="p-img"></div>
+      <h2 id="p-title"></h2>
+      <p id="p-text"></p>
+      <small>Klicken oder ESC zum Schliessen</small>
+    </div>
+  </div>
+
+  <footer class="bigh-footer">Alle Zitate sind 100% authentisch und wurden nie aus dem Kontext gerissen.*<br><small>*doch</small></footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG: Echte Zitate hier eintragen! ====
+    // cat: Kategorie · w: Wann/Wo · e: Emoji fürs Poster · p: Poster-Titel
+    const QUOTES = [
+      { t: 'Ich bin nicht süchtig. Ich bin engagiert.', cat: 'Goon', w: '03:47 Uhr', e: '🥵', p: 'Hingabe' },
+      { t: 'Schlaf ist was für Leute ohne Ranked.', cat: 'Gaming', w: 'Discord, 04:12 Uhr', e: '🎮', p: 'Opfer' },
+      { t: 'Wenn sie nicht zurückschreibt, ist sie wahrscheinlich eine Waifu.', cat: 'Rizz', w: 'nach 0 Matches', e: '💌', p: 'Hoffnung' },
+      { t: 'Gras ist nur ein Teppich von der Natur.', cat: 'Philosophie', w: 'Beim Fenster', e: '🌱', p: 'Weisheit' },
+      { t: 'Team diff.', cat: 'Gaming', w: 'Nach jedem Loss', e: '📉', p: 'Verantwortung' },
+      { t: 'Ich bin in 5 Minuten on.', cat: 'Gaming', w: '3 Stunden vorher', e: '⏰', p: 'Pünktlichkeit' },
+      { t: 'Ich lurk.', cat: 'Gaming', w: 'Valorant, als unoslapis', e: '🔫', p: 'Strategie' },
+      { t: 'Frauen wollen einen Mann mit Zielen. Ich hab 42 von 42 Errungenschaften.', cat: 'Rizz', w: 'Steam-Profil', e: '🏆', p: 'Ambition' },
+      { t: 'Der Unterschied zwischen mir und einem Gott? Ich hab WLAN.', cat: 'Philosophie', w: 'Selbstbewusst', e: '📶', p: 'Göttlichkeit' },
+      { t: 'Nur noch eine Folge.', cat: 'Anime', w: 'Folge 1 von 1122', e: '📺', p: 'Selbstkontrolle' },
+      { t: 'Goth-Baddies sind wie Ranked: Du verlierst oft, aber du queuest trotzdem wieder.', cat: 'Rizz', w: 'Auf der Jagd', e: '🖤', p: 'Ausdauer' },
+      { t: 'Ich brauch keinen Therapeuten, ich hab Kiriko.', cat: 'Gaming', w: 'Overwatch', e: '🦊', p: 'Heilung' },
+      { t: 'Wer goont, gewinnt.', cat: 'Goon', w: 'Lebensmotto', e: '👑', p: 'Erfolg' },
+      { t: 'Die Sonne ist ein Bug, den keiner patcht.', cat: 'Philosophie', w: 'Einzige Begegnung mit draussen', e: '☀️', p: 'Kritik' },
+      { t: 'Man nennt mich nicht umsonst den Stecher. Ich treffe jeden Headshot.', cat: 'Rizz', w: 'Nach einem 1v5', e: '🎯', p: 'Präzision' },
+      { t: 'Ein wahrer Sex-Gott braucht keine Freundin. Er braucht Ranked.', cat: 'Goon', w: 'Sehr überzeugt', e: '😈', p: 'Göttlichkeit' },
+      { t: 'Nakama sind wichtiger als Freundinnen. Ich hab keins von beidem, aber trotzdem.', cat: 'Anime', w: 'One-Piece-Marathon', e: '🏴‍☠️', p: 'Freundschaft' }
+    ];
+    const CAT_COLORS = { Goon: '#e0001b', Gaming: '#2de2e6', Rizz: '#ff3e9a', Philosophie: '#ffd23f', Anime: '#9b5cff' };
+
+    // ---------- Zitat des Tages (für alle gleich, wechselt täglich) ----------
+    const today = new Date();
+    const seed = today.getFullYear() * 1000 + Math.floor((today - new Date(today.getFullYear(), 0, 1)) / 86400000);
+    let current = QUOTES[seed % QUOTES.length];
+    function showMain(q) {
+      current = q;
+      document.getElementById('q-text').textContent = '„' + q.t + '"';
+      document.getElementById('q-author').textContent = '— Alastor Lapis, ' + q.w;
+    }
+    showMain(current);
+    document.getElementById('random').addEventListener('click', (e) => {
+      let q;
+      do { q = BIGH.pick(QUOTES); } while (q === current && QUOTES.length > 1);
+      showMain(q);
+      BIGH.burst(e.clientX, e.clientY, ['✨', '📜', '🧠'], 12);
+    });
+
+    // ---------- Poster ----------
+    const bg = document.getElementById('poster-bg');
+    function openPoster(q) {
+      document.getElementById('p-img').textContent = q.e;
+      document.getElementById('p-title').textContent = q.p;
+      document.getElementById('p-text').textContent = q.t;
+      bg.classList.add('show');
+    }
+    document.getElementById('poster').addEventListener('click', () => openPoster(current));
+    bg.addEventListener('click', () => bg.classList.remove('show'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') bg.classList.remove('show'); });
+
+    // ---------- Votes (nur im eigenen Browser) ----------
+    let voted = {};
+    try { voted = JSON.parse(localStorage.getItem('bigh-quote-votes')) || {}; } catch (e) { /* egal */ }
+    const baseVotes = (s) => [...s].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) % 997, 7) + 12;
+
+    // ---------- Liste + Filter ----------
+    const list = document.getElementById('quotes');
+    QUOTES.forEach((q) => {
+      const d = document.createElement('article');
+      d.className = 'qcard';
+      d.dataset.cat = q.cat;
+      d.style.setProperty('--c', CAT_COLORS[q.cat] || 'var(--yellow)');
+      d.innerHTML = '<div class="t"></div><div class="meta"><span class="cat"></span><button class="vote" type="button"></button></div>';
+      d.querySelector('.t').textContent = '„' + q.t + '"';
+      d.querySelector('.cat').textContent = q.cat + ' · ' + q.w;
+      const v = d.querySelector('.vote');
+      const renderVote = () => {
+        v.textContent = '🔥 ' + (baseVotes(q.t) + (voted[q.t] ? 1 : 0));
+        v.classList.toggle('on', !!voted[q.t]);
+      };
+      renderVote();
+      v.addEventListener('click', (e) => {
+        e.stopPropagation();
+        voted[q.t] = !voted[q.t];
+        try { localStorage.setItem('bigh-quote-votes', JSON.stringify(voted)); } catch (err) { /* egal */ }
+        renderVote();
+        if (voted[q.t]) BIGH.burst(e.clientX, e.clientY, ['🔥', '💯'], 10);
+      });
+      d.addEventListener('click', () => openPoster(q));
+      list.appendChild(d);
+    });
+
+    const filters = document.getElementById('filters');
+    ['Alle'].concat(Object.keys(CAT_COLORS)).forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = c;
+      if (i === 0) b.classList.add('on');
+      b.addEventListener('click', () => {
+        filters.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+        b.classList.add('on');
+        list.querySelectorAll('.qcard').forEach((q) => { q.style.display = c === 'Alle' || q.dataset.cat === c ? '' : 'none'; });
+      });
+      filters.appendChild(b);
+    });
+  })();
+  </script>
+</body>
+</html>

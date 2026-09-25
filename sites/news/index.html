@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Big'H Times – Alle Nachrichten, die sich zum Goonen eignen</title>
+<meta name="description" content="The Big'H Times: Die seriöseste Zeitung über Alastor Lapis. Katzen gerettet, Autos verschenkt, Goth-Baddies gejagt.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;900&display=swap">
+<style>
+  :root { --paper: #f4efe1; --ink: #151515; --rule: #151515; }
+  body { background: #2b2620; background-image: radial-gradient(circle at 50% 0, #4a4136, #2b2620 60%); }
+  .bigh-back { background: rgba(0,0,0,.7); }
+  .stage { width: min(980px, 100% - 24px); margin: 0 auto; padding: 64px 0 30px; }
+
+  /* ---------- Buch ---------- */
+  .book { position: relative; perspective: 2600px; transition: height .4s ease; }
+  .page {
+    position: absolute; top: 0; left: 0; width: 100%;
+    background: var(--paper); color: var(--ink);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(120,90,40,.06), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(120,90,40,.07), transparent 45%),
+      linear-gradient(90deg, rgba(0,0,0,.06), transparent 4%, transparent 96%, rgba(0,0,0,.05));
+    font-family: 'Old Standard TT', Georgia, 'Times New Roman', serif;
+    padding: clamp(16px, 3.5vw, 36px);
+    transform-origin: left center;
+    transition: transform 1s cubic-bezier(.55,.05,.3,1), box-shadow 1s;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    visibility: hidden;
+  }
+  .page.show { visibility: visible; }
+  .page.flipped { transform: rotateY(-180deg); box-shadow: -30px 20px 60px rgba(0,0,0,.2); }
+  .page.turning { box-shadow: -40px 30px 80px rgba(0,0,0,.6); }
+
+  /* Eselsohr zum Umblättern */
+  .corner { position: absolute; right: 0; bottom: 0; width: 56px; height: 56px; cursor: pointer; border: 0; padding: 0; background: linear-gradient(135deg, transparent 50%, #d9d0b8 50%, #efe7d1 75%, #c9bf9f); box-shadow: -3px -3px 6px rgba(0,0,0,.15); transition: width .2s, height .2s; }
+  .corner:hover { width: 76px; height: 76px; }
+  .corner.left { right: auto; left: 0; background: linear-gradient(-135deg, transparent 50%, #d9d0b8 50%, #efe7d1 75%, #c9bf9f); box-shadow: 3px -3px 6px rgba(0,0,0,.15); }
+
+  /* ---------- Zeitungs-Typo ---------- */
+  .masthead { text-align: center; border-bottom: 4px double var(--rule); padding-bottom: 8px; }
+  .masthead .ears { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; font-size: .72rem; line-height: 1.3; }
+  .masthead .ear { border: 1px solid var(--rule); padding: 4px 8px; max-width: 160px; text-align: left; }
+  .masthead h1 { font-family: 'UnifrakturMaguntia', 'Old English Text MT', serif; font-weight: 400; font-size: clamp(2.4rem, 9.5vw, 5.6rem); margin: 4px 0 0; line-height: 1; letter-spacing: 1px; }
+  .masthead .motto { font-style: italic; font-size: .85rem; }
+  .dateline { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding: 5px 0; font-size: .74rem; text-transform: uppercase; letter-spacing: 1px; }
+  .runhead { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 3px double var(--rule); padding-bottom: 6px; margin-bottom: 14px; font-size: .75rem; letter-spacing: 1px; text-transform: uppercase; }
+  .runhead b { font-family: 'UnifrakturMaguntia', serif; font-size: 1.3rem; text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .section-name { text-align: center; font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; font-size: 1rem; border-bottom: 1px solid var(--rule); padding-bottom: 6px; margin-bottom: 14px; }
+
+  .hl { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; line-height: 1.02; margin: 12px 0 8px; }
+  .hl.xxl { font-size: clamp(2rem, 6.8vw, 3.9rem); text-align: center; text-transform: uppercase; }
+  .hl.xl { font-size: clamp(1.6rem, 4.5vw, 2.6rem); }
+  .hl.l { font-size: clamp(1.25rem, 3vw, 1.6rem); }
+  .hl.m { font-size: 1.15rem; }
+  .deck { font-style: italic; font-size: clamp(1rem, 2.4vw, 1.2rem); text-align: center; margin: 0 0 12px; }
+  .byline { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 10px; }
+  .byline b { font-weight: 700; }
+  p.body { text-align: justify; hyphens: auto; -webkit-hyphens: auto; margin: 0 0 10px; font-size: .98rem; line-height: 1.5; }
+  p.body:first-of-type::first-letter { font-family: 'Playfair Display', serif; font-weight: 900; float: left; font-size: 3.4rem; line-height: .85; padding: 4px 6px 0 0; }
+  .cols-2 { columns: 2 240px; column-gap: 26px; column-rule: 1px solid #999; }
+  .cols-3 { columns: 3 200px; column-gap: 22px; column-rule: 1px solid #999; }
+  .cols-2 > *, .cols-3 > * { break-inside: avoid-column; }
+  .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 22px; }
+  .grid > .side { border-left: 1px solid var(--rule); padding-left: 18px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } .grid > .side { border-left: 0; padding-left: 0; border-top: 3px double var(--rule); padding-top: 10px; } }
+  hr.thin { border: 0; border-top: 1px solid var(--rule); margin: 14px 0; }
+  hr.thick { border: 0; border-top: 3px double var(--rule); margin: 16px 0; }
+
+  .photo { position: relative; margin: 6px 0 4px; border: 1px solid var(--rule); background: #bdb6a6; display: grid; place-items: center; overflow: hidden; }
+  .photo .emo { font-size: clamp(3.5rem, 12vw, 6.5rem); filter: grayscale(1) contrast(1.3) brightness(.9); letter-spacing: 8px; }
+  .photo::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,0,0,.22) 1px, transparent 1.4px); background-size: 4px 4px; mix-blend-mode: multiply; }
+  .photo.tall { aspect-ratio: 16 / 9; }
+  .photo.sq { aspect-ratio: 4 / 3; }
+  .caption { font-size: .75rem; font-style: italic; margin-bottom: 12px; }
+
+  .box { border: 2px solid var(--rule); padding: 10px 12px; margin-bottom: 14px; }
+  .box h4 { font-family: 'Playfair Display', serif; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; font-size: .85rem; margin: 0 0 6px; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+  .box ul { margin: 0; padding-left: 16px; font-size: .9rem; }
+  .box li { margin-bottom: 4px; }
+  .stock { width: 100%; border-collapse: collapse; font-size: .85rem; font-variant-numeric: tabular-nums; }
+  .stock td { padding: 3px 0; border-bottom: 1px dotted #777; }
+  .stock td:last-child { text-align: right; font-weight: 700; }
+  .up { color: #0b6b1f; } .down { color: #9b0000; }
+  .pull { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.35rem; line-height: 1.25; border-top: 3px solid var(--rule); border-bottom: 3px solid var(--rule); padding: 10px 0; margin: 12px 0; text-align: center; }
+  .classified { font-size: .85rem; border-bottom: 1px dashed #666; padding: 6px 0; }
+  .classified b { text-transform: uppercase; }
+  .comic { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--rule); }
+  .comic div { border-right: 2px solid var(--rule); padding: 10px 6px; text-align: center; font-size: .78rem; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+  .comic div:last-child { border-right: 0; }
+  .comic .fig { font-size: 2.2rem; filter: grayscale(1); }
+  .end-mark { text-align: center; font-size: 1.1rem; margin-top: 10px; }
+  .toc a { color: var(--ink); cursor: pointer; }
+
+  /* ---------- Navigation ---------- */
+  .nav { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 18px; color: #f4efe1; font-family: 'Old Standard TT', serif; }
+  .nav button { background: #f4efe1; color: #151515; border: 0; border-radius: 999px; width: 48px; height: 48px; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  .nav .count { min-width: 170px; text-align: center; font-size: 1rem; }
+  .hint { text-align: center; color: #b9ae94; font-size: .8rem; margin-top: 8px; font-family: 'Old Standard TT', serif; }
+</style>
+</head>
+<body data-back>
+  <div class="stage">
+    <div class="book" id="book">
+
+      <!-- ================= SEITE 1: TITELSEITE ================= -->
+      <article class="page" data-title="Titelseite">
+        <header class="masthead">
+          <div class="ears">
+            <div class="ear">„Alle Nachrichten,<br>die sich zum Goonen eignen."</div>
+            <div class="ear" style="text-align:right">Wetter: 100 % Rizz,<br>später vereinzelt Goth-Baddies.</div>
+          </div>
+          <h1>The Big'H Times</h1>
+          <div class="motto">Die seriöseste Zeitung über Alastor Lapis · Gegründet 2026</div>
+        </header>
+        <div class="dateline"><span>Vol. CLXIX · Nr. 69'420</span><span class="today"></span><span>Preis: 1 Tempo</span></div>
+
+        <h2 class="hl xxl">Alastor Lapis rettet Katze aus brennendem Haus</h2>
+        <p class="deck">„Ich hab nicht mal nachgedacht", sagt der Held – Katze seither unsterblich verliebt, Feuerwehr fühlt sich überflüssig</p>
+
+        <div class="grid">
+          <div>
+            <div class="photo tall"><span class="emo">🔥🏠🐈</span></div>
+            <div class="caption">Augenblicke vor der Rettung: Das Haus brannte, die Katze schrie, Big H stellte sein Ranked-Game auf Pause. Foto: Big'H Times / Zeugen</div>
+            <div class="byline">Von <b>Dora Diktiergerät</b> · Chefreporterin</div>
+            <div class="cols-2">
+              <p class="body">ZÜRICH – Was als ganz normaler Donnerstagabend begann, endete in einer Heldentat, über die man noch in Generationen sprechen wird. Alastor Lapis, in Fachkreisen auch als „Big H", „der Stecher" oder schlicht „der Goon-König" bekannt, rettete eine Katze aus einem lichterloh brennenden Einfamilienhaus.</p>
+              <p class="body">„Ich war gerade in einem Overwatch-Match, als ich das Miauen hörte", erzählt Lapis gegenüber der Big'H Times. „Ich hab mein Team im Stich gelassen. Das war das grösste Opfer meines Lebens." Er sprang durch ein Fenster im ersten Stock, rollte sich ab wie Genji und kam mit der Katze im Arm wieder heraus – ohne einen einzigen Kratzer und mit perfekt sitzender Frisur.</p>
+              <p class="body">Die Feuerwehr, die sieben Minuten später eintraf, zeigte sich beeindruckt. „Wir haben eigentlich nichts mehr zu tun gehabt", so Einsatzleiter Beat Brandschutz. „Er hat das Feuer offenbar einfach angeschaut, und es ist aus Respekt ausgegangen."</p>
+              <p class="body">Die Katze namens Mausi weicht seither nicht mehr von seiner Seite. Tierärzte sprechen von der „stärksten Rizz-Wirkung, die je an einem Säugetier gemessen wurde". <i>Fortsetzung auf Seite 4.</i></p>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="box toc">
+              <h4>In dieser Ausgabe</h4>
+              <ul>
+                <li><a data-goto="1">Wirtschaft: Big H verschenkt Auto</a> · S. 2</li>
+                <li><a data-goto="2">Reportage: Die Jagd nach den gothischen Schlechties</a> · S. 3</li>
+                <li><a data-goto="3">Gesellschaft: Rizz-Forscher ratlos</a> · S. 4</li>
+                <li><a data-goto="4">Sport: unoslapis zerstört Valorant</a> · S. 5</li>
+                <li><a data-goto="5">Vermischtes, Horoskop & Anzeigen</a> · S. 6</li>
+              </ul>
+            </div>
+            <h3 class="hl m">Lokaler Mann kauft Freund einfach so ein Auto</h3>
+            <p class="body" style="font-size:.9rem">„Ich hatte Kleingeld übrig", erklärt der Milliardär bescheiden. <i>Seite 2</i></p>
+            <hr class="thin">
+            <h3 class="hl m">Sonne meldet: Big H seit 2019 nicht gesehen</h3>
+            <p class="body" style="font-size:.9rem">Vermisstenanzeige aufgegeben. Behörden gelassen: „Er ist sicher am PC."</p>
+            <hr class="thin">
+            <div class="box">
+              <h4>Zitat des Tages</h4>
+              <p style="margin:0;font-style:italic">„Ein Held ist nur ein Gamer, der kurz aufgestanden ist."</p>
+              <p style="margin:4px 0 0;font-size:.8rem">– Alastor Lapis</p>
+            </div>
+          </aside>
+        </div>
+        <button class="corner" type="button" data-dir="next" aria-label="Nächste Seite"></button>
+      </article>
+
+      <!-- ================= SEITE 2: WIRTSCHAFT ================= -->
+      <article class="page" data-title="Wirtschaft">
+        <div class="runhead"><b>The Big'H Times</b><span class="today"></span><span>Seite 2</span></div>
+        <div class="section-name">Wirtschaft & Finanzen</div>
+        <div class="grid">
+          <div>
+            <h2 class="hl xl">„Ich hatte Kleingeld übrig": Big H kauft Freund einfach so ein Auto</h2>
+            <div class="byline">Von <b>Konrad Kontoauszug</b> · Wirtschaftsredaktion</div>
+            <div class="photo sq"><span class="emo">🚗🎀💸</span></div>
+            <div class="caption">Das Geschenk: Ein nagelneuer Sportwagen mit Schleife. Der Beschenkte weint seit drei Tagen.</div>
+            <div class="cols-2">
+              <p class="body">ZÜRICH – Man stelle sich vor: Man trifft sich mit einem Kollegen auf einen Kaffee und fährt mit einem Sportwagen nach Hause. Genau das ist einem Freund von Alastor Lapis letzte Woche passiert. „Er hat gesagt, mein alter Wagen sei ‚cringe'. Dann hat er mir einfach die Schlüssel gegeben", erzählt der sichtlich erschütterte Beschenkte.</p>
+              <p class="body">Big H selbst gibt sich bescheiden. „Ich hatte gerade Kleingeld übrig. Die Steam-Sale war vorbei, was hätte ich sonst damit machen sollen?", sagte der Unternehmer auf Anfrage. Woher sein Vermögen stammt, bleibt unklar. Experten vermuten Einnahmen aus einer geheimen Anime-Merch-Firma, Aktien von Monster Energy und „einem ausserordentlich profitablen Discord-Server".</p>
+              <p class="body">Laut Insidern soll das Auto nicht das erste Geschenk sein. Bereits im Frühling habe Lapis einem Barista ein Trinkgeld von 4'200 Franken gegeben – „weil der Latte-Art-Herz so symmetrisch war".</p>
+            </div>
+            <div class="pull">„Geld macht nicht glücklich. Aber es kauft Autos für Freunde, und das macht glücklich."</div>
+          </div>
+          <aside class="side">
+            <div class="box">
+              <h4>Börse heute</h4>
+              <table class="stock">
+                <tr><td>$LAPIS (Lapis Holding)</td><td class="up">▲ +420 %</td></tr>
+                <tr><td>$GOON (Goon Industries)</td><td class="up">▲ +69 %</td></tr>
+                <tr><td>$TEMPO (Taschentücher)</td><td class="up">▲ +33 %</td></tr>
+                <tr><td>$MNST (Monster Energy)</td><td class="up">▲ +12 %</td></tr>
+                <tr><td>$GRAS (Pro Natura)</td><td class="down">▼ −99 %</td></tr>
+                <tr><td>$SCHLAF (Big H Schlaf AG)</td><td class="down">▼ Konkurs</td></tr>
+              </table>
+            </div>
+            <div class="box">
+              <h4>Forbes-Liste 2026</h4>
+              <ul>
+                <li><b>1. Alastor Lapis</b> – reichster Goon-König der Welt</li>
+                <li>2. Irgendein Tech-Typ</li>
+                <li>3. Noch ein Tech-Typ</li>
+              </ul>
+            </div>
+            <h3 class="hl m">Analyse: Warum Lapis nie Steuern zahlt</h3>
+            <p class="body" style="font-size:.9rem">Das Steueramt hat es versucht. Er hat mit „gg ez" geantwortet und die Leitung blockiert. Seitdem herrscht Funkstille.</p>
+          </aside>
+        </div>
+        <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
+        <button class="corner" type="button" data-dir="next" aria-label="Nächste Seite"></button>
+      </article>
+
+      <!-- ================= SEITE 3: REPORTAGE GOTH ================= -->
+      <article class="page" data-title="Reportage">
+        <div class="runhead"><b>The Big'H Times</b><span class="today"></span><span>Seite 3</span></div>
+        <div class="section-name">Die grosse Reportage</div>
+        <h2 class="hl xxl" style="font-size:clamp(1.8rem,6vw,3.4rem)">Auf der Jagd nach den gothischen Schlechties</h2>
+        <p class="deck">Unsere Reporterin hat Alastor Lapis eine Nacht lang begleitet: auf seiner Expedition in die dunkelste Subkultur der Schweiz, auf der Suche nach dem sagenumwobenen „Goth Baddie"</p>
+        <div class="byline" style="text-align:center">Von <b>Morticia Mitternacht</b> · Sonderkorrespondentin für Schwarze Kleidung</div>
+        <div class="photo tall"><span class="emo">🖤🦇🕯️⛓️</span></div>
+        <div class="caption">Revier der Goth-Baddies: Ein Club irgendwo in Zürich, 23:47 Uhr. Big H hat sich getarnt (schwarzer Hoodie, wie immer).</div>
+        <div class="cols-3">
+          <p class="body">ZÜRICH, 23:12 UHR – Der Nebel hängt tief über der Langstrasse, als Alastor Lapis aus dem Taxi steigt. Er trägt Schwarz. Nicht aus Tarnung, betont er, sondern „weil ich immer Schwarz trage, das ist mein Lore". In der Hand: ein Monster Energy. Im Blick: pure Entschlossenheit.</p>
+          <p class="body">Seit Monaten bereitet sich Lapis auf diese Nacht vor. Er hat Dokumentationen geschaut, drei Alben von Bands gehört, deren Namen er nicht aussprechen kann, und sich mit einem Kajalstift „mental vertraut gemacht". Sein Ziel: das Revier der gothischen Schlechties, von Eingeweihten auch „Goth Baddies" genannt.</p>
+          <p class="body">„Man muss sie verstehen", flüstert er, während wir uns dem Eingang nähern. „Goth Baddies sind wie legendäre Pokémon. Man findet sie nicht. Sie finden dich. Aber man kann die Wahrscheinlichkeit erhöhen." Er zeigt auf seine Kette. Sie ist aus dem Automaten. Er ist stolz auf sie.</p>
+          <p class="body">23:31 Uhr: Erste Sichtung. Eine Frau mit Plateau-Stiefeln, schwarzem Lippenstift und einem Blick, der Milch sauer werden lassen könnte. Lapis erstarrt. „Nicht bewegen", sagt er. „Die reagieren auf Bewegung." Die Frau bestellt einen Drink und ignoriert uns. Lapis wertet das als „starkes Interesse".</p>
+          <div class="pull">„Ich habe in den Abgrund geschaut. Der Abgrund hat Eyeliner getragen."</div>
+          <p class="body">00:04 Uhr: Der entscheidende Moment. Lapis geht auf eine Gruppe zu, atmet tief durch und sagt: „Kennt ihr Alastor aus Hazbin Hotel? Das bin im Prinzip ich." Drei Sekunden Stille. Dann: Gelächter. Aber, so betont Lapis später, „anerkennendes Gelächter".</p>
+          <p class="body">Ob die Mission erfolgreich war, bleibt unklar. Eine Nummer hat er nicht bekommen, dafür einen Sticker mit einer Fledermaus darauf. „Das ist Phase eins", erklärt er auf dem Heimweg. „Man baut Vertrauen auf. Wie bei einem Bossfight."</p>
+          <p class="body">Die Big'H Times wird die Expedition weiter begleiten. Lapis hat bereits eine Tabelle angelegt: „Goth-Baddie-Sichtungen, Q4". Sie hat 47 Spalten.</p>
+        </div>
+        <div class="box" style="margin-top:12px">
+          <h4>Feldnotizen von Big H (Auszug)</h4>
+          <ul>
+            <li>23:15 – Türsteher hat mich angeschaut. Respekt verdient. 💪</li>
+            <li>23:40 – Musik zu laut, kann nicht rizzen. Plan B: mysteriös in der Ecke stehen.</li>
+            <li>00:10 – Stehe seit 30 Min in der Ecke. Bin sehr mysteriös.</li>
+            <li>01:20 – Fledermaus-Sticker erhalten. Das ist quasi eine Verlobung.</li>
+          </ul>
+        </div>
+        <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
+        <button class="corner" type="button" data-dir="next" aria-label="Nächste Seite"></button>
+      </article>
+
+      <!-- ================= SEITE 4: GESELLSCHAFT / RIZZ ================= -->
+      <article class="page" data-title="Gesellschaft">
+        <div class="runhead"><b>The Big'H Times</b><span class="today"></span><span>Seite 4</span></div>
+        <div class="section-name">Gesellschaft & Wissenschaft</div>
+        <div class="grid">
+          <div>
+            <h2 class="hl xl">Rizz-Forscher ratlos: Frau fällt nach einem einzigen „Hey" in Ohnmacht</h2>
+            <div class="byline">Von <b>Prof. Dr. Rüdiger Rizzmann</b> · ETH Zürich, Institut für Angewandte Ausstrahlung</div>
+            <div class="cols-2">
+              <p class="body">Die Fachwelt steht vor einem Rätsel. Im Rahmen einer Feldstudie sagte Alastor Lapis zu einer Passantin lediglich „Hey". Die Frau verlor daraufhin kurzzeitig das Bewusstsein. Als sie wieder zu sich kam, fragte sie nur: „War das… der Sex-Gott?"</p>
+              <p class="body">„Wir haben so etwas noch nie gemessen", erklärt Studienleiter Rizzmann. „Unsere Geräte zeigen bei Big H Werte an, die eigentlich physikalisch unmöglich sind. Das Rizz-o-Meter ist bei 9'001 explodiert." Das Institut prüft nun, ob Rizz als fünfte Grundkraft der Physik anerkannt werden muss.</p>
+              <p class="body">Kritische Stimmen weisen darauf hin, dass die Passantin an diesem Tag nichts gegessen hatte und es 34 Grad heiss war. Lapis lässt das nicht gelten: „Die Hitze kam von mir."</p>
+            </div>
+            <hr class="thick">
+            <h3 class="hl l">Katze Mausi (Fortsetzung von Seite 1): „Er ist mein Held"</h3>
+            <div class="cols-2">
+              <p class="body">Die gerettete Katze hat sich inzwischen vollständig erholt und gibt Interviews nur noch über ihren Anwalt. In einer schriftlichen Stellungnahme heisst es: „Er roch nach Monster Energy und Selbstvertrauen. Ich werde ihm für immer dankbar sein. Miau."</p>
+              <p class="body">Die Stadt Zürich prüft derweil, ob sie eine Statue errichtet. Lapis hat bereits Wünsche geäussert: „Lebensgross. Mit Katze. Und bitte meine gute Seite."</p>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="box">
+              <h4>Auszeichnung</h4>
+              <p style="margin:0;font-size:.95rem"><b>Stecher des Jahres 2026:</b><br>Alastor Lapis (zum 3. Mal in Folge). Die Jury: „Es gab keine ernsthafte Konkurrenz."</p>
+            </div>
+            <div class="photo sq"><span class="emo">🏆😈</span></div>
+            <div class="caption">Der Preisträger bei der Verleihung. Er hat die Rede übersprungen, um Valorant zu spielen.</div>
+            <h3 class="hl m">Studie: Blickkontakt von Big H tödlicher als Widowmaker-Headshot</h3>
+            <p class="body" style="font-size:.9rem">Testpersonen berichten von Herzrasen, Schwindel und dem plötzlichen Wunsch, ein Overwatch-Konto zu erstellen.</p>
+            <hr class="thin">
+            <h3 class="hl m">Umfrage</h3>
+            <p class="body" style="font-size:.9rem">87 % der Befragten halten Big H für „einen Gott unter Menschen". 13 % kannten ihn nicht und wurden aus der Umfrage entfernt.</p>
+          </aside>
+        </div>
+        <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
+        <button class="corner" type="button" data-dir="next" aria-label="Nächste Seite"></button>
+      </article>
+
+      <!-- ================= SEITE 5: SPORT ================= -->
+      <article class="page" data-title="Sport">
+        <div class="runhead"><b>The Big'H Times</b><span class="today"></span><span>Seite 5</span></div>
+        <div class="section-name">Sport & E-Sport</div>
+        <h2 class="hl xl" style="text-align:center">„unoslapis" zerstört Valorant: Gegner deinstallieren das Spiel</h2>
+        <div class="byline" style="text-align:center">Von <b>Hans Headshot</b> · Sportredaktion</div>
+        <div class="grid">
+          <div class="cols-2">
+            <p class="body">Es war ein Massaker. Unter seinem Kampfnamen „unoslapis" betrat Alastor Lapis am Samstagabend einen ganz gewöhnlichen Ranked-Server – und verliess ihn als Legende. Mit Jett gelangen ihm 38 Kills in 13 Runden, darunter ein Ace mit dem Messer.</p>
+            <p class="body">Das gegnerische Team reagierte mit Fassungslosigkeit. Drei der fünf Spieler deinstallierten Valorant noch während des Matches, einer schrieb im Chat nur „wer ist dieser mann". Der fünfte soll inzwischen Landwirt sein.</p>
+            <p class="body">Auch in Overwatch sorgt Lapis weiter für Schlagzeilen. Laut eigenen Angaben liegt er im Rang „Champion", laut Blizzard „[zensiert]". Die Big'H Times hat bei Blizzard nachgefragt. Die Antwort war ein nervöses Lachen.</p>
+            <p class="body">Sein Trainingsgeheimnis verrät Lapis bereitwillig: „Zwölf Stunden am Tag, drei Stunden Schlaf, null Gras. Disziplin ist alles." Sportwissenschaftler raten dringend davon ab.</p>
+          </div>
+          <aside class="side">
+            <div class="box">
+              <h4>Resultate</h4>
+              <table class="stock">
+                <tr><td>unoslapis – Gegner</td><td>13 : 0</td></tr>
+                <tr><td>Big H – Supports</td><td>9'001 : 0</td></tr>
+                <tr><td>Big H – Schlaf</td><td>1 : 0</td></tr>
+                <tr><td>Big H – Gras</td><td class="down">0 : 1</td></tr>
+              </table>
+            </div>
+            <div class="photo sq"><span class="emo">🔫💨</span></div>
+            <div class="caption">Jett in Aktion. Man sieht nur einen Windhauch. Mehr sieht der Gegner auch nicht.</div>
+          </aside>
+        </div>
+        <hr class="thick">
+        <div class="comic" aria-label="Comic">
+          <div><span class="fig">🧍💻</span><span>„Nur noch ein Game."</span></div>
+          <div><span class="fig">🌅🧍💻</span><span>„Nur noch EIN Game."</span></div>
+          <div><span class="fig">💀💻</span><span>„…gg."</span></div>
+        </div>
+        <p class="caption" style="text-align:center;margin-top:4px">Comic: „Der Goon-König" von Zeichner Pinsel-Paul</p>
+        <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
+        <button class="corner" type="button" data-dir="next" aria-label="Nächste Seite"></button>
+      </article>
+
+      <!-- ================= SEITE 6: VERMISCHTES ================= -->
+      <article class="page" data-title="Vermischtes">
+        <div class="runhead"><b>The Big'H Times</b><span class="today"></span><span>Seite 6</span></div>
+        <div class="section-name">Vermischtes · Anzeigen · Horoskop</div>
+        <div class="cols-3">
+          <div class="box">
+            <h4>Horoskop</h4>
+            <p style="margin:0 0 6px;font-size:.9rem"><b>♎ Waage (Big H, 4. Okt.):</b> Die Sterne stehen günstig für Ranked. Für die Liebe weniger. Der Mond rät: Duschen.</p>
+            <p style="margin:0 0 6px;font-size:.9rem"><b>♈ Alle anderen:</b> Heute begegnet euch ein Sex-Gott. Er wird euch ignorieren, weil er im Match ist.</p>
+          </div>
+          <div class="box">
+            <h4>Nachruf</h4>
+            <p style="margin:0;font-size:.9rem"><b>Sein Schlafrhythmus</b> (2004–2019)<br>Er war stets pünktlich und zuverlässig. Er starb friedlich um 04:37 Uhr während „nur noch einer Folge". In stiller Trauer: Sein Wecker, seine Mutter, der Morgen.</p>
+          </div>
+          <div class="box">
+            <h4>Leserbriefe</h4>
+            <p style="margin:0 0 6px;font-size:.9rem">„Ich habe Big H einmal im Coop gesehen. Seitdem schlafe ich besser." – <i>Ruth, 67</i></p>
+            <p style="margin:0;font-size:.9rem">„Warum schreibt ihr nur über ihn?" – <i>Leserbrief wurde gelöscht</i></p>
+          </div>
+          <div class="box">
+            <h4>Kleinanzeigen</h4>
+            <div class="classified"><b>Suche:</b> Goth-Freundin. <b>Biete:</b> Steam-Library, 3 Tempo-Packungen, Loyalität. Chiffre 69</div>
+            <div class="classified"><b>Verkaufe:</b> Wecker, ungenutzt. Nie gebraucht. Chiffre 420</div>
+            <div class="classified"><b>Verschenke:</b> Sportwagen. Nur an Freunde. Siehe Seite 2.</div>
+            <div class="classified"><b>Gesucht:</b> Gras. Zum Anfassen. Belohnung. Chiffre 🌱</div>
+          </div>
+          <div class="box">
+            <h4>Rätsel</h4>
+            <p style="margin:0;font-size:.9rem">Was hat vier Buchstaben, beginnt mit G und ist Big H's Lieblingsbeschäftigung?<br><br><span style="transform:rotate(180deg);display:inline-block;font-size:.8rem">Lösung: GAME. (Was dachtest du denn?)</span></p>
+          </div>
+          <div class="box">
+            <h4>Veranstaltungen</h4>
+            <ul>
+              <li><b>4. Oktober:</b> Big H hat Geburtstag. Pflichtveranstaltung. <a data-sub="b-day" href="https://b-day.unoslapis.ch/">b-day.unoslapis.ch</a></li>
+              <li><b>Jede Nacht, 02:00:</b> Ranked-Session. Zuschauer willkommen.</li>
+              <li><b>1. November, 00:04:</b> No Nut November – Eröffnung und Abschluss.</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="thick">
+        <p class="end-mark">❦ Ende der Ausgabe ❦<br><span style="font-size:.8rem">The Big'H Times · Redaktion: Discord · Druck: Big H's Drucker, der seit 2021 klemmt</span></p>
+        <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
+      </article>
+
+    </div>
+
+    <nav class="nav" aria-label="Seiten">
+      <button type="button" id="prev" aria-label="Vorherige Seite">◀</button>
+      <div class="count" id="count" aria-live="polite">Seite 1 von 6</div>
+      <button type="button" id="next" aria-label="Nächste Seite">▶</button>
+    </nav>
+    <p class="hint">Umblättern: Eselsohr klicken, Pfeiltasten ← → oder wischen</p>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const book = document.getElementById('book');
+    const pages = [...book.querySelectorAll('.page')];
+    const N = pages.length;
+    const DURATION = BIGH.reduced ? 20 : 1000;
+    let cur = 0;
+    let busy = false;
+
+    // Datum in alle Kopfzeilen
+    const todayStr = new Date().toLocaleDateString('de-CH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    document.querySelectorAll('.today').forEach((el) => { el.textContent = todayStr; });
+
+    // Stapelreihenfolge: vordere Seiten liegen oben
+    pages.forEach((p, i) => { p.style.zIndex = String(N - i); });
+
+    function fitHeight(i, j) {
+      const h = Math.max(pages[i].offsetHeight, j === undefined ? 0 : pages[j].offsetHeight);
+      book.style.height = h + 'px';
+    }
+    function updateNav() {
+      document.getElementById('count').textContent = 'Seite ' + (cur + 1) + ' von ' + N + ' · ' + pages[cur].dataset.title;
+      document.getElementById('prev').disabled = cur === 0;
+      document.getElementById('next').disabled = cur === N - 1;
+      try { history.replaceState(null, '', '#seite-' + (cur + 1)); } catch (e) { /* egal */ }
+    }
+    function scrollIntoViewIfNeeded() {
+      const top = book.getBoundingClientRect().top;
+      if (top < 0) window.scrollTo({ top: window.scrollY + top - 60, behavior: BIGH.reduced ? 'auto' : 'smooth' });
+    }
+    function rustle() {
+      // Papiergeräusch: kurzes Rauschen
+      for (let i = 0; i < 6; i++) setTimeout(() => BIGH.beep(BIGH.rand(1800, 3200), 0.03, 'sawtooth', 0.012), i * 40);
+    }
+
+    function show(i) {
+      pages.forEach((p, k) => {
+        p.classList.toggle('flipped', k < i);
+        p.classList.toggle('show', k === i);
+      });
+      cur = i;
+      fitHeight(cur);
+      updateNav();
+    }
+
+    function next() {
+      if (busy || cur >= N - 1) return;
+      busy = true;
+      const a = pages[cur], b = pages[cur + 1];
+      b.classList.add('show');
+      fitHeight(cur, cur + 1);
+      a.classList.add('turning', 'flipped');
+      rustle();
+      setTimeout(() => {
+        a.classList.remove('turning', 'show');
+        cur++;
+        fitHeight(cur);
+        updateNav();
+        scrollIntoViewIfNeeded();
+        busy = false;
+      }, DURATION);
+    }
+
+    function prev() {
+      if (busy || cur <= 0) return;
+      busy = true;
+      const a = pages[cur - 1], b = pages[cur];
+      a.classList.add('show', 'turning');
+      fitHeight(cur - 1, cur);
+      void a.offsetWidth;
+      a.classList.remove('flipped');
+      rustle();
+      setTimeout(() => {
+        a.classList.remove('turning');
+        b.classList.remove('show');
+        cur--;
+        fitHeight(cur);
+        updateNav();
+        scrollIntoViewIfNeeded();
+        busy = false;
+      }, DURATION);
+    }
+
+    function goTo(i) {
+      if (busy || i === cur || i < 0 || i >= N) return;
+      // Direkt springen (z.B. Inhaltsverzeichnis), dann kurz blättern
+      if (Math.abs(i - cur) === 1) { i > cur ? next() : prev(); return; }
+      show(i > cur ? i - 1 : i + 1);
+      i > cur ? next() : prev();
+    }
+
+    document.getElementById('next').addEventListener('click', next);
+    document.getElementById('prev').addEventListener('click', prev);
+    book.addEventListener('click', (e) => {
+      const c = e.target.closest('.corner');
+      if (c) { c.dataset.dir === 'next' ? next() : prev(); return; }
+      const g = e.target.closest('[data-goto]');
+      if (g) { e.preventDefault(); goTo(Number(g.dataset.goto)); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+
+    // Wischen auf dem Handy
+    let sx = 0, sy = 0, st = 0;
+    book.addEventListener('touchstart', (e) => { const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
+    book.addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - st < 800) dx < 0 ? next() : prev();
+    }, { passive: true });
+
+    // Höhe bei Grössenänderung / nach dem Laden der Schriften anpassen
+    window.addEventListener('resize', () => fitHeight(cur));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitHeight(cur));
+    window.addEventListener('load', () => fitHeight(cur));
+
+    // Start: Seite aus URL (#seite-3) oder Titelseite
+    const m = location.hash.match(/^#seite-(\d+)$/);
+    show(m ? Math.min(Math.max(Number(m[1]) - 1, 0), N - 1) : 0);
+  })();
+  </script>
+</body>
+</html>

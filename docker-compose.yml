@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     depends_on:
       - web
+      - guestbook
     ports:
       - "80:80"
       - "443:443"
@@ -40,7 +41,26 @@ services:
     networks:
       - unoslapis
 
+  # Mini-Backend für guestbook.unoslapis.ch (speichert Einträge als JSON)
+  guestbook:
+    build: ./guestbook
+    container_name: unoslapis-guestbook
+    restart: unless-stopped
+    environment:
+      # Token zum Löschen von Einträgen (siehe README). Leer = Löschen deaktiviert.
+      ADMIN_TOKEN: ${GUESTBOOK_ADMIN_TOKEN:-}
+    volumes:
+      - guestbook_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - unoslapis
+
 volumes:
+  guestbook_data:
   caddy_data:
   caddy_config:
 

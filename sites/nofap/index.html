@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🚫 NoFap Tracker – Goon-König Edition</title>
+<meta name="description" content="Der offizielle NoFap-Tracker des Goon-Königs. Streak: kurz.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚫</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: linear-gradient(180deg, #120a14, #0d0b1a 60%); }
+  .wrap { padding: 70px 0 20px; }
+  .head { text-align: center; }
+  .head .tag { display: inline-block; font-family: var(--pixel); font-size: .65rem; background: #e0001b; color: #fff; padding: 6px 10px; border-radius: 4px; letter-spacing: 1px; }
+  .head h1 { font-family: var(--title); font-size: clamp(2.8rem, 10vw, 5.5rem); letter-spacing: 3px; margin: 14px 0 0; line-height: 1; }
+  .head p { color: var(--muted); margin: 8px 0 0; }
+
+  .streak { text-align: center; margin: 34px auto 0; max-width: 680px; border: 2px solid #e0001b; background: radial-gradient(circle at 50% 0, rgba(224,0,27,.25), transparent 70%), var(--card); }
+  .streak .lbl { color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: .85rem; }
+  .streak .time { font-family: var(--pixel); font-size: clamp(1.6rem, 7vw, 3.4rem); margin: 16px 0 8px; color: #fff; text-shadow: 0 0 20px #e0001b; }
+  .streak .sub { color: var(--muted); }
+  .streak.reset { animation: alarm .25s 8; }
+  @keyframes alarm { 50% { background: #e0001b; } }
+  .streak .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; }
+  .k .v { font-family: var(--title); font-size: 2.4rem; line-height: 1; color: var(--yellow); }
+  .k .l { color: var(--muted); font-weight: 600; font-size: .9rem; margin-top: 4px; }
+
+  h2.sec { font-family: var(--title); letter-spacing: 2px; font-size: clamp(2rem, 6vw, 2.8rem); margin: 50px 0 14px; }
+
+  .heat { display: grid; grid-template-columns: repeat(auto-fill, minmax(18px, 1fr)); gap: 4px; }
+  .heat span { aspect-ratio: 1; border-radius: 3px; background: #e0001b; opacity: .9; }
+  .heat span.ok { background: var(--green); }
+  .heat span.mid { background: #ff7b00; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: .85rem; margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+
+  .nnn { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .nnn div { background: var(--card); border-radius: 12px; padding: 14px; text-align: center; }
+  .nnn b { display: block; font-size: 1.3rem; }
+  .nnn span { color: #ff5470; font-weight: 700; font-size: .9rem; }
+
+  .quote { font-size: 1.3rem; font-weight: 800; text-align: center; min-height: 3.2em; display: grid; place-items: center; }
+  .quote .reply { display: block; color: var(--pink); font-size: 1rem; margin-top: 8px; }
+
+  .temptation { height: 26px; border-radius: 13px; background: rgba(255,255,255,.08); overflow: hidden; }
+  .temptation div { height: 100%; width: 100%; background: repeating-linear-gradient(45deg, #e0001b 0 14px, #ff3355 14px 28px); animation: stripes 1s linear infinite; background-size: 40px 40px; }
+  @keyframes stripes { to { background-position: 40px 0; } }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <div class="head">
+      <span class="tag">SELBSTHILFE-PROGRAMM</span>
+      <h1>NoFap Tracker 🚫</h1>
+      <p>Teilnehmer: <b>Alastor Lapis</b> alias der Goon-König · Motivation: gering · Rückfallquote: ja</p>
+    </div>
+
+    <section class="card streak" id="streak">
+      <div class="lbl">Aktueller Streak</div>
+      <div class="time" id="time">00:00:00</div>
+      <div class="sub" id="since">seit heute 00:04 Uhr</div>
+      <div class="btns">
+        <button class="btn pink" id="relapse" type="button">🚨 Rückfall melden</button>
+        <button class="btn ghost" id="pray" type="button">🙏 Kraft schicken</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card k"><div class="v">2 T 3 h</div><div class="l">Längster Streak aller Zeiten (Nov. 2024, Grippe)</div></div>
+      <div class="card k"><div class="v" id="relapses">0</div><div class="l">Rückfälle dieses Jahr</div></div>
+      <div class="card k"><div class="v">00:04</div><div class="l">Durchschnittliche Rückfall-Uhrzeit</div></div>
+      <div class="card k"><div class="v" id="prayers">0</div><div class="l">Kraft geschickt (hat nichts gebracht)</div></div>
+    </section>
+
+    <h2 class="sec">Die letzten 12 Wochen</h2>
+    <section class="card">
+      <div class="heat" id="heat"></div>
+      <div class="legend"><span><i style="background:#e0001b"></i>Rückfall</span><span><i style="background:#ff7b00"></i>Fast geschafft (bis 00:03)</span><span><i style="background:var(--green)"></i>Clean (war krank)</span></div>
+    </section>
+
+    <h2 class="sec">No Nut November – Archiv</h2>
+    <section class="nnn" id="nnn"></section>
+
+    <h2 class="sec">Versuchungs-Level</h2>
+    <section class="card">
+      <div class="temptation"><div></div></div>
+      <p style="text-align:center;color:var(--muted);margin:10px 0 0">Konstant bei 100%. Ursache laut Big H: „Das Internet existiert."</p>
+    </section>
+
+    <h2 class="sec">Motivation des Tages</h2>
+    <section class="card">
+      <div class="quote" id="quote"></div>
+      <div style="text-align:center;margin-top:10px"><button class="btn" id="next-quote" type="button">💪 Mehr Motivation</button></div>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">Dieser Tracker wird automatisch zurückgesetzt. Täglich. Um 00:04. Wie immer.</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const RESET_HOUR = 0, RESET_MIN = 4; // täglicher "Rückfall" um 00:04
+
+    const QUOTES = [
+      ['Du bist stärker als dein Verlangen.', 'Big H: „Nein."'],
+      ['Jeder Tag ist eine neue Chance.', 'Big H: „Genau, jeden Tag."'],
+      ['Disziplin ist die Brücke zwischen Zielen und Erfolg.', 'Big H hat die Brücke abgerissen.'],
+      ['Denk an deine Zukunft!', 'Big H denkt an die nächsten 5 Minuten.'],
+      ['Echte Könige kontrollieren sich selbst.', 'Er ist der GOON-König. Andere Regeln.'],
+      ['Geh raus, fass Gras an!', 'Siehe touchgrass.unoslapis.ch. Aussichtslos.'],
+      ['Ein Sex-Gott braucht keine Hilfsmittel.', 'Der Sex-Gott: „Hilfsmittel? Ich nenne es Hobby."']
+    ];
+
+    // ---------- Streak: seit dem letzten 00:04 ----------
+    let lastReset = computeLastReset();
+    function computeLastReset() {
+      const now = new Date();
+      const r = new Date(now.getFullYear(), now.getMonth(), now.getDate(), RESET_HOUR, RESET_MIN);
+      if (r > now) r.setDate(r.getDate() - 1);
+      return r;
+    }
+    const pad = (n) => String(n).padStart(2, '0');
+    function tick() {
+      const now = new Date();
+      const daily = computeLastReset();
+      if (daily > lastReset) lastReset = daily;
+      const s = Math.max(0, Math.floor((now - lastReset) / 1000));
+      document.getElementById('time').textContent = pad(Math.floor(s / 3600)) + ':' + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60);
+      const sameDay = lastReset.toDateString() === now.toDateString();
+      document.getElementById('since').textContent = 'seit ' + (sameDay ? 'heute' : 'gestern') + ' ' + pad(lastReset.getHours()) + ':' + pad(lastReset.getMinutes()) + ' Uhr';
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // Rückfälle dieses Jahr = vergangene Tage im Jahr (einer pro Tag, verlässlich)
+    const now = new Date();
+    const dayOfYear = Math.floor((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - new Date(now.getFullYear(), 0, 1)) / 86400000) + 1;
+    let relapses = dayOfYear;
+    const rel = document.getElementById('relapses');
+    rel.textContent = relapses;
+
+    const streak = document.getElementById('streak');
+    const RELAPSE_MSGS = ['🚨 Rückfall registriert. Überraschung: keine.', '📉 Streak zurückgesetzt. Schon wieder.', '🤝 Wir haben es alle kommen sehen.', '👑 Der Goon-König regiert weiter.'];
+    let ri = 0;
+    document.getElementById('relapse').addEventListener('click', () => {
+      lastReset = new Date();
+      relapses++;
+      rel.textContent = relapses;
+      tick();
+      streak.classList.remove('reset'); void streak.offsetWidth; streak.classList.add('reset');
+      BIGH.toast(RELAPSE_MSGS[ri++ % RELAPSE_MSGS.length]);
+      [880, 660, 880, 660].forEach((f, i) => setTimeout(() => BIGH.beep(f, 0.18, 'square', 0.05), i * 200));
+    });
+
+    let prayers = 0;
+    document.getElementById('pray').addEventListener('click', (e) => {
+      prayers++;
+      document.getElementById('prayers').textContent = prayers;
+      BIGH.burst(e.clientX, e.clientY, ['🙏', '💪', '✨', '🕯️'], 14);
+    });
+
+    // ---------- Heatmap der letzten 84 Tage ----------
+    const heat = document.getElementById('heat');
+    for (let i = 0; i < 84; i++) {
+      const s = document.createElement('span');
+      const r = Math.random();
+      if (r > 0.97) { s.className = 'ok'; s.title = 'Clean (hatte Fieber)'; }
+      else if (r > 0.85) { s.className = 'mid'; s.title = 'Fast geschafft (bis 00:03)'; }
+      else s.title = 'Rückfall';
+      heat.appendChild(s);
+    }
+
+    // ---------- No Nut November Archiv ----------
+    const nnn = document.getElementById('nnn');
+    const year = now.getFullYear();
+    for (let y = year - 4; y < year; y++) {
+      const d = document.createElement('div');
+      const b = document.createElement('b');
+      b.textContent = 'NNN ' + y;
+      const s = document.createElement('span');
+      s.textContent = y === year - 2 ? '❌ 01.11. · 00:00:12 (neuer Rekord: schnellstes Scheitern)' : '❌ gescheitert am 01.11. · 00:04';
+      d.append(b, s);
+      nnn.appendChild(d);
+    }
+
+    // ---------- Motivation ----------
+    const q = document.getElementById('quote');
+    let qi = Math.floor(Math.random() * QUOTES.length);
+    function showQuote() {
+      const [a, b] = QUOTES[qi++ % QUOTES.length];
+      q.textContent = '„' + a + '"';
+      const r = document.createElement('span');
+      r.className = 'reply';
+      r.textContent = b;
+      q.appendChild(r);
+    }
+    showQuote();
+    document.getElementById('next-quote').addEventListener('click', showQuote);
+  })();
+  </script>
+</body>
+</html>

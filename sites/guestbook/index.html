@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📖 Big H's Gästebuch – Trag dich ein!!!</title>
+<meta name="description" content="Das offizielle Gästebuch von Big H. Wie 2003, nur schlimmer.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body {
+    background-color: #000033;
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+      radial-gradient(1px 1px at 80px 120px, #ff0, transparent),
+      radial-gradient(1.5px 1.5px at 150px 60px, #fff, transparent),
+      radial-gradient(1px 1px at 200px 170px, #0ff, transparent);
+    background-size: 240px 200px;
+    font-family: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', cursive, var(--body);
+    color: #fff;
+  }
+  .wrap { width: min(760px, 100% - 32px); padding: 64px 0 20px; }
+  .rainbow { background: linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, magenta, red); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rb 3s linear infinite; }
+  @keyframes rb { to { background-position: 200% 0; } }
+  h1 { font-size: clamp(2.2rem, 8vw, 3.6rem); text-align: center; margin: 0; font-weight: 900; }
+  .marq { overflow: hidden; white-space: nowrap; border: 3px ridge #c0c0c0; background: #000; color: #0f0; padding: 6px 0; margin: 16px 0; font-family: 'Courier New', monospace; font-weight: 700; }
+  .marq span { display: inline-block; padding-left: 100%; animation: ticker 18s linear infinite; }
+  .blink { animation: blink 1s steps(1) infinite; color: #ff0; font-weight: 900; }
+  @keyframes blink { 50% { opacity: 0; } }
+  hr.rb { border: 0; height: 6px; background: linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, magenta); margin: 24px 0; }
+  .center { text-align: center; }
+  .construction { display: inline-block; background: repeating-linear-gradient(45deg, #ffd23f 0 14px, #000 14px 28px); padding: 4px; margin: 6px 0; }
+  .construction span { display: block; background: #ffd23f; color: #000; font-weight: 900; padding: 4px 12px; }
+
+  .box { border: 4px outset #c0c0c0; background: #c0c0c0; color: #000; padding: 0; }
+  .box .title { background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: 700; padding: 4px 8px; font-family: Tahoma, Arial, sans-serif; font-size: .95rem; display: flex; justify-content: space-between; }
+  .box .body { padding: 16px; font-family: Tahoma, Arial, sans-serif; }
+  label { display: block; font-weight: 700; margin: 10px 0 4px; }
+  input[type=text], textarea { width: 100%; border: 2px inset #fff; background: #fff; padding: 8px; font: 1rem Tahoma, Arial, sans-serif; color: #000; }
+  textarea { min-height: 110px; resize: vertical; }
+  .emojis { display: flex; flex-wrap: wrap; gap: 6px; }
+  .emojis label { margin: 0; font-weight: 400; }
+  .emojis input { position: absolute; opacity: 0; pointer-events: none; }
+  .emojis span { display: inline-grid; place-items: center; width: 42px; height: 42px; font-size: 1.4rem; border: 2px outset #fff; background: #dcdcdc; cursor: pointer; }
+  .emojis input:checked + span { border-style: inset; background: #fff; outline: 2px dotted #000080; }
+  .emojis input:focus-visible + span { outline: 3px solid #000080; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .win-btn { border: 3px outset #fff; background: #c0c0c0; padding: 8px 20px; font: 700 1rem Tahoma, Arial, sans-serif; cursor: pointer; color: #000; }
+  .win-btn:active { border-style: inset; }
+  .win-btn:disabled { color: #808080; cursor: wait; }
+  .count { font-size: .85rem; color: #333; }
+  .msg { margin-top: 10px; font-weight: 700; min-height: 1.3em; }
+  .msg.err { color: #b00000; }
+  .msg.ok { color: #006400; }
+
+  .entries { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .entry { border: 3px double #ff00ff; background: rgba(0,0,60,.85); padding: 14px 16px; position: relative; }
+  .entry:nth-child(3n+2) { border-color: #00ffff; }
+  .entry:nth-child(3n+3) { border-color: #ffff00; }
+  .entry .who { font-weight: 900; font-size: 1.1rem; }
+  .entry .who .e { font-size: 1.5rem; margin-right: 6px; vertical-align: -3px; }
+  .entry .when { font-size: .8rem; color: #aaa; }
+  .entry .text { margin-top: 8px; white-space: pre-line; word-wrap: break-word; overflow-wrap: anywhere; }
+  .entry .del { position: absolute; top: 8px; right: 8px; }
+  .empty { text-align: center; color: #aaa; padding: 20px; }
+  .counter { display: inline-flex; gap: 2px; }
+  .counter span { background: #000; color: #0f0; font-family: 'Courier New', monospace; border: 1px solid #0f0; padding: 2px 5px; font-weight: 700; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1 class="rainbow">~*~ Big H's GäStEbUcH ~*~</h1>
+    <div class="center"><div class="construction"><span>🚧 UNDER CONSTRUCTION SEIT 2003 🚧</span></div></div>
+    <div class="marq"><span>Willkommen auf der Homepage von Big H alias Alastor Lapis alias dem Goon-König!!! Bitte trag dich ins Gästebuch ein!!! Keine Beleidigungen (ausser gegen seinen Rank)!!! Du bist Besucher Nr. 420069!!!</span></div>
+
+    <p class="center"><span class="blink">NEU!!!</span> Hinterlass eine Nachricht für Big H – zum Geburtstag, als Liebeserklärung oder einfach um zu sagen, dass er Gras anfassen soll.</p>
+
+    <section class="box">
+      <div class="title"><span>📝 Eintrag schreiben.exe</span><span>_ □ ✕</span></div>
+      <div class="body">
+        <form id="form" novalidate>
+          <label for="name">Dein Name:</label>
+          <input type="text" id="name" maxlength="30" autocomplete="nickname" placeholder="xXx_DarkLord_xXx" required>
+
+          <label>Dein Emoji:</label>
+          <div class="emojis" id="emojis"></div>
+
+          <label for="message">Deine Nachricht:</label>
+          <textarea id="message" maxlength="500" placeholder="Big H du bist der beste!!!1!" required></textarea>
+
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="row">
+            <span class="count" id="count">0 / 500</span>
+            <button class="win-btn" type="submit" id="submit">📨 Eintragen!</button>
+          </div>
+          <div class="msg" id="msg" role="status"></div>
+        </form>
+      </div>
+    </section>
+
+    <hr class="rb">
+    <h2 class="rainbow center" style="font-size:2rem;margin:0">✨ Einträge ✨ <span id="total" style="font-size:1rem"></span></h2>
+    <section class="entries" id="entries"><div class="empty">Lade Einträge… ⏳</div></section>
+
+    <hr class="rb">
+    <p class="center">Besucher: <span class="counter"><span>4</span><span>2</span><span>0</span><span>0</span><span>6</span><span>9</span></span></p>
+    <p class="center" style="font-size:.85rem;color:#aaa">Optimiert für Netscape Navigator 4.0 · 800×600 · Best viewed with 🥵</p>
+  </main>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const API = '/api/entries';
+    const EMOJIS = ['🐎', '👑', '🥵', '💀', '😂', '🎮', '🍜', '💜', '🔥', '🌱', '🎂', '🗡️'];
+    const isAdmin = location.hash === '#admin';
+
+    // Emoji-Auswahl
+    const emo = document.getElementById('emojis');
+    EMOJIS.forEach((e, i) => {
+      const l = document.createElement('label');
+      l.innerHTML = '<input type="radio" name="emoji"><span></span>';
+      l.querySelector('input').value = e;
+      l.querySelector('input').checked = i === 0;
+      l.querySelector('input').setAttribute('aria-label', e);
+      l.querySelector('span').textContent = e;
+      emo.appendChild(l);
+    });
+
+    const msgEl = document.getElementById('msg');
+    const count = document.getElementById('count');
+    const message = document.getElementById('message');
+    message.addEventListener('input', () => { count.textContent = message.value.length + ' / 500'; });
+
+    function setMsg(text, ok) { msgEl.textContent = text; msgEl.className = 'msg ' + (ok ? 'ok' : 'err'); }
+
+    function when(ts) {
+      const d = new Date(ts);
+      return d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' um ' +
+        d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+    }
+
+    const list = document.getElementById('entries');
+    function render(entries) {
+      list.innerHTML = '';
+      if (!entries.length) {
+        list.innerHTML = '<div class="empty">Noch keine Einträge. Sei der Erste!!! 🥇</div>';
+        return;
+      }
+      entries.forEach((en) => {
+        const d = document.createElement('article');
+        d.className = 'entry';
+        d.innerHTML = '<div class="who"><span class="e"></span><span class="n"></span></div><div class="when"></div><div class="text"></div>';
+        d.querySelector('.e').textContent = en.emoji;
+        d.querySelector('.n').textContent = en.name;
+        d.querySelector('.when').textContent = when(en.ts);
+        d.querySelector('.text').textContent = en.message;
+        if (isAdmin) {
+          const b = document.createElement('button');
+          b.className = 'win-btn del';
+          b.type = 'button';
+          b.textContent = '🗑️';
+          b.addEventListener('click', () => del(en.id, d));
+          d.appendChild(b);
+        }
+        list.appendChild(d);
+      });
+    }
+
+    async function load() {
+      try {
+        const r = await fetch(API, { cache: 'no-store' });
+        if (!r.ok) throw new Error(r.status);
+        const data = await r.json();
+        render(data.entries || []);
+        document.getElementById('total').textContent = '(' + (data.total || 0) + ')';
+      } catch (e) {
+        list.innerHTML = '<div class="empty">⚠️ Der Gästebuch-Server antwortet nicht. Er goont vermutlich. Versuch es später nochmal.</div>';
+      }
+    }
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const text = message.value.trim();
+      if (!name) { setMsg('❌ Du musst einen Namen eingeben!!!', false); return; }
+      if (text.length < 2) { setMsg('❌ Schreib schon was, du Feigling!!!', false); return; }
+      const btn = document.getElementById('submit');
+      btn.disabled = true;
+      setMsg('⏳ Wird gesendet… (Modem-Geräusche)', true);
+      try {
+        const r = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, message: text,
+            emoji: (document.querySelector('input[name=emoji]:checked') || {}).value,
+            website: document.getElementById('website').value
+          })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || 'Fehler ' + r.status);
+        setMsg('✅ Danke für deinen Eintrag!!! Big H ist gerührt. 🥹', true);
+        message.value = '';
+        count.textContent = '0 / 500';
+        BIGH.confettiRain(['⭐', '✨', '💜', '📖'], 50);
+        load();
+      } catch (err) {
+        setMsg('❌ ' + (err.message === 'Failed to fetch' ? 'Server nicht erreichbar.' : err.message), false);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Admin: guestbook.unoslapis.ch/#admin -> Löschknöpfe (Token aus .env)
+    async function del(id, el) {
+      let token = '';
+      try { token = sessionStorage.getItem('bigh-gb-token') || ''; } catch (e) { /* egal */ }
+      if (!token) {
+        token = prompt('Admin-Token:') || '';
+        if (!token) return;
+      }
+      if (!confirm('Eintrag wirklich löschen?')) return;
+      const r = await fetch(API + '/' + encodeURIComponent(id), { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+      if (r.ok) {
+        try { sessionStorage.setItem('bigh-gb-token', token); } catch (e) { /* egal */ }
+        el.remove();
+        BIGH.toast('🗑️ Gelöscht');
+      } else {
+        try { sessionStorage.removeItem('bigh-gb-token'); } catch (e) { /* egal */ }
+        BIGH.toast('❌ Löschen fehlgeschlagen (' + r.status + ')');
+      }
+    }
+
+    load();
+    setInterval(() => { if (!document.hidden) load(); }, 60000);
+  })();
+  </script>
+</body>
+</html>

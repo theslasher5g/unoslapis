@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💔 Operation Freundin – Big H Countdown</title>
+<meta name="description" content="Countdown: In einem Jahr hat Big H seine erste Freundin. Vielleicht.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💔</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: radial-gradient(circle at 50% 0%, #4a1030 0%, #1a0b1f 55%, #0d0b1a 100%); }
+  .wrap { padding: 70px 0 20px; text-align: center; }
+  .eyebrow { font-family: var(--pixel); font-size: .7rem; color: var(--pink); letter-spacing: 2px; }
+  h1 { font-family: var(--title); font-size: clamp(3rem, 12vw, 6.5rem); line-height: .95; margin: 14px 0 6px; letter-spacing: 3px; }
+  h1 .heart { display: inline-block; animation: crack 3s ease-in-out infinite; }
+  @keyframes crack { 0%, 70%, 100% { transform: scale(1); } 75% { transform: scale(1.25) rotate(-8deg); } 80% { transform: scale(.9) rotate(8deg); } }
+  .lead { color: var(--muted); font-size: 1.15rem; max-width: 620px; margin: 0 auto 34px; }
+
+  .countdown { display: flex; justify-content: center; gap: clamp(8px, 2vw, 16px); flex-wrap: wrap; }
+  .cd { background: linear-gradient(180deg, #2b1640, #1f1a3a); border: 2px solid rgba(255,62,154,.4); border-radius: 16px; padding: 18px 10px 14px; min-width: clamp(74px, 20vw, 130px); box-shadow: 0 0 30px rgba(255,62,154,.15); }
+  .cd .n { font-family: var(--pixel); font-size: clamp(1.4rem, 5.5vw, 2.8rem); color: #fff; text-shadow: 0 0 18px var(--pink); }
+  .cd .u { margin-top: 10px; color: var(--muted); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; }
+  .target { margin-top: 16px; color: var(--muted); font-weight: 600; }
+  .extended { display: none; margin: 18px auto 0; max-width: 560px; background: #3a0d1f; border: 2px solid var(--pink); border-radius: 12px; padding: 12px 16px; font-weight: 700; }
+  .extended.show { display: block; animation: shake .4s 3; }
+  @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 50px; text-align: left; }
+  .card h2 { font-family: var(--title); letter-spacing: 1px; font-size: 1.9rem; margin: 0 0 12px; }
+
+  /* Wahrscheinlichkeit */
+  .prob { font-family: var(--title); font-size: 4rem; line-height: 1; color: var(--pink); }
+  .prob-bar { height: 16px; background: rgba(255,255,255,.08); border-radius: 8px; overflow: hidden; margin: 12px 0 8px; }
+  .prob-bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--yellow)); transition: width .8s; }
+  .small { color: var(--muted); font-size: .9rem; }
+
+  /* Roadmap */
+  .road { list-style: none; padding: 0; margin: 0; }
+  .road li { display: flex; gap: 12px; align-items: flex-start; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,.1); }
+  .road li:last-child { border-bottom: 0; }
+  .road .st { flex: none; width: 28px; text-align: center; }
+  .road .done { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.3); }
+  .road .todo { font-weight: 700; }
+
+  /* Wette */
+  .bet-btns { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+  .odds { display: flex; gap: 16px; font-weight: 800; margin-top: 8px; }
+  .odds span b { color: var(--yellow); }
+  .votes { height: 12px; border-radius: 6px; overflow: hidden; display: flex; background: rgba(255,255,255,.08); margin-top: 10px; }
+  .votes .y { background: var(--green); transition: width .5s; }
+  .votes .n { background: var(--pink); transition: width .5s; }
+
+  .tips li { margin-bottom: 8px; }
+  .status-pill { display: inline-block; background: #3a0d1f; color: var(--pink); border: 1px solid var(--pink); padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: .85rem; margin-bottom: 14px; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <div class="eyebrow">OPERATION FREUNDIN · STATUS: AKTIV</div>
+    <h1>Big H bekommt eine <span style="color:var(--pink)">Freundin</span> <span class="heart">💔</span></h1>
+    <p class="lead">Die Wissenschaft sagt: Noch ein Jahr, dann ist es so weit. Der Goon-König hat es versprochen. Wir zählen mit.</p>
+
+    <div class="countdown" aria-live="off">
+      <div class="cd"><div class="n" id="d">000</div><div class="u">Tage</div></div>
+      <div class="cd"><div class="n" id="h">00</div><div class="u">Stunden</div></div>
+      <div class="cd"><div class="n" id="m">00</div><div class="u">Minuten</div></div>
+      <div class="cd"><div class="n" id="s">00</div><div class="u">Sekunden</div></div>
+    </div>
+    <div class="target" id="target"></div>
+    <div class="extended" id="extended"></div>
+
+    <section class="grid">
+      <div class="card">
+        <div class="status-pill">❤️‍🩹 Beziehungsstatus: Single seit Geburt</div>
+        <h2>Erfolgs-Chance</h2>
+        <div class="prob" id="prob">0.0%</div>
+        <div class="prob-bar"><div id="prob-bar"></div></div>
+        <div class="small" id="prob-note">Berechnet von einem Supercomputer. Der Supercomputer hat danach geweint.</div>
+      </div>
+
+      <div class="card">
+        <h2>Roadmap 🗺️</h2>
+        <ul class="road" id="road"></ul>
+      </div>
+
+      <div class="card">
+        <h2>Wettbüro 🎰</h2>
+        <p style="margin:0">Schafft er es bis zum Ende des Countdowns?</p>
+        <div class="odds"><span>Ja: <b>69 : 1</b></span><span>Nein: <b>1.01 : 1</b></span></div>
+        <div class="bet-btns">
+          <button class="btn cyan" id="bet-yes" type="button">✅ Ja, ich glaube an ihn</button>
+          <button class="btn pink" id="bet-no" type="button">❌ Niemals</button>
+        </div>
+        <div class="votes"><div class="y" id="vy" style="width:3%"></div><div class="n" id="vn" style="width:97%"></div></div>
+        <div class="small" id="vote-text" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card">
+        <h2>Tipps vom Squad 💡</h2>
+        <ul class="tips" id="tips"></ul>
+        <button class="btn ghost" id="more-tip" type="button">🎲 Neuer Tipp</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">Operation Freundin™ · Bei Erfolg bitte sofort b-day.unoslapis.ch informieren · Countdown wird bei Bedarf automatisch verlängert</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    // Zieldatum für die erste Freundin (Countdown startet am 25.09.2026 -> 1 Jahr)
+    const TARGET = new Date('2027-09-25T00:00:00+02:00');
+
+    const ROADMAP = [
+      { done: true,  t: 'Eine echte Frau gesehen (auf Twitch)' },
+      { done: true,  t: 'Tinder installiert' },
+      { done: true,  t: 'Tinder deinstalliert (0 Matches, 1 Bot)' },
+      { done: true,  t: 'Profilbild von Anime-Charakter zu echtem Foto gewechselt… und wieder zurück' },
+      { done: false, t: 'Mit einer Frau gesprochen (Kassiererin zählt nicht)' },
+      { done: false, t: 'Ein Date, das nicht in Overwatch stattfindet' },
+      { done: false, t: 'Beim Date nicht über seinen Rank reden' },
+      { done: false, t: 'ERSTE FREUNDIN 💍' }
+    ];
+
+    const TIPS = [
+      'Beim ersten Date nicht erwähnen, wie viele Stunden du auf Steam hast.',
+      'Nein, „uwu" ist keine Begrüssung.',
+      'Frauen mögen Selbstvertrauen. Aber nicht „ich bin Champion (laut mir)"-Selbstvertrauen.',
+      'Den Waifu-Tierlisten-Link NICHT als Icebreaker schicken.',
+      'Duschen hilft. Wirklich.',
+      'Wenn sie „Was machst du so?" fragt, ist „goonen" die falsche Antwort.',
+      'Goth-Baddies sind auch nur Menschen. Sprich sie einfach an.',
+      'Ramen zählt als Date-Essen. Instant-Ramen nicht.',
+      'Den PC mal ausschalten. Nur für einen Abend. Du schaffst das.',
+      'Alastor-Lapis-Energie: Selbstbewusst, mysteriös, geduscht.'
+    ];
+
+    // ---------- Countdown (verlängert sich selbst, wenn die Zeit abläuft) ----------
+    const pad = (n, l) => String(n).padStart(l || 2, '0');
+    let extensions = 0;
+    let target = new Date(TARGET);
+    function extendIfNeeded(now) {
+      while (target <= now) {
+        target = new Date(target.getFullYear() + 1, target.getMonth(), target.getDate(), target.getHours(), target.getMinutes());
+        extensions++;
+      }
+      const ext = document.getElementById('extended');
+      if (extensions > 0) {
+        ext.textContent = '⏰ Deadline verpasst. Countdown wurde automatisch um 1 Jahr verlängert' +
+          (extensions > 1 ? ' (schon ' + extensions + '×)' : '') + '. 💀';
+        ext.classList.add('show');
+      }
+      document.getElementById('target').textContent = 'Deadline: ' + target.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    function tick() {
+      const now = new Date();
+      if (target <= now) extendIfNeeded(now);
+      const s = Math.floor((target - now) / 1000);
+      document.getElementById('d').textContent = pad(Math.floor(s / 86400), 3);
+      document.getElementById('h').textContent = pad(Math.floor(s % 86400 / 3600));
+      document.getElementById('m').textContent = pad(Math.floor(s % 3600 / 60));
+      document.getElementById('s').textContent = pad(s % 60);
+    }
+    extendIfNeeded(new Date());
+    tick();
+    setInterval(tick, 1000);
+
+    // ---------- Wahrscheinlichkeit (schwankt dramatisch um fast nichts) ----------
+    const prob = document.getElementById('prob');
+    const probBar = document.getElementById('prob-bar');
+    const NOTES = [
+      'Berechnet von einem Supercomputer. Der Supercomputer hat danach geweint.',
+      '+0.1% weil er heute geduscht hat.',
+      '−0.2% weil er „m\'lady" gesagt hat.',
+      '+0.05% für den neuen Hoodie.',
+      '−0.3%: Wurde beim Goonen erwischt.'
+    ];
+    function updateProb() {
+      const p = BIGH.rand(0.1, 2.4);
+      prob.textContent = p.toFixed(1) + '%';
+      probBar.style.width = Math.max(p * 2, 1) + '%';
+      document.getElementById('prob-note').textContent = BIGH.pick(NOTES);
+    }
+    updateProb();
+    setInterval(updateProb, 4000);
+
+    // ---------- Roadmap ----------
+    const road = document.getElementById('road');
+    ROADMAP.forEach((r) => {
+      const li = document.createElement('li');
+      const st = document.createElement('span');
+      st.className = 'st';
+      st.textContent = r.done ? '✅' : '⏳';
+      const tx = document.createElement('span');
+      tx.className = r.done ? 'done' : 'todo';
+      tx.textContent = r.t;
+      li.append(st, tx);
+      road.appendChild(li);
+    });
+
+    // ---------- Wettbüro (Stimmen werden im Browser gespeichert) ----------
+    let votes = { y: 3, n: 97 };
+    try { votes = JSON.parse(localStorage.getItem('bigh-gf-votes')) || votes; } catch (e) { /* egal */ }
+    function renderVotes() {
+      const total = votes.y + votes.n;
+      document.getElementById('vy').style.width = (votes.y / total * 100) + '%';
+      document.getElementById('vn').style.width = (votes.n / total * 100) + '%';
+      document.getElementById('vote-text').textContent =
+        Math.round(votes.y / total * 100) + '% glauben an ihn · ' + Math.round(votes.n / total * 100) + '% sind realistisch';
+    }
+    function vote(k, e) {
+      votes[k]++;
+      try { localStorage.setItem('bigh-gf-votes', JSON.stringify(votes)); } catch (err) { /* egal */ }
+      renderVotes();
+      if (k === 'y') {
+        BIGH.toast('🙏 Mutig. Du bist ein echter Freund.');
+        BIGH.burst(e.clientX, e.clientY, ['💖', '🙏', '✨'], 16);
+      } else {
+        BIGH.toast('📉 Ehrlich. Brutal, aber ehrlich.');
+        BIGH.burst(e.clientX, e.clientY, ['💔', '💀', '📉'], 16);
+      }
+    }
+    document.getElementById('bet-yes').addEventListener('click', (e) => vote('y', e));
+    document.getElementById('bet-no').addEventListener('click', (e) => vote('n', e));
+    renderVotes();
+
+    // ---------- Tipps ----------
+    const tips = document.getElementById('tips');
+    let pool = TIPS.slice().sort(() => Math.random() - 0.5);
+    function addTip() {
+      if (!pool.length) pool = TIPS.slice().sort(() => Math.random() - 0.5);
+      const li = document.createElement('li');
+      li.textContent = pool.pop();
+      tips.prepend(li);
+      while (tips.children.length > 4) tips.lastChild.remove();
+    }
+    for (let i = 0; i < 3; i++) addTip();
+    document.getElementById('more-tip').addEventListener('click', addTip);
+
+    BIGH.emojiBackground(['💔', '💌', '🥀', '💍', '😭', '💘'], 1200);
+  })();
+  </script>
+</body>
+</html>

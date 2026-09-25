@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏆 Waifu Tier List – Goon-König Edition</title>
+<meta name="description" content="Die offizielle Waifu-Tierliste von Alastor Lapis. Erstell deine eigene.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: radial-gradient(circle at 20% 0, rgba(155,92,255,.3), transparent 45%), radial-gradient(circle at 90% 30%, rgba(255,62,154,.2), transparent 40%), var(--bg); }
+  .wrap { padding: 70px 0 20px; }
+  h1 { font-family: var(--title); font-size: clamp(2.8rem, 10vw, 5.4rem); text-align: center; margin: 0; letter-spacing: 3px; line-height: 1; }
+  h1 span { color: var(--pink); }
+  .sub { text-align: center; color: var(--muted); margin: 8px 0 20px; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
+  .toolbar .btn { font-size: .9rem; padding: 10px 16px; }
+  .mode { text-align: center; font-weight: 700; margin-bottom: 14px; min-height: 1.5em; color: var(--yellow); }
+
+  .tiers { border-radius: 14px; overflow: hidden; border: 2px solid #000; background: #1a1a1a; }
+  .tier { display: grid; grid-template-columns: 110px 1fr; min-height: 86px; border-bottom: 2px solid #000; }
+  .tier:last-child { border-bottom: 0; }
+  .tier .lab { display: grid; place-items: center; text-align: center; font-family: var(--title); font-size: 2.2rem; color: #111; line-height: 1; padding: 6px; }
+  .tier .lab small { display: block; font-family: var(--body); font-size: .62rem; font-weight: 800; letter-spacing: 0; margin-top: 4px; }
+  .zone { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; align-content: flex-start; min-height: 86px; cursor: pointer; transition: background .15s; }
+  .zone.over, .zone.target { background: rgba(255,255,255,.08); outline: 2px dashed var(--yellow); outline-offset: -4px; }
+  @media (max-width: 560px) { .tier { grid-template-columns: 74px 1fr; } .tier .lab { font-size: 1.7rem; } }
+
+  .pool-wrap { margin-top: 18px; }
+  .pool-wrap h2 { font-family: var(--title); letter-spacing: 1px; margin: 0 0 8px; font-size: 1.6rem; }
+  .pool { background: var(--card); border-radius: 14px; border: 2px dashed rgba(255,255,255,.2); }
+
+  .chip {
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; border-radius: 10px; cursor: grab; user-select: none;
+    background: #2a2450; border: 2px solid transparent; font-weight: 700; font-size: .88rem; touch-action: manipulation;
+    transition: transform .15s, border-color .15s;
+  }
+  .chip:hover { transform: translateY(-2px); }
+  .chip.sel { border-color: var(--yellow); box-shadow: 0 0 16px rgba(255,210,63,.5); transform: scale(1.05); }
+  .chip.dragging { opacity: .4; }
+  .chip .av { width: 44px; height: 44px; border-radius: 8px; display: grid; place-items: center; font-size: 1.5rem; flex: none; }
+  .chip .src { display: block; font-size: .68rem; color: var(--muted); font-weight: 600; }
+  .note { color: var(--muted); text-align: center; font-size: .85rem; margin-top: 18px; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1>Waifu <span>Tier List</span> 🏆</h1>
+    <p class="sub">Offiziell geprüft vom Goon-König persönlich. Zieh die Karten in die Reihen – oder tipp erst eine Karte und dann eine Reihe an.</p>
+
+    <div class="toolbar">
+      <button class="btn pink" id="preset" type="button">👑 Alastor Lapis' offizielle Liste</button>
+      <button class="btn cyan" id="shuffle" type="button">🎲 Zufällig</button>
+      <button class="btn ghost" id="reset" type="button">↺ Alles zurücksetzen</button>
+      <button class="btn" id="copy" type="button">📋 Als Text kopieren</button>
+    </div>
+    <div class="mode" id="mode" aria-live="polite"></div>
+
+    <section class="tiers" id="tiers"></section>
+
+    <section class="pool-wrap">
+      <h2>Noch nicht eingestuft</h2>
+      <div class="zone pool" id="pool" data-tier="pool"></div>
+    </section>
+
+    <p class="note">Alle Figuren sind im Original erwachsen. Deine Liste wird nur in deinem Browser gespeichert.</p>
+  </main>
+
+  <footer class="bigh-footer">Waifu-Tierliste · Diskussionen über S-Tier bitte direkt mit Big H im Discord (er hat Zeit)</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const TIERS = [
+      { id: 'S', label: 'S', note: 'Ehefrau', color: '#ff7f7f' },
+      { id: 'A', label: 'A', note: 'Würde heiraten', color: '#ffbf7f' },
+      { id: 'B', label: 'B', note: 'Solide', color: '#ffdf7f' },
+      { id: 'C', label: 'C', note: 'Naja', color: '#ffff7f' },
+      { id: 'D', label: 'D', note: 'Freundzone', color: '#bfff7f' },
+      { id: 'X', label: '??', note: 'Unbekannt', color: '#b58cff' }
+    ];
+
+    const CHARS = [
+      { n: 'Makima', s: 'Chainsaw Man', e: '⛓️', c: '#8b1e1e' },
+      { n: 'Himeno', s: 'Chainsaw Man', e: '👁️', c: '#34495e' },
+      { n: 'Yor Forger', s: 'Spy x Family', e: '🌹', c: '#2c0f1a' },
+      { n: 'Nico Robin', s: 'One Piece', e: '📚', c: '#3d2b56' },
+      { n: 'Boa Hancock', s: 'One Piece', e: '🐍', c: '#6b1f5a' },
+      { n: 'Nami', s: 'One Piece', e: '🍊', c: '#b3541e' },
+      { n: 'Misato', s: 'Evangelion', e: '🍺', c: '#4a235a' },
+      { n: 'Esdeath', s: 'Akame ga Kill', e: '❄️', c: '#1f4e79' },
+      { n: 'Tsunade', s: 'Naruto', e: '🎲', c: '#8a6d1d' },
+      { n: 'Yoruichi', s: 'Bleach', e: '🐈‍⬛', c: '#3b1f54' },
+      { n: 'Albedo', s: 'Overlord', e: '🪽', c: '#1c1c1c' },
+      { n: 'Erza Scarlet', s: 'Fairy Tail', e: '⚔️', c: '#8e1b1b' },
+      { n: 'Mikasa', s: 'Attack on Titan', e: '🧣', c: '#5a1010' },
+      { n: 'Kiriko', s: 'Overwatch', e: '🦊', c: '#7a2e2e' },
+      { n: 'D.Va', s: 'Overwatch', e: '🐰', c: '#b0457a' },
+      { n: 'Jett', s: 'Valorant', e: '💨', c: '#2e6f8e' },
+      { n: 'Reyna', s: 'Valorant', e: '🔮', c: '#4b1d6b' },
+      { n: 'Sein Body-Pillow', s: 'Real Life', e: '🛏️', c: '#555' },
+      { n: 'Eine echte Frau', s: 'Real Life', e: '❓', c: '#222' }
+    ];
+
+    const PRESET = {
+      S: ['Makima', 'Yor Forger', 'Kiriko', 'Sein Body-Pillow'],
+      A: ['Boa Hancock', 'Esdeath', 'Jett', 'Albedo'],
+      B: ['Nico Robin', 'Himeno', 'Reyna', 'Yoruichi'],
+      C: ['Misato', 'Tsunade', 'Erza Scarlet', 'D.Va'],
+      D: ['Nami', 'Mikasa'],
+      X: ['Eine echte Frau']
+    };
+
+    const KEY = 'bigh-waifu-tiers';
+    const tiersEl = document.getElementById('tiers');
+    const pool = document.getElementById('pool');
+    const modeEl = document.getElementById('mode');
+    const zones = { pool };
+    const chips = {};
+
+    // Reihen bauen
+    TIERS.forEach((t) => {
+      const row = document.createElement('div');
+      row.className = 'tier';
+      const lab = document.createElement('div');
+      lab.className = 'lab';
+      lab.style.background = t.color;
+      lab.textContent = t.label;
+      const sm = document.createElement('small');
+      sm.textContent = t.note;
+      lab.appendChild(sm);
+      const zone = document.createElement('div');
+      zone.className = 'zone';
+      zone.dataset.tier = t.id;
+      zone.setAttribute('aria-label', 'Tier ' + t.label);
+      row.append(lab, zone);
+      tiersEl.appendChild(row);
+      zones[t.id] = zone;
+    });
+
+    // Karten bauen
+    CHARS.forEach((ch) => {
+      const el = document.createElement('div');
+      el.className = 'chip';
+      el.draggable = true;
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.dataset.name = ch.n;
+      el.innerHTML = '<span class="av"></span><span><span class="nm"></span><span class="src"></span></span>';
+      el.querySelector('.av').textContent = ch.e;
+      el.querySelector('.av').style.background = ch.c;
+      el.querySelector('.nm').textContent = ch.n;
+      el.querySelector('.src').textContent = ch.s;
+      chips[ch.n] = el;
+      pool.appendChild(el);
+    });
+
+    // ---------- Speichern / Laden ----------
+    function save() {
+      const state = {};
+      Object.keys(zones).forEach((k) => { state[k] = [...zones[k].children].map((c) => c.dataset.name); });
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* egal */ }
+    }
+    function apply(state) {
+      Object.values(chips).forEach((c) => pool.appendChild(c));
+      Object.keys(state).forEach((k) => {
+        if (!zones[k]) return;
+        state[k].forEach((n) => { if (chips[n]) zones[k].appendChild(chips[n]); });
+      });
+    }
+    try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) apply(s); } catch (e) { /* egal */ }
+
+    // ---------- Auswählen & Platzieren (Klick / Tippen / Tastatur) ----------
+    let selected = null;
+    function select(el) {
+      if (selected) selected.classList.remove('sel');
+      selected = selected === el ? null : el;
+      document.querySelectorAll('.zone').forEach((z) => z.classList.toggle('target', !!selected));
+      if (selected) {
+        selected.classList.add('sel');
+        modeEl.textContent = '👉 „' + selected.dataset.name + '" ausgewählt – jetzt eine Reihe antippen';
+      } else {
+        modeEl.textContent = '';
+      }
+    }
+    function place(zone, el, before) {
+      if (before) zone.insertBefore(el, before); else zone.appendChild(el);
+      save();
+      if (zone.dataset.tier === 'S') {
+        const r = el.getBoundingClientRect();
+        BIGH.burst(r.left + r.width / 2, r.top + r.height / 2, ['💖', '👑', '✨'], 14);
+      }
+      if (el.dataset.name === 'Eine echte Frau' && zone.dataset.tier === 'S') BIGH.toast('😳 Eine echte Frau in S-Tier?! Der Goon-König ist verwirrt.');
+      if (el.dataset.name === 'Sein Body-Pillow' && zone.dataset.tier !== 'S' && zone.dataset.tier !== 'pool') BIGH.toast('😤 Big H: „Nimm das sofort zurück."');
+    }
+    document.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (chip) { select(chip); return; }
+      const zone = e.target.closest('.zone');
+      if (zone && selected) {
+        const el = selected;
+        select(el); // Auswahl aufheben
+        place(zone, el);
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      const chip = e.target.closest && e.target.closest('.chip');
+      if (chip && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(chip); return; }
+      // Mit ausgewählter Karte: Tasten S, A, B, C, D, ? oder 0 (zurück)
+      if (!selected) return;
+      const map = { s: 'S', a: 'A', b: 'B', c: 'C', d: 'D', '?': 'X', '0': 'pool' };
+      const k = map[e.key.toLowerCase()];
+      if (k) { const el = selected; select(el); place(zones[k], el); el.focus(); }
+    });
+
+    // ---------- Drag & Drop (Desktop) ----------
+    let dragged = null;
+    document.addEventListener('dragstart', (e) => {
+      const chip = e.target.closest && e.target.closest('.chip');
+      if (!chip) return;
+      dragged = chip;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', chip.dataset.name);
+    });
+    document.addEventListener('dragend', () => {
+      if (dragged) dragged.classList.remove('dragging');
+      dragged = null;
+      document.querySelectorAll('.zone.over').forEach((z) => z.classList.remove('over'));
+    });
+    Object.values(zones).forEach((zone) => {
+      zone.addEventListener('dragover', (e) => { if (dragged) { e.preventDefault(); zone.classList.add('over'); } });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        if (!dragged) return;
+        // Einfügen vor der ersten Karte, die in Lesereihenfolge hinter dem Mauszeiger liegt
+        const before = [...zone.querySelectorAll('.chip:not(.dragging)')].find((c) => {
+          const r = c.getBoundingClientRect();
+          return e.clientY < r.top || (e.clientY <= r.bottom && e.clientX < r.left + r.width / 2);
+        });
+        place(zone, dragged, before);
+      });
+    });
+
+    // ---------- Buttons ----------
+    document.getElementById('preset').addEventListener('click', () => {
+      apply(PRESET); save();
+      BIGH.toast('👑 Offizielle Liste geladen. Kritik ist nicht erlaubt.');
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+      if (selected) select(selected);
+      apply({}); save();
+    });
+    document.getElementById('shuffle').addEventListener('click', () => {
+      const ids = TIERS.map((t) => t.id);
+      const st = {};
+      Object.keys(chips).sort(() => Math.random() - 0.5).forEach((n) => {
+        const k = BIGH.pick(ids);
+        (st[k] = st[k] || []).push(n);
+      });
+      apply(st); save();
+    });
+    document.getElementById('copy').addEventListener('click', async () => {
+      const lines = TIERS.map((t) => t.label + ' (' + t.note + '): ' + ([...zones[t.id].children].map((c) => c.dataset.name).join(', ') || '–'));
+      const text = '🏆 Meine Waifu-Tierliste (waifu.unoslapis.ch)\n' + lines.join('\n');
+      try {
+        await navigator.clipboard.writeText(text);
+        BIGH.toast('📋 Kopiert! Jetzt Big H schicken.');
+      } catch (e) {
+        prompt('Kopieren:', text);
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
