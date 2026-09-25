@@ -17,6 +17,10 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `waifu.unoslapis.ch` | Waifu-Tierliste mit Drag & Drop (oder antippen), seine „offizielle" Liste, als Text kopieren |
 | `quotes.unoslapis.ch` | Hall of Fame seiner Zitate, Zitat des Tages, Filter, Motivationsposter-Modus |
 | `guestbook.unoslapis.ch` | Gästebuch im 2003-Stil. Einträge werden **wirklich gespeichert** (eigenes Backend) |
+| `excuses.unoslapis.ch` | Ausreden-Generator als Spielautomat (3 Situationen), Jackpot: „Ich muss baden gehen", Kopieren-Knopf |
+| `horoskop.unoslapis.ch` | Astro-Lapis: tägliches Horoskop für alle 12 Sternzeichen, Big H (Waage) als Spezial, Partner-Check |
+| `merch.unoslapis.ch` | Fake-Shop mit Warenkorb, Sale-Countdown und „Bestellung" (fragt nichts ab, verschickt nichts) |
+| `discord.unoslapis.ch` | Nachgebauter Chat-Server mit Kanälen wie #baden-gehen und #goon-logs; man kann selbst schreiben und unoslapis antwortet |
 
 Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `alastor`, `stecher`, `unoslapis`, `goon`, `nani`, `uwu`, `gg` (und ein geheimes Wort) tippen.
 
@@ -36,6 +40,7 @@ sites/
   shared/              # style.css, fun.js, 404.html (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
+  excuses/  horoskop/  merch/  discord/
 ```
 
 ## Deploy auf dem VPS
@@ -52,7 +57,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 
@@ -103,6 +108,9 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Quotes** (`sites/quotes/index.html`): Liste `QUOTES`, hier seine **echten** Sprüche eintragen
 - **Touchgrass** (`sites/touchgrass/index.html`): `LAST_TOUCH` (letzter Grasskontakt)
 - **Waifu** (`sites/waifu/index.html`): `CHARS` und seine Liste `PRESET`
+- **Excuses** (`sites/excuses/index.html`): `CATS` (Ausreden je Situation), `HOF`
+- **Merch** (`sites/merch/index.html`): `PRODUCTS`
+- **Discord** (`sites/discord/index.html`): `USERS`, `CHANNELS` (Nachrichten), `REPLIES` (Antworten des Bots)
 - **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`
 
@@ -111,8 +119,7 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 1. `caddy/Caddyfile`: `memes.{$DOMAIN}` in die Liste eintragen
 2. `nginx/default.conf`: in der `map` die Zeile `~^memes\.  memes;` ergänzen
 3. `sites/memes/index.html` anlegen (`/shared/style.css` und `/shared/fun.js` einbinden)
-4. In `sites/shared/fun.js` `'memes'` in `SUBS` aufnehmen
-5. DNS-Eintrag anlegen, dann `docker compose restart`
+4. DNS-Eintrag anlegen (oder Wildcard `*`), dann `docker compose restart`
 
 ## Lokal testen
 

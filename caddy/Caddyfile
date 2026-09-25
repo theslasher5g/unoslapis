@@ -21,7 +21,7 @@
 }
 
 # Alle statischen Seiten
-{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN} {
+{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN}, excuses.{$DOMAIN}, horoskop.{$DOMAIN}, merch.{$DOMAIN}, discord.{$DOMAIN} {
 	import common
 	reverse_proxy web:80
 }
@@ -47,5 +47,4 @@ www.{$DOMAIN} {
 # Neue Subdomain? 1) hier oben in die Liste eintragen
 #                 2) in nginx/default.conf in die map eintragen
 #                 3) Ordner sites/<name>/index.html anlegen
-#                 4) in sites/shared/fun.js bei SUBS eintragen
-#                 5) DNS-Eintrag anlegen, dann: docker compose restart
+#                 4) DNS-Eintrag anlegen, dann: docker compose restart

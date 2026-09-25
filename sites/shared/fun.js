@@ -2,12 +2,15 @@
 (function () {
   'use strict';
 
-  const SUBS = ['www', 'dating', 'overwatch', 'b-day', 'goon', 'girlfriend', 'linkedin', 'nofap', 'guestbook', 'touchgrass', 'waifu', 'quotes', 'news'];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Basis-Domain aus aktuellem Host ableiten (funktioniert auch lokal mit *.localhost)
-  const parts = location.hostname.split('.');
-  const rootHost = SUBS.includes(parts[0]) && parts.length > 1 ? parts.slice(1).join('.') : location.hostname;
+  // Basis-Domain aus dem aktuellen Host ableiten – ohne Liste der Subdomains:
+  // dating.unoslapis.ch -> unoslapis.ch, dating.localhost -> localhost, IP bleibt IP
+  const host = location.hostname;
+  const parts = host.split('.');
+  const rootHost = /^\d+(\.\d+){3}$/.test(host) ? host
+    : parts[parts.length - 1] === 'localhost' ? 'localhost'
+    : parts.length > 2 ? parts.slice(-2).join('.') : host;
   const port = location.port ? ':' + location.port : '';
 
   function link(sub) {

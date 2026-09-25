@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔮 Astro-Lapis – Das Big H Horoskop</title>
+<meta name="description" content="Das tägliche Horoskop von Astro-Lapis. Die Sterne lügen nicht. Big H schon.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap">
+<style>
+  body {
+    background:
+      radial-gradient(1px 1px at 10% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 70%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 55% 35%, #ffe9a8, transparent), radial-gradient(1px 1px at 75% 15%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 60%, #fff, transparent), radial-gradient(1.5px 1.5px at 20% 90%, #cfe6ff, transparent),
+      radial-gradient(circle at 50% 0%, #3b1d6e 0%, #150b2e 50%, #0a0616 100%);
+    background-size: 300px 300px, 260px 260px, 340px 340px, 280px 280px, 320px 320px, 360px 360px, 100% 100%;
+  }
+  .wrap { padding: 70px 0 20px; text-align: center; }
+  .cinzel { font-family: 'Cinzel', Georgia, serif; }
+  h1 { font-family: 'Cinzel', Georgia, serif; font-weight: 800; font-size: clamp(2.4rem, 9vw, 4.8rem); margin: 0; letter-spacing: 4px; background: linear-gradient(180deg, #fff6d0, #ffd23f 60%, #c98b00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { color: #c9b8f0; margin: 8px 0 0; }
+  .date { font-family: var(--pixel); font-size: .65rem; color: var(--yellow); margin-top: 12px; letter-spacing: 1px; }
+
+  /* Tierkreis-Rad */
+  .wheel { width: min(300px, 70vw); aspect-ratio: 1; margin: 26px auto 0; position: relative; border-radius: 50%; border: 2px solid rgba(255,210,63,.5); box-shadow: 0 0 60px rgba(155,92,255,.4), inset 0 0 40px rgba(155,92,255,.3); animation: turn 90s linear infinite; }
+  .wheel::before { content: ''; position: absolute; inset: 18%; border-radius: 50%; border: 1px dashed rgba(255,210,63,.35); }
+  .wheel span { position: absolute; left: 50%; top: 50%; font-size: clamp(1.1rem, 4vw, 1.6rem); width: 2em; height: 2em; margin: -1em; display: grid; place-items: center; }
+  .wheel .core { position: absolute; inset: 34%; border-radius: 50%; display: grid; place-items: center; font-size: clamp(2.4rem, 9vw, 3.6rem); animation: turn 90s linear infinite reverse; background: radial-gradient(circle, rgba(255,210,63,.25), transparent 70%); }
+  @keyframes turn { to { transform: rotate(360deg); } }
+
+  /* Big H Spezial */
+  .featured { max-width: 760px; margin: 34px auto 0; text-align: left; border: 2px solid rgba(255,210,63,.6); background: linear-gradient(160deg, rgba(59,29,110,.85), rgba(21,11,46,.9)); box-shadow: 0 0 40px rgba(255,210,63,.18); }
+  .featured .head { display: flex; align-items: center; gap: 16px; }
+  .featured .sym { font-size: 3.4rem; line-height: 1; }
+  .featured h2 { font-family: 'Cinzel', Georgia, serif; margin: 0; font-size: clamp(1.4rem, 4vw, 2rem); }
+  .featured h2 small { display: block; font-family: var(--body); font-size: .85rem; color: var(--yellow); font-weight: 700; letter-spacing: 0; }
+  .txt { font-size: 1.05rem; line-height: 1.6; margin: 14px 0; }
+  .ratings { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 16px; }
+  .ratings div { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; font-size: .92rem; }
+  .ratings .stars { color: var(--yellow); letter-spacing: 2px; white-space: nowrap; }
+  .lucky { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .lucky span { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 4px 12px; font-size: .85rem; }
+  .lucky b { color: var(--yellow); }
+
+  h2.sec { font-family: 'Cinzel', Georgia, serif; font-size: clamp(1.6rem, 5vw, 2.4rem); margin: 54px 0 16px; }
+  .signs { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; max-width: 900px; margin: 0 auto; }
+  .signs button { background: rgba(31,26,58,.85); color: var(--text); border: 2px solid rgba(255,255,255,.1); border-radius: 14px; padding: 12px 6px; cursor: pointer; font: 700 .9rem var(--body); transition: transform .15s, border-color .15s; }
+  .signs button:hover { transform: translateY(-3px); border-color: var(--yellow); }
+  .signs button.on { border-color: var(--yellow); background: rgba(255,210,63,.14); }
+  .signs .s { display: block; font-size: 2rem; }
+  .signs small { display: block; color: var(--muted); font-weight: 600; font-size: .7rem; margin-top: 2px; }
+  #reading { max-width: 760px; margin: 18px auto 0; text-align: left; display: none; }
+  #reading.show { display: block; animation: rise .45s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+  /* Partner-Check */
+  .match { max-width: 640px; margin: 0 auto; }
+  .match select { width: 100%; max-width: 320px; padding: 12px; border-radius: 12px; border: 2px solid rgba(255,255,255,.2); background: #1f1a3a; color: var(--text); font: 700 1rem var(--body); }
+  .match .pct { font-family: 'Cinzel', Georgia, serif; font-weight: 800; font-size: clamp(3rem, 12vw, 5rem); color: var(--pink); line-height: 1; margin-top: 16px; min-height: 1em; }
+  .match .verdict { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1>Astro-Lapis</h1>
+    <p class="sub">Das Horoskop, auf das Big H schwört. Die Sterne lügen nicht. Er schon.</p>
+    <div class="date" id="date"></div>
+
+    <div class="wheel" id="wheel" aria-hidden="true"><div class="core">🔮</div></div>
+
+    <section class="card featured" aria-labelledby="bigh-title">
+      <div class="head">
+        <div class="sym">♎</div>
+        <h2 id="bigh-title">Waage – Big H persönlich<small>Geboren am 4. Oktober · Aszendent: Goon · Mond im Ranked</small></h2>
+      </div>
+      <div class="txt" id="bigh-txt"></div>
+      <div class="ratings" id="bigh-rat"></div>
+      <div class="lucky" id="bigh-lucky"></div>
+    </section>
+
+    <h2 class="sec">✨ Dein Tageshoroskop ✨</h2>
+    <div class="signs" id="signs"></div>
+    <section class="card" id="reading" aria-live="polite">
+      <div class="head" style="display:flex;align-items:center;gap:14px">
+        <div id="r-sym" style="font-size:3rem;line-height:1"></div>
+        <h2 id="r-title" class="cinzel" style="margin:0;font-size:1.8rem"></h2>
+      </div>
+      <div class="txt" id="r-txt"></div>
+      <div class="ratings" id="r-rat"></div>
+      <div class="lucky" id="r-lucky"></div>
+    </section>
+
+    <h2 class="sec">💞 Passt du zu Big H?</h2>
+    <section class="match">
+      <p style="color:var(--muted);margin-top:0">Wähle dein Sternzeichen. Die Sterne berechnen eure Kompatibilität (täglich neu, weil die Sterne sich nicht entscheiden können).</p>
+      <select id="match-sel" aria-label="Dein Sternzeichen"><option value="">– Sternzeichen wählen –</option></select>
+      <div class="pct" id="match-pct"></div>
+      <div class="verdict" id="match-verdict"></div>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">Astro-Lapis™ · Horoskope werden täglich um Mitternacht von einem Kristall-Monster-Energy-Dosen-Orakel neu berechnet.</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const SIGNS = [
+      { n: 'Widder', s: '♈', e: '🐏', d: '21.3.–19.4.' }, { n: 'Stier', s: '♉', e: '🐂', d: '20.4.–20.5.' },
+      { n: 'Zwillinge', s: '♊', e: '👯', d: '21.5.–21.6.' }, { n: 'Krebs', s: '♋', e: '🦀', d: '22.6.–22.7.' },
+      { n: 'Löwe', s: '♌', e: '🦁', d: '23.7.–22.8.' }, { n: 'Jungfrau', s: '♍', e: '🌾', d: '23.8.–22.9.' },
+      { n: 'Waage', s: '♎', e: '⚖️', d: '23.9.–22.10.' }, { n: 'Skorpion', s: '♏', e: '🦂', d: '23.10.–21.11.' },
+      { n: 'Schütze', s: '♐', e: '🏹', d: '22.11.–20.12.' }, { n: 'Steinbock', s: '♑', e: '🐐', d: '21.12.–19.1.' },
+      { n: 'Wassermann', s: '♒', e: '🏺', d: '20.1.–18.2.' }, { n: 'Fische', s: '♓', e: '🐟', d: '19.2.–20.3.' }
+    ];
+
+    // Bausteine für die Horoskope (werden pro Tag + Sternzeichen fest zusammengewürfelt)
+    const OPEN = [
+      'Merkur ist rückläufig und dein Ping auch.', 'Venus steht heute im Haus der Tempo-Taschentücher.',
+      'Der Mond tritt in die Ranked-Phase ein.', 'Jupiter schickt dir starke Energie – leider nur Monster Energy.',
+      'Saturn fordert Disziplin. Du forderst eine weitere Folge.', 'Die Sterne sind heute klar – im Gegensatz zu deinem Browserverlauf.',
+      'Mars bringt Kampfgeist. Nutze ihn weise (nicht gegen Supports).', 'Eine seltene Planetenkonstellation macht heute alles möglich. Fast alles.'
+    ];
+    const LOVE = [
+      'In der Liebe erwartet dich eine Begegnung mit einer Goth-Baddie. Sie wird dich ignorieren. Das ist gut.',
+      'Jemand denkt an dich. Es ist wahrscheinlich Big H, weil er Geld von dir will.',
+      'Deine Waifu ist heute besonders gesprächig. Das ist ein Warnsignal.',
+      'Ein Match auf Tinder! (Es ist ein Bot. Aber ein süsser.)',
+      'Die Liebe klopft an. Du hast Kopfhörer auf und hörst sie nicht.',
+      'Heute ist ein guter Tag für Romantik. Leider bist du im Ranked.'
+    ];
+    const WORK = [
+      'Im Ranked gewinnst du drei Games und verlierst dann fünf. Klassisch.',
+      'Dein Aim ist heute göttlich. Dein Team leider nicht.',
+      'Vermeide heute Hanzo-Mains. Sie bringen Unglück.',
+      'Ein Clip von dir wird heute legendär. Niemand wird ihn sehen.',
+      'Heute bekommst du endlich POTG. Als Mercy. Durch einen Rez-Bug.',
+      'Die Sterne raten: Nicht mit Jett in Valorant. Zu viel Wind.'
+    ];
+    const ADVICE = [
+      'Tipp der Sterne: Fass heute Gras an. Nur kurz. Die Sterne glauben an dich.',
+      'Tipp der Sterne: Wenn jemand fragt, sag einfach „Ich muss baden gehen".',
+      'Tipp der Sterne: Trink heute Wasser. Das ist dieses durchsichtige Monster.',
+      'Tipp der Sterne: Geh vor 3 Uhr schlafen. Haha. Kleiner Scherz.',
+      'Tipp der Sterne: Lösch deinen Browserverlauf. Jetzt. Vertrau uns.',
+      'Tipp der Sterne: Schreib Big H etwas Nettes ins Gästebuch.'
+    ];
+    const HEROES = ['Genji', 'Kiriko', 'Hanzo', 'D.Va', 'Widowmaker', 'Mercy', 'Reinhardt', 'Jett', 'Reyna', 'Sage'];
+    const ANIME = ['One Piece', 'Naruto', 'Chainsaw Man', 'Jujutsu Kaisen', 'Frieren', 'Attack on Titan', 'Spy x Family', 'Hazbin Hotel'];
+    const SNACKS = ['Instant-Ramen', 'Monster Ultra', 'kalte Pizza', 'Chips aus dem Bett', 'Mamas Lasagne', 'Energy + Toast'];
+    const BIGH_SPECIAL = [
+      'Als Waage suchst du Balance: Heute 12 Stunden Overwatch, dafür 12 Stunden Valorant. Perfekt ausgeglichen.',
+      'Dein Geburtstag naht, und das Universum bereitet ein Geschenk vor. Leider ist es wieder kein Rank-Up.',
+      'Die Sterne sehen eine Freundin in deiner Zukunft. Der Countdown auf girlfriend.unoslapis.ch ist trotzdem optimistischer.',
+      'Heute wirst du ein Bad nehmen. Oder zumindest behaupten, dass du eins nimmst.',
+      'Venus und Mars stehen in deinem Goon-Haus. Das erklärt einiges.',
+      'Eine gothische Schlechtie kreuzt deinen Weg. Die Sterne raten: Nicht über Hazbin Hotel reden.',
+      'Alastor-Energie auf Maximum: Du lächelst heute ununterbrochen und niemand weiss, warum.'
+    ];
+
+    // ---------- Deterministischer Zufall: gleicher Tag + gleiches Zeichen = gleiches Horoskop ----------
+    const now = new Date();
+    const dayKey = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    function rng(seed) {
+      let s = seed >>> 0;
+      return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    }
+    const pickR = (r, arr) => arr[Math.floor(r() * arr.length)];
+    const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+    function reading(idx, special) {
+      const r = rng(dayKey * 31 + idx * 7919 + (special ? 1234567 : 0));
+      const text = (special ? pickR(r, BIGH_SPECIAL) + ' ' : pickR(r, OPEN) + ' ') + pickR(r, LOVE) + ' ' + pickR(r, WORK) + ' ' + pickR(r, ADVICE);
+      const rat = [
+        ['💘 Liebe', special ? 1 : 1 + Math.floor(r() * 5)],
+        ['🎮 Ranked', 1 + Math.floor(r() * 5)],
+        ['🥵 Goon', special ? 5 : 1 + Math.floor(r() * 5)],
+        ['🍀 Glück', 1 + Math.floor(r() * 5)]
+      ];
+      const lucky = [
+        ['Glückszahl', String(Math.floor(r() * 99) + 1)],
+        ['Glücksheld', pickR(r, HEROES)],
+        ['Glücks-Anime', pickR(r, ANIME)],
+        ['Glücks-Snack', pickR(r, SNACKS)]
+      ];
+      return { text, rat, lucky };
+    }
+    function render(target, data) {
+      document.getElementById(target + '-txt').textContent = data.text;
+      const ratEl = document.getElementById(target + '-rat');
+      ratEl.innerHTML = '';
+      data.rat.forEach(([k, v]) => {
+        const d = document.createElement('div');
+        const a = document.createElement('span'); a.textContent = k;
+        const b = document.createElement('span'); b.className = 'stars'; b.textContent = stars(v);
+        d.append(a, b); ratEl.appendChild(d);
+      });
+      const lk = document.getElementById(target + '-lucky');
+      lk.innerHTML = '';
+      data.lucky.forEach(([k, v]) => {
+        const s = document.createElement('span');
+        s.append(k + ': ');
+        const b = document.createElement('b'); b.textContent = v;
+        s.appendChild(b); lk.appendChild(s);
+      });
+    }
+
+    document.getElementById('date').textContent = now.toLocaleDateString('de-CH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+
+    // Rad
+    const wheel = document.getElementById('wheel');
+    SIGNS.forEach((sg, i) => {
+      const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+      const el = document.createElement('span');
+      el.textContent = sg.s;
+      el.style.left = (50 + Math.cos(a) * 41) + '%';
+      el.style.top = (50 + Math.sin(a) * 41) + '%';
+      wheel.appendChild(el);
+    });
+
+    // Big H
+    render('bigh', reading(6, true));
+
+    // Auswahl
+    const signsEl = document.getElementById('signs');
+    const readingEl = document.getElementById('reading');
+    function show(i, scroll) {
+      const sg = SIGNS[i];
+      signsEl.querySelectorAll('button').forEach((b, k) => b.classList.toggle('on', k === i));
+      document.getElementById('r-sym').textContent = sg.s;
+      document.getElementById('r-title').textContent = sg.n + ' ' + sg.e;
+      render('r', reading(i, false));
+      readingEl.classList.remove('show'); void readingEl.offsetWidth; readingEl.classList.add('show');
+      try { localStorage.setItem('bigh-sign', String(i)); } catch (e) { /* egal */ }
+      if (scroll) readingEl.scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth', block: 'nearest' });
+    }
+    SIGNS.forEach((sg, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = '<span class="s"></span><span class="nm"></span><small></small>';
+      b.querySelector('.s').textContent = sg.s;
+      b.querySelector('.nm').textContent = sg.n;
+      b.querySelector('small').textContent = sg.d;
+      b.addEventListener('click', (e) => { show(i, true); BIGH.burst(e.clientX, e.clientY, ['✨', '⭐', sg.s], 10); });
+      signsEl.appendChild(b);
+    });
+    let saved = null;
+    try { saved = localStorage.getItem('bigh-sign'); } catch (e) { /* egal */ }
+    if (saved !== null && SIGNS[Number(saved)]) show(Number(saved), false);
+
+    // Partner-Check mit Big H (Waage)
+    const sel = document.getElementById('match-sel');
+    SIGNS.forEach((sg, i) => { const o = document.createElement('option'); o.value = String(i); o.textContent = sg.s + ' ' + sg.n; sel.appendChild(o); });
+    const VERDICTS = [
+      [0, 'Die Sterne schreien „NEIN". Er würde dich für Ranked sitzen lassen.'],
+      [25, 'Schwierig. Ihr würdet euch nur über Waifu-Tierlisten streiten.'],
+      [50, 'Könnte klappen – solange du akzeptierst, dass er „baden geht".'],
+      [75, 'Starke Verbindung! Duo-Queue-Material. 💞'],
+      [90, 'SEELENVERWANDT. Sofort dating.unoslapis.ch ausfüllen!']
+    ];
+    sel.addEventListener('change', () => {
+      const pctEl = document.getElementById('match-pct');
+      const vEl = document.getElementById('match-verdict');
+      if (sel.value === '') { pctEl.textContent = ''; vEl.textContent = ''; return; }
+      const i = Number(sel.value);
+      const r = rng(dayKey * 13 + i * 104729);
+      const pct = i === 6 ? 100 : Math.floor(r() * 101);
+      let shown = 0;
+      const step = () => {
+        shown = Math.min(pct, shown + Math.max(1, Math.ceil(pct / 25)));
+        pctEl.textContent = shown + ' %';
+        if (shown < pct) requestAnimationFrame(step);
+      };
+      step();
+      let v = VERDICTS[0][1];
+      VERDICTS.forEach(([min, t]) => { if (pct >= min) v = t; });
+      if (i === 6) v = 'Waage + Waage: Er würde sich selbst daten. Tut er praktisch schon.';
+      vEl.textContent = v;
+      if (pct >= 75) BIGH.confettiRain(['💞', '✨', '💘'], 40);
+    });
+  })();
+  </script>
+</body>
+</html>

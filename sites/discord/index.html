@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💬 Big H's Server – #allgemein</title>
+<meta name="description" content="Der Chat-Server von Big H. Kanäle: #goon-logs, #baden-gehen, #warum-bist-du-single.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --d0: #1e1f22; --d1: #2b2d31; --d2: #313338; --d3: #383a40; --dt: #dbdee1; --dm: #949ba4; --blurple: #5865f2; }
+  html, body { height: 100%; }
+  body { background: var(--d2); color: var(--dt); overflow: hidden; }
+  .bigh-back { top: auto; bottom: 14px; left: 14px; z-index: 60; }
+  .app { display: grid; grid-template-columns: 72px 240px 1fr 240px; height: 100vh; height: 100dvh; }
+  @media (max-width: 1000px) { .app { grid-template-columns: 72px 240px 1fr; } .members { display: none; } }
+  @media (max-width: 720px) { .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .servers, .channels { display: none; } .chat .mobile-ch { display: flex !important; } }
+
+  .servers { background: var(--d0); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0; overflow-y: auto; }
+  .srv { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem; background: var(--d2); cursor: pointer; transition: border-radius .2s, background .2s; position: relative; border: 0; color: #fff; }
+  .srv:hover, .srv.on { border-radius: 16px; background: var(--blurple); }
+  .srv.on::before { content: ''; position: absolute; left: -12px; width: 4px; height: 36px; border-radius: 0 4px 4px 0; background: #fff; }
+  .sep { width: 32px; height: 2px; background: var(--d3); border-radius: 1px; }
+
+  .channels { background: var(--d1); display: flex; flex-direction: column; min-height: 0; }
+  .srv-name { height: 48px; display: flex; align-items: center; padding: 0 16px; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,.3); box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .ch-list { flex: 1; overflow-y: auto; padding: 12px 8px; }
+  .cat { font-size: .72rem; font-weight: 800; color: var(--dm); text-transform: uppercase; letter-spacing: .5px; margin: 14px 8px 4px; }
+  .ch { display: flex; align-items: center; gap: 6px; width: 100%; background: none; border: 0; color: var(--dm); font: 600 .95rem var(--body); padding: 6px 8px; border-radius: 6px; cursor: pointer; text-align: left; }
+  .ch:hover { background: rgba(78,80,88,.3); color: var(--dt); }
+  .ch.on { background: rgba(78,80,88,.6); color: #fff; }
+  .ch .hash { font-size: 1.2rem; opacity: .7; width: 18px; text-align: center; }
+  .ch .unread { margin-left: auto; background: #f23f43; color: #fff; font-size: .7rem; font-weight: 800; border-radius: 999px; padding: 1px 6px; }
+  .voice-users { margin: 0 0 4px 34px; }
+  .vu { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--dm); padding: 3px 0; }
+  .vu .av { width: 22px; height: 22px; font-size: .8rem; }
+  .vu.speaking .av { box-shadow: 0 0 0 2px #23a55a; }
+  .me-bar { background: #232428; padding: 8px; display: flex; align-items: center; gap: 8px; font-size: .85rem; }
+  .me-bar small { display: block; color: var(--dm); }
+
+  .chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .chat-head { height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid rgba(0,0,0,.3); box-shadow: 0 1px 2px rgba(0,0,0,.2); font-weight: 800; flex: none; }
+  .chat-head .topic { color: var(--dm); font-weight: 500; font-size: .85rem; border-left: 1px solid var(--d3); padding-left: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mobile-ch { display: none !important; gap: 6px; overflow-x: auto; padding: 8px; background: var(--d1); border-bottom: 1px solid rgba(0,0,0,.3); }
+  .mobile-ch button { flex: none; background: var(--d3); color: var(--dt); border: 0; border-radius: 999px; padding: 6px 12px; font: 700 .85rem var(--body); cursor: pointer; }
+  .mobile-ch button.on { background: var(--blurple); color: #fff; }
+  .msgs { flex: 1; overflow-y: auto; padding: 16px 0 8px; }
+  .welcome { padding: 0 16px 16px; border-bottom: 1px solid var(--d3); margin-bottom: 8px; }
+  .welcome .big { width: 68px; height: 68px; border-radius: 50%; background: var(--d3); display: grid; place-items: center; font-size: 2.2rem; margin-bottom: 8px; }
+  .welcome h2 { margin: 0 0 4px; font-size: 1.8rem; }
+  .welcome p { margin: 0; color: var(--dm); }
+  .msg { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding: 6px 16px; margin-top: 10px; }
+  .msg:hover { background: rgba(4,4,5,.07); }
+  .msg.cont { margin-top: 0; padding-top: 2px; }
+  .msg.cont .av { visibility: hidden; height: 0; }
+  .msg.cont .who { display: none; }
+  .msg.mention { background: rgba(250,168,26,.1); box-shadow: inset 2px 0 0 #f0b232; }
+  .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; flex: none; }
+  .who { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .who b { font-weight: 700; cursor: pointer; }
+  .who b:hover { text-decoration: underline; }
+  .who .bot { background: var(--blurple); color: #fff; font-size: .62rem; font-weight: 800; padding: 1px 5px; border-radius: 4px; }
+  .who time { color: var(--dm); font-size: .75rem; }
+  .txt { white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; line-height: 1.4; }
+  .txt .ping { background: rgba(88,101,242,.3); color: #c9cdfb; border-radius: 3px; padding: 0 2px; font-weight: 600; }
+  .reacts { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+  .react { background: var(--d1); border: 1px solid transparent; border-radius: 8px; padding: 2px 7px; font-size: .85rem; cursor: pointer; color: var(--dt); }
+  .react.me { background: rgba(88,101,242,.15); border-color: var(--blurple); }
+  .typing { height: 22px; padding: 0 16px; font-size: .8rem; color: var(--dm); flex: none; }
+  .typing b { color: var(--dt); }
+  .dots span { animation: blinkdot 1.2s infinite; }
+  .dots span:nth-child(2) { animation-delay: .2s; } .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blinkdot { 50% { opacity: .2; } }
+  .composer { padding: 0 16px 20px; flex: none; }
+  .composer form { background: var(--d3); border-radius: 8px; display: flex; align-items: center; gap: 8px; padding: 0 12px; }
+  .composer input { flex: 1; background: none; border: 0; outline: none; color: var(--dt); font: 1rem var(--body); padding: 12px 0; min-width: 0; }
+  .composer input::placeholder { color: var(--dm); }
+  .composer button { background: none; border: 0; font-size: 1.3rem; cursor: pointer; }
+  @media (max-width: 720px) { .composer { padding-bottom: 64px; } }
+
+  .members { background: var(--d1); overflow-y: auto; padding: 16px 8px; }
+  .mem { display: flex; align-items: center; gap: 10px; padding: 5px 8px; border-radius: 6px; cursor: pointer; }
+  .mem:hover { background: rgba(78,80,88,.3); }
+  .mem .av { width: 32px; height: 32px; font-size: 1rem; position: relative; }
+  .mem .av::after { content: ''; position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px; border-radius: 50%; border: 3px solid var(--d1); background: var(--st, #80848e); }
+  .mem.off { opacity: .4; }
+  .mem small { display: block; color: var(--dm); font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+</style>
+</head>
+<body data-back>
+  <div class="app">
+    <nav class="servers" aria-label="Server">
+      <button class="srv on" type="button" title="Big H's Server">🐎</button>
+      <div class="sep"></div>
+      <button class="srv" type="button" data-toast="🎯 Overwatch-Server: Big H wurde dort 3× gebannt.">🎯</button>
+      <button class="srv" type="button" data-toast="🎌 Anime-Server: 14'000 ungelesene Nachrichten.">🎌</button>
+      <button class="srv" type="button" data-toast="🖤 Goth-Server: Zugang verweigert. Zu wenig Eyeliner.">🖤</button>
+      <button class="srv" type="button" data-toast="➕ Neuen Server erstellen? Big H hat schon 47.">➕</button>
+    </nav>
+
+    <aside class="channels">
+      <div class="srv-name">Big H's Server 🐎 ▾</div>
+      <div class="ch-list" id="ch-list"></div>
+      <div class="me-bar"><div class="av" style="background:#5865f2;width:32px;height:32px;font-size:1rem">🫵</div><div><b>Du</b><small>Gast · schaust nur zu</small></div></div>
+    </aside>
+
+    <main class="chat">
+      <div class="mobile-ch" id="mobile-ch"></div>
+      <div class="chat-head"><span style="opacity:.6">#</span><span id="ch-name">allgemein</span><span class="topic" id="ch-topic"></span></div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="typing" id="typing"></div>
+      <div class="composer">
+        <form id="form" autocomplete="off">
+          <span aria-hidden="true">➕</span>
+          <input id="input" maxlength="300" placeholder="Nachricht an #allgemein" aria-label="Nachricht">
+          <button type="submit" aria-label="Senden">📨</button>
+        </form>
+      </div>
+    </main>
+
+    <aside class="members" id="members" aria-label="Mitglieder"></aside>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const USERS = {
+      bigh:  { name: 'unoslapis', e: '😈', c: '#ff3e9a', bg: '#6b0020', st: '#23a55a', status: '🎮 Spielt Overwatch 2', bio: 'a.k.a. Big H a.k.a. Alastor Lapis. Goon-König. Stecher. Muss oft baden gehen.' },
+      cat:   { name: 'Mausi 🐈', e: '🐈', c: '#ffd23f', bg: '#5a4a1a', st: '#23a55a', status: 'Gerettet aus brennendem Haus', bio: 'Die Katze aus der Big\'H Times. Seit der Rettung Big H\'s grösster Fan.' },
+      goth:  { name: 'goth_baddie', e: '🖤', c: '#b58cff', bg: '#1a1a1a', st: '#f0b232', status: 'Abwesend (hört Musik, die du nicht kennst)', bio: 'Hat Big H einen Fledermaus-Sticker geschenkt. Bereut es.' },
+      fbi:   { name: 'FBI Agent', e: '🕵️', c: '#949ba4', bg: '#2b2d31', st: '#f23f43', status: 'Nicht stören – beobachtet Browserverlauf', bio: 'Zuständig für den Fall „unoslapis". Überstunden: sehr viele.' },
+      fire:  { name: 'Beat Brandschutz', e: '🚒', c: '#ff7b00', bg: '#5a2a00', st: '#80848e', status: 'Offline', bio: 'Einsatzleiter. Kam 7 Minuten zu spät zur Katzenrettung.' },
+      grass: { name: 'Gras', e: '🌱', c: '#3dff8a', bg: '#1f7a33', st: '#80848e', status: 'Offline seit 2019', bio: 'Wartet immer noch auf Big H.' },
+      bot:   { name: 'GoonBot', e: '🤖', c: '#5865f2', bg: '#2b2f6e', st: '#23a55a', status: 'Protokolliert alles', bio: 'Automatischer Bot. Zählt Sessions, Ausreden und Rückfälle.', bot: true },
+      you:   { name: 'Du', e: '🫵', c: '#fff', bg: '#5865f2', st: '#23a55a', status: 'Gast', bio: 'Das bist du.' }
+    };
+
+    const CHANNELS = [
+      { cat: 'Info', id: 'ankuendigungen', icon: '📢', topic: 'Wichtige Durchsagen vom Goon-König', msgs: [
+        ['bigh', '@everyone Am 4. Oktober hab ich Geburtstag. Geschenke bitte über merch.unoslapis.ch 🎁', '09:00', { '🎂': 12, '👑': 5 }],
+        ['bigh', 'Und schreibt ins Gästebuch: guestbook.unoslapis.ch ✍️', '09:01'],
+        ['bot', '📰 Neue Ausgabe der Big\'H Times erschienen: „Alastor Lapis rettet Katze aus brennendem Haus"', '09:15', { '🐈': 9 }],
+        ['cat', 'miau (das stimmt alles) 🥹', '09:16', { '❤️': 20 }]
+      ] },
+      { cat: 'Text', id: 'allgemein', icon: '#', topic: 'Alles ausser Gras', msgs: [
+        ['goth', 'wer ist dieser unoslapis und warum hat er mir einen 40-seitigen Hazbin-Hotel-Vortrag geschickt', '19:02'],
+        ['bigh', 'das war kein vortrag das war rizz', '19:03', { '💀': 7 }],
+        ['bigh', 'kennst du alastor? das bin im prinzip ich', '19:03'],
+        ['goth', '…', '19:10'],
+        ['fbi', 'Wir haben das Gespräch zu den Akten genommen.', '19:11', { '🕵️': 4 }],
+        ['cat', 'miau', '19:12'],
+        ['bigh', 'gleich jemand ranked? bin in 5 min on', '19:30'],
+        ['bot', '⏰ Erinnerung: unoslapis hat „bin in 5 min on" um 19:30 gesagt. Aktuelle Wartezeit wird gemessen…', '22:47', { '😂': 15 }]
+      ] },
+      { cat: 'Text', id: 'baden-gehen', icon: '🛁', topic: 'Offizieller Kanal für die legendäre Ausrede', msgs: [
+        ['bigh', 'kann heut nicht, ich muss baden gehen', 'Mo 18:00', { '🛁': 9 }],
+        ['bigh', 'sorry leute ich muss baden gehen', 'Di 18:02'],
+        ['bigh', 'muss baden gehen, morgen aber sicher', 'Mi 17:58', { '🦆': 6 }],
+        ['bigh', 'ich muss baden gehen', 'Do 18:01'],
+        ['bot', '📊 Statistik: unoslapis war diese Woche 4× baden. Laut Wasserzähler: 0×.', 'Do 18:05', { '🤨': 21 }],
+        ['fbi', 'Bestätigt. Wasserverbrauch unverändert.', 'Do 18:06', { '💀': 12 }]
+      ] },
+      { cat: 'Text', id: 'ranked-rage', icon: '🎮', topic: 'Hier wird Team diff diskutiert', msgs: [
+        ['bigh', 'TEAM DIFF', '01:12', { '😭': 3 }],
+        ['bigh', 'unser mercy hat mich 0 mal geheilt', '01:12'],
+        ['bigh', 'ich spiel genji ich brauch keine heilung', '01:13', { '🤡': 8 }],
+        ['bigh', 'nochmal eins', '01:40'],
+        ['bigh', 'TEAM DIFF', '02:05'],
+        ['cat', 'miau (geh schlafen)', '02:06', { '🐈': 11 }]
+      ] },
+      { cat: 'Text', id: 'waifu-of-the-week', icon: '🏆', topic: 'Wöchentliche Wahl. Ergebnis steht vorher fest.', msgs: [
+        ['bot', '🗳️ Abstimmung: Waifu der Woche! Kandidatinnen: Makima, Yor, Kiriko', 'Fr 12:00'],
+        ['bigh', 'makima. immer makima. diskussion beendet', 'Fr 12:00', { '⛓️': 6 }],
+        ['goth', 'ich stimme für „eine echte Frau"', 'Fr 12:30', { '😳': 14 }],
+        ['bigh', 'die gibts nicht, siehe tierliste', 'Fr 12:31'],
+        ['bot', '🏆 Gewinnerin: Makima (1 Stimme von unoslapis, 47× abgegeben)', 'Fr 18:00', { '🤖': 5 }]
+      ] },
+      { cat: 'Text', id: 'warum-bist-du-single', icon: '💔', topic: 'Eine Selbsthilfegruppe', msgs: [
+        ['goth', 'ernstgemeinte frage: warum bist du single', 'Sa 20:00'],
+        ['bigh', 'ich bin nicht single ich bin in einer beziehung mit ranked', 'Sa 20:01', { '💀': 9 }],
+        ['bigh', 'ausserdem steht auf girlfriend.unoslapis.ch dass es in einem jahr klappt', 'Sa 20:01'],
+        ['bot', '📉 Hinweis: Der Countdown verlängert sich automatisch.', 'Sa 20:02', { '😂': 18 }],
+        ['grass', '(ich warte immer noch)', 'Sa 20:30', { '🌱': 3 }]
+      ] },
+      { cat: 'Text', id: 'goon-logs', icon: '🔞', topic: 'Automatisches Protokoll. Nicht öffnen.', msgs: [
+        ['bot', '🟢 unoslapis hat eine Session gestartet.', '23:02'],
+        ['bot', '⏱️ Laufzeit: 2 h. Status: unverändert.', '01:02'],
+        ['bot', '⏱️ Laufzeit: 5 h. Neuer Wochenrekord in Reichweite.', '04:02', { '👑': 4 }],
+        ['bot', '🏁 Session beendet nach 7 h 43 min. Neuer Rekord! 🏆', '06:45', { '🥵': 13, '🧻': 7 }],
+        ['fbi', 'Notiert.', '06:46']
+      ] }
+    ];
+    const VOICE = [
+      { name: 'Ranked-Grind', users: ['bigh', 'cat'], speaking: 'bigh' },
+      { name: 'AFK – baden gehen', users: [] },
+      { name: 'Draussen (unbenutzt)', users: ['grass'] }
+    ];
+
+    // Antworten von unoslapis auf eigene Nachrichten (Stichwort -> Antworten)
+    const REPLIES = [
+      [/bad|dusch|wasser/i, ['ich muss auch baden gehen 🛁', 'baden ist wichtig, darum bin ich so oft dort', 'bin gleich zurück, muss nur kurz baden (3 std)']],
+      [/\b(ranked|games?|spiel\w*|ow|overwatch|valo\w*|zock\w*|on)\b/i, ['bin in 5 min on', 'nur wenn du support spielst', 'ich carry, du guckst zu', 'grad keine zeit, bin in ranked']],
+      [/freundin|single|date|liebe|frau/i, ['💔', 'nächstes jahr. steht so auf girlfriend.unoslapis.ch', 'ich hab makima, ich brauch nix']],
+      [/gras|draussen|raus|sonne/i, ['draussen ist sonne. nein danke ☀️', 'gras ist nur natur-teppich', 'touchgrass.unoslapis.ch sagt alles']],
+      [/geburtstag|bday|b-day|4\.? ?okt/i, ['4. oktober!!! geschenke über merch.unoslapis.ch 🎁', 'ja ich werd älter aber nicht erwachsener']],
+      [/goon|nofap/i, ['kein kommentar', 'das fbi liest mit, bitte themawechsel', '🥵']],
+      [/\b(hallo|hi|hey|servus|moin)\b|grüezi/i, ['yo', 'hey 😏', 'na']],
+      [/\?$/, ['keine ahnung ehrlich', 'frag mich nach meinem bad', 'kommt drauf an. auf mein horoskop']]
+    ];
+    const FALLBACK = ['lol', 'real', 'ich muss baden gehen', 'gg', 'bruh', 'erzähl das meinem team', 'k', 'ich les das später (nie)', '😂'];
+
+    // ---------- Aufbau ----------
+    const state = {};
+    CHANNELS.forEach((c) => { state[c.id] = c.msgs.map((m) => ({ u: m[0], t: m[1], time: m[2], r: Object.assign({}, m[3] || {}), mine: {} })); });
+    const unread = { ankuendigungen: 2, 'baden-gehen': 1, 'goon-logs': 4 };
+    let current = 'allgemein';
+
+    function av(u, size) {
+      const d = document.createElement('div');
+      d.className = 'av';
+      d.style.background = USERS[u].bg;
+      d.textContent = USERS[u].e;
+      if (size) { d.style.width = d.style.height = size + 'px'; }
+      return d;
+    }
+
+    const chList = document.getElementById('ch-list');
+    const mobile = document.getElementById('mobile-ch');
+    function buildChannels() {
+      chList.innerHTML = '';
+      mobile.innerHTML = '';
+      let lastCat = null;
+      CHANNELS.forEach((c) => {
+        if (c.cat !== lastCat) { const h = document.createElement('div'); h.className = 'cat'; h.textContent = '▾ ' + c.cat + '-Kanäle'; chList.appendChild(h); lastCat = c.cat; }
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ch' + (c.id === current ? ' on' : '');
+        b.innerHTML = '<span class="hash"></span><span class="nm"></span>';
+        b.querySelector('.hash').textContent = c.icon;
+        b.querySelector('.nm').textContent = c.id;
+        if (unread[c.id] && c.id !== current) { const u = document.createElement('span'); u.className = 'unread'; u.textContent = unread[c.id]; b.appendChild(u); }
+        b.addEventListener('click', () => open(c.id));
+        chList.appendChild(b);
+        const mb = document.createElement('button');
+        mb.type = 'button';
+        mb.textContent = c.icon + ' ' + c.id;
+        if (c.id === current) mb.classList.add('on');
+        mb.addEventListener('click', () => open(c.id));
+        mobile.appendChild(mb);
+      });
+      const h = document.createElement('div'); h.className = 'cat'; h.textContent = '▾ Sprachkanäle'; chList.appendChild(h);
+      VOICE.forEach((v) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ch';
+        b.innerHTML = '<span class="hash">🔊</span><span class="nm"></span>';
+        b.querySelector('.nm').textContent = v.name;
+        b.addEventListener('click', () => BIGH.toast(v.users.length ? '🔊 Du hörst: „…TEAM DIFF…" – lieber nicht beitreten.' : '🔊 Hier ist niemand. Alle sind „baden".'));
+        chList.appendChild(b);
+        if (v.users.length) {
+          const wrap = document.createElement('div');
+          wrap.className = 'voice-users';
+          v.users.forEach((u) => {
+            const d = document.createElement('div');
+            d.className = 'vu' + (v.speaking === u ? ' speaking' : '');
+            d.appendChild(av(u));
+            const n = document.createElement('span'); n.textContent = USERS[u].name;
+            d.appendChild(n);
+            wrap.appendChild(d);
+          });
+          chList.appendChild(wrap);
+        }
+      });
+    }
+
+    // Text sicher einfügen und @-Erwähnungen hervorheben
+    function richText(el, text) {
+      text.split(/(@everyone|@unoslapis)/g).forEach((part) => {
+        if (part === '@everyone' || part === '@unoslapis') {
+          const s = document.createElement('span'); s.className = 'ping'; s.textContent = part; el.appendChild(s);
+        } else if (part) el.appendChild(document.createTextNode(part));
+      });
+    }
+
+    const msgsEl = document.getElementById('msgs');
+    function renderMessages() {
+      const ch = CHANNELS.find((c) => c.id === current);
+      msgsEl.innerHTML = '';
+      const w = document.createElement('div');
+      w.className = 'welcome';
+      w.innerHTML = '<div class="big"></div><h2></h2><p></p>';
+      w.querySelector('.big').textContent = ch.icon === '#' ? '#' : ch.icon;
+      w.querySelector('h2').textContent = 'Willkommen in #' + ch.id + '!';
+      w.querySelector('p').textContent = 'Das ist der Anfang des Kanals #' + ch.id + '. ' + ch.topic + '.';
+      msgsEl.appendChild(w);
+      let prev = null;
+      state[current].forEach((m) => {
+        const d = document.createElement('div');
+        d.className = 'msg' + (prev === m.u ? ' cont' : '') + (m.t.includes('@everyone') ? ' mention' : '');
+        prev = m.u;
+        const user = USERS[m.u];
+        d.appendChild(av(m.u));
+        const body = document.createElement('div');
+        const who = document.createElement('div');
+        who.className = 'who';
+        const b = document.createElement('b'); b.textContent = user.name; b.style.color = user.c;
+        b.addEventListener('click', () => BIGH.toast(user.e + ' ' + user.name + ': ' + user.bio));
+        who.appendChild(b);
+        if (user.bot) { const bt = document.createElement('span'); bt.className = 'bot'; bt.textContent = 'BOT'; who.appendChild(bt); }
+        const tm = document.createElement('time'); tm.textContent = m.time; who.appendChild(tm);
+        const txt = document.createElement('div'); txt.className = 'txt'; richText(txt, m.t);
+        body.append(who, txt);
+        const keys = Object.keys(m.r);
+        if (keys.length) {
+          const rs = document.createElement('div'); rs.className = 'reacts';
+          keys.forEach((k) => {
+            const r = document.createElement('button');
+            r.type = 'button';
+            r.className = 'react' + (m.mine[k] ? ' me' : '');
+            r.textContent = k + ' ' + m.r[k];
+            r.addEventListener('click', (e) => {
+              m.mine[k] = !m.mine[k];
+              m.r[k] += m.mine[k] ? 1 : -1;
+              r.classList.toggle('me', m.mine[k]);
+              r.textContent = k + ' ' + m.r[k];
+              if (m.mine[k]) BIGH.burst(e.clientX, e.clientY, [k], 6);
+            });
+            rs.appendChild(r);
+          });
+          body.appendChild(rs);
+        }
+        d.appendChild(body);
+        msgsEl.appendChild(d);
+      });
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+    }
+
+    function open(id) {
+      current = id;
+      delete unread[id];
+      const ch = CHANNELS.find((c) => c.id === id);
+      document.getElementById('ch-name').textContent = id;
+      document.getElementById('ch-topic').textContent = ch.topic;
+      document.getElementById('input').placeholder = 'Nachricht an #' + id;
+      document.title = '💬 Big H\'s Server – #' + id;
+      buildChannels();
+      renderMessages();
+      if (id === 'goon-logs') BIGH.toast('🔞 Du hast #goon-logs geöffnet. Das FBI hat es notiert.');
+    }
+
+    // Mitglieder
+    const members = document.getElementById('members');
+    [['Online', ['bigh', 'cat', 'bot', 'goth', 'fbi']], ['Offline', ['fire', 'grass']]].forEach(([title, ids]) => {
+      const h = document.createElement('div'); h.className = 'cat'; h.textContent = title + ' — ' + ids.length; members.appendChild(h);
+      ids.forEach((u) => {
+        const d = document.createElement('div');
+        d.className = 'mem' + (title === 'Offline' ? ' off' : '');
+        const a = av(u); a.style.setProperty('--st', USERS[u].st);
+        const t = document.createElement('div');
+        const n = document.createElement('b'); n.textContent = USERS[u].name; n.style.color = USERS[u].c;
+        const s = document.createElement('small'); s.textContent = USERS[u].status;
+        t.append(n, s);
+        d.append(a, t);
+        d.addEventListener('click', () => BIGH.toast(USERS[u].e + ' ' + USERS[u].name + ': ' + USERS[u].bio));
+        members.appendChild(d);
+      });
+    });
+
+    document.querySelectorAll('.srv[data-toast]').forEach((b) => b.addEventListener('click', () => BIGH.toast(b.dataset.toast)));
+
+    // ---------- Selbst schreiben ----------
+    const typing = document.getElementById('typing');
+    const nowTime = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+    let replyTimer = null;
+    function reply(text) {
+      let options = FALLBACK;
+      for (const [re, list] of REPLIES) { if (re.test(text)) { options = list; break; } }
+      const answer = BIGH.pick(options);
+      const channel = current;
+      clearTimeout(replyTimer);
+      replyTimer = setTimeout(() => {
+        typing.innerHTML = '<b>unoslapis</b> schreibt<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+        replyTimer = setTimeout(() => {
+          typing.textContent = '';
+          state[channel].push({ u: 'bigh', t: answer, time: nowTime(), r: {}, mine: {} });
+          if (channel === current) renderMessages(); else { unread[channel] = (unread[channel] || 0) + 1; buildChannels(); }
+          BIGH.beep(660, 0.06, 'sine', 0.05);
+          setTimeout(() => BIGH.beep(880, 0.08, 'sine', 0.05), 70);
+        }, 1200 + Math.random() * 1500);
+      }, 600 + Math.random() * 900);
+    }
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      state[current].push({ u: 'you', t: text, time: nowTime(), r: {}, mine: {} });
+      renderMessages();
+      reply(text);
+    });
+
+    open('allgemein');
+  })();
+  </script>
+</body>
+</html>

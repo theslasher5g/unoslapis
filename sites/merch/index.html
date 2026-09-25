@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🛍️ Big H Merch Store – Offizielle Fanartikel</title>
+<meta name="description" content="Der offizielle (fake) Merch-Store von Big H alias Alastor Lapis. Skill-Issue-Hoodies, Badeenten und Eau de Monster.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: #f6f3ee; color: #1b1426; }
+  .bigh-back { background: rgba(0,0,0,.75); }
+  .topbar { position: sticky; top: 0; z-index: 40; background: #1b1426; color: #fff; }
+  .topbar .in { width: min(1100px, 100% - 32px); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 60px; padding-left: 130px; }
+  @media (max-width: 560px) { .topbar .in { padding-left: 120px; } }
+  .logo { font-family: var(--title); font-size: 1.7rem; letter-spacing: 2px; white-space: nowrap; }
+  .logo span { color: var(--yellow); }
+  .cart-btn { position: relative; background: var(--yellow); color: #1b1426; border: 0; border-radius: 999px; padding: 9px 16px; font: 800 .95rem var(--body); cursor: pointer; white-space: nowrap; }
+  .cart-btn .count { position: absolute; top: -6px; right: -6px; background: var(--pink); color: #fff; border-radius: 999px; min-width: 22px; height: 22px; font-size: .75rem; display: grid; place-items: center; padding: 0 5px; }
+  .cart-btn.bump { animation: bump .4s; }
+  @keyframes bump { 40% { transform: scale(1.18) rotate(-4deg); } }
+
+  .sale { background: var(--pink); color: #fff; text-align: center; font-weight: 800; padding: 8px 16px; font-size: .95rem; }
+  .sale b { font-family: var(--pixel); font-size: .75rem; }
+
+  .hero { width: min(1100px, 100% - 32px); margin: 28px auto 0; border-radius: 22px; overflow: hidden; background: linear-gradient(120deg, #1b1426, #4a1d6e 55%, #ff3e9a); color: #fff; padding: clamp(24px, 5vw, 48px); display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: center; }
+  @media (max-width: 720px) { .hero { grid-template-columns: 1fr; } }
+  .hero h1 { font-family: var(--title); font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: .95; margin: 0; letter-spacing: 2px; }
+  .hero p { font-size: 1.1rem; opacity: .9; }
+  .hero .big { font-size: clamp(5rem, 16vw, 8rem); text-align: center; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px) rotate(4deg); } }
+
+  .shop { width: min(1100px, 100% - 32px); margin: 30px auto 0; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .filters button { background: #fff; border: 2px solid #e2dcd2; border-radius: 999px; padding: 8px 16px; font: 700 .9rem var(--body); cursor: pointer; color: #1b1426; }
+  .filters button.on { background: #1b1426; color: #fff; border-color: #1b1426; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+  .prod { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 20px rgba(27,20,38,.08); display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+  .prod:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(27,20,38,.14); }
+  .mock { height: 210px; display: grid; place-items: center; position: relative; overflow: hidden; }
+  .mock .emo { font-size: 5.5rem; }
+  .badge { position: absolute; top: 12px; left: 12px; background: var(--pink); color: #fff; font-weight: 800; font-size: .72rem; padding: 4px 10px; border-radius: 999px; }
+  .badge.dark { background: #1b1426; }
+
+  /* T-Shirt / Hoodie als CSS-Form mit Aufdruck */
+  .shirt { width: 170px; height: 170px; clip-path: polygon(30% 0, 70% 0, 100% 18%, 88% 38%, 80% 32%, 80% 100%, 20% 100%, 20% 32%, 12% 38%, 0 18%); display: grid; place-items: center; }
+  .shirt span { font-family: var(--title); font-size: 1.35rem; letter-spacing: 1px; text-align: center; line-height: 1; margin-top: 22px; max-width: 90px; }
+  .cap { position: relative; width: 150px; height: 90px; }
+  .cap .dome { position: absolute; inset: 0 10px 10px; border-radius: 80px 80px 10px 10px; display: grid; place-items: center; }
+  .cap .dome span { font-family: var(--title); font-size: 1.1rem; letter-spacing: 1px; }
+  .cap .brim { position: absolute; bottom: 0; left: 50px; right: -30px; height: 16px; border-radius: 0 20px 20px 0; }
+  .mug { position: relative; width: 110px; height: 120px; border-radius: 6px 6px 18px 18px; background: #fff; box-shadow: inset 0 -10px 0 rgba(0,0,0,.05), 0 8px 20px rgba(0,0,0,.12); display: grid; place-items: center; }
+  .mug::after { content: ''; position: absolute; right: -34px; top: 26px; width: 30px; height: 56px; border: 9px solid #fff; border-left: 0; border-radius: 0 30px 30px 0; box-shadow: 6px 6px 14px rgba(0,0,0,.08); }
+  .mug span { font-family: var(--title); font-size: 1.3rem; text-align: center; line-height: 1; color: #1b1426; }
+  .pad { width: 190px; height: 120px; border-radius: 14px; display: grid; place-items: center; box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+  .pad span { font-family: var(--pixel); font-size: .7rem; color: #fff; }
+  .censored { filter: blur(10px); }
+  .censor-bar { position: absolute; background: #000; color: #fff; font-family: var(--pixel); font-size: .7rem; padding: 6px 12px; transform: rotate(-8deg); }
+
+  .info { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .info h3 { margin: 0; font-size: 1.05rem; }
+  .info .desc { color: #6b6178; font-size: .88rem; flex: 1; }
+  .rating { color: #f5a300; font-size: .85rem; }
+  .rating span { color: #6b6178; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .price { font-weight: 900; font-size: 1.2rem; white-space: nowrap; }
+  .price s { display: block; color: #a39aae; font-weight: 600; font-size: .8rem; line-height: 1; }
+  .add { background: #1b1426; color: #fff; border: 0; border-radius: 999px; padding: 9px 14px; font: 800 .88rem var(--body); cursor: pointer; white-space: nowrap; }
+  .add:hover { background: var(--pink); }
+  .add:disabled { background: #cfc8d8; cursor: not-allowed; }
+  select.size { border: 2px solid #e2dcd2; border-radius: 10px; padding: 6px 8px; font: 700 .85rem var(--body); background: #fff; color: #1b1426; }
+
+  /* Warenkorb */
+  .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 70; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 100%); background: #fff; z-index: 71; transform: translateX(100%); transition: transform .3s ease; display: flex; flex-direction: column; }
+  body.cart-open .drawer-bg { opacity: 1; pointer-events: auto; }
+  body.cart-open .drawer { transform: none; }
+  .drawer header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid #eee; }
+  .drawer header h2 { margin: 0; font-family: var(--title); letter-spacing: 1px; font-size: 1.8rem; }
+  .x { background: none; border: 0; font-size: 1.6rem; cursor: pointer; color: #1b1426; }
+  .items { flex: 1; overflow: auto; padding: 10px 20px; }
+  .ci { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0ece6; }
+  .ci .e { font-size: 1.8rem; text-align: center; }
+  .ci small { color: #6b6178; display: block; }
+  .qty { display: flex; align-items: center; gap: 6px; }
+  .qty button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #e2dcd2; background: #fff; cursor: pointer; font-weight: 800; color: #1b1426; }
+  .empty { text-align: center; color: #6b6178; padding: 40px 10px; }
+  .drawer footer { padding: 16px 20px 22px; border-top: 1px solid #eee; }
+  .sum { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem; margin-bottom: 4px; }
+  .note { color: #6b6178; font-size: .8rem; margin-bottom: 12px; }
+  .checkout { width: 100%; justify-content: center; }
+
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 90; display: none; place-items: center; padding: 16px; }
+  .modal-bg.show { display: grid; }
+  .modal { background: #fff; border-radius: 22px; max-width: 460px; width: 100%; padding: 28px; text-align: center; animation: pop .45s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform: scale(.5); opacity: 0; } }
+  .modal .big { font-size: 4rem; }
+  .modal h2 { font-family: var(--title); letter-spacing: 1px; font-size: 2rem; margin: 6px 0; }
+  .modal p { color: #4b4158; }
+  footer.bigh-footer { color: #6b6178; }
+</style>
+</head>
+<body data-back>
+  <div class="topbar"><div class="in">
+    <div class="logo">BIG H <span>MERCH</span></div>
+    <button class="cart-btn" id="cart-btn" type="button">🛒 Warenkorb <span class="count" id="count">0</span></button>
+  </div></div>
+  <div class="sale">🔥 SALE: −69 % auf alles* · endet in <b id="sale-time">00:00:00</b> <span style="opacity:.8;font-weight:600">(*ausser auf Würde)</span></div>
+
+  <section class="hero">
+    <div>
+      <h1>Offizielle Fanartikel des Goon-Königs</h1>
+      <p>Trag Big H mit Stolz. Oder zumindest ohne Scham. Jeder Kauf unterstützt seinen Monster-Energy-Konsum direkt.</p>
+      <a class="btn pink" href="#shop">Jetzt shoppen ↓</a>
+    </div>
+    <div class="big" aria-hidden="true">🛍️</div>
+  </section>
+
+  <main class="shop" id="shop">
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="bigh-footer">Big H Merch™ · Dies ist ein Fake-Shop. Es wird nichts verkauft, nichts verschickt und nichts bezahlt. Leider auch keine Badeente.</footer>
+
+  <div class="drawer-bg" id="drawer-bg"></div>
+  <aside class="drawer" id="drawer" aria-label="Warenkorb" aria-hidden="true">
+    <header><h2>🛒 Warenkorb</h2><button class="x" id="close" type="button" aria-label="Schliessen">✕</button></header>
+    <div class="items" id="items"></div>
+    <footer>
+      <div class="sum"><span>Total</span><span id="total">CHF 0.00</span></div>
+      <div class="note">inkl. 7,7 % Goon-Steuer · Versand: gratis (weil nie etwas ankommt)</div>
+      <button class="btn pink checkout" id="checkout" type="button">Jetzt bestellen 💸</button>
+    </footer>
+  </aside>
+
+  <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal">
+      <div class="big">📦</div>
+      <h2 id="m-title">Bestellung aufgegeben!</h2>
+      <p id="m-text"></p>
+      <p style="font-size:.85rem">Voraussichtliche Lieferung: sobald Big H eine Freundin hat.<br><a data-sub="girlfriend" href="https://girlfriend.unoslapis.ch/">→ Lieferstatus verfolgen</a></p>
+      <button class="btn" id="m-close" type="button">Okay 😔</button>
+    </div>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG: Produkte ====
+    // type: shirt | cap | mug | pad | emoji · color: Grundfarbe · print: Aufdruck
+    const PRODUCTS = [
+      { id: 'hoodie', name: '„Skill Issue"-Hoodie', cat: 'Kleidung', type: 'shirt', color: '#1b1426', ink: '#ff3e9a', print: 'SKILL ISSUE', bg: '#ffe3ef', price: 69, old: 222, sizes: true, rate: 5, n: 420, badge: 'BESTSELLER', desc: 'Für alle, die nach dem Loss wissen, wer schuld ist. (Nicht du.)' },
+      { id: 'duck', name: '„Ich muss baden gehen"-Badeente', cat: 'Zubehör', type: 'emoji', emo: '🦆', bg: '#d9f3ff', price: 12.9, rate: 5, n: 4269, badge: 'LEGENDÄR', desc: 'Die offizielle Ausrede zum Anfassen. Quietscht, wenn du ein Treffen absagst.' },
+      { id: 'cap', name: '„Stecher"-Cap', cat: 'Kleidung', type: 'cap', color: '#e0001b', ink: '#fff', print: 'STECHER', bg: '#fff1e0', price: 29.9, rate: 4, n: 69, desc: 'Signalisiert Selbstvertrauen. Nicht zwingend begründet.' },
+      { id: 'mug', name: '„Team Diff"-Tasse', cat: 'Zubehör', type: 'mug', print: 'TEAM<br>DIFF', bg: '#eaf0ff', price: 19.9, rate: 5, n: 777, desc: 'Für den Kaffee nach der Niederlage. Spülmaschinenfest, im Gegensatz zu seinem Ego.' },
+      { id: 'pad', name: 'unoslapis Mousepad XXL', cat: 'Gaming', type: 'pad', color: 'linear-gradient(135deg,#1b1426,#4a1d6e,#ff3e9a)', print: 'unoslapis', bg: '#efe9ff', price: 34.9, rate: 5, n: 133, desc: '90 × 40 cm. Genug Platz für Flicks, Ausreden und Tränen.' },
+      { id: 'crown', name: 'Goon-König-Krone', cat: 'Zubehör', type: 'emoji', emo: '👑', bg: '#fff6cc', price: 42, rate: 5, n: 99, desc: 'Aus echtem Plastik. Für Könige, die ihren Thron (Gaming-Stuhl) nie verlassen.' },
+      { id: 'parfum', name: 'Eau de Monster – by Alastor Lapis', cat: 'Zubehör', type: 'emoji', emo: '🧴', bg: '#e6fff0', price: 99, old: 320, rate: 3, n: 12, badge: 'NEU', desc: 'Duftnoten: Monster Ultra, Gaming-Stuhl, 3 Uhr morgens und Selbstvertrauen.' },
+      { id: 'grass', name: 'Touch-Grass-Kit', cat: 'Zubehör', type: 'emoji', emo: '🌱', bg: '#e3ffe0', price: 4.2, rate: 1, n: 1, desc: '10 × 10 cm echter Rasen + Anleitung. Big H hat es gekauft und nie ausgepackt.' },
+      { id: 'tempo', name: 'Taschentücher – Signature Edition', cat: 'Zubehör', type: 'emoji', emo: '🧻', bg: '#f3f3f3', price: 6.9, rate: 5, n: 1337, badge: 'OFT GEKAUFT', desc: 'Für die… Allergie. Genau. Die Allergie.' },
+      { id: 'poster', name: 'Waifu-Tierliste als Poster', cat: 'Gaming', type: 'emoji', emo: '🏆', bg: '#ffe9f7', price: 15, rate: 4, n: 57, desc: 'A1-Format, offiziell von Big H abgesegnet. Diskussionen im Discord.' },
+      { id: 'pillow', name: 'Big H Body-Pillow', cat: 'Zubehör', type: 'pillow', emo: '🛏️', bg: '#ffe3e3', price: 149, rate: 5, n: 1, badge: 'ZENSIERT', desc: 'Motiv aus Jugendschutzgründen zensiert. Nur ein Kunde. Wir wissen, wer.' },
+      { id: 'nft', name: 'NFT seines echten Ranks', cat: 'Gaming', type: 'emoji', emo: '🖼️', bg: '#e9e9e9', price: 0, rate: 1, n: 0, badge: 'AUSVERKAUFT', soldout: true, desc: 'Wert: 0.00. Wurde von Big H selbst gelöscht, bevor jemand es sehen konnte.' }
+    ];
+
+    const fmt = (v) => 'CHF ' + v.toFixed(2);
+    const grid = document.getElementById('grid');
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('bigh-cart')) || []; } catch (e) { cart = []; }
+
+    function mockup(p) {
+      const m = document.createElement('div');
+      m.className = 'mock';
+      m.style.background = p.bg;
+      if (p.type === 'shirt') {
+        m.innerHTML = '<div class="shirt"><span></span></div>';
+        m.querySelector('.shirt').style.background = p.color;
+        const s = m.querySelector('span'); s.textContent = p.print; s.style.color = p.ink;
+      } else if (p.type === 'cap') {
+        m.innerHTML = '<div class="cap"><div class="brim"></div><div class="dome"><span></span></div></div>';
+        m.querySelector('.dome').style.background = p.color;
+        m.querySelector('.brim').style.background = p.color;
+        const s = m.querySelector('span'); s.textContent = p.print; s.style.color = p.ink;
+      } else if (p.type === 'mug') {
+        m.innerHTML = '<div class="mug"><span></span></div>';
+        m.querySelector('span').innerHTML = p.print; // fester Text aus der Konfig (nur <br>)
+      } else if (p.type === 'pad') {
+        m.innerHTML = '<div class="pad"><span></span></div>';
+        m.querySelector('.pad').style.background = p.color;
+        m.querySelector('span').textContent = p.print;
+      } else if (p.type === 'pillow') {
+        m.innerHTML = '<div class="emo censored"></div><div class="censor-bar">ZENSIERT</div>';
+        m.querySelector('.emo').textContent = p.emo;
+      } else {
+        m.innerHTML = '<div class="emo"></div>';
+        m.querySelector('.emo').textContent = p.emo;
+      }
+      if (p.badge) {
+        const b = document.createElement('span');
+        b.className = 'badge' + (p.soldout ? ' dark' : '');
+        b.textContent = p.badge;
+        m.appendChild(b);
+      }
+      return m;
+    }
+
+    PRODUCTS.forEach((p) => {
+      const card = document.createElement('article');
+      card.className = 'prod';
+      card.dataset.cat = p.cat;
+      card.appendChild(mockup(p));
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = '<h3></h3><div class="rating"></div><div class="desc"></div><div class="row"><div class="price"></div><div class="act" style="display:flex;gap:6px;align-items:center"></div></div>';
+      info.querySelector('h3').textContent = p.name;
+      info.querySelector('.rating').textContent = '★'.repeat(p.rate) + '☆'.repeat(5 - p.rate) + ' ';
+      const rn = document.createElement('span'); rn.textContent = '(' + p.n.toLocaleString('de-CH') + ')';
+      info.querySelector('.rating').appendChild(rn);
+      info.querySelector('.desc').textContent = p.desc;
+      const pr = info.querySelector('.price');
+      if (p.old) { const s = document.createElement('s'); s.textContent = fmt(p.old); pr.appendChild(s); }
+      pr.append(p.soldout ? '–' : fmt(p.price));
+      const act = info.querySelector('.act');
+      let size = null;
+      if (p.sizes) {
+        size = document.createElement('select');
+        size.className = 'size';
+        size.setAttribute('aria-label', 'Grösse');
+        ['S', 'M', 'L', 'XL', 'XXL', 'Goon-XXXL'].forEach((z) => { const o = document.createElement('option'); o.textContent = z; if (z === 'L') o.selected = true; size.appendChild(o); });
+        act.appendChild(size);
+      }
+      const add = document.createElement('button');
+      add.className = 'add';
+      add.type = 'button';
+      add.textContent = p.soldout ? 'Ausverkauft' : '+ Warenkorb';
+      add.disabled = !!p.soldout;
+      add.addEventListener('click', (e) => {
+        addToCart(p, size ? size.value : null);
+        BIGH.burst(e.clientX, e.clientY, [p.emo || '🛍️', '✨', '💸'], 12);
+        if (p.id === 'pillow') BIGH.toast('👀 Interessante Wahl. Wir sagen es niemandem.');
+        else if (p.id === 'grass') BIGH.toast('🌱 Mutig. Big H hat das nie geschafft.');
+        else BIGH.toast('🛒 „' + p.name + '" im Warenkorb');
+      });
+      act.appendChild(add);
+      card.appendChild(info);
+      grid.appendChild(card);
+    });
+
+    // Filter
+    const filters = document.getElementById('filters');
+    ['Alle', 'Kleidung', 'Zubehör', 'Gaming'].forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = c;
+      if (i === 0) b.classList.add('on');
+      b.addEventListener('click', () => {
+        filters.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+        grid.querySelectorAll('.prod').forEach((card) => { card.style.display = c === 'Alle' || card.dataset.cat === c ? '' : 'none'; });
+      });
+      filters.appendChild(b);
+    });
+
+    // ---------- Warenkorb ----------
+    function save() { try { localStorage.setItem('bigh-cart', JSON.stringify(cart)); } catch (e) { /* egal */ } }
+    function addToCart(p, size) {
+      const key = p.id + (size ? '-' + size : '');
+      const it = cart.find((c) => c.key === key);
+      if (it) it.q++; else cart.push({ key, id: p.id, size, q: 1 });
+      save(); renderCart();
+      const cb = document.getElementById('cart-btn');
+      cb.classList.remove('bump'); void cb.offsetWidth; cb.classList.add('bump');
+      BIGH.beep(880, 0.07, 'triangle', 0.05);
+    }
+    function renderCart() {
+      const items = document.getElementById('items');
+      items.innerHTML = '';
+      let total = 0, count = 0;
+      cart = cart.filter((c) => PRODUCTS.some((p) => p.id === c.id));
+      cart.forEach((c) => {
+        const p = PRODUCTS.find((x) => x.id === c.id);
+        total += p.price * c.q; count += c.q;
+        const row = document.createElement('div');
+        row.className = 'ci';
+        row.innerHTML = '<div class="e"></div><div><b></b><small></small></div><div class="qty"><button type="button" aria-label="weniger">−</button><span></span><button type="button" aria-label="mehr">+</button></div>';
+        row.querySelector('.e').textContent = p.emo || (p.type === 'shirt' ? '👕' : p.type === 'cap' ? '🧢' : p.type === 'mug' ? '☕' : '🖱️');
+        row.querySelector('b').textContent = p.name;
+        row.querySelector('small').textContent = (c.size ? 'Grösse ' + c.size + ' · ' : '') + fmt(p.price);
+        row.querySelector('.qty span').textContent = c.q;
+        const [minus, plus] = row.querySelectorAll('.qty button');
+        minus.addEventListener('click', () => { c.q--; if (c.q <= 0) cart = cart.filter((x) => x !== c); save(); renderCart(); });
+        plus.addEventListener('click', () => { c.q++; save(); renderCart(); });
+        items.appendChild(row);
+      });
+      if (!cart.length) items.innerHTML = '<div class="empty">Dein Warenkorb ist leer.<br>Wie Big H\'s Beziehungsstatus. 💔</div>';
+      document.getElementById('count').textContent = count;
+      document.getElementById('total').textContent = fmt(total);
+      document.getElementById('checkout').disabled = !cart.length;
+      return { total, count };
+    }
+    renderCart();
+
+    const openCart = () => { document.body.classList.add('cart-open'); document.getElementById('drawer').setAttribute('aria-hidden', 'false'); };
+    const closeCart = () => { document.body.classList.remove('cart-open'); document.getElementById('drawer').setAttribute('aria-hidden', 'true'); };
+    document.getElementById('cart-btn').addEventListener('click', openCart);
+    document.getElementById('close').addEventListener('click', closeCart);
+    document.getElementById('drawer-bg').addEventListener('click', closeCart);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeCart(); document.getElementById('modal').classList.remove('show'); } });
+
+    // Bestellung: es wird NICHTS abgefragt oder gesendet
+    document.getElementById('checkout').addEventListener('click', () => {
+      const { total, count } = renderCart();
+      if (!count) return;
+      const nr = 'BH-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('m-text').textContent = 'Bestellung ' + nr + ' über ' + fmt(total) + ' (' + count + ' Artikel) ist eingegangen. Big H bedankt sich und kauft davon sofort Monster Energy.';
+      cart = []; save(); renderCart(); closeCart();
+      document.getElementById('modal').classList.add('show');
+      BIGH.confettiRain(['💸', '📦', '🛍️', '🦆'], 70);
+    });
+    document.getElementById('m-close').addEventListener('click', () => document.getElementById('modal').classList.remove('show'));
+    document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') e.currentTarget.classList.remove('show'); });
+
+    // Sale-Countdown bis Mitternacht (danach startet der Sale einfach neu)
+    const pad = (n) => String(n).padStart(2, '0');
+    function tick() {
+      const now = new Date();
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const s = Math.floor((end - now) / 1000);
+      document.getElementById('sale-time').textContent = pad(Math.floor(s / 3600)) + ':' + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60);
+    }
+    tick(); setInterval(tick, 1000);
+  })();
+  </script>
+</body>
+</html>

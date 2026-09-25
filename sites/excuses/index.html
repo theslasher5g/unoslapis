@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🛁 Ausreden-Generator – Big H Edition</title>
+<meta name="description" content="Der offizielle Ausreden-Generator von Big H. Nummer 1 seit Jahren: Ich muss baden gehen.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛁</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  body { background: radial-gradient(circle at 50% 0%, #0f3b5c 0%, #0d0b1a 60%); }
+  .wrap { padding: 70px 0 20px; text-align: center; }
+  h1 { font-family: var(--title); font-size: clamp(2.8rem, 10vw, 5.6rem); line-height: .95; margin: 0; letter-spacing: 3px; }
+  h1 span { color: var(--cyan); }
+  .sub { color: var(--muted); margin: 10px auto 26px; max-width: 620px; }
+
+  /* Legendäre Ausrede */
+  .legend {
+    max-width: 680px; margin: 0 auto 34px; border-radius: 20px; padding: 22px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #ffd23f, #ff9a3c); color: #1a1030; box-shadow: 0 0 50px rgba(255,210,63,.35);
+  }
+  .legend::after { content: ''; position: absolute; inset: -50%; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%); animation: shine 3.5s infinite; }
+  @keyframes shine { from { transform: translateX(-60%); } to { transform: translateX(60%); } }
+  .legend .tag { font-family: var(--pixel); font-size: .6rem; letter-spacing: 1px; }
+  .legend .q { font-family: var(--title); font-size: clamp(2rem, 7vw, 3.4rem); letter-spacing: 1px; line-height: 1; margin: 10px 0 6px; }
+  .legend .meta { font-weight: 700; font-size: .9rem; }
+  .duck { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-6px) rotate(-8deg); } }
+
+  /* Kategorie */
+  .cats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
+  .cats button { background: var(--card); color: var(--text); border: 2px solid rgba(255,255,255,.12); border-radius: 999px; padding: 8px 16px; font: 700 .9rem var(--body); cursor: pointer; }
+  .cats button.on { background: var(--cyan); color: #0d0b1a; border-color: var(--cyan); }
+
+  /* Spielautomat */
+  .machine { max-width: 860px; margin: 0 auto; background: linear-gradient(180deg, #2a2450, #1a1533); border: 4px solid #3d3470; border-radius: 26px; padding: clamp(14px, 3vw, 26px); box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.08); }
+  .reels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 640px) { .reels { grid-template-columns: 1fr; } }
+  .reel { background: #fff; color: #1a1030; border-radius: 14px; height: 120px; overflow: hidden; position: relative; box-shadow: inset 0 8px 16px rgba(0,0,0,.25), inset 0 -8px 16px rgba(0,0,0,.25); }
+  .reel .lbl { position: absolute; top: 6px; left: 0; right: 0; font-family: var(--pixel); font-size: .5rem; color: #8a80b0; z-index: 2; }
+  .reel .strip { position: absolute; left: 0; right: 0; top: 0; }
+  .reel .item { height: 120px; display: flex; align-items: center; justify-content: center; padding: 18px 12px 8px; font-weight: 800; font-size: 1.02rem; line-height: 1.25; }
+  .reel.spinning .strip { filter: blur(1.5px); }
+
+  .lever { margin-top: 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .spin-btn { font-size: 1.3rem; padding: 16px 34px; }
+  .result {
+    margin-top: 20px; background: rgba(0,0,0,.3); border-radius: 16px; padding: 16px 18px; text-align: left; min-height: 90px;
+    border-left: 5px solid var(--cyan);
+  }
+  .result .txt { font-size: 1.15rem; font-weight: 700; }
+  .result .cred { margin-top: 10px; display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); }
+  .cred .bar { flex: 1; max-width: 260px; height: 10px; border-radius: 5px; background: rgba(255,255,255,.1); overflow: hidden; }
+  .cred .bar div { height: 100%; width: 0; background: linear-gradient(90deg, #ff5470, var(--yellow), var(--green)); transition: width .8s; }
+
+  h2.sec { font-family: var(--title); letter-spacing: 2px; font-size: clamp(2rem, 6vw, 2.8rem); margin: 54px 0 14px; }
+  .hof { max-width: 760px; margin: 0 auto; text-align: left; counter-reset: rank; }
+  .hof li { list-style: none; display: flex; gap: 14px; align-items: center; background: var(--card); border-radius: 14px; padding: 12px 16px; margin-bottom: 10px; }
+  .hof li::before { counter-increment: rank; content: '#' counter(rank); font-family: var(--pixel); font-size: .8rem; color: var(--yellow); min-width: 34px; }
+  .hof .t { flex: 1; font-weight: 700; }
+  .hof .n { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+  .hof ol { padding: 0; margin: 0; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <h1>Ausreden-<span>Generator</span> 🎰</h1>
+    <p class="sub">Big H kann heute nicht. Big H kann nie. Aber warum? Die Maschine weiss es. Hebel ziehen, Ausrede kopieren, fertig.</p>
+
+    <section class="legend" aria-label="Legendäre Ausrede">
+      <div class="tag">👑 LEGENDÄRE AUSREDE · PLATZ 1 SEIT 2019 👑</div>
+      <div class="q">„Ich muss baden gehen." <span class="duck">🛁🦆</span></div>
+      <div class="meta">Benutzt: <span id="bath-count">4'269</span>× · Glaubwürdigkeit: 3 % · Er badet nie so lange.</div>
+    </section>
+
+    <div class="cats" id="cats" role="group" aria-label="Situation"></div>
+
+    <section class="machine">
+      <div class="reels">
+        <div class="reel" id="r0"><div class="lbl">AUSREDE</div><div class="strip"></div></div>
+        <div class="reel" id="r1"><div class="lbl">BEGRÜNDUNG</div><div class="strip"></div></div>
+        <div class="reel" id="r2"><div class="lbl">VERSPRECHEN</div><div class="strip"></div></div>
+      </div>
+      <div class="lever">
+        <button class="btn pink spin-btn" id="spin" type="button">🎰 Ausrede ziehen</button>
+        <button class="btn cyan" id="copy" type="button" disabled>📋 Kopieren</button>
+      </div>
+      <div class="result" aria-live="polite">
+        <div class="txt" id="result">Zieh den Hebel für deine erste Ausrede.</div>
+        <div class="cred"><span>Glaubwürdigkeit:</span><div class="bar"><div id="cred-bar"></div></div><b id="cred">–</b></div>
+      </div>
+    </section>
+
+    <h2 class="sec">Hall of Fame der Ausreden 🏆</h2>
+    <div class="hof"><ol id="hof"></ol></div>
+  </main>
+
+  <footer class="bigh-footer">Ausreden-Generator™ · Alle Ausreden wurden von Big H persönlich im Feld getestet. Keine hat funktioniert.</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const CATS = {
+      treffen: {
+        label: '🍻 Treffen absagen',
+        a: ['Ich muss baden gehen 🛁', 'Mein Router brennt', 'Ich hab Kopfweh', 'Meine Mutter braucht mich', 'Ich bin krank (Anime-Grippe)', 'Mein Kater hat Geburtstag', 'Ich muss meine Waifu-Tierliste updaten'],
+        b: ['weil ich sonst die Folge verpasse', 'weil draussen Sonne ist ☀️', 'weil ich seit 3 Tagen nicht geschlafen hab', 'weil die Ente allein Angst hat 🦆', 'weil mein Horoskop Nein sagt', 'weil Gras gefährlich ist', 'weil mein Discord-Status „Beschäftigt" ist'],
+        c: ['– nächstes Mal sicher!', '– ich mach es wieder gut 🙏', '– wir sehen uns 2027', '– bin in 5 Min on (Lüge)', '– ich schreib dir später (nie)', '– Ehrenwort 🤞']
+      },
+      ranked: {
+        label: '🎮 Warum er verloren hat',
+        a: ['Team diff', 'Mein Ping war 400', 'Die Maus hatte keine Batterie mehr', 'Die Sonne hat geblendet', 'Ich hab mit einer Hand gespielt', 'Der Gegner war ein Smurf', 'Mein Monitor hat 60 Hz'],
+        b: ['weil unser Support AFK war', 'weil ich gerade gebadet hab 🛁', 'weil meine Katze über die Tastatur lief', 'weil ich müde war (3 Uhr)', 'weil Blizzard mich hasst', 'weil ich nebenbei Anime geschaut hab'],
+        c: ['– eigentlich bin ich Champion', '– nächstes Game carry ich', '– ich hab trotzdem POTG verdient', '– report the healer', '– gg ez (für sie)']
+      },
+      antwort: {
+        label: '💬 Warum er nicht zurückschreibt',
+        a: ['Ich war baden 🛁', 'Mein Handy war auf lautlos', 'Hab die Nachricht nicht gesehen', 'Ich war in einem Match', 'Mein Akku war leer', 'Ich hab geschlafen (um 15 Uhr)'],
+        b: ['weil das Wasser so schön warm war', 'weil ich in der Queue war', 'weil ich über eine Antwort nachgedacht hab (3 Tage)', 'weil ich zu viel Rizz hatte', 'weil Discord mich abgelenkt hat'],
+        c: ['– sorry 😅', '– aber jetzt bin ich da!', '– was wolltest du nochmal?', '– lol', '– k']
+      }
+    };
+    const HOF = [
+      ['Ich muss baden gehen 🛁', '4\'269×'],
+      ['Bin in 5 Min on', '3\'112×'],
+      ['Team diff', '2\'048×'],
+      ['Mein Internet spinnt', '1\'337×'],
+      ['Ich hab es nicht gesehen', '999×'],
+      ['Die Sonne hat geblendet', '420×'],
+      ['Mein Kater hat Geburtstag', '69×']
+    ];
+
+    const ITEM_H = 120;
+    let cat = 'treffen';
+    let current = null;
+    let busy = false;
+
+    // Kategorien
+    const catsEl = document.getElementById('cats');
+    Object.keys(CATS).forEach((k) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = CATS[k].label;
+      if (k === cat) b.classList.add('on');
+      b.addEventListener('click', () => {
+        if (busy) return;
+        cat = k;
+        catsEl.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+        fillStatic();
+      });
+      catsEl.appendChild(b);
+    });
+
+    const reels = [0, 1, 2].map((i) => document.getElementById('r' + i));
+    const keys = ['a', 'b', 'c'];
+    function item(text) {
+      const d = document.createElement('div');
+      d.className = 'item';
+      d.textContent = text;
+      return d;
+    }
+    function fillStatic() {
+      reels.forEach((r, i) => {
+        const strip = r.querySelector('.strip');
+        strip.innerHTML = '';
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateY(0)';
+        strip.appendChild(item('❔'));
+      });
+    }
+    fillStatic();
+
+    function spinReel(r, list, final, duration) {
+      return new Promise((resolve) => {
+        const strip = r.querySelector('.strip');
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateY(0)';
+        strip.innerHTML = '';
+        const n = 14 + Math.floor(Math.random() * 6);
+        strip.appendChild(item(strip.dataset.last || '❔'));
+        for (let i = 0; i < n; i++) strip.appendChild(item(BIGH.pick(list)));
+        strip.appendChild(item(final));
+        strip.dataset.last = final;
+        r.classList.add('spinning');
+        void strip.offsetHeight;
+        const ms = BIGH.reduced ? 10 : duration;
+        strip.style.transition = 'transform ' + ms + 'ms cubic-bezier(.15,.85,.25,1)';
+        strip.style.transform = 'translateY(' + (-(n + 1) * ITEM_H) + 'px)';
+        setTimeout(() => { r.classList.remove('spinning'); BIGH.beep(520, 0.06, 'square', 0.04); resolve(); }, ms);
+      });
+    }
+
+    const resultEl = document.getElementById('result');
+    const copyBtn = document.getElementById('copy');
+    document.getElementById('spin').addEventListener('click', async (e) => {
+      if (busy) return;
+      busy = true;
+      copyBtn.disabled = true;
+      const c = CATS[cat];
+      // Ab und zu (15 %) gewinnt die legendäre Ausrede als Jackpot
+      const jackpot = Math.random() < 0.15;
+      const parts = keys.map((k) => BIGH.pick(c[k]));
+      if (jackpot) { parts[0] = 'Ich muss baden gehen 🛁'; parts[1] = BIGH.pick(['weil die Ente allein Angst hat 🦆', 'weil das Wasser so schön warm war', 'weil ich sonst stinke (ausnahmsweise)']); }
+      resultEl.textContent = '…';
+      const tick = setInterval(() => BIGH.beep(BIGH.rand(300, 700), 0.03, 'square', 0.02), 90);
+      await Promise.all(reels.map((r, i) => spinReel(r, c[keys[i]], parts[i], 1200 + i * 450)));
+      clearInterval(tick);
+      current = parts[0] + ', ' + parts[1] + ' ' + parts[2];
+      resultEl.textContent = '„' + current + '"';
+      const cred = jackpot ? 3 : Math.floor(BIGH.rand(4, 61));
+      document.getElementById('cred').textContent = cred + ' %';
+      document.getElementById('cred-bar').style.width = cred + '%';
+      copyBtn.disabled = false;
+      if (jackpot) {
+        BIGH.toast('🛁 JACKPOT! Die legendäre Ausrede!');
+        BIGH.confettiRain(['🛁', '🦆', '🧼', '🫧'], 70);
+        const bc = document.getElementById('bath-count');
+        bc.textContent = (Number(bc.textContent.replace(/\D/g, '')) + 1).toLocaleString('de-CH');
+      } else {
+        BIGH.burst(e.clientX, e.clientY, ['🎰', '💬', '✨'], 12);
+      }
+      busy = false;
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!current) return;
+      const text = current + '\n– gesendet mit dem Big-H-Ausreden-Generator (excuses.unoslapis.ch)';
+      try { await navigator.clipboard.writeText(text); BIGH.toast('📋 Kopiert! Jetzt in den Gruppenchat damit.'); }
+      catch (err) { prompt('Kopieren:', text); }
+    });
+
+    // Hall of Fame
+    const hof = document.getElementById('hof');
+    HOF.forEach(([t, n]) => {
+      const li = document.createElement('li');
+      const a = document.createElement('span'); a.className = 't'; a.textContent = t;
+      const b = document.createElement('span'); b.className = 'n'; b.textContent = n + ' benutzt';
+      li.append(a, b);
+      hof.appendChild(li);
+    });
+
+    BIGH.emojiBackground(['🛁', '🦆', '🫧', '🧼', '💬', '🙄'], 1400);
+  })();
+  </script>
+</body>
+</html>
