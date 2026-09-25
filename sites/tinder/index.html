@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥 Hinder – Alastor, 24 · 2 km entfernt</title>
+<meta name="description" content="Das Dating-Profil von Alastor Lapis alias Big H. Swipe right. Du hast keine Wahl.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --grad: linear-gradient(135deg, #fd267a, #ff6036); }
+  body { background: #111; background-image: radial-gradient(circle at 50% 0, rgba(253,38,122,.25), transparent 55%); }
+  .app { width: min(420px, 100% - 24px); margin: 0 auto; padding: 64px 0 24px; }
+  .brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; }
+  .brand .logo { font-family: var(--title); font-size: 2.2rem; letter-spacing: 1px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand .fl { font-size: 1.9rem; }
+
+  .deck { position: relative; aspect-ratio: 3 / 4.4; }
+  .empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #aaa; padding: 30px; border-radius: 18px; border: 2px dashed #333; }
+  .card {
+    position: absolute; inset: 0; border-radius: 18px; overflow: hidden; background: #222; box-shadow: 0 16px 40px rgba(0,0,0,.6);
+    touch-action: pan-y; user-select: none; cursor: grab; will-change: transform;
+  }
+  .card.drag { cursor: grabbing; }
+  .card.anim { transition: transform .35s ease, opacity .35s; }
+  .photo { position: absolute; inset: 0; display: grid; place-items: center; }
+  .photo .emo { font-size: clamp(6rem, 30vw, 9rem); filter: drop-shadow(0 10px 20px rgba(0,0,0,.4)); }
+  .photo .cap { position: absolute; top: 34px; left: 0; right: 0; text-align: center; font-weight: 800; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.6); font-size: .9rem; padding: 0 14px; }
+  .bars { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; gap: 4px; z-index: 3; }
+  .bars span { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,.35); }
+  .bars span.on { background: #fff; }
+  .shade { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: linear-gradient(transparent, rgba(0,0,0,.92)); z-index: 1; pointer-events: none; }
+  .meta { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 64px 18px 18px; z-index: 2; color: #fff; }
+  .meta h1 { margin: 0; font-size: 2rem; font-weight: 800; }
+  .meta h1 span { font-weight: 400; }
+  .verified { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #1d9bf0; font-size: .75rem; vertical-align: 5px; margin-left: 4px; }
+  .meta .line { opacity: .9; font-size: .92rem; margin-top: 2px; }
+  .meta .info-btn { position: absolute; right: 16px; bottom: 22px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #fff; color: #111; font-weight: 900; cursor: pointer; }
+  .stamp { position: absolute; top: 44px; z-index: 4; font: 900 2.2rem var(--body); letter-spacing: 3px; border: 5px solid; border-radius: 10px; padding: 2px 12px; opacity: 0; pointer-events: none; }
+  .stamp.like { left: 20px; color: #3dff8a; border-color: #3dff8a; transform: rotate(-18deg); }
+  .stamp.nope { right: 20px; color: #ff4458; border-color: #ff4458; transform: rotate(18deg); }
+  .stamp.super { left: 50%; top: 45%; margin-left: -110px; width: 220px; text-align: center; color: #1ec0ff; border-color: #1ec0ff; }
+
+  .actions { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 18px; }
+  .act { width: 64px; height: 64px; border-radius: 50%; border: 0; background: #1e1e1e; box-shadow: 0 6px 18px rgba(0,0,0,.5); font-size: 1.8rem; cursor: pointer; transition: transform .15s; display: grid; place-items: center; }
+  .act:hover { transform: scale(1.1); }
+  .act:active { transform: scale(.92); }
+  .act.small { width: 50px; height: 50px; font-size: 1.3rem; }
+  .act.nope { color: #ff4458; } .act.like { color: #3dff8a; } .act.super { color: #1ec0ff; }
+
+  /* Profil-Details */
+  .details { margin-top: 22px; display: grid; gap: 12px; }
+  .box { background: #1c1c1e; border-radius: 16px; padding: 16px 18px; }
+  .box h2 { margin: 0 0 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; color: #aaa; }
+  .box p { margin: 0; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { border: 1px solid #555; border-radius: 999px; padding: 4px 12px; font-size: .88rem; }
+  .chips span.hl { border-color: #fd267a; color: #ff7aa8; }
+  .prompt b { display: block; font-size: .85rem; color: #aaa; font-weight: 700; margin-bottom: 4px; }
+  .prompt p { font-size: 1.2rem; font-weight: 700; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; font-size: .92rem; }
+  .facts span { color: #aaa; }
+  .anthem { display: flex; align-items: center; gap: 12px; }
+  .anthem .cover { width: 52px; height: 52px; border-radius: 8px; background: linear-gradient(135deg, #7a0000, #1a0000); display: grid; place-items: center; font-size: 1.6rem; flex: none; }
+  .report { background: none; border: 0; color: #888; font: 700 .85rem var(--body); cursor: pointer; text-decoration: underline; justify-self: center; margin-top: 4px; }
+
+  /* Match */
+  .match-bg { position: fixed; inset: 0; z-index: 80; display: none; place-items: center; padding: 16px; background: rgba(0,0,0,.85); }
+  .match-bg.show { display: grid; }
+  .match { width: min(420px, 100%); text-align: center; animation: zoom .45s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes zoom { from { transform: scale(.4); opacity: 0; } }
+  .match h2 { font-family: var(--title); font-size: clamp(3rem, 14vw, 4.6rem); margin: 0; line-height: 1; background: linear-gradient(90deg, #3dff8a, #2de2e6); -webkit-background-clip: text; background-clip: text; color: transparent; transform: rotate(-4deg); }
+  .avs { display: flex; justify-content: center; margin: 22px 0; }
+  .avs div { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #fff; display: grid; place-items: center; font-size: 3.4rem; }
+  .avs div + div { margin-left: -20px; }
+  .chat { background: #1c1c1e; border-radius: 16px; padding: 12px; text-align: left; max-height: 240px; overflow-y: auto; margin-bottom: 10px; }
+  .bubble { max-width: 80%; padding: 8px 12px; border-radius: 16px; margin: 4px 0; font-size: .95rem; word-wrap: break-word; overflow-wrap: anywhere; }
+  .bubble.me { margin-left: auto; background: var(--grad); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.him { background: #333; color: #fff; border-bottom-left-radius: 4px; }
+  .bubble.sys { background: none; color: #888; text-align: center; max-width: none; font-size: .8rem; }
+  .send { display: flex; gap: 8px; }
+  .send input { flex: 1; min-width: 0; background: #1c1c1e; border: 1px solid #333; border-radius: 999px; padding: 12px 16px; color: #fff; font: 1rem var(--body); outline: none; }
+  .send button { border: 0; border-radius: 999px; padding: 0 18px; background: var(--grad); color: #fff; font: 800 .95rem var(--body); cursor: pointer; }
+  .close-match { margin-top: 12px; background: none; border: 0; color: #aaa; font: 700 .9rem var(--body); cursor: pointer; }
+</style>
+</head>
+<body data-back>
+  <main class="app">
+    <div class="brand"><span class="fl">🔥</span><span class="logo">hinder</span></div>
+
+    <div class="deck" id="deck">
+      <div class="empty" id="empty">
+        <div>
+          <div style="font-size:3rem">📍</div>
+          <p><b>Keine weiteren Profile in deiner Nähe.</b><br>Nur er. Es gab immer nur ihn.</p>
+          <button class="btn pink" id="reload" type="button">🔄 Nochmal suchen</button>
+        </div>
+      </div>
+      <article class="card" id="card" aria-label="Profil von Alastor">
+        <div class="bars" id="bars"></div>
+        <div class="photo" id="photo"><span class="emo"></span><span class="cap"></span></div>
+        <div class="shade"></div>
+        <div class="stamp like" id="st-like">LIKE</div>
+        <div class="stamp nope" id="st-nope">NOPE</div>
+        <div class="stamp super" id="st-super">SUPER LIKE</div>
+        <div class="meta">
+          <h1>Alastor <span id="age">24</span><span class="verified" title="Verifiziert (von sich selbst)">✓</span></h1>
+          <div class="line">🎮 Senior Goon Engineer bei Selbstständig</div>
+          <div class="line">🏠 Wohnt in seinem Zimmer · 📍 2 km entfernt</div>
+          <button class="info-btn" type="button" id="info-btn" aria-label="Mehr Infos">i</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="actions">
+      <button class="act small" type="button" id="undo" aria-label="Rückgängig" title="Rückgängig">↩️</button>
+      <button class="act nope" type="button" id="btn-nope" aria-label="Nope">✕</button>
+      <button class="act super small" type="button" id="btn-super" aria-label="Super Like">⭐</button>
+      <button class="act like" type="button" id="btn-like" aria-label="Like">💚</button>
+      <button class="act small" type="button" id="boost" aria-label="Boost" title="Boost">⚡</button>
+    </div>
+
+    <section class="details" id="details">
+      <div class="box">
+        <h2>Über mich</h2>
+        <p>Gamer, Anime-Kenner, Sternzeichen Waage ♎ (Aszendent: Goon). Suche jemanden, der mich zu Duo-Queue begleitet und nicht fragt, warum ich um 3 Uhr noch wach bin. Ich rette Katzen aus brennenden Häusern und verschenke Autos (siehe news.unoslapis.ch). Muss ab und zu baden gehen. 🛁</p>
+      </div>
+      <div class="box prompt"><b>Meine grösste Red Flag</b><p>Ich sage „bin in 5 Min on" und meine 3 Stunden.</p></div>
+      <div class="box">
+        <h2>Interessen</h2>
+        <div class="chips">
+          <span class="hl">Overwatch</span><span class="hl">Valorant</span><span class="hl">Anime</span><span>Ramen</span><span>Goth-Baddies 🖤</span><span>Hazbin Hotel</span><span>Monster Energy</span><span>Baden (angeblich)</span><span>Nicht draussen sein</span>
+        </div>
+      </div>
+      <div class="box prompt"><b>Das perfekte erste Date</b><p>Duo-Queue, danach Ramen, danach nochmal Duo-Queue.</p></div>
+      <div class="box">
+        <h2>Basics</h2>
+        <div class="facts">
+          <div><span>📏 Grösse</span><br>„Ja"</div>
+          <div><span>♎ Sternzeichen</span><br>Waage</div>
+          <div><span>🎓 Bildung</span><br>Universität von YouTube</div>
+          <div><span>🍷 Trinkt</span><br>Nur Monster</div>
+          <div><span>🚬 Raucht</span><br>Nur Gegner</div>
+          <div><span>🏋️ Sport</span><br>Daumen (APM)</div>
+          <div><span>🐾 Haustiere</span><br>Mausi (gerettet)</div>
+          <div><span>🔎 Sucht</span><br>Etwas Ernstes. Oder Duo.</div>
+        </div>
+      </div>
+      <div class="box prompt"><b>Du wirst mich lieben, wenn …</b><p>… du Makima in S-Tier packst.</p></div>
+      <div class="box">
+        <h2>Meine Hymne</h2>
+        <div class="anthem"><div class="cover">📻</div><div><b>Insane</b><br><span style="color:#aaa">Hazbin Hotel · Alastor-Energie</span></div></div>
+      </div>
+      <div class="box prompt"><b>Mein Steam-Name</b><p>unoslapis. Auch in Valorant. Add me, ich lurk.</p></div>
+      <button class="report" type="button" id="report">Alastor melden</button>
+    </section>
+  </main>
+
+  <div class="match-bg" id="match" role="dialog" aria-modal="true" aria-labelledby="match-title">
+    <div class="match">
+      <h2 id="match-title">It's a Match!</h2>
+      <p style="color:#ddd;margin:8px 0 0" id="match-sub">Du und Alastor habt euch gegenseitig geliked.</p>
+      <div class="avs"><div style="background:#5865f2">🫵</div><div style="background:radial-gradient(circle at 40% 35%, #ff4f6d, #6b0020)">😈</div></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <form class="send" id="send" autocomplete="off">
+        <input id="msg" maxlength="200" placeholder="Sag Hallo 👋" aria-label="Nachricht">
+        <button type="submit">Senden</button>
+      </form>
+      <button class="close-match" type="button" id="close-match">Weiter swipen</button>
+    </div>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG ====
+    const BIRTHDAY = new Date(2002, 9, 4); // 4. Oktober 2002
+    const PHOTOS = [
+      { e: '😈', cap: '', bg: 'radial-gradient(circle at 40% 35%, #ff4f6d, #6b0020 70%)' },
+      { e: '🎮🖥️', cap: 'Mein natürlicher Lebensraum', bg: 'linear-gradient(160deg, #1e3a66, #0b1422)' },
+      { e: '🛁🦆', cap: 'Beim Baden (angeblich)', bg: 'linear-gradient(160deg, #5ec8ff, #1f6fa8)' },
+      { e: '🐈🔥', cap: 'Mit Mausi nach der Rettung', bg: 'linear-gradient(160deg, #ff9a3c, #7a1f00)' },
+      { e: '🌱', cap: 'Ich draussen (Wallpaper)', bg: 'linear-gradient(160deg, #3dff8a, #1f7a33)' },
+      { e: '🖤🦇', cap: 'Auf der Jagd nach Goth-Baddies', bg: 'linear-gradient(160deg, #3a3a3a, #000)' }
+    ];
+    const NOPE_MSGS = [
+      '🔄 Er ist zurück. Er gibt nicht so schnell auf.',
+      '😏 Alastor hat dich trotzdem geliked.',
+      '📍 Keine anderen Profile in deiner Nähe. Nur er.',
+      '🛁 Er muss jetzt baden gehen. Vor Trauer.',
+      '🤖 Der Algorithmus hat entschieden: Er ist dein Schicksal.'
+    ];
+    const OPENERS = ['hey 😏', 'na, auch am goonen?', 'bist du ein Genji-Main? weil du hast mein herz gedashed', 'hi, ich bin alastor. kennst du hazbin hotel? das bin im prinzip ich'];
+    const REPLIES = [
+      [/\b(hi|hey|hallo|moin|servus|na)\b|grüezi/i, ['hey 😏', 'yo', 'na du 👀']],
+      [/date|treffen|essen|kino|ausgehen/i, ['klingt gut. duo-queue um 20 uhr?', 'ramen? ich zahl (mit dem geld vom merch-shop)', 'kann heut nicht, ich muss baden gehen 🛁']],
+      [/game|spiel|overwatch|valo|ranked|zock/i, ['endlich jemand mit geschmack 😍', 'welcher rank? sag nicht bronze', 'add mich: unoslapis']],
+      [/anime|waifu|makima/i, ['makima in s-tier oder wir sind fertig', 'one piece oder naruto? antworte weise']],
+      [/baden|bad|dusch/i, ['das ist mein lieblingsthema 🛁', 'woher weisst du von meiner ausrede']],
+      [/\?$/, ['gute frage. ich muss kurz baden gehen und denk drüber nach', 'hm. mein horoskop sagt ja', 'kommt drauf an 😏']]
+    ];
+    const FALLBACK = ['lol', 'haha ja', 'real 😂', 'ich bin in 5 min wieder da (3 std)', 'du bist lustig. match des jahres', '🥺'];
+
+    // Alter automatisch
+    const now = new Date();
+    let age = now.getFullYear() - BIRTHDAY.getFullYear();
+    if (now.getMonth() < BIRTHDAY.getMonth() || (now.getMonth() === BIRTHDAY.getMonth() && now.getDate() < BIRTHDAY.getDate())) age--;
+    document.getElementById('age').textContent = age;
+    document.title = '🔥 Hinder – Alastor, ' + age + ' · 2 km entfernt';
+
+    // ---------- Fotos ----------
+    const photo = document.getElementById('photo');
+    const bars = document.getElementById('bars');
+    let pi = 0;
+    PHOTOS.forEach(() => bars.appendChild(document.createElement('span')));
+    function showPhoto(i) {
+      pi = (i + PHOTOS.length) % PHOTOS.length;
+      const p = PHOTOS[pi];
+      photo.style.background = p.bg;
+      photo.querySelector('.emo').textContent = p.e;
+      photo.querySelector('.cap').textContent = p.cap;
+      [...bars.children].forEach((b, k) => b.classList.toggle('on', k === pi));
+    }
+    showPhoto(0);
+    document.getElementById('info-btn').addEventListener('click', () => document.getElementById('details').scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth' }));
+
+    // ---------- Swipen ----------
+    const card = document.getElementById('card');
+    const stLike = document.getElementById('st-like'), stNope = document.getElementById('st-nope'), stSuper = document.getElementById('st-super');
+    let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false, moved = false, nopes = 0, busy = false, lastAction = null;
+
+    function setStamps(x, y) {
+      stLike.style.opacity = Math.max(0, Math.min(1, x / 100));
+      stNope.style.opacity = Math.max(0, Math.min(1, -x / 100));
+      stSuper.style.opacity = Math.max(0, Math.min(1, -y / 120)) * (Math.abs(x) < 60 ? 1 : 0);
+    }
+    function resetCard(animated) {
+      card.classList.toggle('anim', !!animated);
+      card.style.transform = '';
+      card.style.opacity = '';
+      setStamps(0, 0);
+    }
+    card.addEventListener('pointerdown', (e) => {
+      if (busy || e.target.closest('.info-btn')) return;
+      dragging = true; moved = false;
+      startX = e.clientX; startY = e.clientY; dx = dy = 0;
+      card.classList.remove('anim'); card.classList.add('drag');
+      card.setPointerCapture(e.pointerId);
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      dx = e.clientX - startX; dy = e.clientY - startY;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+      card.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + dx / 14 + 'deg)';
+      setStamps(dx, dy);
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      card.classList.remove('drag');
+      // Nur angetippt (nicht gewischt): linke/rechte Hälfte oben = Foto zurück/weiter
+      if (!moved && e && e.type === 'pointerup') {
+        const r = card.getBoundingClientRect();
+        if (e.clientY - r.top < r.height * 0.62) showPhoto(e.clientX - r.left < r.width / 2 ? pi - 1 : pi + 1);
+        resetCard(false);
+        return;
+      }
+      if (dx > 110) decide('like');
+      else if (dx < -110) decide('nope');
+      else if (dy < -130) decide('super');
+      else resetCard(true);
+    }
+    card.addEventListener('pointerup', endDrag);
+    card.addEventListener('pointercancel', endDrag);
+
+    function flyOut(dir) {
+      card.classList.add('anim');
+      const w = window.innerWidth;
+      if (dir === 'like') { card.style.transform = 'translate(' + w + 'px, -40px) rotate(30deg)'; stLike.style.opacity = 1; }
+      if (dir === 'nope') { card.style.transform = 'translate(' + -w + 'px, -40px) rotate(-30deg)'; stNope.style.opacity = 1; }
+      if (dir === 'super') { card.style.transform = 'translate(0, ' + -window.innerHeight + 'px)'; stSuper.style.opacity = 1; }
+      card.style.opacity = '0';
+    }
+
+    function decide(dir) {
+      if (busy) return;
+      busy = true;
+      lastAction = dir;
+      flyOut(dir);
+      if (dir === 'nope') {
+        nopes++;
+        BIGH.beep(180, 0.2, 'sawtooth', 0.04);
+        setTimeout(() => {
+          if (nopes >= 3 && nopes % 3 === 0) {
+            card.style.display = 'none';
+            busy = false;
+            BIGH.toast('📍 Keine weiteren Profile. Nur er.');
+            return;
+          }
+          // Er kommt zurück. Von der anderen Seite.
+          card.classList.remove('anim');
+          card.style.transform = 'translate(' + window.innerWidth + 'px, 0) rotate(20deg)';
+          void card.offsetWidth;
+          resetCard(true);
+          BIGH.toast(NOPE_MSGS[(nopes - 1) % NOPE_MSGS.length]);
+          showPhoto(0);
+          setTimeout(() => { busy = false; }, 360);
+        }, 380);
+      } else {
+        BIGH.beep(dir === 'super' ? 1200 : 880, 0.12, 'triangle', 0.06);
+        setTimeout(() => openMatch(dir === 'super'), 380);
+      }
+    }
+    document.getElementById('btn-like').addEventListener('click', () => decide('like'));
+    document.getElementById('btn-nope').addEventListener('click', () => decide('nope'));
+    document.getElementById('btn-super').addEventListener('click', () => decide('super'));
+    document.getElementById('undo').addEventListener('click', () => BIGH.toast(lastAction === 'nope' ? '↩️ Rückgängig nur mit Hinder Gold. Er zahlt es für dich. Er ist ja reich.' : '↩️ Nichts rückgängig zu machen.'));
+    document.getElementById('boost').addEventListener('click', (e) => { BIGH.toast('⚡ Boost aktiviert! Du bist jetzt 10× sichtbarer – für Alastor.'); BIGH.burst(e.clientX, e.clientY, ['⚡', '💜', '🔥'], 16); });
+    document.getElementById('report').addEventListener('click', () => BIGH.toast('🚩 Meldung abgelehnt. Grund: zu attraktiv.'));
+    document.getElementById('reload').addEventListener('click', () => {
+      card.style.display = '';
+      card.classList.remove('anim');
+      card.style.transform = 'translate(0, -40px) scale(.9)';
+      card.style.opacity = '0';
+      void card.offsetWidth;
+      resetCard(true);
+      showPhoto(0);
+      BIGH.toast('🔄 1 neues Profil gefunden: Alastor, ' + age + '. Überraschung.');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('match').classList.contains('show') || e.target.tagName === 'INPUT') return;
+      if (card.style.display === 'none') return;
+      if (e.key === 'ArrowRight') decide('like');
+      if (e.key === 'ArrowLeft') decide('nope');
+      if (e.key === 'ArrowUp') decide('super');
+    });
+
+    // ---------- Match + Chat ----------
+    const chat = document.getElementById('chat');
+    function bubble(who, text) {
+      const b = document.createElement('div');
+      b.className = 'bubble ' + who;
+      b.textContent = text;
+      chat.appendChild(b);
+      chat.scrollTop = chat.scrollHeight;
+    }
+    let matchOpen = false;
+    function openMatch(superLike) {
+      matchOpen = true;
+      chat.innerHTML = '';
+      document.getElementById('match-sub').textContent = superLike
+        ? 'Du hast Alastor super-geliked! Er hat es 0,3 Sekunden später gesehen. Er hatte die App offen.'
+        : 'Du und Alastor habt euch gegenseitig geliked.';
+      bubble('sys', 'Ihr habt am ' + new Date().toLocaleDateString('de-CH') + ' gematcht');
+      document.getElementById('match').classList.add('show');
+      BIGH.confettiRain(['💚', '🔥', '💘', '😈'], 80);
+      setTimeout(() => { if (matchOpen) bubble('him', BIGH.pick(OPENERS)); }, 1400);
+      setTimeout(() => document.getElementById('msg').focus(), 100);
+    }
+    document.getElementById('send').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('msg');
+      const t = input.value.trim();
+      if (!t) return;
+      input.value = '';
+      bubble('me', t);
+      let opts = FALLBACK;
+      for (const [re, list] of REPLIES) { if (re.test(t)) { opts = list; break; } }
+      const answer = BIGH.pick(opts);
+      setTimeout(() => {
+        if (!matchOpen) return;
+        bubble('him', answer);
+        BIGH.beep(880, 0.07, 'sine', 0.05);
+      }, 900 + Math.random() * 1200);
+    });
+    document.getElementById('close-match').addEventListener('click', () => {
+      matchOpen = false;
+      document.getElementById('match').classList.remove('show');
+      card.classList.remove('anim');
+      card.style.transform = 'translate(0, 40px) scale(.9)';
+      void card.offsetWidth;
+      resetCard(true);
+      showPhoto(0);
+      busy = false;
+      BIGH.toast('🔄 Neues Profil: Alastor, ' + age + '. Schon wieder.');
+    });
+  })();
+  </script>
+</body>
+</html>

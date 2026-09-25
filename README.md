@@ -21,6 +21,8 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `horoskop.unoslapis.ch` | Astro-Lapis: tägliches Horoskop für alle 12 Sternzeichen, Big H (Waage) als Spezial, Partner-Check |
 | `merch.unoslapis.ch` | Fake-Shop mit Warenkorb, Sale-Countdown und „Bestellung" (fragt nichts ab, verschickt nichts) |
 | `discord.unoslapis.ch` | Nachgebauter Chat-Server mit Kanälen wie #baden-gehen und #goon-logs; man kann selbst schreiben und unoslapis antwortet |
+| `wordle.unoslapis.ch` | unoslapis Wordle: Wort des Tages (für alle gleich) + Endlos-Modus, Statistik, Teilen als Emoji-Raster |
+| `tinder.unoslapis.ch` | „Hinder"-Dating-Profil von Alastor: Karte wischen, Fotos durchtippen, Nope bringt nichts, bei Match antwortet er im Chat |
 
 Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `alastor`, `stecher`, `unoslapis`, `goon`, `nani`, `uwu`, `gg` (und ein geheimes Wort) tippen.
 
@@ -40,7 +42,7 @@ sites/
   shared/              # style.css, fun.js, 404.html (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
-  excuses/  horoskop/  merch/  discord/
+  excuses/  horoskop/  merch/  discord/  wordle/  tinder/
 ```
 
 ## Deploy auf dem VPS
@@ -57,7 +59,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 
@@ -111,6 +113,8 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Excuses** (`sites/excuses/index.html`): `CATS` (Ausreden je Situation), `HOF`
 - **Merch** (`sites/merch/index.html`): `PRODUCTS`
 - **Discord** (`sites/discord/index.html`): `USERS`, `CHANNELS` (Nachrichten), `REPLIES` (Antworten des Bots)
+- **Wordle** (`sites/wordle/index.html`): Liste `WORDS` (5 Buchstaben A–Z + Erklärung)
+- **Tinder** (`sites/tinder/index.html`): `PHOTOS`, `REPLIES`, Profiltexte direkt im HTML
 - **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`
 

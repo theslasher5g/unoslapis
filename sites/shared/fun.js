@@ -144,6 +144,8 @@
   document.addEventListener('keydown', (e) => {
     const target = e.target;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+    // Seiten mit eigener Tastatursteuerung (z.B. Wordle) können die Tipp-Eggs abschalten
+    if (document.body.hasAttribute('data-no-eggs')) return;
 
     const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     keyBuf = keyBuf.concat(key).slice(-KONAMI.length);

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>🟩 unoslapis Wordle – Das tägliche Big-H-Worträtsel</title>
+<meta name="description" content="Errate das Wort des Tages aus dem Big-H-Universum in 6 Versuchen.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟩</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --ok: #538d4e; --near: #c9b458; --no: #3a3a3c; --tile: #121213; --line: #3a3a3c; --key: #818384; }
+  body { background: #121213; }
+  .wrap { width: min(520px, 100% - 24px); padding: 60px 0 16px; text-align: center; }
+  header.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+  header.top h1 { margin: 0; font-family: var(--title); font-size: clamp(1.8rem, 7vw, 2.6rem); letter-spacing: 2px; line-height: 1; }
+  header.top h1 span { color: var(--ok); }
+  .icon-btn { background: none; border: 0; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 6px; }
+  .modes { display: flex; justify-content: center; gap: 6px; margin: 12px 0 4px; }
+  .modes button { background: #1f1f21; color: #ddd; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font: 700 .85rem var(--body); cursor: pointer; }
+  .modes button.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .info { color: #a3a3a3; font-size: .85rem; min-height: 1.3em; }
+
+  .board { display: grid; grid-template-rows: repeat(6, 1fr); gap: 6px; width: min(330px, 86vw); margin: 14px auto; }
+  .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .row.shake { animation: shake .5s; }
+  @keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); } 30%, 50%, 70% { transform: translateX(-6px); } 40%, 60% { transform: translateX(6px); } }
+  .tile { aspect-ratio: 1; border: 2px solid var(--line); display: grid; place-items: center; font: 800 clamp(1.6rem, 7vw, 2rem) var(--body); text-transform: uppercase; color: #fff; user-select: none; }
+  .tile.filled { border-color: #565758; animation: pop .1s; }
+  @keyframes pop { 50% { transform: scale(1.1); } }
+  .tile.reveal { animation: flip .5s ease forwards; }
+  @keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+  .tile.ok { background: var(--ok); border-color: var(--ok); }
+  .tile.near { background: var(--near); border-color: var(--near); }
+  .tile.no { background: var(--no); border-color: var(--no); }
+  .tile.win { animation: bounce .5s ease; }
+  @keyframes bounce { 40% { transform: translateY(-24px); } 60% { transform: translateY(4px); } }
+
+  .kb { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; user-select: none; }
+  .kb .r { display: flex; gap: 5px; justify-content: center; }
+  .kb button { flex: 1; max-width: 44px; height: 56px; border: 0; border-radius: 5px; background: var(--key); color: #fff; font: 800 1rem var(--body); cursor: pointer; text-transform: uppercase; touch-action: manipulation; }
+  .kb button.wide { max-width: 70px; flex: 1.5; font-size: .75rem; }
+  .kb button.ok { background: var(--ok); } .kb button.near { background: var(--near); } .kb button.no { background: var(--no); }
+
+  .toastmsg { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; font-weight: 800; padding: 12px 16px; border-radius: 6px; z-index: 90; pointer-events: none; animation: fadeout 1.8s forwards; }
+  @keyframes fadeout { 0%, 75% { opacity: 1; } 100% { opacity: 0; } }
+
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 80; display: none; place-items: center; padding: 16px; }
+  .modal-bg.show { display: grid; }
+  .modal { background: #1f1f21; border: 1px solid var(--line); border-radius: 14px; max-width: 420px; width: 100%; padding: 22px; position: relative; text-align: center; animation: rise .3s ease; }
+  @keyframes rise { from { transform: translateY(24px); opacity: 0; } }
+  .modal .x { position: absolute; top: 8px; right: 10px; }
+  .modal h2 { margin: 0 0 10px; font-family: var(--title); letter-spacing: 1px; font-size: 1.8rem; }
+  .word-reveal { font: 900 2rem var(--body); letter-spacing: 6px; color: var(--ok); }
+  .explain { color: #cfcfcf; margin: 6px 0 14px; }
+  .stats { display: flex; justify-content: center; gap: 16px; margin: 10px 0; }
+  .stats div { min-width: 60px; }
+  .stats b { display: block; font-size: 1.8rem; }
+  .stats span { font-size: .72rem; color: #a3a3a3; }
+  .dist { text-align: left; margin: 12px 0; }
+  .dist .l { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: .85rem; }
+  .dist .bar { background: var(--no); color: #fff; font-weight: 800; padding: 1px 6px; text-align: right; min-width: 22px; }
+  .dist .bar.cur { background: var(--ok); }
+  .help p { text-align: left; color: #ddd; font-size: .95rem; }
+  .ex { display: flex; gap: 4px; margin: 6px 0; }
+  .ex .tile { width: 38px; font-size: 1.2rem; }
+  .next { color: #a3a3a3; font-size: .85rem; margin-top: 10px; }
+</style>
+</head>
+<body data-back data-no-eggs>
+  <main class="wrap">
+    <header class="top">
+      <button class="icon-btn" id="help-btn" type="button" aria-label="Anleitung">❔</button>
+      <h1>unoslapis <span>Wordle</span></h1>
+      <button class="icon-btn" id="stats-btn" type="button" aria-label="Statistik">📊</button>
+    </header>
+    <div class="modes">
+      <button type="button" id="mode-daily" class="on">📅 Wort des Tages</button>
+      <button type="button" id="mode-endless">♾️ Endlos</button>
+    </div>
+    <div class="info" id="info"></div>
+
+    <div class="board" id="board" aria-label="Spielfeld"></div>
+    <div class="kb" id="kb" aria-label="Tastatur"></div>
+  </main>
+
+  <div class="modal-bg" id="end-modal" role="dialog" aria-modal="true" aria-labelledby="end-title">
+    <div class="modal">
+      <button class="icon-btn x" type="button" data-close aria-label="Schliessen">✕</button>
+      <h2 id="end-title"></h2>
+      <div class="word-reveal" id="end-word"></div>
+      <div class="explain" id="end-explain"></div>
+      <div class="stats" id="stats"></div>
+      <div class="dist" id="dist"></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn pink" id="share" type="button">📤 Teilen</button>
+        <button class="btn cyan" id="again" type="button">♾️ Nochmal (Endlos)</button>
+      </div>
+      <div class="next" id="next"></div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal help">
+      <button class="icon-btn x" type="button" data-close aria-label="Schliessen">✕</button>
+      <h2 id="help-title">So geht's</h2>
+      <p>Errate das Wort in 6 Versuchen. Jedes Wort hat 5 Buchstaben und stammt aus dem Big-H-Universum (Gaming, Anime, Ausreden, Geburtstag …).</p>
+      <div class="ex"><div class="tile ok">L</div><div class="tile">A</div><div class="tile">P</div><div class="tile">I</div><div class="tile">S</div></div>
+      <p><b>L</b> ist im Wort und an der richtigen Stelle.</p>
+      <div class="ex"><div class="tile">B</div><div class="tile near">A</div><div class="tile">D</div><div class="tile">E</div><div class="tile">N</div></div>
+      <p><b>A</b> ist im Wort, aber an einer anderen Stelle.</p>
+      <div class="ex"><div class="tile">G</div><div class="tile">E</div><div class="tile">N</div><div class="tile no">J</div><div class="tile">I</div></div>
+      <p><b>J</b> kommt im Wort nicht vor.</p>
+      <p style="color:#a3a3a3;font-size:.85rem">Umlaute gibt es keine. Jeden Tag gibt es ein neues Wort für alle, im Endlos-Modus beliebig viele.</p>
+    </div>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // ==== KONFIG: Lösungswörter (genau 5 Buchstaben A–Z) + Erklärung ====
+    const WORDS = [
+      ['LAPIS', 'Wie Alastor Lapis. Wie unoslapis. Wie der Goon-König.'],
+      ['BADEN', '„Ich muss baden gehen." – die legendäre Ausrede Nr. 1.'],
+      ['GENJI', 'Sein Main. Ryūjin no ken wo kurae!'],
+      ['HANZO', 'Random Arrow = Headshot. So spielt er.'],
+      ['MERCY', 'Die ihn in Ranked nie heilt (laut ihm).'],
+      ['WAIFU', 'Siehe waifu.unoslapis.ch. S-Tier ist voll.'],
+      ['ANIME', 'Gesehene Animes: ∞'],
+      ['RAMEN', 'Grundnahrungsmittel eines Otakus. Instant, natürlich.'],
+      ['SKILL', 'Wie in „Skill Issue". Beim Gegner, versteht sich.'],
+      ['TEMPO', 'Für die… Allergie. Genau.'],
+      ['KATZE', 'Mausi, die er aus dem brennenden Haus gerettet hat.'],
+      ['ULTRA', 'Monster Ultra – sein Treibstoff.'],
+      ['CARRY', 'Er carryt. Immer. Laut ihm.'],
+      ['SMURF', 'Die Ausrede, wenn der Gegner besser war.'],
+      ['WAAGE', 'Sein Sternzeichen. Geboren am 4. Oktober.'],
+      ['RASEN', 'Hat er seit 2019 nicht mehr berührt.'],
+      ['NERDS', 'Seine Leute.'],
+      ['GAMER', 'Kein Hobby. Ein Lifestyle.'],
+      ['QUEUE', 'Wo er sich gerade befindet. Seit 4 Stunden.'],
+      ['ENTEN', 'Badeenten. Für das Bad, das er nie nimmt.'],
+      ['TORTE', 'Mit Zahlenkerzen „2" und „4". Siehe b-day.unoslapis.ch.'],
+      ['KERZE', 'Auspusten! Am besten mit dem Mikrofon.'],
+      ['OTAKU', 'Kein Schimpfwort. Eine Auszeichnung.'],
+      ['NINJA', 'Genji ist ein Cyborg-Ninja. Er auch (im Kopf).'],
+      ['GOTHS', 'Die gothischen Schlechties, die er jagt. 🖤'],
+      ['STERN', 'Die Sterne lügen nicht. Er schon. (horoskop.unoslapis.ch)'],
+      ['REYNA', 'Valorant-Agentin. Unter seinen Waifus im B-Tier.'],
+      ['TEAMS', 'Team diff. Immer das Team.'],
+      ['LURKT', 'Er lurkt. Seit Runde 1. Im Spawn.'],
+      ['ZOCKT', 'Was er gerade macht. Und immer.'],
+      ['MEMES', 'Aus denen er zu 90 % besteht.'],
+      ['KRONE', 'Die Goon-König-Krone, erhältlich auf merch.unoslapis.ch.']
+    ].filter(([w]) => /^[A-Z]{5}$/.test(w)); // Sicherheitsnetz gegen Tippfehler in der Liste
+
+    const START = new Date(2026, 8, 25); // Tag 1 = 25.09.2026
+    const KEYS = ['QWERTZUIOP', 'ASDFGHJKL', '↵YXCVBNM⌫'];
+
+    // Feste, gemischte Reihenfolge, damit Wörter nicht alphabetisch/vorhersehbar kommen
+    const ORDER = WORDS.map((_, i) => i);
+    (function shuffle() { let s = 20261004; const r = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648; for (let i = ORDER.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [ORDER[i], ORDER[j]] = [ORDER[j], ORDER[i]]; } })();
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const dayNo = Math.max(1, Math.round((today - START) / 86400000) + 1);
+    const dailyIdx = ORDER[(dayNo - 1) % ORDER.length];
+
+    const store = {
+      get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+      set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } }
+    };
+
+    let mode = 'daily';
+    let answer, explain, guesses, cur, done;
+
+    const board = document.getElementById('board');
+    const info = document.getElementById('info');
+
+    // ---------- Aufbau ----------
+    for (let r = 0; r < 6; r++) {
+      const row = document.createElement('div');
+      row.className = 'row';
+      for (let c = 0; c < 5; c++) { const t = document.createElement('div'); t.className = 'tile'; row.appendChild(t); }
+      board.appendChild(row);
+    }
+    const kb = document.getElementById('kb');
+    const keyEls = {};
+    KEYS.forEach((line) => {
+      const r = document.createElement('div');
+      r.className = 'r';
+      [...line].forEach((ch) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        if (ch === '↵') { b.textContent = 'Enter'; b.className = 'wide'; b.dataset.k = 'Enter'; }
+        else if (ch === '⌫') { b.textContent = '⌫'; b.className = 'wide'; b.dataset.k = 'Backspace'; b.setAttribute('aria-label', 'Löschen'); }
+        else { b.textContent = ch; b.dataset.k = ch; keyEls[ch] = b; }
+        r.appendChild(b);
+      });
+      kb.appendChild(r);
+    });
+
+    // ---------- Bewertung (korrekt bei doppelten Buchstaben) ----------
+    function score(guess, sol) {
+      const res = Array(5).fill('no');
+      const rest = {};
+      for (let i = 0; i < 5; i++) {
+        if (guess[i] === sol[i]) res[i] = 'ok';
+        else rest[sol[i]] = (rest[sol[i]] || 0) + 1;
+      }
+      for (let i = 0; i < 5; i++) {
+        if (res[i] !== 'ok' && rest[guess[i]] > 0) { res[i] = 'near'; rest[guess[i]]--; }
+      }
+      return res;
+    }
+    const RANK = { no: 1, near: 2, ok: 3 };
+
+    function paintRow(r, word, res, animate) {
+      const tiles = board.children[r].children;
+      [...word].forEach((ch, i) => {
+        const t = tiles[i];
+        t.textContent = ch;
+        const apply = () => {
+          t.className = 'tile ' + res[i];
+          const k = keyEls[ch];
+          if (k) {
+            const old = k.dataset.s;
+            if (!old || RANK[res[i]] > RANK[old]) { k.dataset.s = res[i]; k.className = res[i]; }
+          }
+        };
+        if (animate && !BIGH.reduced) {
+          setTimeout(() => { t.classList.add('reveal'); setTimeout(apply, 250); }, i * 250);
+        } else apply();
+      });
+    }
+
+    function resetBoard() {
+      [...board.children].forEach((row) => [...row.children].forEach((t) => { t.className = 'tile'; t.textContent = ''; }));
+      Object.values(keyEls).forEach((k) => { k.className = ''; delete k.dataset.s; });
+    }
+
+    function start(newMode) {
+      mode = newMode;
+      document.getElementById('mode-daily').classList.toggle('on', mode === 'daily');
+      document.getElementById('mode-endless').classList.toggle('on', mode === 'endless');
+      resetBoard();
+      cur = '';
+      if (mode === 'daily') {
+        [answer, explain] = WORDS[dailyIdx];
+        const saved = store.get('bigh-wordle-day', null);
+        guesses = saved && saved.day === dayNo ? saved.guesses : [];
+        info.textContent = 'Wort des Tages #' + dayNo;
+      } else {
+        let i;
+        do { i = Math.floor(Math.random() * WORDS.length); } while (WORDS.length > 1 && WORDS[i][0] === answer);
+        [answer, explain] = WORDS[i];
+        guesses = [];
+        info.textContent = 'Endlos-Modus – zählt nicht zur Statistik';
+      }
+      guesses.forEach((g, r) => paintRow(r, g, score(g, answer), false));
+      done = guesses.includes(answer) || guesses.length >= 6;
+      if (done && mode === 'daily') setTimeout(() => showEnd(guesses.includes(answer), false), 300);
+    }
+
+    function msg(t) {
+      const d = document.createElement('div');
+      d.className = 'toastmsg';
+      d.textContent = t;
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 1900);
+    }
+
+    function typeRow() {
+      const tiles = board.children[guesses.length].children;
+      for (let i = 0; i < 5; i++) {
+        tiles[i].textContent = cur[i] || '';
+        tiles[i].className = 'tile' + (cur[i] ? ' filled' : '');
+      }
+    }
+
+    const WIN_MSGS = ['Goon-König-Niveau! 👑', 'Stecher-Präzision! 🎯', 'Sehr gut! 🔥', 'Solide! 💪', 'Knapp! 😅', 'Puh! Gerade noch 🛁'];
+    let busy = false;
+    function submit() {
+      if (cur.length < 5) {
+        const row = board.children[guesses.length];
+        row.classList.remove('shake'); void row.offsetWidth; row.classList.add('shake');
+        msg('Zu wenig Buchstaben');
+        return;
+      }
+      busy = true;
+      const g = cur;
+      const r = guesses.length;
+      guesses.push(g);
+      cur = '';
+      paintRow(r, g, score(g, answer), true);
+      const win = g === answer;
+      const over = win || guesses.length >= 6;
+      if (mode === 'daily') store.set('bigh-wordle-day', { day: dayNo, guesses });
+      setTimeout(() => {
+        busy = false;
+        if (!over) return;
+        done = true;
+        if (win) {
+          [...board.children[r].children].forEach((t, i) => setTimeout(() => t.classList.add('win'), i * 100));
+          msg(WIN_MSGS[r]);
+          BIGH.confettiRain(['🟩', '👑', '🎉', '🐎'], 60);
+        } else {
+          msg(answer);
+        }
+        if (mode === 'daily') recordStats(win, r + 1);
+        setTimeout(() => showEnd(win, true), 1400);
+      }, BIGH.reduced ? 50 : 1400);
+    }
+
+    function press(k) {
+      if (done || busy) return;
+      if (k === 'Enter') return submit();
+      if (k === 'Backspace') { cur = cur.slice(0, -1); typeRow(); return; }
+      const ch = k.toUpperCase();
+      if (/^[A-Z]$/.test(ch) && cur.length < 5) { cur += ch; typeRow(); }
+    }
+    kb.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { press(b.dataset.k); b.blur(); } });
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (document.querySelector('.modal-bg.show')) { if (e.key === 'Escape') closeModals(); return; }
+      if (e.key === 'Enter' || e.key === 'Backspace' || /^[a-zA-Z]$/.test(e.key)) { e.preventDefault(); press(e.key); }
+    });
+
+    // ---------- Statistik ----------
+    function recordStats(win, n) {
+      const s = store.get('bigh-wordle-stats', { played: 0, wins: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0], last: 0 });
+      if (s.last === dayNo) return;
+      s.played++;
+      if (win) {
+        s.wins++; s.dist[n - 1]++;
+        s.streak = s.last === dayNo - 1 ? s.streak + 1 : 1;
+        s.best = Math.max(s.best, s.streak);
+      } else s.streak = 0;
+      s.last = dayNo;
+      store.set('bigh-wordle-stats', s);
+    }
+    function renderStats(highlight) {
+      const s = store.get('bigh-wordle-stats', { played: 0, wins: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0], last: 0 });
+      const st = document.getElementById('stats');
+      st.innerHTML = '';
+      [[s.played, 'Gespielt'], [s.played ? Math.round(s.wins / s.played * 100) : 0, 'Gewonnen %'], [s.streak, 'Serie'], [s.best, 'Beste Serie']].forEach(([v, l]) => {
+        const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = l; d.append(b, sp); st.appendChild(d);
+      });
+      const dist = document.getElementById('dist');
+      dist.innerHTML = '';
+      const max = Math.max(1, ...s.dist);
+      s.dist.forEach((v, i) => {
+        const l = document.createElement('div'); l.className = 'l';
+        const n = document.createElement('span'); n.textContent = i + 1;
+        const b = document.createElement('div'); b.className = 'bar' + (highlight === i + 1 ? ' cur' : ''); b.style.width = Math.max(7, v / max * 100) + '%'; b.textContent = v;
+        l.append(n, b); dist.appendChild(l);
+      });
+    }
+
+    function showEnd(win, fresh) {
+      document.getElementById('end-title').textContent = win ? '🎉 Gewonnen!' : '💀 Verloren';
+      document.getElementById('end-word').textContent = answer;
+      document.getElementById('end-explain').textContent = explain;
+      const showStats = mode === 'daily';
+      document.getElementById('stats').style.display = showStats ? '' : 'none';
+      document.getElementById('dist').style.display = showStats ? '' : 'none';
+      if (showStats) renderStats(win ? guesses.length : null);
+      updateNext();
+      document.getElementById('end-modal').classList.add('show');
+    }
+    function updateNext() {
+      const el = document.getElementById('next');
+      if (mode !== 'daily') { el.textContent = ''; return; }
+      const now = new Date();
+      const tmr = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const s = Math.floor((tmr - now) / 1000);
+      el.textContent = 'Nächstes Wort in ' + String(Math.floor(s / 3600)).padStart(2, '0') + ':' + String(Math.floor(s % 3600 / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+    }
+    setInterval(() => { if (document.getElementById('end-modal').classList.contains('show')) updateNext(); }, 1000);
+
+    document.getElementById('share').addEventListener('click', async () => {
+      const win = guesses.includes(answer);
+      const grid = guesses.map((g) => score(g, answer).map((r) => (r === 'ok' ? '🟩' : r === 'near' ? '🟨' : '⬛')).join('')).join('\n');
+      const title = mode === 'daily' ? 'unoslapis Wordle #' + dayNo : 'unoslapis Wordle (Endlos)';
+      const text = title + ' ' + (win ? guesses.length : 'X') + '/6\n\n' + grid + '\n\nwordle.unoslapis.ch';
+      try { await navigator.clipboard.writeText(text); msg('In die Zwischenablage kopiert'); }
+      catch (e) { prompt('Kopieren:', text); }
+    });
+    document.getElementById('again').addEventListener('click', () => { closeModals(); start('endless'); });
+
+    function closeModals() { document.querySelectorAll('.modal-bg').forEach((m) => m.classList.remove('show')); }
+    document.querySelectorAll('.modal-bg').forEach((m) => m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) closeModals(); }));
+    document.getElementById('help-btn').addEventListener('click', () => document.getElementById('help-modal').classList.add('show'));
+    document.getElementById('stats-btn').addEventListener('click', () => {
+      const wasMode = mode;
+      if (done) { showEnd(guesses.includes(answer), false); return; }
+      document.getElementById('end-title').textContent = '📊 Statistik';
+      document.getElementById('end-word').textContent = '';
+      document.getElementById('end-explain').textContent = wasMode === 'daily' ? 'Das heutige Wort ist noch offen.' : 'Statistik zählt nur das Wort des Tages.';
+      document.getElementById('stats').style.display = '';
+      document.getElementById('dist').style.display = '';
+      renderStats(null);
+      updateNext();
+      document.getElementById('end-modal').classList.add('show');
+    });
+    document.getElementById('mode-daily').addEventListener('click', () => start('daily'));
+    document.getElementById('mode-endless').addEventListener('click', () => start('endless'));
+
+    start('daily');
+    if (!store.get('bigh-wordle-seen', false)) { store.set('bigh-wordle-seen', true); document.getElementById('help-modal').classList.add('show'); }
+  })();
+  </script>
+</body>
+</html>

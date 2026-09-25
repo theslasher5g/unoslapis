@@ -21,7 +21,7 @@
 }
 
 # Alle statischen Seiten
-{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN}, excuses.{$DOMAIN}, horoskop.{$DOMAIN}, merch.{$DOMAIN}, discord.{$DOMAIN} {
+{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN}, excuses.{$DOMAIN}, horoskop.{$DOMAIN}, merch.{$DOMAIN}, discord.{$DOMAIN}, wordle.{$DOMAIN}, tinder.{$DOMAIN} {
 	import common
 	reverse_proxy web:80
 }
