@@ -3,66 +3,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🌱 Touch Grass Tracker – Alastor Lapis</title>
+<title>Touch Grass Tracker – Alastor Lapis</title>
 <meta name="description" content="Tage, seit Big H zuletzt Gras berührt hat. Die Zahl wird nur grösser.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
-  body { background: linear-gradient(180deg, #5ec8ff 0%, #a9e4ff 45%, #d9f5ff 70%); color: #0d2a14; min-height: 100vh; }
-  .sun { position: absolute; top: 40px; right: 8%; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle, #fff6a8, #ffd23f 60%, #ffb000); box-shadow: 0 0 80px 30px rgba(255,210,63,.6); animation: sunpulse 4s ease-in-out infinite; z-index: 1; }
-  .sun::after { content: '😡'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 3rem; }
-  @keyframes sunpulse { 50% { transform: scale(1.08); } }
-  .cloud { position: absolute; font-size: 4rem; opacity: .9; animation: drift linear infinite; z-index: 1; }
+  :root { --accent: #16a34a; }
+  body { background: linear-gradient(180deg, #bfe3f5 0%, #dcf0f9 45%, #eef8fc 70%); color: #0f2a1a; min-height: 100vh; }
+  .bigh-back { background: rgba(255,255,255,.8); color: #0f2a1a; border-color: rgba(15,42,26,.12); }
+  .sun { position: absolute; top: 56px; right: 9%; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, #fffbe0, #fde68a 60%, #fcd34d); box-shadow: 0 0 60px 20px rgba(253,230,138,.45); z-index: 1; }
+  .cloud { position: absolute; width: 140px; height: 44px; border-radius: 999px; background: rgba(255,255,255,.85); animation: drift linear infinite; z-index: 1; }
+  .cloud::before { content: ''; position: absolute; left: 26px; top: -24px; width: 64px; height: 56px; border-radius: 50%; background: inherit; }
   @keyframes drift { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
 
-  .wrap { padding: 70px 0 0; text-align: center; }
-  .label { font-weight: 800; font-size: clamp(1rem, 3vw, 1.3rem); background: rgba(255,255,255,.7); display: inline-block; padding: 6px 16px; border-radius: 999px; }
-  .days { font-family: var(--title); font-size: clamp(5rem, 24vw, 13rem); line-height: .9; color: #fff; text-shadow: 0 6px 0 #1f7a33, 0 12px 30px rgba(0,0,0,.25); margin: 10px 0 0; transition: transform .3s; }
-  .days.zero { color: #3dff8a; transform: scale(1.1); }
-  .days-sub { font-weight: 800; font-size: 1.2rem; }
-  .last { margin-top: 6px; font-weight: 600; opacity: .8; }
+  .wrap { padding: 88px 0 0; text-align: center; }
+  .label { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: .92rem; background: rgba(255,255,255,.75); padding: 6px 14px; border-radius: 999px; color: #1f3d2b; }
+  .label .icon { color: var(--accent); }
+  .days { font: 700 clamp(5rem, 22vw, 11rem)/.95 var(--title); letter-spacing: -.05em; color: #14532d; margin: 16px 0 0; transition: transform .3s, color .3s; font-variant-numeric: tabular-nums; }
+  .days.zero { color: var(--accent); transform: scale(1.05); }
+  .days-sub { font-weight: 600; font-size: 1.1rem; color: #1f3d2b; }
+  .last { margin-top: 6px; color: #4b6b58; font-size: .92rem; }
 
   .btn-row { margin: 22px 0 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .btn.green { background: #3dff8a; }
+  .btn.green { background: #14532d; color: #fff; }
 
-  .meadow { position: relative; height: 260px; margin-top: 20px; }
+  .meadow { position: relative; height: 240px; margin-top: 16px; }
   canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
-  .actor { position: absolute; bottom: 60px; left: 6%; font-size: 3.6rem; z-index: 3; transition: left 2s linear; }
-  .actor .bubble { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fff; border-radius: 12px; padding: 4px 10px; font: 800 .95rem var(--body); color: #000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+  .actor { position: absolute; bottom: 58px; left: 8%; z-index: 3; transition: left 2s linear; color: #0f2a1a; }
+  .actor .fig { display: block; transition: transform .3s; transform-origin: 50% 100%; }
+  .actor .fig .icon { width: 56px; height: 56px; stroke-width: 1.8; }
+  .actor[data-state="kneel"] .fig { transform: scaleY(.7); }
+  .actor[data-state="run"] .fig { transform: rotate(-12deg) scaleX(-1); }
+  .actor .bubble { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fff; border-radius: 12px; padding: 5px 12px; font: 600 .88rem var(--body); color: #0f2a1a; display: none; box-shadow: 0 4px 14px rgba(0,0,0,.12); margin-bottom: 6px; }
   .actor .bubble.show { display: block; }
-  .pc { position: absolute; bottom: 60px; left: 1%; font-size: 3rem; z-index: 2; }
+  .pc { position: absolute; bottom: 58px; left: 1.5%; z-index: 2; color: #1f3d2b; }
+  .pc .icon { width: 48px; height: 48px; stroke-width: 1.6; }
 
-  .ground { background: linear-gradient(180deg, #2f9e44, #1f7a33 40%, #155724); color: #eaffef; padding: 30px 0 10px; position: relative; z-index: 2; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  .gcard { background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; padding: 18px; text-align: left; }
-  .gcard .v { font-family: var(--title); font-size: 2.4rem; line-height: 1; color: #fff; }
-  .gcard .l { font-weight: 600; opacity: .85; }
-  h2.sec { font-family: var(--title); letter-spacing: 2px; font-size: clamp(2rem, 6vw, 2.8rem); margin: 40px 0 14px; color: #fff; }
-  .ach { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; text-align: left; }
-  .ach div { background: rgba(0,0,0,.3); border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
-  .ach div.locked { opacity: .55; filter: grayscale(1); }
-  .ach .i { font-size: 1.8rem; flex: none; }
-  .ach small { display: block; opacity: .8; }
-  .ground .bigh-footer { color: #cfeed6; }
+  .ground { background: linear-gradient(180deg, #166534, #14532d 50%, #0f3d22); color: #e7f6ec; padding: 32px 0 10px; position: relative; z-index: 2; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .gcard { background: rgba(0,0,0,.18); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 18px; text-align: left; }
+  .gcard .v { font: 600 2rem/1.1 var(--title); color: #fff; }
+  .gcard .v .icon { width: 30px; height: 30px; }
+  .gcard .l { font-size: .88rem; opacity: .82; margin-top: 4px; }
+  h2.sec { font: 600 1.4rem/1.2 var(--title); margin: 40px 0 14px; color: #fff; text-align: left; }
+  .ach { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; text-align: left; }
+  .ach div { background: rgba(0,0,0,.18); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; }
+  .ach div.locked { opacity: .55; }
+  .ach .i { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,.1); flex: none; }
+  .ach b { font-weight: 600; }
+  .ach small { display: block; opacity: .75; }
+  .ground .bigh-footer { color: #bbf7d0; }
 </style>
 </head>
 <body data-back>
   <div class="sun" aria-hidden="true"></div>
-  <div class="cloud" style="top:120px;animation-duration:60s" aria-hidden="true">☁️</div>
-  <div class="cloud" style="top:40px;animation-duration:85s;animation-delay:-30s" aria-hidden="true">☁️</div>
+  <div class="cloud" style="top:130px;animation-duration:80s" aria-hidden="true"></div>
+  <div class="cloud" style="top:60px;animation-duration:110s;animation-delay:-40s;transform:scale(.8)" aria-hidden="true"></div>
 
   <main class="wrap">
-    <div class="label">🌱 Tage seit Alastor Lapis zuletzt Gras berührt hat</div>
+    <div class="label"><i data-icon="sprout"></i>Tage seit Alastor Lapis zuletzt Gras berührt hat</div>
     <div class="days" id="days">0</div>
     <div class="days-sub" id="days-sub">Tage</div>
     <div class="last" id="last"></div>
     <div class="btn-row">
-      <button class="btn green" id="touch" type="button">🌱 Big H nach draussen schicken</button>
+      <button class="btn green" id="touch" type="button">Big H nach draussen schicken</button>
     </div>
 
     <div class="meadow" id="meadow">
-      <div class="pc" aria-hidden="true">🖥️</div>
-      <div class="actor" id="actor" aria-hidden="true">🧍<span class="bubble" id="bubble"></span></div>
+      <div class="pc" aria-hidden="true"><i data-icon="monitor"></i></div>
+      <div class="actor" id="actor" aria-hidden="true"><span class="fig"><i data-icon="user"></i></span><span class="bubble" id="bubble"></span></div>
       <canvas id="grass" aria-label="Wiese – fahr mit der Maus drüber"></canvas>
     </div>
   </main>
@@ -71,9 +80,9 @@
     <div class="wrap" style="padding-top:0">
       <div class="cards">
         <div class="gcard"><div class="v">2%</div><div class="l">Vitamin-D-Spiegel</div></div>
-        <div class="gcard"><div class="v">🪟</div><div class="l">Sonnenlicht zuletzt gesehen: durchs Fenster</div></div>
+        <div class="gcard"><div class="v"><i data-icon="sun"></i></div><div class="l">Sonnenlicht zuletzt gesehen: durchs Fenster</div></div>
         <div class="gcard"><div class="v">3 m</div><div class="l">Weiteste Strecke von seinem PC (zum Kühlschrank)</div></div>
-        <div class="gcard"><div class="v">🔴</div><div class="l">Gefahrenstufe „Draussen" laut Big H</div></div>
+        <div class="gcard"><div class="v"><i data-icon="shield-alert"></i></div><div class="l">Gefahrenstufe „Draussen" laut Big H</div></div>
       </div>
 
       <h2 class="sec">Outdoor-Achievements</h2>
@@ -91,12 +100,12 @@
     const LAST_TOUCH = new Date('2019-06-12T14:37:00+02:00'); // Das letzte Mal. Angeblich.
 
     const ACH = [
-      { i: '🚪', t: 'Haustür geöffnet', d: 'Für den Pizzaboten zählt es nicht.', ok: true },
-      { i: '🌤️', t: 'Tageslicht überlebt', d: '5 Minuten draussen ohne zu zischen', ok: false },
-      { i: '🌱', t: 'Gras berührt', d: 'Mit der Hand. Echtes Gras. Kein Kunstrasen.', ok: false },
-      { i: '🚶', t: '10\'000 Schritte', d: 'An einem Tag. Nicht in einem Jahr.', ok: false },
-      { i: '🏔️', t: 'Echter Schweizer', d: 'Einen Berg gesehen (nicht als Wallpaper)', ok: false },
-      { i: '🖥️', t: 'PC-Treue', d: '1000 Tage am Stück drinnen', ok: true }
+      { i: 'door-open', t: 'Haustür geöffnet', d: 'Für den Pizzaboten zählt es nicht.', ok: true },
+      { i: 'sun', t: 'Tageslicht überlebt', d: '5 Minuten draussen ohne zu zischen', ok: false },
+      { i: 'sprout', t: 'Gras berührt', d: 'Mit der Hand. Echtes Gras. Kein Kunstrasen.', ok: false },
+      { i: 'footprints', t: '10\'000 Schritte', d: 'An einem Tag. Nicht in einem Jahr.', ok: false },
+      { i: 'mountain', t: 'Echter Schweizer', d: 'Einen Berg gesehen (nicht als Wallpaper)', ok: false },
+      { i: 'monitor', t: 'PC-Treue', d: '1000 Tage am Stück drinnen', ok: true }
     ];
 
     // ---------- Zähler ----------
@@ -121,10 +130,10 @@
     const say = (t) => { bubble.textContent = t; bubble.classList.add('show'); };
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const OUTCOMES = [
-      ['😱 ES BRENNT!!!', '🔥 Die Sonne hat ihn angegriffen. Rückzug.'],
-      ['🤢 Es ist… nass?', '💧 Morgentau. Er hat geschrien.'],
-      ['🐝 EINE BIENE', '🐝 Eine Biene. Mission abgebrochen.'],
-      ['😳 Da sind Menschen', '👥 Soziale Interaktion befürchtet. Flucht.']
+      ['ES BRENNT!!!', 'Die Sonne hat ihn angegriffen. Rückzug.'],
+      ['Es ist… nass?', 'Morgentau. Er hat geschrien.'],
+      ['EINE BIENE', 'Eine Biene. Mission abgebrochen.'],
+      ['Da sind Menschen', 'Soziale Interaktion befürchtet. Flucht.']
     ];
     let running = false;
     touchBtn.addEventListener('click', async () => {
@@ -133,31 +142,28 @@
       touchBtn.disabled = true;
       const [shout, result] = BIGH.pick(OUTCOMES);
       actor.style.transitionDuration = '2s';
-      say('😰 Okay… ich geh raus…');
+      say('Okay… ich geh raus…');
       actor.style.left = '55%';
       await wait(2100);
-      actor.textContent = '🧎';
-      actor.appendChild(bubble);
-      say('🤏 *berührt Gras*');
+      actor.dataset.state = 'kneel';
+      say('*berührt Gras*');
       frozen = true;
       daysEl.textContent = '0';
-      subEl.textContent = 'Tage 🎉';
+      subEl.textContent = 'Tage';
       daysEl.classList.add('zero');
-      BIGH.confettiRain(['🌱', '🌿', '🍀', '🎉'], 40);
+      BIGH.confettiRain(['', '', '', ''], 40);
       await wait(1600);
-      actor.textContent = '🏃';
-      actor.appendChild(bubble);
+      actor.dataset.state = 'run';
       say(shout);
       BIGH.beep(900, 0.3, 'sawtooth', 0.06);
       actor.style.transitionDuration = '.7s';
       actor.style.left = '6%';
       await wait(900);
-      actor.textContent = '🧍';
-      actor.appendChild(bubble);
+      actor.dataset.state = '';
       bubble.classList.remove('show');
       BIGH.toast(result);
       await wait(1200);
-      BIGH.toast('📋 Fehlalarm: Es war Kunstrasen. Zähler wiederhergestellt.');
+      BIGH.toast('Fehlalarm: Es war Kunstrasen. Zähler wiederhergestellt.');
       frozen = false;
       daysEl.classList.remove('zero');
       renderDays();
@@ -171,7 +177,7 @@
       const d = document.createElement('div');
       if (!a.ok) d.className = 'locked';
       d.innerHTML = '<span class="i"></span><span><b></b><small></small></span>';
-      d.querySelector('.i').textContent = a.ok ? a.i : '🔒';
+      d.querySelector('.i').innerHTML = BIGH.icon(a.ok ? a.i : 'lock');
       d.querySelector('b').textContent = a.t;
       d.querySelector('small').textContent = a.d;
       ach.appendChild(d);
@@ -242,7 +248,7 @@
     meadow.addEventListener('pointerdown', () => {
       if (touchedOnce) return;
       touchedOnce = true;
-      BIGH.toast('🌱 Du hast gerade mehr Gras berührt als Big H seit ' + LAST_TOUCH.getFullYear() + '.');
+      BIGH.toast('Du hast gerade mehr Gras berührt als Big H seit ' + LAST_TOUCH.getFullYear() + '.');
     });
 
     let resizeTimer;

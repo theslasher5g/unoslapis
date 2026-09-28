@@ -3,66 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📜 Hall of Fame – Zitate von Alastor Lapis</title>
+<title>Hall of Fame – Zitate von Alastor Lapis</title>
 <meta name="description" content="Die grössten Weisheiten von Big H alias Alastor Lapis. Philosophie für die Ewigkeit.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500;1,700&display=swap">
 <style>
-  body { background: linear-gradient(180deg, #120f24, #0d0b1a); }
-  .wrap { padding: 70px 0 20px; }
+  :root { --accent: #fbbf24; }
+  body { background: radial-gradient(700px 360px at 50% -80px, rgba(251,191,36,.08), transparent 70%), var(--bg); }
   .serif { font-family: 'Playfair Display', Georgia, serif; }
-  h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.4rem, 9vw, 4.6rem); text-align: center; margin: 0; line-height: 1.05; }
-  h1 em { color: var(--yellow); }
-  .sub { text-align: center; color: var(--muted); margin: 10px 0 30px; }
+  .page-head { text-align: center; }
+  .page-head p { margin-inline: auto; }
+  .page-head h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; letter-spacing: -.01em; }
+  .page-head h1 em { color: var(--accent); }
 
-  .qotd {
-    position: relative; overflow: hidden; border-radius: 20px; padding: clamp(28px, 6vw, 60px); text-align: center;
-    background: linear-gradient(180deg, #ff9a3c 0%, #ff5e62 40%, #6a3093 100%); min-height: 280px;
-    display: flex; flex-direction: column; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.4);
-  }
-  .qotd::before { content: ''; position: absolute; left: 50%; bottom: -120px; width: 260px; height: 260px; margin-left: -130px; border-radius: 50%; background: radial-gradient(circle, #fff6c2, #ffd23f 50%, transparent 70%); opacity: .8; }
-  .qotd .lbl { position: relative; font-family: var(--pixel); font-size: .6rem; letter-spacing: 2px; opacity: .85; }
-  .qotd .q { position: relative; font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 700; font-size: clamp(1.6rem, 5vw, 2.8rem); line-height: 1.2; margin: 14px 0; text-shadow: 0 3px 12px rgba(0,0,0,.35); }
-  .qotd .a { position: relative; font-weight: 700; opacity: .95; }
-  .qotd .btns { position: relative; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .qotd { position: relative; border-radius: 24px; padding: clamp(28px, 6vw, 56px); text-align: center; background: linear-gradient(160deg, #1c1a14, var(--card) 60%); border: 1px solid rgba(251,191,36,.18); }
+  .qotd .lbl { display: inline-flex; align-items: center; gap: 6px; font: 600 .75rem var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .qotd .q { font: italic 600 clamp(1.5rem, 4.4vw, 2.5rem)/1.25 'Playfair Display', Georgia, serif; margin: 16px auto 14px; max-width: 760px; }
+  .qotd .a { color: var(--muted); }
+  .qotd .btns { margin-top: 22px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 40px 0 18px; }
-  .filters button { background: var(--card); color: var(--text); border: 2px solid rgba(255,255,255,.12); border-radius: 999px; padding: 8px 16px; font: 700 .9rem var(--body); cursor: pointer; }
-  .filters button.on { background: var(--yellow); color: #120d24; border-color: var(--yellow); }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 36px 0 16px; }
+  .filters button { background: var(--card); color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 15px; font: 600 .86rem var(--body); cursor: pointer; }
+  .filters button:hover { color: var(--text); }
+  .filters button.on { background: var(--text); color: #0a0a0c; border-color: var(--text); }
 
-  .quotes { columns: 3 280px; column-gap: 16px; }
-  .qcard { break-inside: avoid; margin-bottom: 16px; background: var(--card); border-radius: 16px; padding: 20px; border-left: 5px solid var(--c, var(--yellow)); cursor: pointer; transition: transform .2s; }
-  .qcard:hover { transform: translateY(-3px) rotate(-.5deg); }
-  .qcard .t { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.25rem; line-height: 1.35; }
-  .qcard .meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: .85rem; }
-  .qcard .cat { background: rgba(255,255,255,.08); padding: 2px 10px; border-radius: 999px; font-weight: 700; }
-  .vote { background: none; border: 1px solid rgba(255,255,255,.2); color: var(--text); border-radius: 999px; padding: 4px 10px; cursor: pointer; font: 700 .85rem var(--body); }
-  .vote.on { background: var(--pink); border-color: var(--pink); }
+  .quotes { columns: 3 280px; column-gap: 12px; }
+  .qcard { break-inside: avoid; margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; cursor: pointer; transition: border-color .15s; }
+  .qcard:hover { border-color: var(--line-2); }
+  .qcard .t { font: italic 500 1.18rem/1.4 'Playfair Display', Georgia, serif; }
+  .qcard .meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: .82rem; }
+  .qcard .cat { display: inline-flex; align-items: center; gap: 6px; }
+  .qcard .cat::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--accent)); }
+  .vote { background: none; border: 1px solid var(--line-2); color: var(--muted); border-radius: 999px; padding: 4px 10px; cursor: pointer; font: 600 .8rem var(--body); }
+  .vote.on { background: rgba(251,191,36,.14); border-color: rgba(251,191,36,.4); color: var(--accent); }
 
-  /* Demotivations-Poster */
-  .poster-bg { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.9); display: none; place-items: center; padding: 16px; }
-  .poster-bg.show { display: grid; animation: fade .3s; }
+  /* Poster */
+  .poster-bg { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.88); display: none; place-items: center; padding: 16px; }
+  .poster-bg.show { display: grid; animation: fade .25s; }
   @keyframes fade { from { opacity: 0; } }
-  .poster { background: #000; border: 2px solid #fff; outline: 12px solid #000; padding: clamp(18px, 4vw, 36px); max-width: 620px; width: 100%; text-align: center; }
-  .poster .img { border: 3px solid #fff; aspect-ratio: 16 / 10; display: grid; place-items: center; font-size: clamp(4rem, 16vw, 7rem); background: linear-gradient(180deg, #2b5876, #4e4376); }
-  .poster h2 { font-family: 'Playfair Display', Georgia, serif; letter-spacing: 8px; font-size: clamp(1.8rem, 7vw, 3rem); margin: 18px 0 6px; text-transform: uppercase; }
-  .poster p { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1rem, 3vw, 1.2rem); margin: 0; }
-  .poster small { display: block; margin-top: 14px; color: #aaa; }
+  .poster { background: #000; border: 1px solid #fff; outline: 12px solid #000; padding: clamp(18px, 4vw, 34px); max-width: 600px; width: 100%; text-align: center; }
+  .poster .img { border: 2px solid #fff; aspect-ratio: 16 / 10; display: grid; place-items: center; background: linear-gradient(160deg, #2b2f3a, #0f1115); color: rgba(255,255,255,.85); }
+  .poster .img .icon { width: 30%; height: 30%; stroke-width: 1.2; }
+  .poster h2 { font-family: 'Playfair Display', Georgia, serif; letter-spacing: .3em; font-size: clamp(1.6rem, 6vw, 2.6rem); margin: 18px 0 6px; text-transform: uppercase; font-weight: 700; }
+  .poster p { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1rem, 3vw, 1.15rem); margin: 0; }
+  .poster small { display: block; margin-top: 14px; color: #999; }
 </style>
 </head>
 <body data-back>
   <main class="wrap">
-    <h1>Die Weisheiten des <em>Alastor Lapis</em></h1>
-    <p class="sub">Hall of Fame · Gesammelt aus Discord, Voice-Chat und 3-Uhr-Nachrichten. Für die Ewigkeit.</p>
+    <header class="page-head">
+      <span class="kicker"><i data-icon="quote"></i>Hall of Fame</span>
+      <h1>Die Weisheiten des <em>Alastor Lapis</em></h1>
+      <p>Gesammelt aus Discord, Voice-Chat und Nachrichten um 3 Uhr. Für die Ewigkeit.</p>
+    </header>
 
     <section class="qotd" id="qotd">
-      <div class="lbl">✨ ZITAT DES TAGES ✨</div>
+      <div class="lbl"><i data-icon="sparkles"></i>Zitat des Tages</div>
       <div class="q" id="q-text"></div>
       <div class="a" id="q-author"></div>
       <div class="btns">
-        <button class="btn" id="random" type="button">🎲 Zufälliges Zitat</button>
-        <button class="btn ghost" id="poster" type="button" style="color:#fff;border-color:#fff">🖼️ Als Poster</button>
+        <button class="btn" id="random" type="button">Zufälliges Zitat</button>
+        <button class="btn ghost" id="poster" type="button">Als Poster</button>
       </div>
     </section>
 
@@ -89,23 +91,23 @@
     // ==== KONFIG: Echte Zitate hier eintragen! ====
     // cat: Kategorie · w: Wann/Wo · e: Emoji fürs Poster · p: Poster-Titel
     const QUOTES = [
-      { t: 'Ich bin nicht süchtig. Ich bin engagiert.', cat: 'Goon', w: '03:47 Uhr', e: '🥵', p: 'Hingabe' },
-      { t: 'Schlaf ist was für Leute ohne Ranked.', cat: 'Gaming', w: 'Discord, 04:12 Uhr', e: '🎮', p: 'Opfer' },
-      { t: 'Wenn sie nicht zurückschreibt, ist sie wahrscheinlich eine Waifu.', cat: 'Rizz', w: 'nach 0 Matches', e: '💌', p: 'Hoffnung' },
-      { t: 'Gras ist nur ein Teppich von der Natur.', cat: 'Philosophie', w: 'Beim Fenster', e: '🌱', p: 'Weisheit' },
-      { t: 'Team diff.', cat: 'Gaming', w: 'Nach jedem Loss', e: '📉', p: 'Verantwortung' },
-      { t: 'Ich bin in 5 Minuten on.', cat: 'Gaming', w: '3 Stunden vorher', e: '⏰', p: 'Pünktlichkeit' },
-      { t: 'Ich lurk.', cat: 'Gaming', w: 'Valorant, als unoslapis', e: '🔫', p: 'Strategie' },
-      { t: 'Frauen wollen einen Mann mit Zielen. Ich hab 42 von 42 Errungenschaften.', cat: 'Rizz', w: 'Steam-Profil', e: '🏆', p: 'Ambition' },
-      { t: 'Der Unterschied zwischen mir und einem Gott? Ich hab WLAN.', cat: 'Philosophie', w: 'Selbstbewusst', e: '📶', p: 'Göttlichkeit' },
-      { t: 'Nur noch eine Folge.', cat: 'Anime', w: 'Folge 1 von 1122', e: '📺', p: 'Selbstkontrolle' },
-      { t: 'Goth-Baddies sind wie Ranked: Du verlierst oft, aber du queuest trotzdem wieder.', cat: 'Rizz', w: 'Auf der Jagd', e: '🖤', p: 'Ausdauer' },
-      { t: 'Ich brauch keinen Therapeuten, ich hab Kiriko.', cat: 'Gaming', w: 'Overwatch', e: '🦊', p: 'Heilung' },
-      { t: 'Wer goont, gewinnt.', cat: 'Goon', w: 'Lebensmotto', e: '👑', p: 'Erfolg' },
-      { t: 'Die Sonne ist ein Bug, den keiner patcht.', cat: 'Philosophie', w: 'Einzige Begegnung mit draussen', e: '☀️', p: 'Kritik' },
-      { t: 'Man nennt mich nicht umsonst den Stecher. Ich treffe jeden Headshot.', cat: 'Rizz', w: 'Nach einem 1v5', e: '🎯', p: 'Präzision' },
-      { t: 'Ein wahrer Sex-Gott braucht keine Freundin. Er braucht Ranked.', cat: 'Goon', w: 'Sehr überzeugt', e: '😈', p: 'Göttlichkeit' },
-      { t: 'Nakama sind wichtiger als Freundinnen. Ich hab keins von beidem, aber trotzdem.', cat: 'Anime', w: 'One-Piece-Marathon', e: '🏴‍☠️', p: 'Freundschaft' }
+      { t: 'Ich bin nicht süchtig. Ich bin engagiert.', cat: 'Goon', w: '03:47 Uhr', e: '', p: 'Hingabe' },
+      { t: 'Schlaf ist was für Leute ohne Ranked.', cat: 'Gaming', w: 'Discord, 04:12 Uhr', e: '', p: 'Opfer' },
+      { t: 'Wenn sie nicht zurückschreibt, ist sie wahrscheinlich eine Waifu.', cat: 'Rizz', w: 'nach 0 Matches', e: '', p: 'Hoffnung' },
+      { t: 'Gras ist nur ein Teppich von der Natur.', cat: 'Philosophie', w: 'Beim Fenster', e: '', p: 'Weisheit' },
+      { t: 'Team diff.', cat: 'Gaming', w: 'Nach jedem Loss', e: '', p: 'Verantwortung' },
+      { t: 'Ich bin in 5 Minuten on.', cat: 'Gaming', w: '3 Stunden vorher', e: '', p: 'Pünktlichkeit' },
+      { t: 'Ich lurk.', cat: 'Gaming', w: 'Valorant, als unoslapis', e: '', p: 'Strategie' },
+      { t: 'Frauen wollen einen Mann mit Zielen. Ich hab 42 von 42 Errungenschaften.', cat: 'Rizz', w: 'Steam-Profil', e: '', p: 'Ambition' },
+      { t: 'Der Unterschied zwischen mir und einem Gott? Ich hab WLAN.', cat: 'Philosophie', w: 'Selbstbewusst', e: '', p: 'Göttlichkeit' },
+      { t: 'Nur noch eine Folge.', cat: 'Anime', w: 'Folge 1 von 1122', e: '', p: 'Selbstkontrolle' },
+      { t: 'Goth-Baddies sind wie Ranked: Du verlierst oft, aber du queuest trotzdem wieder.', cat: 'Rizz', w: 'Auf der Jagd', e: '', p: 'Ausdauer' },
+      { t: 'Ich brauch keinen Therapeuten, ich hab Kiriko.', cat: 'Gaming', w: 'Overwatch', e: '', p: 'Heilung' },
+      { t: 'Wer goont, gewinnt.', cat: 'Goon', w: 'Lebensmotto', e: '', p: 'Erfolg' },
+      { t: 'Die Sonne ist ein Bug, den keiner patcht.', cat: 'Philosophie', w: 'Einzige Begegnung mit draussen', e: '', p: 'Kritik' },
+      { t: 'Man nennt mich nicht umsonst den Stecher. Ich treffe jeden Headshot.', cat: 'Rizz', w: 'Nach einem 1v5', e: '', p: 'Präzision' },
+      { t: 'Ein wahrer Sex-Gott braucht keine Freundin. Er braucht Ranked.', cat: 'Goon', w: 'Sehr überzeugt', e: '', p: 'Göttlichkeit' },
+      { t: 'Nakama sind wichtiger als Freundinnen. Ich hab keins von beidem, aber trotzdem.', cat: 'Anime', w: 'One-Piece-Marathon', e: '', p: 'Freundschaft' }
     ];
     const CAT_COLORS = { Goon: '#e0001b', Gaming: '#2de2e6', Rizz: '#ff3e9a', Philosophie: '#ffd23f', Anime: '#9b5cff' };
 
@@ -123,13 +125,13 @@
       let q;
       do { q = BIGH.pick(QUOTES); } while (q === current && QUOTES.length > 1);
       showMain(q);
-      BIGH.burst(e.clientX, e.clientY, ['✨', '📜', '🧠'], 12);
+      BIGH.burst(e.clientX, e.clientY, ['', '', ''], 12);
     });
 
     // ---------- Poster ----------
     const bg = document.getElementById('poster-bg');
     function openPoster(q) {
-      document.getElementById('p-img').textContent = q.e;
+      document.getElementById('p-img').innerHTML = BIGH.icon('quote');
       document.getElementById('p-title').textContent = q.p;
       document.getElementById('p-text').textContent = q.t;
       bg.classList.add('show');
@@ -155,7 +157,7 @@
       d.querySelector('.cat').textContent = q.cat + ' · ' + q.w;
       const v = d.querySelector('.vote');
       const renderVote = () => {
-        v.textContent = '🔥 ' + (baseVotes(q.t) + (voted[q.t] ? 1 : 0));
+        v.innerHTML = BIGH.icon('flame') + ' ' + (baseVotes(q.t) + (voted[q.t] ? 1 : 0));
         v.classList.toggle('on', !!voted[q.t]);
       };
       renderVote();
@@ -164,7 +166,7 @@
         voted[q.t] = !voted[q.t];
         try { localStorage.setItem('bigh-quote-votes', JSON.stringify(voted)); } catch (err) { /* egal */ }
         renderVote();
-        if (voted[q.t]) BIGH.burst(e.clientX, e.clientY, ['🔥', '💯'], 10);
+        if (voted[q.t]) BIGH.burst(e.clientX, e.clientY, ['', ''], 10);
       });
       d.addEventListener('click', () => openPoster(q));
       list.appendChild(d);

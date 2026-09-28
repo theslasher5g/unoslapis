@@ -3,106 +3,96 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>💌 Big H Dating – Willst du mit mir gehen?</title>
+<title>Ein Brief von Big H – Willst du mit mir gehen?</title>
 <meta name="description" content="Ein Liebesbrief von Big H. Nein ist keine Option.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23be185d'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,500;1,600&display=swap">
 <style>
-  body {
-    background: linear-gradient(160deg, #ffd6e8 0%, #ffb3d1 45%, #ff8fbf 100%);
-    color: #5a1036;
-  }
-  .bg-emoji { opacity: .7; }
-  .wrap { width: min(720px, 100% - 32px); padding: 70px 0 40px; }
+  :root { --accent: #be185d; --ink: #3b1426; --paper: #fffdfb; --rose: #fce7ef; }
+  body { background: #faf5f7; color: var(--ink); }
+  .bigh-back { background: rgba(255,255,255,.85); color: var(--ink); border-color: rgba(59,20,38,.12); }
+  .bigh-back:hover { background: #fff; }
+  .wrap { width: min(680px, 100% - 32px); padding: 84px 0 40px; }
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
 
-  h1 {
-    font-family: 'Pacifico', cursive; font-weight: 400; text-align: center; color: #d6006b;
-    font-size: clamp(2.2rem, 8vw, 3.6rem); margin: 0 0 10px;
-    text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(214,0,107,.2);
-    animation: heartbeat 1.6s ease-in-out infinite;
-  }
-  @keyframes heartbeat { 0%, 40%, 100% { transform: scale(1); } 20% { transform: scale(1.05); } 30% { transform: scale(.98); } }
-  .sub { text-align: center; font-weight: 600; margin-bottom: 30px; }
+  .head { text-align: center; margin-bottom: 28px; }
+  .head .kicker { color: #9d5b78; }
+  .head .kicker .icon { color: var(--accent); }
+  h1 { font: 600 clamp(2.2rem, 7vw, 3.2rem)/1.1 'Playfair Display', Georgia, serif; margin: 12px 0 8px; letter-spacing: -.01em; }
+  .sub { color: #8a5a70; margin: 0; }
 
   .letter {
-    position: relative; background: #fffaf3; border-radius: 6px; padding: 42px clamp(20px, 5vw, 48px);
-    box-shadow: 0 25px 60px rgba(120,0,60,.35);
-    background-image: repeating-linear-gradient(transparent 0 31px, rgba(214,0,107,.12) 31px 32px);
-    transform: rotate(-.6deg);
-    border: 10px solid #fff; outline: 3px dashed #ff8fbf; outline-offset: -18px;
+    position: relative; background: var(--paper); border-radius: 20px; padding: clamp(24px, 5vw, 48px);
+    border: 1px solid rgba(59,20,38,.08); box-shadow: 0 1px 2px rgba(59,20,38,.05), 0 24px 60px -24px rgba(190,24,93,.25);
   }
-  .letter::before { content: '💝'; position: absolute; top: -34px; right: -18px; font-size: 3.6rem; transform: rotate(18deg); }
-  .letter::after  { content: '🌹'; position: absolute; bottom: -26px; left: -20px; font-size: 3.2rem; transform: rotate(-20deg); }
-  .hand { font-family: 'Dancing Script', cursive; font-size: 1.55rem; line-height: 1.35; }
-  .hand p { margin: 0 0 16px; }
+  .hand { font-family: 'Dancing Script', cursive; font-size: 1.45rem; line-height: 1.45; color: #4a1a30; }
+  .hand p { margin: 0 0 14px; }
 
-  fieldset { border: 0; padding: 0; margin: 26px 0 0; }
-  legend, label.q { font-family: 'Dancing Script', cursive; font-size: 1.5rem; font-weight: 700; color: #d6006b; margin-bottom: 8px; display: block; padding: 0; }
+  fieldset { border: 0; padding: 0; margin: 26px 0 0; min-width: 0; }
+  legend, label.q { font: 600 .82rem var(--body); letter-spacing: .06em; text-transform: uppercase; color: #9d5b78; margin-bottom: 10px; display: block; padding: 0; }
   input[type=text], select {
-    width: 100%; padding: 12px 14px; font: 600 1.05rem var(--body); color: #5a1036;
-    border: 2px solid #ffb3d1; border-radius: 12px; background: #fff; outline: none;
+    width: 100%; padding: 12px 14px; font: 500 1rem var(--body); color: var(--ink);
+    border: 1px solid rgba(59,20,38,.16); border-radius: 12px; background: #fff; outline: none; transition: border-color .15s, box-shadow .15s;
   }
-  input[type=text]:focus, select:focus { border-color: #d6006b; box-shadow: 0 0 0 4px rgba(214,0,107,.15); }
-  .opt { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: background .15s; }
-  .opt:hover { background: #ffe3ef; }
-  .opt input { width: 20px; height: 20px; accent-color: #d6006b; flex: none; }
+  input[type=text]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(190,24,93,.12); }
+  .opt { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; cursor: pointer; font-weight: 500; transition: background .15s; }
+  .opt:hover { background: var(--rose); }
+  .opt input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
 
-  .ask {
-    text-align: center; margin-top: 40px; padding-top: 26px; border-top: 2px dashed #ffb3d1;
-  }
-  .ask h2 { font-family: 'Pacifico', cursive; font-weight: 400; color: #d6006b; font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 0 0 22px; }
-  .choices { display: flex; justify-content: center; align-items: center; gap: 30px; min-height: 90px; flex-wrap: wrap; }
-  .yes, .no {
-    font: 800 1.3rem var(--body); border: 0; border-radius: 999px; padding: 14px 34px; cursor: pointer;
-    box-shadow: 0 6px 0 rgba(0,0,0,.2);
-  }
-  .yes { background: linear-gradient(135deg, #ff3e9a, #d6006b); color: #fff; transition: transform .25s cubic-bezier(.2,1.6,.4,1); transform-origin: center; }
-  .yes:hover { filter: brightness(1.1); }
-  .no { background: #8d8d8d; color: #fff; }
+  .ask { text-align: center; margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(59,20,38,.1); }
+  .ask h2 { font: 600 clamp(1.7rem, 5vw, 2.3rem)/1.15 'Playfair Display', Georgia, serif; margin: 0 0 22px; }
+  .choices { display: flex; justify-content: center; align-items: center; gap: 20px; min-height: 90px; flex-wrap: wrap; }
+  .yes, .no { font: 600 1.05rem var(--body); border: 0; border-radius: 999px; padding: 13px 34px; cursor: pointer; }
+  .yes { background: var(--accent); color: #fff; transition: transform .25s cubic-bezier(.2,1.4,.4,1), background .15s; transform-origin: center; }
+  .yes:hover { background: #9d174d; }
+  .no { background: #e7e1e4; color: #6b5561; }
   .no.fleeing { position: fixed; z-index: 1000; transition: left .22s ease-out, top .22s ease-out; margin: 0; }
+  .hint { font-size: .9rem; margin-top: 16px; min-height: 1.4em; color: #8a5a70; font-style: italic; }
 
-  .hint { font-size: .9rem; margin-top: 18px; min-height: 1.4em; font-style: italic; }
-
-  /* ---------- Urkunde ---------- */
+  /* Urkunde */
   .certificate { display: none; text-align: center; }
-  .certificate.show { display: block; animation: pop .6s cubic-bezier(.2,1.6,.4,1); }
-  @keyframes pop { from { transform: scale(.3) rotate(-10deg); opacity: 0; } }
-  .certificate .seal { font-size: 5rem; animation: heartbeat 1s infinite; display: inline-block; }
-  .certificate h2 { font-family: 'Pacifico', cursive; font-weight: 400; color: #d6006b; font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 6px 0; }
-  .certificate .names { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 7vw, 3rem); font-weight: 700; margin: 10px 0; }
-  .certificate ul { text-align: left; display: inline-block; font-weight: 600; margin: 10px 0 20px; }
-  .certificate .sig { font-family: 'Dancing Script', cursive; font-size: 2rem; margin-top: 16px; }
-  .stamp {
-    display: inline-block; border: 4px solid #d6006b; color: #d6006b; padding: 6px 16px; border-radius: 8px;
-    font: 800 1.2rem var(--body); transform: rotate(-12deg); margin: 10px 0 20px; letter-spacing: 2px;
-  }
+  .certificate.show { display: block; animation: rise .5s ease; }
+  @keyframes rise { from { transform: translateY(10px); opacity: 0; } }
+  .certificate .seal { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto; display: grid; place-items: center; background: var(--rose); color: var(--accent); }
+  .certificate .seal .icon { width: 28px; height: 28px; }
+  .certificate h2 { font: 600 clamp(1.7rem, 5vw, 2.3rem)/1.15 'Playfair Display', Georgia, serif; margin: 16px 0 6px; }
+  .certificate .names { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 7vw, 2.8rem); font-weight: 700; margin: 12px 0; }
+  .certificate .amp { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--accent); }
+  .certificate ul { text-align: left; display: inline-block; margin: 8px 0 16px; }
+  .certificate .sig { font-family: 'Dancing Script', cursive; font-size: 1.9rem; margin-top: 16px; }
+  .stamp { display: inline-block; border: 2px solid var(--accent); color: var(--accent); padding: 4px 14px; border-radius: 8px; font: 700 .9rem var(--body); letter-spacing: .12em; transform: rotate(-6deg); margin: 8px 0 18px; }
+  .btn.pink { background: var(--accent); }
+  footer.bigh-footer { color: #9d5b78; }
 </style>
 </head>
 <body data-back>
   <main class="wrap">
-    <h1>Ein Brief für dich 💌</h1>
-    <p class="sub">von Big H, mit ganz viel Liebe (und etwas Goon-Energie)</p>
+    <header class="head">
+      <span class="kicker"><i data-icon="mail"></i>Persönlich · Vertraulich</span>
+      <h1>Ein Brief für dich</h1>
+      <p class="sub">von Big H, mit ganz viel Liebe (und etwas Goon-Energie)</p>
+    </header>
 
     <div class="letter">
       <form id="love-form" novalidate>
         <div class="hand">
           <p>Hallo du Schöne/r,</p>
           <p>ich weiss, wir kennen uns noch nicht so gut (ausser du bist in meinem Discord), aber seit ich dich gesehen habe, kann ich an nichts anderes mehr denken. Nicht mal an Overwatch. Okay… ein bisschen an Overwatch.</p>
-          <p>Du bist wie ein Legendary Skin: selten, wunderschön und ich würde alles dafür grinden. 🥺</p>
+          <p>Du bist wie ein Legendary Skin: selten, wunderschön und ich würde alles dafür grinden.</p>
           <p>Bitte füll diesen Brief aus und gib ihn mir zurück.</p>
         </div>
 
         <fieldset>
-          <label class="q" for="name">Wie heisst du, du Engel? 😇</label>
+          <label class="q" for="name">Wie heisst du, du Engel?</label>
           <input type="text" id="name" maxlength="40" placeholder="Dein Name" autocomplete="off">
         </fieldset>
 
         <fieldset>
           <legend>Wie findest du Big H?</legend>
-          <label class="opt"><input type="radio" name="rating" value="Ein Stecher 😏" checked> Ein Stecher 😏</label>
-          <label class="opt"><input type="radio" name="rating" value="Ein Sex-Gott 😈"> Ein Sex-Gott 😈</label>
-          <label class="opt"><input type="radio" name="rating" value="Der Goon-König höchstpersönlich 👑"> Der Goon-König höchstpersönlich 👑</label>
+          <label class="opt"><input type="radio" name="rating" value="Ein Stecher" checked> Ein Stecher</label>
+          <label class="opt"><input type="radio" name="rating" value="Ein Sex-Gott"> Ein Sex-Gott</label>
+          <label class="opt"><input type="radio" name="rating" value="Der Goon-König höchstpersönlich"> Der Goon-König höchstpersönlich</label>
         </fieldset>
 
         <fieldset>
@@ -121,46 +111,46 @@
 
         <fieldset>
           <legend>Unser perfektes erstes Date?</legend>
-          <label class="opt"><input type="checkbox" name="date" value="Duo-Queue in Overwatch"> Duo-Queue in Overwatch 🎮</label>
-          <label class="opt"><input type="checkbox" name="date" value="12h Anime-Marathon"> 12h Anime-Marathon 📺</label>
-          <label class="opt"><input type="checkbox" name="date" value="Ramen essen wie in Naruto"> Ramen essen wie in Naruto 🍜</label>
-          <label class="opt"><input type="checkbox" name="date" value="Zusammen Gras anfassen (sein erstes Mal)"> Zusammen Gras anfassen (sein erstes Mal) 🌱</label>
+          <label class="opt"><input type="checkbox" name="date" value="Duo-Queue in Overwatch"> Duo-Queue in Overwatch</label>
+          <label class="opt"><input type="checkbox" name="date" value="12h Anime-Marathon"> 12h Anime-Marathon</label>
+          <label class="opt"><input type="checkbox" name="date" value="Ramen essen wie in Naruto"> Ramen essen wie in Naruto</label>
+          <label class="opt"><input type="checkbox" name="date" value="Zusammen Gras anfassen (sein erstes Mal)"> Zusammen Gras anfassen (sein erstes Mal)</label>
         </fieldset>
 
         <fieldset>
           <legend>Kleingedrucktes</legend>
-          <label class="opt"><input type="checkbox" id="accept"> Ich akzeptiere, dass er mich während Ranked ignoriert. ⚠️</label>
+          <label class="opt"><input type="checkbox" id="accept"> Ich akzeptiere, dass er mich während Ranked ignoriert.</label>
         </fieldset>
 
         <div class="ask">
           <h2>Willst du mit mir gehen?</h2>
           <div class="choices" id="choices">
-            <button type="submit" class="yes" id="yes">Ja 💖</button>
-            <button type="button" class="no" id="no">Nein 💔</button>
+            <button type="submit" class="yes" id="yes">Ja</button>
+            <button type="button" class="no" id="no">Nein</button>
           </div>
           <p class="hint" id="hint"></p>
         </div>
       </form>
 
       <section class="certificate" id="certificate" aria-live="polite">
-        <div class="seal">💞</div>
+        <div class="seal"><i data-icon="heart"></i></div>
         <h2>Offizielle Beziehungsurkunde</h2>
         <div class="stamp">IT'S A MATCH</div>
         <p>Hiermit wird feierlich bestätigt, dass</p>
-        <div class="names"><span id="c-name"></span> ❤️ Big H</div>
+        <div class="names"><span id="c-name"></span> <span class="amp">&amp;</span> Big H</div>
         <p>ab dem <strong id="c-date"></strong> offiziell zusammen sind.</p>
         <p>Bewertung von Big H: <strong id="c-rating"></strong><br>
            Gemeinsamer Lieblingsanime: <strong id="c-anime"></strong></p>
         <div id="c-dates"></div>
         <p id="c-tries"></p>
-        <div class="sig">~ Big H 🐎</div>
-        <p style="margin-top:24px">📸 Mach einen Screenshot und schick ihn Big H!</p>
-        <button class="btn pink" type="button" id="again">Nochmal ausfüllen 💌</button>
+        <div class="sig">~ Big H</div>
+        <p style="margin-top:24px">Mach einen Screenshot und schick ihn Big H!</p>
+        <button class="btn pink" type="button" id="again">Nochmal ausfüllen</button>
       </section>
     </div>
   </main>
 
-  <footer class="bigh-footer" style="color:#8a2a5a">Big H Dating™ · Keine Rückerstattung bei gebrochenem Herzen</footer>
+  <footer class="bigh-footer">Big H Dating™ · Keine Rückerstattung bei gebrochenem Herzen</footer>
 
   <script src="/shared/fun.js"></script>
   <script>
@@ -168,13 +158,13 @@
     'use strict';
 
     const NO_TEXTS = [
-      'Nein 💔', 'Sicher? 🥺', 'Überleg nochmal!', 'Bist du blind?', 'Er ist ein SEX-GOTT 😈',
-      'Falscher Knopf!', 'Nope 😤', 'Big H weint jetzt 😭', 'Das tut weh…', 'Fang mich doch 😜',
-      'Zu langsam!', 'Gib auf 😏', 'Ja wäre besser', 'Error 404: Nein nicht gefunden', 'Skill Issue'
+      'Nein', 'Sicher?', 'Überleg nochmal!', 'Bist du blind?', 'Er ist ein SEX-GOTT',
+      'Falscher Knopf!', 'Nope', 'Big H weint jetzt', 'Das tut weh…', 'Fang mich doch',
+      'Zu langsam!', 'Gib auf', 'Ja wäre besser', 'Error 404: Nein nicht gefunden', 'Skill Issue'
     ];
     const HINTS = [
       '', 'Hmm, der Knopf ist wohl schüchtern…', 'Der „Nein"-Knopf hat Angst vor dir.',
-      'Vielleicht ist das ein Zeichen? 👀', 'Das Universum will, dass du „Ja" drückst.',
+      'Vielleicht ist das ein Zeichen?', 'Das Universum will, dass du „Ja" drückst.',
       'Der „Ja"-Knopf wird immer grösser. Nur so als Hinweis.', 'Big H hat mehr Aim als du. Gib auf.'
     ];
 
@@ -190,7 +180,7 @@
     // „Kein Anime" ist keine gültige Antwort
     anime.addEventListener('change', () => {
       if (anime.value === 'none') {
-        BIGH.toast('❌ Falsche Antwort. Versuch es nochmal.');
+        BIGH.toast(' Falsche Antwort. Versuch es nochmal.');
         anime.selectedIndex = 0;
       }
     });
@@ -239,8 +229,8 @@
       // Ja-Knopf wächst mit jedem Versuch
       yes.style.transform = `scale(${Math.min(1 + tries * 0.08, 2.2)})`;
       BIGH.beep(BIGH.rand(600, 1200), 0.06, 'square', 0.03);
-      if (tries === 10) BIGH.toast('😏 Du weisst schon, dass das nicht klappt, oder?');
-      if (tries === 25) BIGH.toast('🏆 Achievement: Hartnäckig (25× Nein versucht)');
+      if (tries === 10) BIGH.toast(' Du weisst schon, dass das nicht klappt, oder?');
+      if (tries === 25) BIGH.toast(' Achievement: Hartnäckig (25× Nein versucht)');
     }
 
     // Maus kommt zu nahe -> weg!
@@ -269,7 +259,7 @@
       e.preventDefault();
       const accept = document.getElementById('accept');
       if (!accept.checked) {
-        BIGH.toast('⚠️ Du musst noch das Kleingedruckte akzeptieren. Ranked geht vor.');
+        BIGH.toast(' Du musst noch das Kleingedruckte akzeptieren. Ranked geht vor.');
         accept.closest('.opt').animate(
           [{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }],
           { duration: 300, iterations: 2 }
@@ -296,12 +286,12 @@
         dates.forEach((d) => { const li = document.createElement('li'); li.textContent = d; ul.appendChild(li); });
         dBox.append(p, ul);
       } else {
-        p.textContent = 'Geplante Dates: keine – also wird es Overwatch. 🎮';
+        p.textContent = 'Geplante Dates: keine – also wird es Overwatch.';
         dBox.append(p);
       }
       document.getElementById('c-tries').textContent = tries
-        ? `Du hast ${tries}× versucht, „Nein" zu drücken. Big H verzeiht dir. Vielleicht. 😤`
-        : 'Ohne ein einziges Mal zu zögern. Respekt. 🫡';
+        ? `Du hast ${tries}× versucht, „Nein" zu drücken. Big H verzeiht dir. Vielleicht.`
+        : 'Ohne ein einziges Mal zu zögern. Respekt.';
 
       done = true;
       form.style.display = 'none';
@@ -309,13 +299,12 @@
       document.getElementById('certificate').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      BIGH.confettiRain(['💖', '💕', '💘', '💞', '🌹', '💍', '🐎'], 110);
+      BIGH.confettiRain(null, 60);
       [523, 659, 784, 1046, 784, 1046].forEach((f, i) => setTimeout(() => BIGH.beep(f, 0.2, 'triangle', 0.06), i * 160));
     });
 
     document.getElementById('again').addEventListener('click', () => location.reload());
 
-    BIGH.emojiBackground(['💖', '💕', '💘', '🌹', '💌', '🥰', '💝'], 700);
   })();
   </script>
 </body>

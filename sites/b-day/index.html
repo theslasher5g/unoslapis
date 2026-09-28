@@ -3,114 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🎂 Big H B-Day – 4. Oktober</title>
-<meta name="description" content="Am 4. Oktober levelt Big H auf. Das muss gefeiert werden.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+<title>Big H Geburtstag – 4. Oktober</title>
+<meta name="description" content="Am 4. Oktober levelt Big H auf. Countdown, Torte, Wunschliste.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23fbbf24'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
-  body {
-    background:
-      radial-gradient(circle at 15% 20%, rgba(255,210,63,.18), transparent 40%),
-      radial-gradient(circle at 85% 60%, rgba(155,92,255,.25), transparent 45%),
-      linear-gradient(180deg, #1a0f33, #0d0b1a);
-  }
-  .wrap { padding: 70px 0 20px; text-align: center; }
-  h1 {
-    font-family: var(--title); font-size: clamp(3rem, 12vw, 7rem); margin: 0; line-height: .95; letter-spacing: 3px;
-    color: var(--yellow); text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 var(--purple);
-  }
-  h1 .wave { display: inline-block; animation: wave 1.4s ease-in-out infinite; }
-  @keyframes wave { 50% { transform: translateY(-14px); } }
-  .date-tag { font-family: var(--pixel); font-size: clamp(.7rem, 2.5vw, 1rem); color: var(--cyan); margin: 18px 0 30px; }
+  :root { --accent: #fbbf24; }
+  body { background: radial-gradient(700px 360px at 50% -80px, rgba(251,191,36,.12), transparent 70%), var(--bg); }
+  .wrap { width: min(900px, 100% - 32px); }
+  .page-head { text-align: center; }
+  .page-head p { margin-inline: auto; }
 
-  /* ---------- Countdown ---------- */
-  .countdown { display: flex; justify-content: center; gap: clamp(8px, 2vw, 18px); flex-wrap: wrap; }
-  .cd { background: var(--card); border-radius: 14px; padding: 16px 10px; min-width: clamp(72px, 20vw, 120px); border-bottom: 5px solid var(--pink); }
-  .cd .n { font-family: var(--pixel); font-size: clamp(1.4rem, 5vw, 2.6rem); color: var(--yellow); }
-  .cd .u { color: var(--muted); font-weight: 600; margin-top: 8px; font-size: .85rem; text-transform: uppercase; }
-  .party-now { display: none; font-family: var(--title); font-size: clamp(2.4rem, 9vw, 5rem); color: var(--pink); animation: shake .3s infinite; }
-  @keyframes shake { 25% { transform: rotate(-3deg) scale(1.03); } 75% { transform: rotate(3deg) scale(1.03); } }
+  /* Countdown */
+  .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 620px; margin: 8px auto 0; }
+  .cd { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 8px 14px; text-align: center; }
+  .cd .n { font: 600 clamp(1.8rem, 6vw, 2.8rem)/1 var(--title); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .cd .u { color: var(--muted); font-size: .78rem; margin-top: 8px; text-transform: uppercase; letter-spacing: .08em; }
+  .party-now { display: none; text-align: center; font: 700 clamp(2rem, 7vw, 3.4rem)/1.1 var(--title); letter-spacing: -.02em; color: var(--accent); }
   body.party .countdown { display: none; }
   body.party .party-now { display: block; }
 
-  /* ---------- XP-Bar ---------- */
-  .xp { max-width: 640px; margin: 40px auto 0; text-align: left; }
-  .xp .row { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 8px; font-family: var(--pixel); font-size: .7rem; }
-  .xp .bar { height: 26px; background: #000; border: 3px solid #fff; border-radius: 4px; padding: 3px; }
-  .xp .fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--green) 0 14px, #2bd872 14px 16px); transition: width 2s cubic-bezier(.2,.9,.3,1); }
+  /* Level-Fortschritt */
+  .xp { max-width: 620px; margin: 28px auto 0; }
+  .xp .row { display: flex; justify-content: space-between; font: 500 .8rem var(--pixel); color: var(--muted); margin-bottom: 8px; }
+  .xp .bar { height: 8px; background: var(--card-2); border-radius: 999px; overflow: hidden; }
+  .xp .fill { height: 100%; width: 0; background: linear-gradient(90deg, #f59e0b, #fbbf24); border-radius: 999px; transition: width 1.6s cubic-bezier(.2,.9,.3,1); }
+  .xp p { text-align: center; color: var(--muted); font-size: .85rem; margin: 10px 0 0; }
 
-  h2.sec { font-family: var(--title); font-size: clamp(2.2rem, 7vw, 3.2rem); letter-spacing: 2px; margin: 64px 0 10px; }
-  .muted { color: var(--muted); }
+  .card-sec { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: clamp(20px, 4vw, 32px); margin-top: 20px; }
+  .card-sec h2 { display: flex; align-items: center; gap: 10px; font: 600 1.35rem/1.2 var(--title); letter-spacing: -.01em; margin: 0 0 6px; }
+  .card-sec h2 .icon { color: var(--accent); }
+  .card-sec > p { color: var(--muted); margin: 0 0 8px; }
 
-  /* ---------- Torte ---------- */
-  .cake-zone { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
-  .cake { position: relative; width: min(340px, 90vw); margin-top: 80px; }
+  /* Torte */
+  .cake-zone { display: flex; flex-direction: column; align-items: center; }
+  .cake { position: relative; width: min(300px, 80vw); margin-top: 80px; }
   .candles { position: absolute; bottom: 100%; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap-reverse; padding: 0 20px; }
-  .candle {
-    position: relative; width: 16px; height: 56px; border-radius: 4px; cursor: pointer; border: 0; padding: 0;
-    background: repeating-linear-gradient(45deg, #fff 0 6px, var(--pink) 6px 12px);
-  }
-  .candle::before { content: ''; position: absolute; top: -8px; left: 7px; width: 2px; height: 8px; background: #333; }
+  .candle { position: relative; width: 12px; height: 50px; border-radius: 4px; cursor: pointer; border: 0; padding: 0; background: repeating-linear-gradient(45deg, #fafafa 0 6px, #fda4af 6px 12px); }
+  .candle::before { content: ''; position: absolute; top: -7px; left: 50%; width: 2px; height: 7px; margin-left: -1px; background: #52525b; }
   .flame {
-    position: absolute; top: -34px; left: 50%; width: 16px; height: 26px; margin-left: -8px;
-    background: radial-gradient(circle at 50% 70%, #fff 0 15%, #ffd23f 30%, #ff7b00 70%, transparent 72%);
+    position: absolute; top: -30px; left: 50%; width: 14px; height: 22px; margin-left: -7px;
+    background: radial-gradient(circle at 50% 70%, #fff 0 15%, #fde68a 32%, #f59e0b 70%, transparent 72%);
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    animation: flicker .15s infinite alternate; transform-origin: 50% 90%;
-    box-shadow: 0 0 20px 6px rgba(255,180,0,.45);
+    animation: flicker 1.2s ease-in-out infinite alternate; transform-origin: 50% 90%;
+    filter: drop-shadow(0 0 10px rgba(251,191,36,.55));
   }
-  @keyframes flicker { from { transform: scaleY(1) rotate(-2deg); } to { transform: scaleY(1.12) rotate(2deg); } }
-  /* Zahlenkerzen (z.B. „2" und „4") */
+  @keyframes flicker { from { transform: scaleY(1) rotate(-1.5deg); } to { transform: scaleY(1.06) rotate(1.5deg); } }
   .candle.num { width: auto; height: auto; background: none; border-radius: 0; padding: 0 2px; }
-  .candle.num::before { left: 50%; margin-left: -1px; top: -6px; }
-  .candle.num .flame { top: -32px; }
-  .candle.num .digit {
-    display: block; font-family: var(--title); font-size: 5.2rem; line-height: .85; letter-spacing: 0;
-    background: repeating-linear-gradient(45deg, #fff 0 8px, var(--pink) 8px 16px);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    -webkit-text-stroke: 2px #fff; filter: drop-shadow(0 3px 0 rgba(0,0,0,.35));
-  }
+  .candle.num::before { top: -6px; }
+  .candle.num .flame { top: -30px; }
+  .candle.num .digit { display: block; font: 700 4.6rem/.85 var(--title); letter-spacing: -.02em; color: #fecdd3; text-shadow: 0 2px 0 #fb7185; }
   .candle.out .flame { display: none; }
-  .candle.out::after { content: '💨'; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; animation: smoke 1s forwards; }
-  @keyframes smoke { to { transform: translate(-50%, -30px); opacity: 0; } }
+  .candle.out::after { content: ''; position: absolute; top: -26px; left: 50%; width: 6px; height: 18px; margin-left: -3px; border-radius: 999px; background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.35)); animation: smoke 1.2s forwards; }
+  @keyframes smoke { to { transform: translateY(-24px) scaleX(2); opacity: 0; } }
   .tier { border-radius: 14px 14px 8px 8px; position: relative; margin: 0 auto; }
-  .tier.top { width: 70%; height: 70px; background: #ff9ad1; }
-  .tier.bottom { width: 100%; height: 100px; background: #8a4b2a; }
-  .tier.top::after, .tier.bottom::after {
-    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 22px; border-radius: 14px 14px 0 0;
-    background: radial-gradient(circle at 10px 22px, transparent 10px, #fff 10.5px) 0 0 / 20px 22px repeat-x;
-  }
-  .tier.bottom .txt { position: absolute; inset: 30px 0 0; font-family: var(--title); font-size: 2rem; color: var(--yellow); letter-spacing: 2px; }
-  .plate { width: 115%; height: 18px; margin-left: -7.5%; background: #ddd; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,.5); }
-  .cake-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
-  .wish { display: none; margin-top: 24px; font-size: 1.3rem; font-weight: 800; color: var(--yellow); }
-  .wish.show { display: block; animation: pop .5s cubic-bezier(.2,1.6,.4,1); }
-  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
+  .tier.top { width: 70%; height: 64px; background: #fbcfe8; }
+  .tier.bottom { width: 100%; height: 92px; background: #7c4a2d; }
+  .tier.top::after, .tier.bottom::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 18px; border-radius: 14px 14px 0 0; background: radial-gradient(circle at 9px 18px, transparent 8px, #fafafa 8.5px) 0 0 / 18px 18px repeat-x; }
+  .tier.bottom .txt { position: absolute; inset: 34px 0 0; text-align: center; font: 700 1.4rem var(--title); color: #fde68a; letter-spacing: .04em; }
+  .plate { width: 115%; height: 14px; margin-left: -7.5%; background: #d4d4d8; border-radius: 50%; }
+  .cake-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
+  .wish { display: none; margin-top: 20px; font-weight: 600; color: var(--accent); text-align: center; }
+  .wish.show { display: block; animation: fade .4s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
 
-  /* ---------- Ballons ---------- */
-  .balloon {
-    position: fixed; bottom: -140px; z-index: 5; width: 70px; height: 86px; border-radius: 50% 50% 48% 48%;
-    cursor: pointer; border: 0; padding: 0; animation: rise linear forwards;
-    box-shadow: inset -8px -10px 0 rgba(0,0,0,.12);
-  }
-  .balloon::before { content: ''; position: absolute; top: 14px; left: 16px; width: 12px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.5); }
-  .balloon::after { content: ''; position: absolute; top: 100%; left: 50%; width: 1px; height: 60px; background: rgba(255,255,255,.5); }
-  @keyframes rise { to { transform: translateY(calc(-100vh - 260px)) translateX(var(--drift, 30px)); } }
+  /* Ballons */
+  .balloon { position: fixed; bottom: -130px; z-index: 5; width: 56px; height: 70px; border-radius: 50% 50% 48% 48%; cursor: pointer; border: 0; padding: 0; animation: rise linear forwards; opacity: .92; }
+  .balloon::before { content: ''; position: absolute; top: 12px; left: 13px; width: 9px; height: 14px; border-radius: 50%; background: rgba(255,255,255,.4); }
+  .balloon::after { content: ''; position: absolute; top: 100%; left: 50%; width: 1px; height: 50px; background: rgba(255,255,255,.35); }
+  @keyframes rise { to { transform: translateY(calc(-100vh - 240px)) translateX(var(--drift, 30px)); } }
 
-  /* ---------- Wunschliste ---------- */
-  .gifts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; text-align: left; }
-  .gift { background: var(--card); border-radius: 14px; padding: 18px; cursor: pointer; transition: transform .2s; border: 2px solid transparent; }
-  .gift:hover { transform: translateY(-4px) rotate(-1deg); border-color: var(--yellow); }
-  .gift .e { font-size: 2.4rem; }
-  .gift b { display: block; margin: 6px 0 4px; }
-  .gift span { color: var(--muted); font-size: .9rem; }
-  .gift.claimed { opacity: .55; }
-  .gift.claimed b::after { content: ' ✅ reserviert'; color: var(--green); font-size: .8rem; }
+  /* Wunschliste */
+  .gifts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 16px; }
+  .gift { display: flex; gap: 12px; align-items: flex-start; background: var(--card-2); border: 1px solid var(--line); border-radius: 14px; padding: 14px; cursor: pointer; text-align: left; color: var(--text); font: inherit; transition: border-color .15s, background .15s; }
+  .gift:hover { border-color: var(--line-2); }
+  .gift .e { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(251,191,36,.12); color: var(--accent); flex: none; }
+  .gift b { display: block; font-weight: 600; }
+  .gift span.d { color: var(--muted); font-size: .88rem; }
+  .gift.claimed { border-color: rgba(52,211,153,.4); background: rgba(52,211,153,.06); }
+  .gift.claimed b::after { content: ' · reserviert'; color: var(--green); font-size: .8rem; font-weight: 600; }
+
+  .card-link { display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--text); }
+  .card-link .ic { width: 48px; height: 48px; border-radius: 14px; background: rgba(244,114,182,.14); color: #f472b6; display: grid; place-items: center; flex: none; }
+  .card-link .ic .icon { width: 22px; height: 22px; }
+  .card-link b { display: block; font: 600 1.1rem var(--title); }
+  .card-link span { color: var(--muted); font-size: .92rem; }
+  .card-link > .icon { margin-left: auto; color: var(--muted); }
+  @media (max-width: 520px) { .countdown { gap: 6px; } .cd { padding: 14px 4px 10px; } }
 </style>
 </head>
 <body data-back>
   <main class="wrap">
-    <h1><span class="wave">🎉</span> Big H <span class="wave" style="animation-delay:.2s">B-Day</span> <span class="wave" style="animation-delay:.4s">🎂</span></h1>
-    <div class="date-tag">4. OKTOBER · LEVEL UP INCOMING</div>
+    <header class="page-head">
+      <span class="kicker"><i data-icon="cake"></i>4. Oktober</span>
+      <h1 id="headline">Big H hat Geburtstag</h1>
+      <p>Der Goon-König levelt auf. Hier wird runtergezählt, gewünscht und ausgepustet.</p>
+    </header>
 
     <div class="countdown" id="countdown" aria-live="off">
       <div class="cd"><div class="n" id="d">00</div><div class="u">Tage</div></div>
@@ -118,41 +106,55 @@
       <div class="cd"><div class="n" id="m">00</div><div class="u">Minuten</div></div>
       <div class="cd"><div class="n" id="s">00</div><div class="u">Sekunden</div></div>
     </div>
-    <div class="party-now">🥳 HAPPY BIRTHDAY BIG H!!! 🥳</div>
+    <div class="party-now">Happy Birthday, Big H!</div>
 
     <div class="xp">
-      <div class="row"><span id="lvl">LVL ??</span><span id="xp-pct">0%</span><span id="lvl-next">LVL ??</span></div>
+      <div class="row"><span id="lvl">Level ??</span><span id="xp-pct">0%</span><span id="lvl-next">Level ??</span></div>
       <div class="bar"><div class="fill" id="xp-fill"></div></div>
-      <p class="muted" style="text-align:center;font-size:.9rem">XP-Fortschritt bis zum nächsten Geburtstag</p>
+      <p>Fortschritt bis zum nächsten Level</p>
     </div>
 
-    <h2 class="sec">Puste die Kerzen aus 🕯️</h2>
-    <p class="muted">Klick auf die Kerzen – oder benutz dein Mikrofon und puste richtig!</p>
-    <div class="cake-zone">
-      <div class="cake">
-        <div class="candles" id="candles"></div>
-        <div class="tier top"></div>
-        <div class="tier bottom"><div class="txt">BIG H</div></div>
-        <div class="plate"></div>
-      </div>
-      <div class="cake-btns">
-        <button class="btn" id="mic" type="button">🎤 Mit Mikro auspusten</button>
-        <button class="btn pink" id="song" type="button">🎵 Happy Birthday spielen</button>
-        <button class="btn ghost" id="relight" type="button">🔥 Neu anzünden</button>
-      </div>
-      <div class="wish" id="wish"></div>
-    </div>
+    <section class="card-sec" style="margin-top:36px">
+      <a class="card-link" data-sub="karte" href="https://karte.unoslapis.ch/">
+        <span class="ic"><i data-icon="mail"></i></span>
+        <span><b>Geburtstagskarte unterschreiben</b><span>Alle unterschreiben vorher, am 4. Oktober öffnet er sie.</span></span>
+        <i data-icon="arrow-right"></i>
+      </a>
+    </section>
 
-    <h2 class="sec">Wunschliste 🎁</h2>
-    <p class="muted">Klick auf ein Geschenk, um es zu „reservieren".</p>
-    <section class="gifts" id="gifts"></section>
+    <section class="card-sec">
+      <h2><i data-icon="flame"></i>Kerzen auspusten</h2>
+      <p>Klick auf die Kerzen – oder puste richtig ins Mikrofon.</p>
+      <div class="cake-zone">
+        <div class="cake">
+          <div class="candles" id="candles"></div>
+          <div class="tier top"></div>
+          <div class="tier bottom"><div class="txt">BIG H</div></div>
+          <div class="plate"></div>
+        </div>
+        <div class="cake-btns">
+          <button class="btn cyan" id="mic" type="button">Mit Mikrofon auspusten</button>
+          <button class="btn pink" id="song" type="button" style="color:#0a0a0c">Happy Birthday spielen</button>
+          <button class="btn ghost" id="relight" type="button">Neu anzünden</button>
+        </div>
+        <div class="wish" id="wish" aria-live="polite"></div>
+      </div>
+    </section>
 
-    <h2 class="sec">Ballon-Party 🎈</h2>
-    <p class="muted">Lass die Ballons platzen. Jeder hat eine Nachricht für Big H.</p>
-    <button class="btn cyan" id="more-balloons" type="button">🎈 Mehr Ballons!</button>
+    <section class="card-sec">
+      <h2><i data-icon="gift"></i>Wunschliste</h2>
+      <p>Klick auf ein Geschenk, um es zu reservieren.</p>
+      <div class="gifts" id="gifts"></div>
+    </section>
+
+    <section class="card-sec" style="text-align:center">
+      <h2 style="justify-content:center"><i data-icon="party-popper"></i>Ballons</h2>
+      <p>Lass ein paar steigen. Jeder Ballon hat eine Nachricht für Big H.</p>
+      <button class="btn ghost" id="more-balloons" type="button" style="margin-top:8px">Ballons steigen lassen</button>
+    </section>
   </main>
 
-  <footer class="bigh-footer">Happy Birthday vom ganzen Squad 💜 · b-day.unoslapis.ch</footer>
+  <footer class="bigh-footer">Happy Birthday vom ganzen Squad · b-day.unoslapis.ch</footer>
 
   <script src="/shared/fun.js"></script>
   <script>
@@ -161,35 +163,35 @@
 
     // ==== KONFIG ====
     const BIRTHDAY = { month: 10, day: 4 };
-    const BIRTH_YEAR = 2002;   // z.B. 2004 eintragen -> Alter/Level und Kerzenzahl werden berechnet
+    const BIRTH_YEAR = 2002;   // Alter/Level und Kerzen werden daraus berechnet
     const DEFAULT_CANDLES = 1; // Kerzen, falls BIRTH_YEAR nicht gesetzt ist
 
     const WISHES = [
-      'Big H wünscht sich: Endlich Champion. 🏆',
-      'Wunsch: Eine Waifu, die zurückschreibt. 💌',
-      'Wunsch: 1 Jahr ohne Leaver in Ranked. 🙏',
-      'Wunsch: Unendlich Ramen. 🍜',
-      'Wunsch geheim. Aber wir können es uns denken. 🥵'
+      'Big H wünscht sich: endlich Champion.',
+      'Wunsch: eine Waifu, die zurückschreibt.',
+      'Wunsch: ein Jahr ohne Leaver in Ranked.',
+      'Wunsch: unendlich Ramen.',
+      'Der Wunsch bleibt geheim. Wir können es uns denken.'
     ];
     const BALLOON_MSGS = [
-      'Happy Birthday, du Stecher! 😏',
-      'Ein Jahr älter, null Jahre erwachsener. 🎉',
+      'Happy Birthday, du Stecher!',
+      'Ein Jahr älter, null Jahre erwachsener.',
       'Level Up! +1 Weisheit, +10 Goon-Energie',
-      'Möge deine Aim nie schwächer werden 🎯',
-      'Noch ein Jahr ohne Gras berührt. Respekt 🌱',
-      'Alles Gute zum Wiegenfest! 🥳',
+      'Möge deine Aim nie schwächer werden.',
+      'Noch ein Jahr ohne Gras berührt. Respekt.',
+      'Alles Gute zum Wiegenfest!',
       'お誕生日おめでとう！ (Otanjōbi omedetō!)',
-      'Du bist der Main Character 🌟',
+      'Du bist der Main Character.',
       'Heute darfst du 24h goonen. Ausnahmsweise.',
-      'GG WP zum Leben 💜'
+      'GG WP zum Leben.'
     ];
     const GIFTS = [
-      { e: '🌱', t: 'Touch-Grass-Gutschein', d: 'Einmal Gras anfassen, begleitet. Premium-Erlebnis.' },
-      { e: '💎', t: 'Overwatch Coins', d: 'Für den nächsten Genji-Skin, den er eh schon hat.' },
-      { e: '🛏️', t: 'Body-Pillow Upgrade', d: 'Neues Waifu-Motiv. Das alte ist… abgenutzt.' },
-      { e: '😴', t: '1 Tag Schlaf', d: 'Hat er seit 2019 nicht mehr gehabt.' },
-      { e: '🍜', t: 'Ramen-Jahresvorrat', d: 'Grundnahrungsmittel eines Otakus.' },
-      { e: '🧴', t: 'Tempo-Jumbopack', d: 'Für die… Allergie. Ja genau. Allergie.' }
+      { i: 'sprout', t: 'Touch-Grass-Gutschein', d: 'Einmal Gras anfassen, begleitet. Premium-Erlebnis.' },
+      { i: 'gamepad-2', t: 'Overwatch Coins', d: 'Für den nächsten Genji-Skin, den er eh schon hat.' },
+      { i: 'bed', t: 'Body-Pillow Upgrade', d: 'Neues Waifu-Motiv. Das alte ist … abgenutzt.' },
+      { i: 'moon', t: '1 Tag Schlaf', d: 'Hat er seit 2019 nicht mehr gehabt.' },
+      { i: 'soup', t: 'Ramen-Jahresvorrat', d: 'Grundnahrungsmittel eines Otakus.' },
+      { i: 'gift', t: 'Taschentuch-Jumbopack', d: 'Für die … Allergie. Ja genau. Allergie.' }
     ];
 
     // ---------- Datum-Helfer ----------
@@ -202,14 +204,16 @@
     function isBirthday(now) { return now.getMonth() === BIRTHDAY.month - 1 && now.getDate() === BIRTHDAY.day; }
     const pad = (n) => String(n).padStart(2, '0');
 
+    const upcomingAge = nextBirthday(new Date()).getFullYear() - BIRTH_YEAR;
+    if (BIRTH_YEAR) document.getElementById('headline').textContent = isBirthday(new Date()) ? 'Big H wird heute ' + upcomingAge : 'Big H wird ' + upcomingAge;
+
     // ---------- Countdown ----------
     let partyStarted = false;
     function startParty() {
       if (partyStarted) return;
       partyStarted = true;
       document.body.classList.add('party');
-      BIGH.confettiRain(['🎉', '🎊', '🥳', '🎂', '🐎', '🎈'], 120);
-      setInterval(() => { if (!document.hidden) BIGH.confettiRain(['🎉', '🎊', '🥳'], 30); }, 15000);
+      BIGH.confettiRain(null, 60);
     }
     function updateCountdown() {
       const now = new Date();
@@ -225,16 +229,16 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // ---------- XP-Bar ----------
+    // ---------- Level-Fortschritt ----------
     (function () {
       const now = new Date();
       const next = nextBirthday(now);
-      let last = new Date(next.getFullYear() - 1, BIRTHDAY.month - 1, BIRTHDAY.day);
+      const last = new Date(next.getFullYear() - 1, BIRTHDAY.month - 1, BIRTHDAY.day);
       let pct = isBirthday(now) ? 100 : (now - last) / (next - last) * 100;
       pct = Math.max(0, Math.min(100, pct));
       const lvlNow = BIRTH_YEAR ? (isBirthday(now) ? next.getFullYear() : last.getFullYear()) - BIRTH_YEAR : null;
-      document.getElementById('lvl').textContent = 'LVL ' + (lvlNow !== null ? lvlNow : '??');
-      document.getElementById('lvl-next').textContent = 'LVL ' + (lvlNow !== null ? lvlNow + (isBirthday(now) ? 0 : 1) : '??');
+      document.getElementById('lvl').textContent = 'Level ' + (lvlNow !== null ? lvlNow : '??');
+      document.getElementById('lvl-next').textContent = 'Level ' + (lvlNow !== null ? lvlNow + (isBirthday(now) ? 0 : 1) : '??');
       document.getElementById('xp-pct').textContent = pct.toFixed(1) + '%';
       setTimeout(() => { document.getElementById('xp-fill').style.width = pct + '%'; }, 300);
     })();
@@ -251,7 +255,7 @@
 
     // Platz über der Torte an die Kerzenhöhe anpassen (Flammen inklusive)
     function fitCake() {
-      cake.style.marginTop = (candleBox.offsetHeight + 50) + 'px';
+      cake.style.marginTop = (candleBox.offsetHeight + 46) + 'px';
     }
 
     function buildCandles() {
@@ -282,14 +286,14 @@
     function blowOut(c) {
       if (c.classList.contains('out')) return;
       c.classList.add('out');
-      BIGH.beep(BIGH.rand(200, 320), 0.12, 'triangle', 0.04);
+      BIGH.beep(BIGH.rand(200, 320), 0.12, 'sine', 0.04);
       if (candles.every((x) => x.classList.contains('out'))) allOut();
     }
     function allOut() {
       stopMic();
-      wish.textContent = '🎉 Alle Kerzen aus! ' + BIGH.pick(WISHES);
+      wish.textContent = 'Alle Kerzen aus. ' + BIGH.pick(WISHES);
       wish.classList.add('show');
-      BIGH.confettiRain(['🎉', '🎊', '🥳', '🎂', '✨'], 90);
+      BIGH.confettiRain(null, 50);
       playSong();
     }
     buildCandles();
@@ -302,21 +306,21 @@
       if (micStream) micStream.getTracks().forEach((t) => t.stop());
       micStream = null;
       cancelAnimationFrame(micRaf);
-      micBtn.textContent = '🎤 Mit Mikro auspusten';
+      micBtn.textContent = 'Mit Mikrofon auspusten';
     }
     micBtn.addEventListener('click', async () => {
       if (micStream) { stopMic(); return; }
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        BIGH.toast('🎤 Dein Browser kann kein Mikro. Klick die Kerzen einfach an.');
+        BIGH.toast('Dein Browser unterstützt kein Mikrofon. Klick die Kerzen einfach an.');
         return;
       }
       try {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch (err) {
-        BIGH.toast('🎤 Kein Mikro-Zugriff. Dann halt klicken!');
+        BIGH.toast('Kein Mikrofon-Zugriff. Dann halt klicken.');
         return;
       }
-      micBtn.textContent = '🛑 Mikro stoppen (jetzt pusten!)';
+      micBtn.textContent = 'Mikrofon stoppen (jetzt pusten)';
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const src = ctx.createMediaStreamSource(micStream);
       const an = ctx.createAnalyser();
@@ -360,60 +364,52 @@
       });
       setTimeout(() => { songPlaying = false; }, t * 1000);
     }
-    document.getElementById('song').addEventListener('click', (e) => {
-      playSong();
-      BIGH.burst(e.clientX, e.clientY, ['🎵', '🎶', '🎂'], 16);
-    });
+    document.getElementById('song').addEventListener('click', playSong);
 
     // ---------- Wunschliste ----------
     const giftBox = document.getElementById('gifts');
     GIFTS.forEach((g) => {
-      const d = document.createElement('div');
+      const d = document.createElement('button');
+      d.type = 'button';
       d.className = 'gift';
-      d.innerHTML = '<div class="e"></div><b></b><span></span>';
-      d.querySelector('.e').textContent = g.e;
+      d.innerHTML = '<span class="e">' + BIGH.icon(g.i) + '</span><span><b></b><span class="d"></span></span>';
       d.querySelector('b').textContent = g.t;
-      d.querySelector('span').textContent = g.d;
+      d.querySelector('.d').textContent = g.d;
       d.addEventListener('click', (e) => {
         d.classList.toggle('claimed');
         if (d.classList.contains('claimed')) {
-          BIGH.burst(e.clientX, e.clientY, ['🎁', '🎀', '✨'], 14);
-          BIGH.toast('🎁 „' + g.t + '" reserviert!');
+          BIGH.burst(e.clientX, e.clientY, null, 10);
+          BIGH.toast('„' + g.t + '" reserviert.');
         }
       });
       giftBox.appendChild(d);
     });
 
-    // ---------- Ballons ----------
-    const COLORS = ['#ff3e9a', '#2de2e6', '#ffd23f', '#9b5cff', '#3dff8a', '#ff7b00'];
+    // ---------- Ballons (nur auf Knopfdruck) ----------
+    const COLORS = ['#fb7185', '#fbbf24', '#a78bfa', '#34d399', '#60a5fa'];
     function spawnBalloon() {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'balloon';
       b.setAttribute('aria-label', 'Ballon platzen lassen');
       b.style.background = BIGH.pick(COLORS);
-      b.style.left = BIGH.rand(2, 90) + 'vw';
-      b.style.setProperty('--drift', BIGH.rand(-80, 80) + 'px');
-      const dur = BIGH.rand(9, 15);
+      b.style.left = BIGH.rand(4, 88) + 'vw';
+      b.style.setProperty('--drift', BIGH.rand(-60, 60) + 'px');
+      const dur = BIGH.rand(10, 15);
       b.style.animationDuration = dur + 's';
       b.addEventListener('click', (e) => {
-        BIGH.burst(e.clientX, e.clientY, ['💥', '🎊', '✨'], 16);
-        BIGH.beep(90, 0.08, 'square', 0.1);
-        BIGH.toast('🎈 ' + BIGH.pick(BALLOON_MSGS));
+        BIGH.burst(e.clientX, e.clientY, null, 10);
+        BIGH.beep(140, 0.08, 'sine', 0.08);
+        BIGH.toast(BIGH.pick(BALLOON_MSGS));
         b.remove();
       });
       b.addEventListener('animationend', () => b.remove());
       document.body.appendChild(b);
     }
-    if (!BIGH.reduced) {
-      for (let i = 0; i < 5; i++) setTimeout(spawnBalloon, i * 900);
-      setInterval(() => { if (!document.hidden && document.querySelectorAll('.balloon').length < 8) spawnBalloon(); }, 3500);
-    }
     document.getElementById('more-balloons').addEventListener('click', () => {
-      for (let i = 0; i < 6; i++) setTimeout(spawnBalloon, i * 200);
+      if (BIGH.reduced) { BIGH.toast(BIGH.pick(BALLOON_MSGS)); return; }
+      for (let i = 0; i < 6; i++) setTimeout(spawnBalloon, i * 250);
     });
-
-    BIGH.emojiBackground(['🎉', '🎂', '🎁', '🎈', '✨', '🥳'], 1300);
   })();
   </script>
 </body>

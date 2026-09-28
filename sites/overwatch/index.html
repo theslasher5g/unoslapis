@@ -3,112 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🎯 Big H – Overwatch Career Profile</title>
+<title>unoslapis – Overwatch Career Profile</title>
 <meta name="description" content="Der Beweis, wie absurd cracked Big H in Overwatch ist.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&display=swap">
 <style>
-  :root { --ow: #f99e1a; --ow2: #218ffe; --owbg: #0b1422; --owcard: #152238; }
-  body {
-    background:
-      linear-gradient(115deg, transparent 0 60%, rgba(249,158,26,.06) 60% 70%, transparent 70%),
-      radial-gradient(circle at 80% 0%, rgba(33,143,254,.25), transparent 50%),
-      var(--owbg);
-  }
-  .ow { font-family: 'Teko', var(--title); text-transform: uppercase; letter-spacing: 1px; font-style: italic; }
-  .wrap { padding: 70px 0 20px; }
+  :root { --ow: #f99e1a; --ow2: #3b82f6; --owcard: #121a2a; --accent: #f99e1a; }
+  body { background: radial-gradient(800px 400px at 85% -100px, rgba(59,130,246,.14), transparent 70%), #0a0f1a; }
+  .ow { font-family: 'Teko', var(--title); text-transform: uppercase; letter-spacing: .5px; font-style: italic; }
+  .wrap { padding: 72px 0 20px; }
 
-  /* ---------- POTG ---------- */
-  .potg { position: relative; height: 340px; overflow: hidden; border-radius: var(--radius); background: #000; margin-bottom: 40px; }
-  .potg .stripe { position: absolute; left: -10%; width: 120%; height: 70px; transform: skewY(-8deg) translateX(-110%); }
-  .potg .s1 { top: 70px; background: var(--ow); }
-  .potg .s2 { top: 150px; background: #fff; }
-  .potg .s3 { top: 225px; background: var(--ow2); height: 30px; }
-  .potg .text { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding-left: 8%; z-index: 2; }
-  .potg .t1 { font-size: clamp(2.4rem, 9vw, 5rem); color: #fff; text-shadow: 3px 3px 0 #000; line-height: .9; opacity: 0; }
-  .potg .t2 { font-size: clamp(3rem, 12vw, 7rem); color: var(--ow); line-height: .9; opacity: 0; -webkit-text-stroke: 2px #000; }
-  .potg .t3 { font-size: clamp(1.1rem, 3.5vw, 1.8rem); color: #fff; background: #000; padding: 2px 12px; align-self: flex-start; opacity: 0; }
-  .potg .hero-emoji { position: absolute; right: 6%; bottom: 20px; font-size: clamp(5rem, 18vw, 10rem); z-index: 1; opacity: 0; }
+  /* Play of the Game */
+  .potg { position: relative; height: 300px; overflow: hidden; border-radius: 20px; background: #05080f; margin-bottom: 28px; border: 1px solid var(--line); }
+  .potg .stripe { position: absolute; left: -10%; width: 120%; height: 64px; transform: skewY(-8deg) translateX(-110%); }
+  .potg .s1 { top: 64px; background: var(--ow); }
+  .potg .s2 { top: 136px; background: #e5e7eb; }
+  .potg .s3 { top: 206px; background: var(--ow2); height: 24px; }
+  .potg .text { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding-left: 7%; z-index: 2; }
+  .potg .t1 { font-size: clamp(2.2rem, 8vw, 4.4rem); color: #fff; text-shadow: 2px 2px 0 #000; line-height: .9; opacity: 0; }
+  .potg .t2 { font-size: clamp(2.8rem, 11vw, 6rem); color: var(--ow); line-height: .9; opacity: 0; -webkit-text-stroke: 1.5px #000; }
+  .potg .t3 { font-size: clamp(1rem, 3vw, 1.5rem); color: #fff; background: #000; padding: 2px 12px; align-self: flex-start; opacity: 0; }
+  .potg .hero-emoji { position: absolute; right: 6%; bottom: 26px; z-index: 1; opacity: 0; color: rgba(255,255,255,.9); }
+  .potg .hero-emoji .icon { width: clamp(90px, 16vw, 150px); height: clamp(90px, 16vw, 150px); stroke-width: 1.4; }
   .potg.play .stripe { animation: slide .5s cubic-bezier(.2,.9,.3,1) forwards; }
-  .potg.play .s2 { animation-delay: .12s; }
-  .potg.play .s3 { animation-delay: .24s; }
-  .potg.play .t1 { animation: zoomin .4s .5s forwards; }
-  .potg.play .t2 { animation: zoomin .4s .8s forwards; }
-  .potg.play .t3 { animation: fadein .5s 1.2s forwards; }
-  .potg.play .hero-emoji { animation: heroin .6s 1s forwards; }
+  .potg.play .s2 { animation-delay: .1s; }
+  .potg.play .s3 { animation-delay: .2s; }
+  .potg.play .t1 { animation: zoomin .35s .45s forwards; }
+  .potg.play .t2 { animation: zoomin .35s .7s forwards; }
+  .potg.play .t3 { animation: fadein .4s 1.05s forwards; }
+  .potg.play .hero-emoji { animation: heroin .5s .9s forwards; }
   @keyframes slide { to { transform: skewY(-8deg) translateX(0); } }
-  @keyframes zoomin { from { opacity: 0; transform: scale(2.5) skewX(-10deg); } to { opacity: 1; transform: scale(1) skewX(-10deg); } }
+  @keyframes zoomin { from { opacity: 0; transform: scale(1.6) skewX(-10deg); } to { opacity: 1; transform: scale(1) skewX(-10deg); } }
   @keyframes fadein { to { opacity: 1; } }
-  @keyframes heroin { from { opacity: 0; transform: translateX(200px) rotate(20deg); } to { opacity: 1; transform: none; } }
+  @keyframes heroin { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: none; } }
   .potg .replay { position: absolute; right: 14px; top: 14px; z-index: 3; }
 
-  /* ---------- Profil ---------- */
-  .profile { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; background: var(--owcard); border-left: 6px solid var(--ow); }
+  /* Profil */
+  .profile { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; background: var(--owcard); }
   @media (max-width: 700px) { .profile { grid-template-columns: 1fr; text-align: center; } }
-  .avatar { width: 120px; height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--ow), var(--ow2)); display: grid; place-items: center; font-size: 4.5rem; margin-inline: auto; box-shadow: 0 0 0 4px #fff; }
-  .btag { font-size: 3rem; line-height: 1; }
-  .btag small { color: var(--muted); font-size: 1.6rem; }
-  .title-tag { color: var(--ow); font-size: 1.5rem; }
+  .avatar { width: 104px; height: 104px; border-radius: 20px; background: linear-gradient(150deg, var(--ow), #c2410c); display: grid; place-items: center; font: 700 3.4rem var(--title); color: #fff; margin-inline: auto; }
+  .btag { font-size: 2.8rem; line-height: 1; }
+  .btag small { color: var(--muted); font-size: 1.5rem; }
+  .title-tag { color: var(--ow); font-size: 1.4rem; }
   .rank { text-align: center; }
-  .rank .icon { font-size: 4rem; animation: glow 2s ease-in-out infinite; display: inline-block; }
-  @keyframes glow { 50% { filter: drop-shadow(0 0 16px var(--ow)); transform: scale(1.08); } }
-  .rank .name { font-size: 1.8rem; line-height: 1; }
-  .rank button { margin-top: 8px; font-size: .8rem; padding: 6px 12px; }
+  .rank .rank-ic { width: 64px; height: 64px; margin: 0 auto 6px; border-radius: 18px; display: grid; place-items: center; background: rgba(249,158,26,.12); color: var(--ow); }
+  .rank .rank-ic .icon { width: 30px; height: 30px; }
+  .rank .name { font-size: 1.7rem; line-height: 1; }
+  .rank button { margin-top: 10px; font-size: .8rem; padding: 6px 12px; }
 
-  h2.sec { font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; font-size: clamp(2.4rem, 7vw, 3.4rem); margin: 56px 0 16px; line-height: 1; }
+  h2.sec { font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; font-size: clamp(2.2rem, 6vw, 3rem); margin: 52px 0 14px; line-height: 1; font-weight: 500; }
   h2.sec span { color: var(--ow); }
 
-  /* ---------- Stats ---------- */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
-  .stat { background: var(--owcard); border-radius: 12px; padding: 18px; border-bottom: 4px solid var(--ow2); transition: transform .2s; }
-  .stat:hover { transform: translateY(-4px) skewX(-2deg); }
-  .stat .v { font-family: 'Teko', var(--title); font-size: 2.8rem; line-height: 1; color: #fff; }
-  .stat .l { color: var(--muted); font-weight: 600; font-size: .9rem; text-transform: uppercase; }
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .stat { background: var(--owcard); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .stat .v { font: 600 2rem/1.1 var(--title); color: #fff; font-variant-numeric: tabular-nums; }
+  .stat .l { color: var(--muted); font-size: .82rem; margin-top: 4px; }
 
-  /* ---------- Heroes ---------- */
-  .heroes { display: grid; gap: 12px; }
-  .hero-row { display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center; background: var(--owcard); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
-  .hero-row .e { font-size: 2.4rem; text-align: center; }
-  .hero-row .top { display: flex; justify-content: space-between; gap: 10px; font-weight: 800; }
-  .hero-row .top span:last-child { color: var(--muted); font-weight: 600; }
-  .bar { height: 12px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin-top: 6px; }
-  .bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--ow), #ffd06b); border-radius: 6px; transition: width 1.4s cubic-bezier(.2,.9,.3,1); }
-  .hero-row .quote { color: var(--ow); font-style: italic; font-size: .9rem; margin-top: 4px; min-height: 1.3em; }
+  /* Heroes */
+  .heroes { display: grid; gap: 8px; }
+  .hero-row { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: center; background: var(--owcard); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; cursor: pointer; transition: border-color .15s; }
+  .hero-row:hover { border-color: var(--line-2); }
+  .hero-row .e { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font: 700 1.2rem var(--title); color: #fff; }
+  .hero-row .top { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; }
+  .hero-row .top span:last-child { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; background: rgba(255,255,255,.07); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .bar div { height: 100%; width: 0; background: var(--ow); border-radius: 999px; transition: width 1.4s cubic-bezier(.2,.9,.3,1); }
+  .hero-row .quote { color: #fbbf77; font-style: italic; font-size: .88rem; margin-top: 6px; min-height: 0; }
+  .hero-row .quote:empty { display: none; }
 
-  /* ---------- Clips ---------- */
-  .clips { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
-  .clip { background: var(--owcard); border-radius: 12px; overflow: hidden; }
-  .clip .thumb { height: 140px; display: grid; place-items: center; font-size: 4rem; position: relative; background: linear-gradient(135deg, #1e3a66, #0b1422); }
-  .clip .thumb::after { content: '▶'; position: absolute; font-size: 2rem; width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,.6); display: grid; place-items: center; opacity: 0; transition: opacity .2s; }
-  .clip:hover .thumb::after { opacity: 1; }
-  .clip .info { padding: 14px; }
-  .clip .info b { display: block; margin-bottom: 4px; }
-  .clip .info span { color: var(--muted); font-size: .9rem; }
-  .clip .views { color: var(--ow) !important; font-weight: 700; }
+  /* Clips */
+  .clips { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .clip { background: var(--owcard); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color .15s; }
+  .clip:hover { border-color: var(--line-2); }
+  .clip .thumb { height: 130px; display: grid; place-items: center; position: relative; background: var(--tbg, linear-gradient(135deg, #1e293b, #0a0f1a)); color: #fff; }
+  .clip .thumb .play { width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,.45); display: grid; place-items: center; backdrop-filter: blur(4px); }
+  .clip .thumb .play .icon { width: 20px; height: 20px; margin-left: 2px; }
+  .clip .thumb .len { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.7); font: 600 .72rem var(--pixel); padding: 2px 6px; border-radius: 4px; }
+  .clip .info { padding: 12px 14px 14px; }
+  .clip .info b { display: block; margin-bottom: 4px; font-weight: 600; font-size: .95rem; }
+  .clip .views { color: var(--muted) !important; font-size: .82rem; }
 
-  /* ---------- Soundboard ---------- */
-  .board { display: flex; flex-wrap: wrap; gap: 10px; }
-  .board button { background: var(--owcard); color: #fff; border: 2px solid var(--ow2); border-radius: 10px; padding: 10px 14px; font: 700 .95rem var(--body); cursor: pointer; transition: transform .1s, background .2s; }
-  .board button:hover { background: var(--ow2); }
-  .board button:active { transform: scale(.94); }
-  .shout {
-    position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 60;
-    font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; text-align: center;
-    font-size: clamp(2.5rem, 10vw, 7rem); line-height: .95; color: var(--ow); -webkit-text-stroke: 2px #000;
-    padding: 20px; animation: shout 1.6s forwards;
-  }
-  @keyframes shout { 0% { transform: scale(3); opacity: 0; } 15% { transform: scale(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: scale(.9) translateY(-40px); opacity: 0; } }
+  /* Soundboard */
+  .board { display: flex; flex-wrap: wrap; gap: 8px; }
+  .board button { background: var(--owcard); color: var(--text); border: 1px solid var(--line-2); border-radius: 999px; padding: 9px 16px; font: 600 .9rem var(--body); cursor: pointer; transition: background .15s, border-color .15s; }
+  .board button:hover { border-color: var(--ow); }
+  .shout { position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 60; font-family: 'Teko', var(--title); font-style: italic; text-transform: uppercase; text-align: center; font-size: clamp(2.5rem, 9vw, 6rem); line-height: .95; color: var(--ow); -webkit-text-stroke: 1.5px #000; padding: 20px; animation: shout 1.5s forwards; }
+  @keyframes shout { 0% { transform: scale(1.4); opacity: 0; } 15% { transform: scale(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
 
-  /* ---------- Patch Notes ---------- */
-  .patch { background: var(--owcard); border-radius: 12px; padding: 22px; border-top: 4px solid var(--ow); }
-  .patch h3 { margin: 0 0 12px; font-family: 'Teko', var(--title); font-size: 2rem; font-style: italic; }
+  /* Patch Notes */
+  .patch { background: var(--owcard); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .patch h3 { margin: 0 0 12px; font-family: 'Teko', var(--title); font-size: 1.8rem; font-style: italic; font-weight: 500; }
   .patch li { margin-bottom: 8px; list-style: none; padding-left: 0; }
   .patch ul { padding: 0; margin: 0; }
-  .buff { color: var(--green); font-weight: 800; }
-  .nerf { color: #ff5470; font-weight: 800; }
+  .buff { color: var(--green); font-weight: 700; }
+  .nerf { color: #fb7185; font-weight: 700; }
 
-  .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 50px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 44px; }
   .endorse-count { text-align: center; margin-top: 12px; color: var(--muted); }
 </style>
 </head>
@@ -122,19 +114,19 @@
         <div class="t2 ow" id="potg-name">Big H</div>
         <div class="t3 ow" id="potg-sub">als Genji · 6 Eliminierungen in 4 Sekunden</div>
       </div>
-      <div class="hero-emoji" id="potg-emoji">🗡️</div>
+      <div class="hero-emoji" id="potg-emoji"><i data-icon="swords"></i></div>
       <button class="btn cyan replay" id="replay" type="button">↻ Replay</button>
     </section>
 
     <section class="card profile">
-      <div class="avatar">🐎</div>
+      <div class="avatar">H</div>
       <div>
         <div class="btag ow" id="btag">Big H<small>#1337</small></div>
         <div class="title-tag ow">„Der Stecher von Numbani"</div>
         <div style="color:var(--muted);font-weight:600">Level ∞ · Endorsement-Level 5 · Stunden auf Anime-Maps: alle</div>
       </div>
       <div class="rank">
-        <div class="icon" id="rank-icon">💎</div>
+        <div class="rank-ic" id="rank-icon"></div>
         <div class="name ow" id="rank-name">Champion 1</div>
         <div style="color:var(--muted);font-size:.8rem" id="rank-src">laut Big H</div>
         <button class="btn ghost" id="rank-toggle" type="button">Echten Rank zeigen</button>
@@ -151,7 +143,7 @@
     <section class="clips" id="clips"></section>
 
     <h2 class="sec">Voice-Line <span>Soundboard</span></h2>
-    <p style="color:var(--muted);margin-top:-6px">Klicken = Big H schreit es in den Voice-Chat (Ton an! 🔊)</p>
+    <p style="color:var(--muted);margin-top:-6px">Klicken = Big H schreit es in den Voice-Chat (Ton an!)</p>
     <section class="board" id="board"></section>
 
     <h2 class="sec">Patch <span>Notes</span></h2>
@@ -164,24 +156,24 @@
         <li><span class="nerf">▼ NERF</span> Schlaf: von 8 auf 3 Stunden reduziert (Bugfix, war nie beabsichtigt).</li>
         <li><span class="nerf">▼ NERF</span> Geduld mit Supports: -95%.</li>
         <li><span class="nerf">▼ NERF</span> Gras-Kontakt: entfernt. Niemand hat es benutzt.</li>
-        <li>🐞 <b>BUGFIX</b> „gg ez" wird jetzt nicht mehr 6× pro Match gesendet. Nur noch 5×.</li>
+        <li><b>BUGFIX</b> „gg ez" wird jetzt nicht mehr 6× pro Match gesendet. Nur noch 5×.</li>
       </ul>
     </section>
 
     <h2 class="sec">Nebenbei: <span>Valorant</span></h2>
     <section class="patch" style="border-top-color:#ff4655">
-      <h3>unoslapis · Jett-Main 💨</h3>
+      <h3>unoslapis · Jett-Main</h3>
       <ul>
-        <li>🎯 <b>Rang:</b> Radiant (in seinem Herzen) · laut Riot: „bitte nicht fragen"</li>
-        <li>🔪 <b>Lieblingsbeschäftigung:</b> Messer-Aces und danach 30 Sekunden teabaggen</li>
-        <li>🗣️ <b>Callouts:</b> „Einer ist da irgendwo" – präzise wie immer</li>
-        <li>🕵️ <b>Taktik:</b> „Ich lurk." (Er lurkt seit Runde 1 im Spawn.)</li>
+        <li><b>Rang:</b> Radiant (in seinem Herzen) · laut Riot: „bitte nicht fragen"</li>
+        <li><b>Lieblingsbeschäftigung:</b> Messer-Aces und danach 30 Sekunden teabaggen</li>
+        <li><b>Callouts:</b> „Einer ist da irgendwo" – präzise wie immer</li>
+        <li><b>Taktik:</b> „Ich lurk." (Er lurkt seit Runde 1 im Spawn.)</li>
       </ul>
     </section>
 
     <div class="actions">
-      <button class="btn" id="endorse" type="button">👍 Big H endorsen</button>
-      <button class="btn pink" id="report" type="button">🚩 Big H melden</button>
+      <button class="btn" id="endorse" type="button">Big H endorsen</button>
+      <button class="btn pink" id="report" type="button">Big H melden</button>
     </div>
     <div class="endorse-count" id="endorse-count"></div>
   </main>
@@ -195,8 +187,8 @@
 
     // ==== KONFIG – hier einfach Werte anpassen ====
     const PLAYER = { name: 'unoslapis', tag: '#1337' };
-    const RANK_CLAIMED = { name: 'Champion 1', icon: '💎', src: 'laut Big H' };
-    const RANK_REAL    = { name: '[ZENSIERT]', icon: '🙈', src: 'laut Blizzard' };
+    const RANK_CLAIMED = { name: 'Champion 1', icon: 'gem', src: 'laut Big H' };
+    const RANK_REAL    = { name: '[ZENSIERT]', icon: 'eye-off', src: 'laut Blizzard' };
 
     const STATS = [
       { v: 1337420, l: 'Eliminierungen' },
@@ -210,32 +202,32 @@
     ];
 
     const HEROES = [
-      { e: '🗡️', n: 'Genji',      h: 1204, q: 'Ryūjin no ken wo kurae!' },
-      { e: '🦊', n: 'Kiriko',     h: 988,  q: 'Weeb-Healer. Natürlich.' },
-      { e: '🏹', n: 'Hanzo',      h: 756,  q: 'Ryū ga waga teki wo kurau! (Random Arrow = Headshot)' },
-      { e: '🐰', n: 'D.Va',       h: 540,  q: 'Nerf this! – er hat es gesagt, der Gegner hat es gefühlt.' },
-      { e: '🎯', n: 'Widowmaker', h: 431,  q: 'Un tir, une mort. Der Stecher verfehlt nie.' }
+      { c: '#16a34a', n: 'Genji',      h: 1204, q: 'Ryūjin no ken wo kurae!' },
+      { c: '#dc2626', n: 'Kiriko',     h: 988,  q: 'Weeb-Healer. Natürlich.' },
+      { c: '#2563eb', n: 'Hanzo',      h: 756,  q: 'Ryū ga waga teki wo kurau! (Random Arrow = Headshot)' },
+      { c: '#db2777', n: 'D.Va',       h: 540,  q: 'Nerf this! – er hat es gesagt, der Gegner hat es gefühlt.' },
+      { c: '#7c3aed', n: 'Widowmaker', h: 431,  q: 'Un tir, une mort. Der Stecher verfehlt nie.' }
     ];
 
     const CLIPS = [
-      { e: '🐉', t: '6K Dragonblade in 4 Sekunden', v: '2.4 Mio. Aufrufe · vor 2 Tagen' },
-      { e: '🏹', t: 'Pharah mit Random-Arrow aus Spawn gesnipt', v: '901k Aufrufe · vor 1 Woche' },
-      { e: '🐰', t: 'Self-Destruct: ganzes Team auf dem Punkt ausgelöscht', v: '1.3 Mio. Aufrufe · vor 3 Wochen' },
-      { e: '📺', t: '1v5 Clutch – während im 2. Bildschirm Anime lief', v: '4.2 Mio. Aufrufe · vor 1 Monat' },
-      { e: '🐎', t: 'Alastor-Movement: Gegner verlässt das Spiel', v: '69k Aufrufe · vor 4 Monaten' },
-      { e: '🌙', t: '04:00 Uhr Ranked – Gegner schlafen, er nicht', v: '420k Aufrufe · vor 5 Monaten' }
+      { bg: '#14532d', len: '0:34', t: '6K Dragonblade in 4 Sekunden', v: '2.4 Mio. Aufrufe · vor 2 Tagen' },
+      { bg: '#1e3a8a', len: '0:12', t: 'Pharah mit Random-Arrow aus Spawn gesnipt', v: '901k Aufrufe · vor 1 Woche' },
+      { bg: '#831843', len: '0:21', t: 'Self-Destruct: ganzes Team auf dem Punkt ausgelöscht', v: '1.3 Mio. Aufrufe · vor 3 Wochen' },
+      { bg: '#312e81', len: '1:07', t: '1v5 Clutch – während im 2. Bildschirm Anime lief', v: '4.2 Mio. Aufrufe · vor 1 Monat' },
+      { bg: '#7c2d12', len: '0:45', t: 'Alastor-Movement: Gegner verlässt das Spiel', v: '69k Aufrufe · vor 4 Monaten' },
+      { bg: '#0f172a', len: '2:13', t: '04:00 Uhr Ranked – Gegner schlafen, er nicht', v: '420k Aufrufe · vor 5 Monaten' }
     ];
 
     const VOICE = [
-      { b: '🐉 Dragonblade', s: 'Ryūjin no ken wo kurae!', say: '竜神の剣を喰らえ！', lang: 'ja-JP' },
-      { b: '🏹 Dragonstrike', s: 'Ryū ga waga teki wo kurau!', say: '竜が我が敵を喰らう！', lang: 'ja-JP' },
-      { b: '🐰 Nerf this!', s: 'NERF THIS!', say: 'Nerf this!', lang: 'en-US' },
-      { b: '🩹 I need healing', s: 'I NEED HEALING', say: 'I need healing!', lang: 'en-US' },
-      { b: '🕰️ High Noon', s: "IT'S HIGH NOON", say: "It's high noon.", lang: 'en-US' },
-      { b: '🦊 Kiriko Ult', s: 'Kitsune Rush!', say: 'Kitsune Rush!', lang: 'en-US' },
-      { b: '💀 Die Die Die', s: 'DIE! DIE! DIE!', say: 'Die! Die! Die!', lang: 'en-US' },
-      { b: '📻 Alastor', s: 'ALASTOR LAPIS IST ONLINE', say: 'Alastor Lapis ist online!', lang: 'de-DE' },
-      { b: '😤 Team diff', s: 'TEAM DIFF', say: 'Team diff. Ich kann nicht alles alleine machen.', lang: 'de-DE' }
+      { b: 'Dragonblade', s: 'Ryūjin no ken wo kurae!', say: '竜神の剣を喰らえ！', lang: 'ja-JP' },
+      { b: 'Dragonstrike', s: 'Ryū ga waga teki wo kurau!', say: '竜が我が敵を喰らう！', lang: 'ja-JP' },
+      { b: 'Nerf this!', s: 'NERF THIS!', say: 'Nerf this!', lang: 'en-US' },
+      { b: 'I need healing', s: 'I NEED HEALING', say: 'I need healing!', lang: 'en-US' },
+      { b: 'High Noon', s: "IT'S HIGH NOON", say: "It's high noon.", lang: 'en-US' },
+      { b: 'Kiriko Ult', s: 'Kitsune Rush!', say: 'Kitsune Rush!', lang: 'en-US' },
+      { b: 'Die Die Die', s: 'DIE! DIE! DIE!', say: 'Die! Die! Die!', lang: 'en-US' },
+      { b: 'Alastor', s: 'ALASTOR LAPIS IST ONLINE', say: 'Alastor Lapis ist online!', lang: 'de-DE' },
+      { b: 'Team diff', s: 'TEAM DIFF', say: 'Team diff. Ich kann nicht alles alleine machen.', lang: 'de-DE' }
     ];
 
     // ---------- POTG ----------
@@ -256,13 +248,13 @@
     document.querySelector('#btag small').textContent = PLAYER.tag;
     let showReal = false;
     const rIcon = document.getElementById('rank-icon'), rName = document.getElementById('rank-name'), rSrc = document.getElementById('rank-src');
-    function setRank(r) { rIcon.textContent = r.icon; rName.textContent = r.name; rSrc.textContent = r.src; }
+    function setRank(r) { rIcon.innerHTML = BIGH.icon(r.icon); rName.textContent = r.name; rSrc.textContent = r.src; }
     setRank(RANK_CLAIMED);
     document.getElementById('rank-toggle').addEventListener('click', (e) => {
       showReal = !showReal;
       setRank(showReal ? RANK_REAL : RANK_CLAIMED);
       e.target.textContent = showReal ? 'Zurück zur Wahrheit' : 'Echten Rank zeigen';
-      if (showReal) BIGH.toast('🚨 Diese Information wurde von Big H zensiert.');
+      if (showReal) BIGH.toast('Diese Information wurde von Big H zensiert.');
     });
 
     // ---------- Stats mit Hochzähl-Animation ----------
@@ -292,13 +284,14 @@
       row.className = 'hero-row';
       row.title = 'Klick für Voice-Line';
       row.innerHTML = '<div class="e"></div><div><div class="top"><span></span><span></span></div><div class="bar"><div></div></div><div class="quote"></div></div>';
-      row.querySelector('.e').textContent = h.e;
+      row.querySelector('.e').textContent = h.n.charAt(0);
+      row.querySelector('.e').style.background = h.c;
       row.querySelector('.top span:first-child').textContent = h.n;
       row.querySelector('.top span:last-child').textContent = h.h.toLocaleString('de-CH') + ' Std.';
       row.querySelector('.bar div').dataset.w = (h.h / maxH * 100) + '%';
       row.addEventListener('click', (e) => {
         row.querySelector('.quote').textContent = '„' + h.q + '"';
-        BIGH.burst(e.clientX, e.clientY, [h.e, '💥', '⭐'], 14);
+        BIGH.burst(e.clientX, e.clientY, null, 10);
       });
       heroBox.appendChild(row);
     });
@@ -321,11 +314,13 @@
       const d = document.createElement('div');
       d.className = 'clip';
       d.innerHTML = '<div class="thumb"></div><div class="info"><b></b><span class="views"></span></div>';
-      d.querySelector('.thumb').textContent = c.e;
+      d.querySelector('.thumb').innerHTML = '<span class="play">' + BIGH.icon('play') + '</span><span class="len"></span>';
+      d.querySelector('.len').textContent = c.len;
+      d.querySelector('.thumb').style.setProperty('--tbg', 'linear-gradient(135deg, ' + c.bg + ', #0a0f1a)');
       d.querySelector('b').textContent = c.t;
       d.querySelector('.views').textContent = c.v;
       d.style.cursor = 'pointer';
-      d.addEventListener('click', () => BIGH.toast('📼 Clip wurde von Big H gelöscht, weil er „zu cracked" war.'));
+      d.addEventListener('click', () => BIGH.toast('Clip wurde von Big H gelöscht, weil er „zu cracked" war.'));
       clipBox.appendChild(d);
     });
 
@@ -360,16 +355,16 @@
     const ec = document.getElementById('endorse-count');
     document.getElementById('endorse').addEventListener('click', (e) => {
       endorsements++;
-      ec.textContent = `Du hast Big H ${endorsements}× endorsed. Er weiss das zu schätzen. 🐎`;
-      BIGH.burst(e.clientX, e.clientY, ['👍', '🧡', '⭐', '🎯'], 18);
+      ec.textContent = `Du hast Big H ${endorsements}× endorsed. Er weiss das zu schätzen.`;
+      BIGH.burst(e.clientX, e.clientY, ['', '', '', ''], 18);
       BIGH.beep(880, 0.08, 'triangle');
     });
     const REPORT = [
-      '🚩 Report abgelehnt: Big H ist einfach zu gut.',
-      '🚩 Blizzard hat geprüft: Kein Cheat, nur extrem Sexy ;).',
-      '🚩 Big H hat DICH zurück gemeldet. 💀',
-      '🚩 Report wurde an seine Waifu weitergeleitet.',
-      '🚩 Skill Issue erkannt – bei dir.'
+      'Report abgelehnt: Big H ist einfach zu gut.',
+      'Blizzard hat geprüft: Kein Cheat, nur extrem Sexy ;).',
+      'Big H hat DICH zurück gemeldet.',
+      'Report wurde an seine Waifu weitergeleitet.',
+      'Skill Issue erkannt – bei dir.'
     ];
     let ri = 0;
     document.getElementById('report').addEventListener('click', () => {
@@ -377,7 +372,6 @@
       BIGH.beep(150, 0.3, 'sawtooth', 0.05);
     });
 
-    BIGH.emojiBackground(['🎯', '🧡', '⚡', '🐉', '🏹', '🐎'], 1600);
   })();
   </script>
 </body>

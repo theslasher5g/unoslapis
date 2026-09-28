@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🔮 Astro-Lapis – Das Big H Horoskop</title>
+<title>Astro-Lapis – Das Big H Horoskop</title>
 <meta name="description" content="Das tägliche Horoskop von Astro-Lapis. Die Sterne lügen nicht. Big H schon.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
@@ -27,7 +27,7 @@
   .wheel { width: min(300px, 70vw); aspect-ratio: 1; margin: 26px auto 0; position: relative; border-radius: 50%; border: 2px solid rgba(255,210,63,.5); box-shadow: 0 0 60px rgba(155,92,255,.4), inset 0 0 40px rgba(155,92,255,.3); animation: turn 90s linear infinite; }
   .wheel::before { content: ''; position: absolute; inset: 18%; border-radius: 50%; border: 1px dashed rgba(255,210,63,.35); }
   .wheel span { position: absolute; left: 50%; top: 50%; font-size: clamp(1.1rem, 4vw, 1.6rem); width: 2em; height: 2em; margin: -1em; display: grid; place-items: center; }
-  .wheel .core { position: absolute; inset: 34%; border-radius: 50%; display: grid; place-items: center; font-size: clamp(2.4rem, 9vw, 3.6rem); animation: turn 90s linear infinite reverse; background: radial-gradient(circle, rgba(255,210,63,.25), transparent 70%); }
+  .wheel .core { position: absolute; inset: 34%; border-radius: 50%; display: grid; place-items: center; color: var(--yellow); animation: turn 90s linear infinite reverse; background: radial-gradient(circle, rgba(255,210,63,.25), transparent 70%); }
   @keyframes turn { to { transform: rotate(360deg); } }
 
   /* Big H Spezial */
@@ -60,6 +60,7 @@
   .match select { width: 100%; max-width: 320px; padding: 12px; border-radius: 12px; border: 2px solid rgba(255,255,255,.2); background: #1f1a3a; color: var(--text); font: 700 1rem var(--body); }
   .match .pct { font-family: 'Cinzel', Georgia, serif; font-weight: 800; font-size: clamp(3rem, 12vw, 5rem); color: var(--pink); line-height: 1; margin-top: 16px; min-height: 1em; }
   .match .verdict { font-weight: 700; margin-top: 8px; min-height: 1.5em; }
+  .wheel .core .icon { width: 44%; height: 44%; stroke-width: 1.5; }
 </style>
 </head>
 <body data-back>
@@ -68,7 +69,7 @@
     <p class="sub">Das Horoskop, auf das Big H schwört. Die Sterne lügen nicht. Er schon.</p>
     <div class="date" id="date"></div>
 
-    <div class="wheel" id="wheel" aria-hidden="true"><div class="core">🔮</div></div>
+    <div class="wheel" id="wheel" aria-hidden="true"><div class="core"><i data-icon="sparkles"></i></div></div>
 
     <section class="card featured" aria-labelledby="bigh-title">
       <div class="head">
@@ -80,7 +81,7 @@
       <div class="lucky" id="bigh-lucky"></div>
     </section>
 
-    <h2 class="sec">✨ Dein Tageshoroskop ✨</h2>
+    <h2 class="sec">Dein Tageshoroskop</h2>
     <div class="signs" id="signs"></div>
     <section class="card" id="reading" aria-live="polite">
       <div class="head" style="display:flex;align-items:center;gap:14px">
@@ -92,7 +93,7 @@
       <div class="lucky" id="r-lucky"></div>
     </section>
 
-    <h2 class="sec">💞 Passt du zu Big H?</h2>
+    <h2 class="sec">Passt du zu Big H?</h2>
     <section class="match">
       <p style="color:var(--muted);margin-top:0">Wähle dein Sternzeichen. Die Sterne berechnen eure Kompatibilität (täglich neu, weil die Sterne sich nicht entscheiden können).</p>
       <select id="match-sel" aria-label="Dein Sternzeichen"><option value="">– Sternzeichen wählen –</option></select>
@@ -109,12 +110,12 @@
     'use strict';
 
     const SIGNS = [
-      { n: 'Widder', s: '♈', e: '🐏', d: '21.3.–19.4.' }, { n: 'Stier', s: '♉', e: '🐂', d: '20.4.–20.5.' },
-      { n: 'Zwillinge', s: '♊', e: '👯', d: '21.5.–21.6.' }, { n: 'Krebs', s: '♋', e: '🦀', d: '22.6.–22.7.' },
-      { n: 'Löwe', s: '♌', e: '🦁', d: '23.7.–22.8.' }, { n: 'Jungfrau', s: '♍', e: '🌾', d: '23.8.–22.9.' },
-      { n: 'Waage', s: '♎', e: '⚖️', d: '23.9.–22.10.' }, { n: 'Skorpion', s: '♏', e: '🦂', d: '23.10.–21.11.' },
-      { n: 'Schütze', s: '♐', e: '🏹', d: '22.11.–20.12.' }, { n: 'Steinbock', s: '♑', e: '🐐', d: '21.12.–19.1.' },
-      { n: 'Wassermann', s: '♒', e: '🏺', d: '20.1.–18.2.' }, { n: 'Fische', s: '♓', e: '🐟', d: '19.2.–20.3.' }
+      { n: 'Widder', s: '♈', e: '', d: '21.3.–19.4.' }, { n: 'Stier', s: '♉', e: '', d: '20.4.–20.5.' },
+      { n: 'Zwillinge', s: '♊', e: '', d: '21.5.–21.6.' }, { n: 'Krebs', s: '♋', e: '', d: '22.6.–22.7.' },
+      { n: 'Löwe', s: '♌', e: '', d: '23.7.–22.8.' }, { n: 'Jungfrau', s: '♍', e: '', d: '23.8.–22.9.' },
+      { n: 'Waage', s: '♎', e: '', d: '23.9.–22.10.' }, { n: 'Skorpion', s: '♏', e: '', d: '23.10.–21.11.' },
+      { n: 'Schütze', s: '♐', e: '', d: '22.11.–20.12.' }, { n: 'Steinbock', s: '♑', e: '', d: '21.12.–19.1.' },
+      { n: 'Wassermann', s: '♒', e: '', d: '20.1.–18.2.' }, { n: 'Fische', s: '♓', e: '', d: '19.2.–20.3.' }
     ];
 
     // Bausteine für die Horoskope (werden pro Tag + Sternzeichen fest zusammengewürfelt)
@@ -169,16 +170,16 @@
       return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
     }
     const pickR = (r, arr) => arr[Math.floor(r() * arr.length)];
-    const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+    const stars = (n) => ''.repeat(n) + ''.repeat(5 - n);
 
     function reading(idx, special) {
       const r = rng(dayKey * 31 + idx * 7919 + (special ? 1234567 : 0));
       const text = (special ? pickR(r, BIGH_SPECIAL) + ' ' : pickR(r, OPEN) + ' ') + pickR(r, LOVE) + ' ' + pickR(r, WORK) + ' ' + pickR(r, ADVICE);
       const rat = [
-        ['💘 Liebe', special ? 1 : 1 + Math.floor(r() * 5)],
-        ['🎮 Ranked', 1 + Math.floor(r() * 5)],
-        ['🥵 Goon', special ? 5 : 1 + Math.floor(r() * 5)],
-        ['🍀 Glück', 1 + Math.floor(r() * 5)]
+        ['Liebe', special ? 1 : 1 + Math.floor(r() * 5)],
+        ['Ranked', 1 + Math.floor(r() * 5)],
+        ['Goon', special ? 5 : 1 + Math.floor(r() * 5)],
+        ['Glück', 1 + Math.floor(r() * 5)]
       ];
       const lucky = [
         ['Glückszahl', String(Math.floor(r() * 99) + 1)],
@@ -231,7 +232,7 @@
       const sg = SIGNS[i];
       signsEl.querySelectorAll('button').forEach((b, k) => b.classList.toggle('on', k === i));
       document.getElementById('r-sym').textContent = sg.s;
-      document.getElementById('r-title').textContent = sg.n + ' ' + sg.e;
+      document.getElementById('r-title').textContent = sg.n;
       render('r', reading(i, false));
       readingEl.classList.remove('show'); void readingEl.offsetWidth; readingEl.classList.add('show');
       try { localStorage.setItem('bigh-sign', String(i)); } catch (e) { /* egal */ }
@@ -244,7 +245,7 @@
       b.querySelector('.s').textContent = sg.s;
       b.querySelector('.nm').textContent = sg.n;
       b.querySelector('small').textContent = sg.d;
-      b.addEventListener('click', (e) => { show(i, true); BIGH.burst(e.clientX, e.clientY, ['✨', '⭐', sg.s], 10); });
+      b.addEventListener('click', (e) => { show(i, true); BIGH.burst(e.clientX, e.clientY, ['', '', sg.s], 10); });
       signsEl.appendChild(b);
     });
     let saved = null;
@@ -258,7 +259,7 @@
       [0, 'Die Sterne schreien „NEIN". Er würde dich für Ranked sitzen lassen.'],
       [25, 'Schwierig. Ihr würdet euch nur über Waifu-Tierlisten streiten.'],
       [50, 'Könnte klappen – solange du akzeptierst, dass er „baden geht".'],
-      [75, 'Starke Verbindung! Duo-Queue-Material. 💞'],
+      [75, 'Starke Verbindung! Duo-Queue-Material.'],
       [90, 'SEELENVERWANDT. Sofort dating.unoslapis.ch ausfüllen!']
     ];
     sel.addEventListener('change', () => {
@@ -279,7 +280,7 @@
       VERDICTS.forEach(([min, t]) => { if (pct >= min) v = t; });
       if (i === 6) v = 'Waage + Waage: Er würde sich selbst daten. Tut er praktisch schon.';
       vEl.textContent = v;
-      if (pct >= 75) BIGH.confettiRain(['💞', '✨', '💘'], 40);
+      if (pct >= 75) BIGH.confettiRain(['', '', ''], 40);
     });
   })();
   </script>

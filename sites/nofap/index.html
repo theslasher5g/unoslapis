@@ -3,68 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🚫 NoFap Tracker – Goon-König Edition</title>
+<title>NoFap Tracker – Goon-König Edition</title>
 <meta name="description" content="Der offizielle NoFap-Tracker des Goon-Königs. Streak: kurz.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚫</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
-  body { background: linear-gradient(180deg, #120a14, #0d0b1a 60%); }
-  .wrap { padding: 70px 0 20px; }
-  .head { text-align: center; }
-  .head .tag { display: inline-block; font-family: var(--pixel); font-size: .65rem; background: #e0001b; color: #fff; padding: 6px 10px; border-radius: 4px; letter-spacing: 1px; }
-  .head h1 { font-family: var(--title); font-size: clamp(2.8rem, 10vw, 5.5rem); letter-spacing: 3px; margin: 14px 0 0; line-height: 1; }
-  .head p { color: var(--muted); margin: 8px 0 0; }
+  :root { --accent: #f87171; }
+  body { background: radial-gradient(700px 360px at 50% -80px, rgba(248,113,113,.1), transparent 70%), var(--bg); }
+  .wrap { width: min(900px, 100% - 32px); }
+  .page-head { text-align: center; }
+  .page-head p { margin-inline: auto; }
 
-  .streak { text-align: center; margin: 34px auto 0; max-width: 680px; border: 2px solid #e0001b; background: radial-gradient(circle at 50% 0, rgba(224,0,27,.25), transparent 70%), var(--card); }
-  .streak .lbl { color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: .85rem; }
-  .streak .time { font-family: var(--pixel); font-size: clamp(1.6rem, 7vw, 3.4rem); margin: 16px 0 8px; color: #fff; text-shadow: 0 0 20px #e0001b; }
-  .streak .sub { color: var(--muted); }
-  .streak.reset { animation: alarm .25s 8; }
-  @keyframes alarm { 50% { background: #e0001b; } }
-  .streak .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+  .streak { text-align: center; margin: 8px auto 0; max-width: 620px; padding: 30px 22px; }
+  .streak .lbl { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .1em; font-size: .78rem; }
+  .streak .time { font: 600 clamp(2.4rem, 9vw, 3.8rem)/1 var(--title); letter-spacing: -.02em; margin: 14px 0 8px; font-variant-numeric: tabular-nums; }
+  .streak .sub { color: var(--muted); font-size: .92rem; }
+  .streak.reset { animation: alarm .6s 2; }
+  @keyframes alarm { 50% { border-color: var(--accent); background: rgba(248,113,113,.08); } }
+  .streak .btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; }
-  .k .v { font-family: var(--title); font-size: 2.4rem; line-height: 1; color: var(--yellow); }
-  .k .l { color: var(--muted); font-weight: 600; font-size: .9rem; margin-top: 4px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 12px; }
+  .k { padding: 18px; }
+  .k .v { font: 600 1.8rem/1.1 var(--title); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .k .l { color: var(--muted); font-size: .85rem; margin-top: 4px; }
 
-  h2.sec { font-family: var(--title); letter-spacing: 2px; font-size: clamp(2rem, 6vw, 2.8rem); margin: 50px 0 14px; }
+  h2.sec { font: 600 1.3rem/1.2 var(--title); letter-spacing: -.01em; margin: 44px 0 12px; }
 
-  .heat { display: grid; grid-template-columns: repeat(auto-fill, minmax(18px, 1fr)); gap: 4px; }
-  .heat span { aspect-ratio: 1; border-radius: 3px; background: #e0001b; opacity: .9; }
+  .heat { display: grid; grid-template-columns: repeat(auto-fill, minmax(16px, 1fr)); gap: 4px; }
+  .heat span { aspect-ratio: 1; border-radius: 3px; background: rgba(248,113,113,.7); }
   .heat span.ok { background: var(--green); }
-  .heat span.mid { background: #ff7b00; }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: .85rem; margin-top: 10px; }
-  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+  .heat span.mid { background: rgba(251,191,36,.7); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: .82rem; margin-top: 12px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: 0; margin-right: 6px; }
 
-  .nnn { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-  .nnn div { background: var(--card); border-radius: 12px; padding: 14px; text-align: center; }
-  .nnn b { display: block; font-size: 1.3rem; }
-  .nnn span { color: #ff5470; font-weight: 700; font-size: .9rem; }
+  .nnn { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .nnn div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .nnn b { display: block; font: 600 1.05rem var(--title); margin-bottom: 4px; }
+  .nnn span { color: var(--accent); font-size: .85rem; }
 
-  .quote { font-size: 1.3rem; font-weight: 800; text-align: center; min-height: 3.2em; display: grid; place-items: center; }
-  .quote .reply { display: block; color: var(--pink); font-size: 1rem; margin-top: 8px; }
+  .quote { font: 500 1.2rem/1.45 var(--title); text-align: center; min-height: 3.2em; display: grid; place-items: center; }
+  .quote .reply { display: block; color: var(--accent); font: 500 .95rem var(--body); margin-top: 8px; }
 
-  .temptation { height: 26px; border-radius: 13px; background: rgba(255,255,255,.08); overflow: hidden; }
-  .temptation div { height: 100%; width: 100%; background: repeating-linear-gradient(45deg, #e0001b 0 14px, #ff3355 14px 28px); animation: stripes 1s linear infinite; background-size: 40px 40px; }
-  @keyframes stripes { to { background-position: 40px 0; } }
+  .temptation { height: 8px; border-radius: 999px; background: rgba(255,255,255,.07); overflow: hidden; }
+  .temptation div { height: 100%; width: 100%; background: linear-gradient(90deg, #fbbf24, var(--accent)); }
 </style>
 </head>
 <body data-back>
   <main class="wrap">
-    <div class="head">
-      <span class="tag">SELBSTHILFE-PROGRAMM</span>
-      <h1>NoFap Tracker 🚫</h1>
+    <header class="page-head">
+      <span class="kicker"><i data-icon="ban"></i>Selbsthilfe-Programm</span>
+      <h1>NoFap Tracker</h1>
       <p>Teilnehmer: <b>Alastor Lapis</b> alias der Goon-König · Motivation: gering · Rückfallquote: ja</p>
-    </div>
+    </header>
 
     <section class="card streak" id="streak">
       <div class="lbl">Aktueller Streak</div>
       <div class="time" id="time">00:00:00</div>
       <div class="sub" id="since">seit heute 00:04 Uhr</div>
       <div class="btns">
-        <button class="btn pink" id="relapse" type="button">🚨 Rückfall melden</button>
-        <button class="btn ghost" id="pray" type="button">🙏 Kraft schicken</button>
+        <button class="btn pink" id="relapse" type="button">Rückfall melden</button>
+        <button class="btn ghost" id="pray" type="button">Kraft schicken</button>
       </div>
     </section>
 
@@ -78,7 +77,7 @@
     <h2 class="sec">Die letzten 12 Wochen</h2>
     <section class="card">
       <div class="heat" id="heat"></div>
-      <div class="legend"><span><i style="background:#e0001b"></i>Rückfall</span><span><i style="background:#ff7b00"></i>Fast geschafft (bis 00:03)</span><span><i style="background:var(--green)"></i>Clean (war krank)</span></div>
+      <div class="legend"><span><i style="background:rgba(248,113,113,.7)"></i>Rückfall</span><span><i style="background:rgba(251,191,36,.7)"></i>Fast geschafft (bis 00:03)</span><span><i style="background:var(--green)"></i>Clean (war krank)</span></div>
     </section>
 
     <h2 class="sec">No Nut November – Archiv</h2>
@@ -93,7 +92,7 @@
     <h2 class="sec">Motivation des Tages</h2>
     <section class="card">
       <div class="quote" id="quote"></div>
-      <div style="text-align:center;margin-top:10px"><button class="btn" id="next-quote" type="button">💪 Mehr Motivation</button></div>
+      <div style="text-align:center;margin-top:10px"><button class="btn" id="next-quote" type="button">Mehr Motivation</button></div>
     </section>
   </main>
 
@@ -146,7 +145,7 @@
     rel.textContent = relapses;
 
     const streak = document.getElementById('streak');
-    const RELAPSE_MSGS = ['🚨 Rückfall registriert. Überraschung: keine.', '📉 Streak zurückgesetzt. Schon wieder.', '🤝 Wir haben es alle kommen sehen.', '👑 Der Goon-König regiert weiter.'];
+    const RELAPSE_MSGS = ['Rückfall registriert. Überraschung: keine.', 'Streak zurückgesetzt. Schon wieder.', 'Wir haben es alle kommen sehen.', 'Der Goon-König regiert weiter.'];
     let ri = 0;
     document.getElementById('relapse').addEventListener('click', () => {
       lastReset = new Date();
@@ -162,7 +161,7 @@
     document.getElementById('pray').addEventListener('click', (e) => {
       prayers++;
       document.getElementById('prayers').textContent = prayers;
-      BIGH.burst(e.clientX, e.clientY, ['🙏', '💪', '✨', '🕯️'], 14);
+      BIGH.burst(e.clientX, e.clientY, ['', '', '', ''], 14);
     });
 
     // ---------- Heatmap der letzten 84 Tage ----------
@@ -184,7 +183,7 @@
       const b = document.createElement('b');
       b.textContent = 'NNN ' + y;
       const s = document.createElement('span');
-      s.textContent = y === year - 2 ? '❌ 01.11. · 00:00:12 (neuer Rekord: schnellstes Scheitern)' : '❌ gescheitert am 01.11. · 00:04';
+      s.textContent = y === year - 2 ? '01.11. · 00:00:12 (neuer Rekord: schnellstes Scheitern)' : 'gescheitert am 01.11. · 00:04';
       d.append(b, s);
       nnn.appendChild(d);
     }
