@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geburtstagskarte für Big H</title>
+<meta name="description" content="Die digitale Geburtstagskarte für Big H. Unterschreib sie – am 4. Oktober wird sie überreicht.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23fbbf24'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap">
+<style>
+  :root { --accent: #fbbf24; --hand: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive; --paper: #fbf8f2; --ink: #1c1917; }
+  body { background: radial-gradient(800px 420px at 50% -120px, rgba(251,191,36,.1), transparent 70%), var(--bg); }
+  .wrap { width: min(980px, 100% - 32px); }
+  .page-head { text-align: center; }
+  .page-head p { margin-inline: auto; }
+  .status { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 999px; font-size: .88rem; color: var(--muted); }
+  .status b { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Karte ---------- */
+  .scene { perspective: 2200px; display: flex; justify-content: center; margin: 26px 0 10px; }
+  .card3d { position: relative; width: min(420px, 90vw); aspect-ratio: 5 / 7; transition: transform .9s cubic-bezier(.3,.8,.2,1); }
+  .card3d.open { transform: translateX(50%); }
+  .m-letter { display: none; }
+  @media (max-width: 860px) {
+    .card3d.open { transform: none; }
+    .scene { overflow: hidden; padding: 10px 0 30px; margin-bottom: -20px; }
+    .card3d.open .cover { opacity: 0; pointer-events: none; transition: transform 1.1s cubic-bezier(.3,.8,.2,1), opacity .35s .45s; }
+    .m-letter { display: block; font: 500 1.2rem/1.3 var(--hand); color: #44403c; border-bottom: 1px dashed #d6d3d1; padding-bottom: 10px; margin-bottom: 10px; }
+    .m-letter b { font-weight: 700; color: var(--ink); }
+  }
+  .inside-r, .cover { position: absolute; inset: 0; border-radius: 6px 14px 14px 6px; }
+  .inside-r { background: var(--paper); color: var(--ink); box-shadow: 0 20px 50px rgba(0,0,0,.45); overflow: hidden; }
+  .cover { transform-origin: left center; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(.3,.8,.2,1); cursor: pointer; z-index: 2; }
+  .card3d.open .cover { transform: rotateY(-178deg); cursor: default; }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: inherit; overflow: hidden; }
+  .front { background: linear-gradient(155deg, #1c1917 0%, #292524 60%, #3f2a12 100%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+  .front::before { content: ''; position: absolute; inset: 14px; border: 1px solid rgba(251,191,36,.35); border-radius: 4px 10px 10px 4px; pointer-events: none; }
+  .front .kick { font: 600 .75rem var(--body); letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
+  .front .num { font: 700 clamp(7rem, 34vw, 11rem)/.85 var(--title); letter-spacing: -.06em; margin: 18px 0 6px; background: linear-gradient(180deg, #fde68a, #f59e0b 70%, #b45309); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .front .for { font: 700 2.4rem/1 var(--hand); color: #fef3c7; }
+  .front .tap { position: absolute; bottom: 30px; left: 0; right: 0; font-size: .8rem; color: rgba(255,255,255,.55); display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .front .dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(251,191,36,.5) 1px, transparent 1.6px); background-size: 22px 22px; mask-image: radial-gradient(circle at 50% 45%, transparent 38%, #000 80%); -webkit-mask-image: radial-gradient(circle at 50% 45%, transparent 38%, #000 80%); opacity: .5; }
+  .back { transform: rotateY(180deg); background: var(--paper); color: var(--ink); padding: 34px 28px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset -12px 0 20px -12px rgba(0,0,0,.25); }
+  .back h2 { font: 700 2.3rem/1.05 var(--hand); margin: 0 0 14px; }
+  .back p { font: 500 1.35rem/1.35 var(--hand); margin: 0 0 12px; color: #44403c; }
+  .back .from { font: 700 1.5rem var(--hand); text-align: right; margin-top: 10px; }
+
+  .inside-r { padding: 22px 20px; display: flex; flex-direction: column; }
+  .inside-r h3 { font: 700 1.7rem/1 var(--hand); margin: 0 0 10px; text-align: center; }
+  .sigs { position: relative; flex: 1; overflow-y: auto; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px 16px; padding: 4px 2px; scrollbar-width: thin; }
+  .sig { font: 500 1.28rem/1.15 var(--hand); max-width: 100%; overflow-wrap: anywhere; animation: ink .5s ease both; }
+  .sig b { font-weight: 700; display: block; font-size: 1.05rem; opacity: .8; }
+  .sig.new { animation: ink 1s ease both; }
+  @keyframes ink { from { opacity: 0; filter: blur(3px); transform: translateY(4px); } }
+  .sig.c-rose { color: #be123c; } .sig.c-amber { color: #b45309; } .sig.c-violet { color: #6d28d9; }
+  .sig.c-cyan { color: #0e7490; } .sig.c-green { color: #15803d; } .sig.c-blue { color: #1d4ed8; }
+  .sig.w1 { transform: rotate(-2deg); } .sig.w2 { transform: rotate(1.5deg); } .sig.w3 { transform: rotate(-.8deg); }
+  .sig-empty { color: #a8a29e; font: 500 1.3rem var(--hand); text-align: center; width: 100%; margin-top: 30px; }
+  .count { text-align: center; font: 600 .78rem var(--body); color: #78716c; margin-top: 8px; }
+
+  .controls { display: flex; justify-content: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+  /* ---------- Unterschreiben ---------- */
+  .sign { max-width: 560px; margin: 30px auto 0; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: clamp(18px, 4vw, 26px); }
+  .sign h2 { font: 600 1.3rem var(--title); margin: 0 0 4px; }
+  .sign > p { color: var(--muted); margin: 0 0 16px; font-size: .92rem; }
+  .sign label { display: block; font: 600 .82rem var(--body); color: var(--muted); margin: 0 0 6px; }
+  .field { margin-bottom: 14px; }
+  input[type=text], textarea { width: 100%; border: 1px solid var(--line-2); background: var(--card-2); padding: 11px 14px; font: 500 1rem var(--body); color: var(--text); border-radius: 12px; outline: none; transition: border-color .15s, box-shadow .15s; }
+  input[type=text]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(251,191,36,.15); }
+  textarea { min-height: 90px; resize: vertical; }
+  .preview { font: 500 1.4rem/1.2 var(--hand); min-height: 1.3em; margin-top: 6px; padding: 10px 14px; border-radius: 12px; background: var(--paper); color: var(--ink); }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .swatches button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; outline-offset: 2px; }
+  .swatches button[aria-pressed="true"] { border-color: #fff; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px currentColor; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .cnt { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .btn.send { background: var(--accent); color: #0a0a0c; }
+  .msg { margin-top: 12px; font-size: .92rem; min-height: 1.3em; }
+  .msg.err { color: #fb7185; } .msg.ok { color: var(--green); }
+  .del { background: none; border: 0; color: #a8a29e; cursor: pointer; padding: 0 0 0 4px; vertical-align: middle; }
+</style>
+</head>
+<body data-back data-no-takeover>
+  <main class="wrap">
+    <header class="page-head">
+      <span class="kicker"><i data-icon="mail"></i>Geburtstagskarte</span>
+      <h1 id="h1">Alles Gute, Big H</h1>
+      <p>Eine Karte, alle Unterschriften. Unterschreib jetzt – am 4. Oktober bekommt Big H sie überreicht.</p>
+      <div class="status" id="status"><i data-icon="clock"></i><span id="status-text">–</span></div>
+    </header>
+
+    <div class="scene">
+      <div class="card3d" id="card">
+        <div class="inside-r">
+          <div class="m-letter"><b>Lieber Alastor,</b> alles Gute zum Geburtstag! Mögen deine Teams nie mehr diffen und dein Bad endlich stattfinden. <b>– Dein Squad</b></div>
+          <h3>Unterschrieben von</h3>
+          <div class="sigs" id="sigs"><div class="sig-empty">Lade Unterschriften …</div></div>
+          <div class="count" id="count"></div>
+        </div>
+        <div class="cover" id="cover" role="button" tabindex="0" aria-label="Karte öffnen">
+          <div class="face front">
+            <div class="dots"></div>
+            <div class="kick">Happy Birthday</div>
+            <div class="num" id="age">24</div>
+            <div class="for">für Big H</div>
+            <div class="tap"><i data-icon="hand"></i>Zum Öffnen tippen</div>
+          </div>
+          <div class="face back">
+            <h2>Lieber Alastor,</h2>
+            <p>Fürst a. D., Goon-König, Bezwinger des Everest, Retter von Mausi und Erfinder der besten Ausrede der Welt:</p>
+            <p>Alles Gute zum Geburtstag! Mögen deine Teams nie mehr diffen, dein Akku nie leer sein und dein Bad endlich stattfinden.</p>
+            <div class="from">Dein Squad</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn ghost" type="button" id="toggle"><i data-icon="book-open"></i><span>Karte öffnen</span></button>
+      <a class="btn ghost" href="#unterschreiben"><i data-icon="pen-line"></i>Unterschreiben</a>
+    </div>
+
+    <section class="sign" id="unterschreiben">
+      <h2>Karte unterschreiben</h2>
+      <p>Dein Gruss erscheint handschriftlich auf der Innenseite. Kurz und herzlich (oder frech) ist perfekt.</p>
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="name">Dein Name</label>
+          <input type="text" id="name" maxlength="30" autocomplete="nickname" placeholder="z.B. Mausi" required>
+        </div>
+        <div class="field">
+          <label for="message">Dein Glückwunsch</label>
+          <textarea id="message" maxlength="280" placeholder="Alles Gute, du Stecher. Geh heute wirklich baden." required></textarea>
+          <div class="preview" id="preview" aria-hidden="true"></div>
+        </div>
+        <div class="field">
+          <label>Stiftfarbe</label>
+          <div class="swatches" id="swatches"></div>
+        </div>
+        <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+        <div class="row">
+          <span class="cnt" id="cnt">0 / 280</span>
+          <button class="btn send" type="submit" id="submit"><i data-icon="pen-line"></i>Unterschreiben</button>
+        </div>
+        <div class="msg" id="msg" role="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="bigh-footer">Geburtstagskarte für Big H · karte.unoslapis.ch</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const API = '/api/cards';
+    const isAdmin = location.hash === '#admin';
+    const COLORS = { rose: '#e11d48', amber: '#d97706', violet: '#7c3aed', cyan: '#0891b2', green: '#16a34a', blue: '#2563eb' };
+
+    // ---------- Datum / Alter / Status ----------
+    const now = new Date();
+    const y = now.getFullYear();
+    const isBday = now.getMonth() === 9 && now.getDate() === 4;
+    let next = new Date(y, 9, 4);
+    if (now >= new Date(y, 9, 5)) next = new Date(y + 1, 9, 4);
+    const age = (isBday ? y : next.getFullYear()) - 2002;
+    document.getElementById('age').textContent = age;
+    const statusText = document.getElementById('status-text');
+    if (isBday) {
+      statusText.innerHTML = '<b>Heute</b> ist der grosse Tag. Die Karte ist überreicht.';
+      document.getElementById('h1').textContent = 'Happy Birthday, Big H';
+    } else {
+      const days = Math.ceil((next - new Date(y, now.getMonth(), now.getDate())) / 86400000);
+      statusText.innerHTML = 'Übergabe in <b>' + days + (days === 1 ? ' Tag' : ' Tagen') + '</b> · am 4. Oktober';
+    }
+
+    // ---------- Karte auf- und zuklappen ----------
+    const card = document.getElementById('card');
+    const cover = document.getElementById('cover');
+    const toggleBtn = document.getElementById('toggle');
+    function setOpen(open) {
+      card.classList.toggle('open', open);
+      cover.setAttribute('aria-label', open ? 'Karte schliessen' : 'Karte öffnen');
+      toggleBtn.querySelector('span').textContent = open ? 'Karte schliessen' : 'Karte öffnen';
+    }
+    // Auf schmalen Bildschirmen ist die Karte zu klein für beide Seiten nebeneinander:
+    // dort zeigt "geöffnet" die Innenseite mit den Unterschriften.
+    cover.addEventListener('click', () => setOpen(!card.classList.contains('open')));
+    cover.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!card.classList.contains('open')); } });
+    toggleBtn.addEventListener('click', () => setOpen(!card.classList.contains('open')));
+    if (isBday) setTimeout(() => { setOpen(true); BIGH.confettiRain(null, 60); }, 700);
+
+    // ---------- Unterschriften ----------
+    const sigs = document.getElementById('sigs');
+    function render(cards, highlightId) {
+      sigs.innerHTML = '';
+      if (!cards.length) {
+        sigs.innerHTML = '<div class="sig-empty">Noch leer. Sei die erste Unterschrift.</div>';
+      }
+      cards.slice().reverse().forEach((c, i) => {
+        const d = document.createElement('div');
+        d.className = 'sig c-' + (COLORS[c.color] ? c.color : 'rose') + ' w' + (i % 3 + 1) + (c.id === highlightId ? ' new' : '');
+        const t = document.createElement('span');
+        t.textContent = c.message;
+        const b = document.createElement('b');
+        b.textContent = '– ' + c.name;
+        d.append(t, b);
+        if (isAdmin) {
+          const x = document.createElement('button');
+          x.className = 'del'; x.type = 'button'; x.title = 'Löschen';
+          x.innerHTML = BIGH.icon('x');
+          x.addEventListener('click', () => del(c.id));
+          b.appendChild(x);
+        }
+        sigs.appendChild(d);
+      });
+      document.getElementById('count').textContent = cards.length ? cards.length + (cards.length === 1 ? ' Unterschrift' : ' Unterschriften') : '';
+      if (highlightId) sigs.scrollTop = sigs.scrollHeight;
+    }
+    async function load(highlightId) {
+      try {
+        const r = await fetch(API, { cache: 'no-store' });
+        if (!r.ok) throw new Error(r.status);
+        const data = await r.json();
+        render(data.cards || [], highlightId);
+      } catch (e) {
+        sigs.innerHTML = '<div class="sig-empty">Die Unterschriften sind gerade baden. Versuch es später nochmal.</div>';
+      }
+    }
+
+    // ---------- Formular ----------
+    let color = 'rose';
+    const sw = document.getElementById('swatches');
+    Object.entries(COLORS).forEach(([k, v]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.style.background = v;
+      b.style.color = v;
+      b.setAttribute('aria-label', 'Farbe ' + k);
+      b.setAttribute('aria-pressed', k === color ? 'true' : 'false');
+      b.addEventListener('click', () => {
+        color = k;
+        sw.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+        updatePreview();
+      });
+      sw.appendChild(b);
+    });
+    const message = document.getElementById('message');
+    const nameEl = document.getElementById('name');
+    const preview = document.getElementById('preview');
+    function updatePreview() {
+      preview.style.color = COLORS[color];
+      preview.textContent = (message.value.trim() || 'Dein Gruss in Handschrift') + (nameEl.value.trim() ? ' – ' + nameEl.value.trim() : '');
+      document.getElementById('cnt').textContent = message.value.length + ' / 280';
+    }
+    message.addEventListener('input', updatePreview);
+    nameEl.addEventListener('input', updatePreview);
+    updatePreview();
+
+    const msgEl = document.getElementById('msg');
+    function setMsg(t, ok) { msgEl.textContent = t; msgEl.className = 'msg ' + (ok ? 'ok' : 'err'); }
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = nameEl.value.trim();
+      const text = message.value.trim();
+      if (!name) { setMsg('Bitte gib deinen Namen ein.', false); return; }
+      if (text.length < 2) { setMsg('Schreib wenigstens ein paar Worte.', false); return; }
+      const btn = document.getElementById('submit');
+      btn.disabled = true;
+      setMsg('Wird unterschrieben …', true);
+      try {
+        const r = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, message: text, color, website: document.getElementById('website').value })
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || 'Fehler ' + r.status);
+        setMsg('Danke! Deine Unterschrift ist auf der Karte.', true);
+        message.value = '';
+        updatePreview();
+        setOpen(true);
+        document.getElementById('card').scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth', block: 'center' });
+        BIGH.confettiRain(null, 40);
+        load(data.card && data.card.id);
+      } catch (err) {
+        setMsg(err.message === 'Failed to fetch' ? 'Server nicht erreichbar.' : err.message, false);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Admin: karte.unoslapis.ch/#admin -> Löschknöpfe (Token aus .env)
+    async function del(id) {
+      let token = '';
+      try { token = sessionStorage.getItem('bigh-gb-token') || ''; } catch (e) { /* egal */ }
+      if (!token) { token = prompt('Admin-Token:') || ''; if (!token) return; }
+      if (!confirm('Unterschrift wirklich löschen?')) return;
+      const r = await fetch(API + '/' + encodeURIComponent(id), { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+      if (r.ok) { try { sessionStorage.setItem('bigh-gb-token', token); } catch (e) { /* egal */ } BIGH.toast('Gelöscht'); load(); }
+      else { try { sessionStorage.removeItem('bigh-gb-token'); } catch (e) { /* egal */ } BIGH.toast('Löschen fehlgeschlagen (' + r.status + ')'); }
+    }
+
+    load();
+    setInterval(() => { if (!document.hidden) load(); }, 60000);
+  })();
+  </script>
+</body>
+</html>

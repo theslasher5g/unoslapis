@@ -27,6 +27,7 @@ const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 3;
 
 const EMOJIS = ['🐎', '👑', '🥵', '💀', '😂', '🎮', '🍜', '💜', '🔥', '🌱', '🎂', '🗡️'];
+const CARD_COLORS = ['rose', 'amber', 'violet', 'cyan', 'green', 'blue'];
 const TAGS = ['Dating', 'Gaming', 'Geburtstag', 'Ausrede gehört', 'Zufällig vorbei', 'Katze gerettet'];
 
 function clean(str, max) {
@@ -77,6 +78,21 @@ const COLLECTIONS = {
         average: items.length ? Math.round(sum / items.length * 10) / 10 : 0,
         distribution: dist // Index 0 = 1 Stern … Index 4 = 5 Sterne
       };
+    }
+  },
+  cards: {
+    file: path.join(DATA_DIR, 'cards.json'),
+    rateMsg: 'Du hast schon unterschrieben. Warte ein paar Minuten.',
+    validate(data) {
+      const name = clean(data.name, 30).replace(/\s+/g, ' ');
+      const message = clean(data.message, 280);
+      const color = CARD_COLORS.includes(data.color) ? data.color : CARD_COLORS[0];
+      if (name.length < 1) return { error: 'Name fehlt' };
+      if (message.length < 2) return { error: 'Glückwunsch ist zu kurz' };
+      return { name, message, color };
+    },
+    list(items) {
+      return { cards: items.slice(0, 300), total: items.length };
     }
   }
 };
@@ -166,8 +182,9 @@ function handlePost(req, res, name, c) {
       console.error('Speichern fehlgeschlagen:', e.message);
       return send(res, 500, { error: 'Speichern fehlgeschlagen' });
     }
-    // Antwort-Schlüssel wie bisher: "entry" fürs Gästebuch, "review" für Bewertungen
-    return send(res, 201, { [name === 'entries' ? 'entry' : 'review']: item });
+    // Antwort-Schlüssel: "entry" fürs Gästebuch, "review" für Bewertungen, "card" für die Karte
+    const KEY = { entries: 'entry', reviews: 'review', cards: 'card' };
+    return send(res, 201, { [KEY[name]]: item });
   });
 }
 
@@ -191,7 +208,7 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'GET' && p === '/api/health') return send(res, 200, { ok: true });
 
-  const m = p.match(/^\/api\/(entries|reviews)(?:\/([a-f0-9]{12}))?$/);
+  const m = p.match(/^\/api\/(entries|reviews|cards)(?:\/([a-f0-9]{12}))?$/);
   if (m) {
     const c = COLLECTIONS[m[1]];
     if (!m[2] && req.method === 'GET') return send(res, 200, c.list(c.items));
@@ -203,4 +220,4 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => console.log('Backend läuft auf Port ' + PORT + ' – ' +
-  COLLECTIONS.entries.items.length + ' Gästebuch-Einträge, ' + COLLECTIONS.reviews.items.length + ' Bewertungen'));
+  COLLECTIONS.entries.items.length + ' Gästebuch-Einträge, ' + COLLECTIONS.reviews.items.length + ' Bewertungen, ' + COLLECTIONS.cards.items.length + ' Karten-Grüsse'));

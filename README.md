@@ -1,10 +1,10 @@
-# 🐎 unoslapis.ch – Das Big H Universe
+# unoslapis.ch – Das Big H Universe
 
 Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslapis`). Stecher, Nerd, Goon-König, Legende.
 
 | Domain | Inhalt |
 |---|---|
-| `unoslapis.ch` | Dashboard: Glitch-Titel, Power-Level-Zähler (IT'S OVER 9000), Status-Ticker, Meme-Wall, „Nicht drücken"-Knopf |
+| `unoslapis.ch` | Dashboard: Übersicht aller Seiten nach Themen, Suche, Kennzahlen (Power Level, Tage bis zum Geburtstag), Meme-Wall, „Nicht drücken"-Knopf |
 | `dating.unoslapis.ch` | Kitschiger Liebesbrief. Der **Nein**-Knopf flieht vor Maus und Finger, der **Ja**-Knopf wird immer grösser. Am Ende gibt es eine Beziehungsurkunde. |
 | `overwatch.unoslapis.ch` | Play-of-the-Game-Intro, Career Profile, Stats, Top Heroes, Clips, Voice-Line-Soundboard (Sprachausgabe), Patch Notes |
 | `b-day.unoslapis.ch` | Countdown bis zum 4. Oktober, XP-Balken, Torte (Kerzen per Klick **oder Mikrofon** auspusten), Happy-Birthday-Melodie, Ballons, Wunschliste |
@@ -16,7 +16,7 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `touchgrass.unoslapis.ch` | Tage seit dem letzten Grasskontakt, interaktive Wiese, „nach draussen schicken"-Animation |
 | `waifu.unoslapis.ch` | Waifu-Tierliste mit Drag & Drop (oder antippen), seine „offizielle" Liste, als Text kopieren |
 | `quotes.unoslapis.ch` | Hall of Fame seiner Zitate, Zitat des Tages, Filter, Motivationsposter-Modus |
-| `guestbook.unoslapis.ch` | Gästebuch im 2003-Stil. Einträge werden **wirklich gespeichert** (eigenes Backend) |
+| `guestbook.unoslapis.ch` | Gästebuch. Einträge werden **wirklich gespeichert** (eigenes Backend) |
 | `excuses.unoslapis.ch` | Ausreden-Generator als Spielautomat (3 Situationen), Jackpot: „Ich muss baden gehen", Kopieren-Knopf |
 | `horoskop.unoslapis.ch` | Astro-Lapis: tägliches Horoskop für alle 12 Sternzeichen, Big H (Waage) als Spezial, Partner-Check |
 | `merch.unoslapis.ch` | Fake-Shop mit Warenkorb, Sale-Countdown und „Bestellung" (fragt nichts ab, verschickt nichts) |
@@ -24,6 +24,11 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `wordle.unoslapis.ch` | unoslapis Wordle: Wort des Tages (für alle gleich) + Endlos-Modus, Statistik, Teilen als Emoji-Raster |
 | `bewertungen.unoslapis.ch` | „Goongle"-Unternehmensprofil: Big H als Sehenswürdigkeit mit Öffnungszeiten, Stosszeiten, Q&A. Besucher können **echte Rezensionen** mit Sternen schreiben (gespeichert im Backend) |
 | `tinder.unoslapis.ch` | „Hinder"-Dating-Profil von Alastor: Karte wischen, Fotos durchtippen, Nope bringt nichts, bei Match antwortet er im Chat |
+| `wrapped.unoslapis.ch` | **Big H Wrapped** im Story-Format: 4'269 h Overwatch, Top 0,01 % Hazbin Hotel, Top-Songs, Top-Ausrede, Hörer-Persönlichkeit, Audio-Aura, Zusammenfassung zum Teilen (Tippen = weiter, Halten = Pause) |
+| `wiki.unoslapis.ch` | **Bigipedia**-Artikel über Alastor Lapis: Infobox, Fürst von Lapisien (2011–2019), nackte Everest-Besteigung wie ein Löwe, Katzenrettung, Baden-Affäre, Auszeichnungen, Einzelnachweise |
+| `karte.unoslapis.ch` | **Digitale Geburtstagskarte** zum Aufklappen. Alle können unterschreiben (gespeichert im Backend), am 4. Oktober öffnet sie sich von selbst |
+
+**Geburtstags-Takeover:** Am 4. Oktober erscheint auf allen Seiten oben ein Banner „Heute wird Big H …" mit Link zur Karte und einmal Konfetti. Vorschau jederzeit mit `?bday=1` an der Adresse, z.B. `https://unoslapis.ch/?bday=1`.
 
 Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` (Big H Mode), oder einfach irgendwo `alastor`, `stecher`, `unoslapis`, `goon`, `nani`, `uwu`, `gg` (und ein geheimes Wort) tippen.
 
@@ -31,19 +36,20 @@ Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` 
 
 ```
 Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx      (alle Seiten, Routing per Hostname)
-                                                     └──► guestbook  (nur guestbook.…/api/* und bewertungen.…/api/*, speichert JSON)
+                                                     └──► guestbook  (nur /api/* von guestbook., bewertungen. und karte., speichert JSON)
 ```
 
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
-guestbook/             # Backend für Gästebuch + Bewertungen (Node, ohne Abhängigkeiten)
+guestbook/             # Backend für Gästebuch, Bewertungen und Geburtstagskarte (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
-  shared/              # style.css, fun.js, 404.html (gilt für alle Subdomains)
+  shared/              # style.css, fun.js, icons.svg, 404.html, img/ (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
   excuses/  horoskop/  merch/  discord/  wordle/  tinder/  bewertungen/
+  wrapped/  wiki/  karte/
 ```
 
 ## Deploy auf dem VPS
@@ -60,7 +66,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen`, `wrapped`, `wiki`, `karte` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 
@@ -93,12 +99,12 @@ Die Seiten sind nur read-only eingebunden. HTML ändern, `git pull`, fertig, ohn
 Nach Änderungen an `Caddyfile` oder `default.conf`: `docker compose restart`.
 Nach Änderungen am Gästebuch-Backend oder neuen Services: `docker compose up -d --build`.
 
-### Gästebuch & Bewertungen moderieren
+### Gästebuch, Bewertungen & Karte moderieren
 
 1. In `.env` ein geheimes `GUESTBOOK_ADMIN_TOKEN` setzen (z.B. `openssl rand -hex 24`) und `docker compose up -d`.
-2. `https://guestbook.unoslapis.ch/#admin` bzw. `https://bewertungen.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint 🗑️, beim ersten Löschen wird nach dem Token gefragt.
+2. `https://guestbook.unoslapis.ch/#admin`, `https://bewertungen.unoslapis.ch/#admin` bzw. `https://karte.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint ein ×, beim ersten Löschen wird nach dem Token gefragt.
 
-Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json` und `reviews.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
+Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json`, `reviews.json` und `cards.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
 
 ## Anpassen
 
@@ -117,6 +123,11 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Wordle** (`sites/wordle/index.html`): Liste `WORDS` (5 Buchstaben A–Z + Erklärung)
 - **Bewertungen** (`sites/bewertungen/index.html`): erfundene „Local Guide"-Rezensionen in `SEED`
 - **Tinder** (`sites/tinder/index.html`): `PHOTOS`, `REPLIES`, Profiltexte direkt im HTML
+- **Wrapped** (`sites/wrapped/index.html`): Liste `SLIDES` (Hintergrund + Inhalt pro Slide), `DURATION`
+- **Wiki** (`sites/wiki/index.html`): Artikeltext und Infobox direkt im HTML; das Inhaltsverzeichnis baut sich automatisch aus den Überschriften
+- **Karte** (`sites/karte/index.html`): Text auf der Innenseite direkt im HTML
+- **Foto von Big H**: ein Bild als `sites/shared/img/bigh.jpg` ablegen – es erscheint automatisch auf Dashboard, LinkedOut, Hinder, Goongle, Bigipedia und Wrapped. Ohne Bild wird ein „H"-Monogramm angezeigt.
+- **Icons**: `sites/shared/icons.svg` (Lucide, ISC-Lizenz), einbinden mit `<i data-icon="name"></i>` bzw. `BIGH.icon('name')`
 - **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`
 
