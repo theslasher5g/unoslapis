@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Big'H Times – Alle Nachrichten, die sich zum Goonen eignen</title>
 <meta name="description" content="The Big'H Times: Die seriöseste Zeitung über Alastor Lapis. Katzen gerettet, Autos verschenkt, Goth-Baddies gejagt.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23f4efe4'/><text x='50' y='72' font-size='66' font-family='Georgia,serif' font-weight='700' text-anchor='middle' fill='%23111111'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;900&display=swap">
 <style>
@@ -72,7 +72,8 @@
   hr.thick { border: 0; border-top: 3px double var(--rule); margin: 16px 0; }
 
   .photo { position: relative; margin: 6px 0 4px; border: 1px solid var(--rule); background: #bdb6a6; display: grid; place-items: center; overflow: hidden; }
-  .photo .emo { font-size: clamp(3.5rem, 12vw, 6.5rem); filter: grayscale(1) contrast(1.3) brightness(.9); letter-spacing: 8px; }
+  .photo .emo { display: flex; gap: clamp(10px, 3vw, 22px); color: #2b2822; opacity: .8; }
+  .photo .emo .icon { width: clamp(44px, 10vw, 76px); height: clamp(44px, 10vw, 76px); stroke-width: 1.4; }
   .photo::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(0,0,0,.22) 1px, transparent 1.4px); background-size: 4px 4px; mix-blend-mode: multiply; }
   .photo.tall { aspect-ratio: 16 / 9; }
   .photo.sq { aspect-ratio: 4 / 3; }
@@ -92,7 +93,8 @@
   .comic { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--rule); }
   .comic div { border-right: 2px solid var(--rule); padding: 10px 6px; text-align: center; font-size: .78rem; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
   .comic div:last-child { border-right: 0; }
-  .comic .fig { font-size: 2.2rem; filter: grayscale(1); }
+  .comic .fig { display: flex; justify-content: center; gap: 4px; color: #2b2822; margin-bottom: 6px; }
+  .comic .fig .icon { width: 30px; height: 30px; stroke-width: 1.6; }
   .end-mark { text-align: center; font-size: 1.1rem; margin-top: 10px; }
   .toc a { color: var(--ink); cursor: pointer; }
 
@@ -125,7 +127,7 @@
 
         <div class="grid">
           <div>
-            <div class="photo tall"><span class="emo">🔥🏠🐈</span></div>
+            <div class="photo tall"><span class="emo"><i data-icon="flame"></i><i data-icon="house"></i><i data-icon="cat"></i></span></div>
             <div class="caption">Augenblicke vor der Rettung: Das Haus brannte, die Katze schrie, Big H stellte sein Ranked-Game auf Pause. Foto: Big'H Times / Zeugen</div>
             <div class="byline">Von <b>Dora Diktiergerät</b> · Chefreporterin</div>
             <div class="cols-2">
@@ -170,7 +172,7 @@
           <div>
             <h2 class="hl xl">„Ich hatte Kleingeld übrig": Big H kauft Freund einfach so ein Auto</h2>
             <div class="byline">Von <b>Konrad Kontoauszug</b> · Wirtschaftsredaktion</div>
-            <div class="photo sq"><span class="emo">🚗🎀💸</span></div>
+            <div class="photo sq"><span class="emo"><i data-icon="gift"></i><i data-icon="banknote"></i></span></div>
             <div class="caption">Das Geschenk: Ein nagelneuer Sportwagen mit Schleife. Der Beschenkte weint seit drei Tagen.</div>
             <div class="cols-2">
               <p class="body">ZÜRICH – Man stelle sich vor: Man trifft sich mit einem Kollegen auf einen Kaffee und fährt mit einem Sportwagen nach Hause. Genau das ist einem Freund von Alastor Lapis letzte Woche passiert. „Er hat gesagt, mein alter Wagen sei ‚cringe'. Dann hat er mir einfach die Schlüssel gegeben", erzählt der sichtlich erschütterte Beschenkte.</p>
@@ -214,7 +216,7 @@
         <h2 class="hl xxl" style="font-size:clamp(1.8rem,6vw,3.4rem)">Auf der Jagd nach den gothischen Schlechties</h2>
         <p class="deck">Unsere Reporterin hat Alastor Lapis eine Nacht lang begleitet: auf seiner Expedition in die dunkelste Subkultur der Schweiz, auf der Suche nach dem sagenumwobenen „Goth Baddie"</p>
         <div class="byline" style="text-align:center">Von <b>Morticia Mitternacht</b> · Sonderkorrespondentin für Schwarze Kleidung</div>
-        <div class="photo tall"><span class="emo">🖤🦇🕯️⛓️</span></div>
+        <div class="photo tall"><span class="emo"><i data-icon="moon"></i><i data-icon="ghost"></i><i data-icon="skull"></i></span></div>
         <div class="caption">Revier der Goth-Baddies: Ein Club irgendwo in Zürich, 23:47 Uhr. Big H hat sich getarnt (schwarzer Hoodie, wie immer).</div>
         <div class="cols-3">
           <p class="body">ZÜRICH, 23:12 UHR – Der Nebel hängt tief über der Langstrasse, als Alastor Lapis aus dem Taxi steigt. Er trägt Schwarz. Nicht aus Tarnung, betont er, sondern „weil ich immer Schwarz trage, das ist mein Lore". In der Hand: ein Monster Energy. Im Blick: pure Entschlossenheit.</p>
@@ -229,7 +231,7 @@
         <div class="box" style="margin-top:12px">
           <h4>Feldnotizen von Big H (Auszug)</h4>
           <ul>
-            <li>23:15 – Türsteher hat mich angeschaut. Respekt verdient. 💪</li>
+            <li>23:15 – Türsteher hat mich angeschaut. Respekt verdient.</li>
             <li>23:40 – Musik zu laut, kann nicht rizzen. Plan B: mysteriös in der Ecke stehen.</li>
             <li>00:10 – Stehe seit 30 Min in der Ecke. Bin sehr mysteriös.</li>
             <li>01:20 – Fledermaus-Sticker erhalten. Das ist quasi eine Verlobung.</li>
@@ -264,7 +266,7 @@
               <h4>Auszeichnung</h4>
               <p style="margin:0;font-size:.95rem"><b>Stecher des Jahres 2026:</b><br>Alastor Lapis (zum 3. Mal in Folge). Die Jury: „Es gab keine ernsthafte Konkurrenz."</p>
             </div>
-            <div class="photo sq"><span class="emo">🏆😈</span></div>
+            <div class="photo sq"><span class="emo"><i data-icon="trophy"></i><i data-icon="crown"></i></span></div>
             <div class="caption">Der Preisträger bei der Verleihung. Er hat die Rede übersprungen, um Valorant zu spielen.</div>
             <h3 class="hl m">Studie: Blickkontakt von Big H tödlicher als Widowmaker-Headshot</h3>
             <p class="body" style="font-size:.9rem">Testpersonen berichten von Herzrasen, Schwindel und dem plötzlichen Wunsch, ein Overwatch-Konto zu erstellen.</p>
@@ -300,15 +302,15 @@
                 <tr><td>Big H – Gras</td><td class="down">0 : 1</td></tr>
               </table>
             </div>
-            <div class="photo sq"><span class="emo">🔫💨</span></div>
+            <div class="photo sq"><span class="emo"><i data-icon="crosshair"></i><i data-icon="wind"></i></span></div>
             <div class="caption">Jett in Aktion. Man sieht nur einen Windhauch. Mehr sieht der Gegner auch nicht.</div>
           </aside>
         </div>
         <hr class="thick">
         <div class="comic" aria-label="Comic">
-          <div><span class="fig">🧍💻</span><span>„Nur noch ein Game."</span></div>
-          <div><span class="fig">🌅🧍💻</span><span>„Nur noch EIN Game."</span></div>
-          <div><span class="fig">💀💻</span><span>„…gg."</span></div>
+          <div><span class="fig"><i data-icon="user"></i><i data-icon="monitor"></i></span><span>„Nur noch ein Game."</span></div>
+          <div><span class="fig"><i data-icon="sun"></i><i data-icon="user"></i><i data-icon="monitor"></i></span><span>„Nur noch EIN Game."</span></div>
+          <div><span class="fig"><i data-icon="skull"></i><i data-icon="monitor"></i></span><span>„…gg."</span></div>
         </div>
         <p class="caption" style="text-align:center;margin-top:4px">Comic: „Der Goon-König" von Zeichner Pinsel-Paul</p>
         <button class="corner left" type="button" data-dir="prev" aria-label="Vorherige Seite"></button>
@@ -339,7 +341,7 @@
             <div class="classified"><b>Suche:</b> Goth-Freundin. <b>Biete:</b> Steam-Library, 3 Tempo-Packungen, Loyalität. Chiffre 69</div>
             <div class="classified"><b>Verkaufe:</b> Wecker, ungenutzt. Nie gebraucht. Chiffre 420</div>
             <div class="classified"><b>Verschenke:</b> Sportwagen. Nur an Freunde. Siehe Seite 2.</div>
-            <div class="classified"><b>Gesucht:</b> Gras. Zum Anfassen. Belohnung. Chiffre 🌱</div>
+            <div class="classified"><b>Gesucht:</b> Gras. Zum Anfassen. Belohnung. Chiffre GRAS</div>
           </div>
           <div class="box">
             <h4>Rätsel</h4>

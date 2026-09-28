@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>🟩 unoslapis Wordle – Das tägliche Big-H-Worträtsel</title>
+<title>unoslapis Wordle – Das tägliche Big-H-Worträtsel</title>
 <meta name="description" content="Errate das Wort des Tages aus dem Big-H-Universum in 6 Versuchen.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟩</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23538d4e'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23ffffff'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
   :root { --ok: #538d4e; --near: #c9b458; --no: #3a3a3c; --tile: #121213; --line: #3a3a3c; --key: #818384; }
   body { background: #121213; }
   .wrap { width: min(520px, 100% - 24px); padding: 60px 0 16px; text-align: center; }
   header.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
-  header.top h1 { margin: 0; font-family: var(--title); font-size: clamp(1.8rem, 7vw, 2.6rem); letter-spacing: 2px; line-height: 1; }
+  header.top h1 { margin: 0; font: 700 clamp(1.6rem, 6vw, 2.2rem)/1 var(--title); letter-spacing: -.02em; }
   header.top h1 span { color: var(--ok); }
-  .icon-btn { background: none; border: 0; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 6px; }
+  .icon-btn { background: none; border: 0; color: #d4d4d8; font-size: 1.3rem; cursor: pointer; padding: 6px; display: grid; place-items: center; }
+  .icon-btn:hover { color: #fff; }
+  .modes button { display: inline-flex; align-items: center; gap: 6px; }
   .modes { display: flex; justify-content: center; gap: 6px; margin: 12px 0 4px; }
   .modes button { background: #1f1f21; color: #ddd; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font: 700 .85rem var(--body); cursor: pointer; }
   .modes button.on { background: var(--ok); border-color: var(--ok); color: #fff; }
@@ -49,7 +51,7 @@
   .modal { background: #1f1f21; border: 1px solid var(--line); border-radius: 14px; max-width: 420px; width: 100%; padding: 22px; position: relative; text-align: center; animation: rise .3s ease; }
   @keyframes rise { from { transform: translateY(24px); opacity: 0; } }
   .modal .x { position: absolute; top: 8px; right: 10px; }
-  .modal h2 { margin: 0 0 10px; font-family: var(--title); letter-spacing: 1px; font-size: 1.8rem; }
+  .modal h2 { margin: 0 0 10px; font: 600 1.6rem var(--title); letter-spacing: -.01em; }
   .word-reveal { font: 900 2rem var(--body); letter-spacing: 6px; color: var(--ok); }
   .explain { color: #cfcfcf; margin: 6px 0 14px; }
   .stats { display: flex; justify-content: center; gap: 16px; margin: 10px 0; }
@@ -69,13 +71,13 @@
 <body data-back data-no-eggs>
   <main class="wrap">
     <header class="top">
-      <button class="icon-btn" id="help-btn" type="button" aria-label="Anleitung">❔</button>
+      <button class="icon-btn" id="help-btn" type="button" aria-label="Anleitung"><i data-icon="circle-help"></i></button>
       <h1>unoslapis <span>Wordle</span></h1>
-      <button class="icon-btn" id="stats-btn" type="button" aria-label="Statistik">📊</button>
+      <button class="icon-btn" id="stats-btn" type="button" aria-label="Statistik"><i data-icon="chart-column"></i></button>
     </header>
     <div class="modes">
-      <button type="button" id="mode-daily" class="on">📅 Wort des Tages</button>
-      <button type="button" id="mode-endless">♾️ Endlos</button>
+      <button type="button" id="mode-daily" class="on"><i data-icon="calendar"></i>Wort des Tages</button>
+      <button type="button" id="mode-endless"><i data-icon="repeat"></i>Endlos</button>
     </div>
     <div class="info" id="info"></div>
 
@@ -85,15 +87,15 @@
 
   <div class="modal-bg" id="end-modal" role="dialog" aria-modal="true" aria-labelledby="end-title">
     <div class="modal">
-      <button class="icon-btn x" type="button" data-close aria-label="Schliessen">✕</button>
+      <button class="icon-btn x" type="button" data-close aria-label="Schliessen"><i data-icon="x"></i></button>
       <h2 id="end-title"></h2>
       <div class="word-reveal" id="end-word"></div>
       <div class="explain" id="end-explain"></div>
       <div class="stats" id="stats"></div>
       <div class="dist" id="dist"></div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn pink" id="share" type="button">📤 Teilen</button>
-        <button class="btn cyan" id="again" type="button">♾️ Nochmal (Endlos)</button>
+        <button class="btn pink" id="share" type="button"><i data-icon="share-2"></i>Teilen</button>
+        <button class="btn cyan" id="again" type="button"><i data-icon="repeat"></i>Nochmal (Endlos)</button>
       </div>
       <div class="next" id="next"></div>
     </div>
@@ -101,7 +103,7 @@
 
   <div class="modal-bg" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
     <div class="modal help">
-      <button class="icon-btn x" type="button" data-close aria-label="Schliessen">✕</button>
+      <button class="icon-btn x" type="button" data-close aria-label="Schliessen"><i data-icon="x"></i></button>
       <h2 id="help-title">So geht's</h2>
       <p>Errate das Wort in 6 Versuchen. Jedes Wort hat 5 Buchstaben und stammt aus dem Big-H-Universum (Gaming, Anime, Ausreden, Geburtstag …).</p>
       <div class="ex"><div class="tile ok">L</div><div class="tile">A</div><div class="tile">P</div><div class="tile">I</div><div class="tile">S</div></div>
@@ -145,7 +147,7 @@
       ['KERZE', 'Auspusten! Am besten mit dem Mikrofon.'],
       ['OTAKU', 'Kein Schimpfwort. Eine Auszeichnung.'],
       ['NINJA', 'Genji ist ein Cyborg-Ninja. Er auch (im Kopf).'],
-      ['GOTHS', 'Die gothischen Schlechties, die er jagt. 🖤'],
+      ['GOTHS', 'Die gothischen Schlechties, die er jagt.'],
       ['STERN', 'Die Sterne lügen nicht. Er schon. (horoskop.unoslapis.ch)'],
       ['REYNA', 'Valorant-Agentin. Unter seinen Waifus im B-Tier.'],
       ['TEAMS', 'Team diff. Immer das Team.'],
@@ -156,7 +158,7 @@
     ].filter(([w]) => /^[A-Z]{5}$/.test(w)); // Sicherheitsnetz gegen Tippfehler in der Liste
 
     const START = new Date(2026, 8, 25); // Tag 1 = 25.09.2026
-    const KEYS = ['QWERTZUIOP', 'ASDFGHJKL', '↵YXCVBNM⌫'];
+    const KEYS = ['QWERTZUIOP', 'ASDFGHJKL', '↵YXCVBNM'];
 
     // Feste, gemischte Reihenfolge, damit Wörter nicht alphabetisch/vorhersehbar kommen
     const ORDER = WORDS.map((_, i) => i);
@@ -193,7 +195,7 @@
         const b = document.createElement('button');
         b.type = 'button';
         if (ch === '↵') { b.textContent = 'Enter'; b.className = 'wide'; b.dataset.k = 'Enter'; }
-        else if (ch === '⌫') { b.textContent = '⌫'; b.className = 'wide'; b.dataset.k = 'Backspace'; b.setAttribute('aria-label', 'Löschen'); }
+        else if (ch === '') { b.textContent = ''; b.className = 'wide'; b.dataset.k = 'Backspace'; b.setAttribute('aria-label', 'Löschen'); }
         else { b.textContent = ch; b.dataset.k = ch; keyEls[ch] = b; }
         r.appendChild(b);
       });
@@ -278,7 +280,7 @@
       }
     }
 
-    const WIN_MSGS = ['Goon-König-Niveau! 👑', 'Stecher-Präzision! 🎯', 'Sehr gut! 🔥', 'Solide! 💪', 'Knapp! 😅', 'Puh! Gerade noch 🛁'];
+    const WIN_MSGS = ['Goon-König-Niveau!', 'Stecher-Präzision!', 'Sehr gut!', 'Solide!', 'Knapp!', 'Puh! Gerade noch'];
     let busy = false;
     function submit() {
       if (cur.length < 5) {
@@ -303,7 +305,7 @@
         if (win) {
           [...board.children[r].children].forEach((t, i) => setTimeout(() => t.classList.add('win'), i * 100));
           msg(WIN_MSGS[r]);
-          BIGH.confettiRain(['🟩', '👑', '🎉', '🐎'], 60);
+          BIGH.confettiRain(null, 50);
         } else {
           msg(answer);
         }
@@ -358,7 +360,7 @@
     }
 
     function showEnd(win, fresh) {
-      document.getElementById('end-title').textContent = win ? '🎉 Gewonnen!' : '💀 Verloren';
+      document.getElementById('end-title').textContent = win ? 'Gewonnen!' : 'Verloren';
       document.getElementById('end-word').textContent = answer;
       document.getElementById('end-explain').textContent = explain;
       const showStats = mode === 'daily';
@@ -394,7 +396,7 @@
     document.getElementById('stats-btn').addEventListener('click', () => {
       const wasMode = mode;
       if (done) { showEnd(guesses.includes(answer), false); return; }
-      document.getElementById('end-title').textContent = '📊 Statistik';
+      document.getElementById('end-title').textContent = 'Statistik';
       document.getElementById('end-word').textContent = '';
       document.getElementById('end-explain').textContent = wasMode === 'daily' ? 'Das heutige Wort ist noch offen.' : 'Statistik zählt nur das Wort des Tages.';
       document.getElementById('stats').style.display = '';

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Operation Freundin – Big H Countdown</title>
 <meta name="description" content="Countdown: In einem Jahr hat Big H seine erste Freundin. Vielleicht.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💔</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f43f5e'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
   :root { --accent: #fb7185; }
@@ -221,10 +221,10 @@
       renderVotes();
       if (k === 'y') {
         BIGH.toast('Mutig. Du bist ein echter Freund.');
-        BIGH.burst(e.clientX, e.clientY, ['', '', ''], 16);
+        BIGH.burst(e.clientX, e.clientY, null, 16);
       } else {
         BIGH.toast('Ehrlich. Brutal, aber ehrlich.');
-        BIGH.burst(e.clientX, e.clientY, ['', '', ''], 16);
+        BIGH.burst(e.clientX, e.clientY, null, 16);
       }
     }
     document.getElementById('bet-yes').addEventListener('click', (e) => vote('y', e));
@@ -244,7 +244,6 @@
     for (let i = 0; i < 3; i++) addTip();
     document.getElementById('more-tip').addEventListener('click', addTip);
 
-    BIGH.emojiBackground(['', '', '', '', '', ''], 1200);
   })();
   </script>
 </body>

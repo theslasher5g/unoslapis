@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Waifu Tier List – Goon-König Edition</title>
 <meta name="description" content="Die offizielle Waifu-Tierliste von Alastor Lapis. Erstell deine eigene.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23a78bfa'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <style>
   :root { --accent: #a78bfa; }
@@ -193,7 +193,7 @@
       save();
       if (zone.dataset.tier === 'S') {
         const r = el.getBoundingClientRect();
-        BIGH.burst(r.left + r.width / 2, r.top + r.height / 2, ['', '', ''], 14);
+        BIGH.burst(r.left + r.width / 2, r.top + r.height / 2, null, 14);
       }
       if (el.dataset.name === 'Eine echte Frau' && zone.dataset.tier === 'S') BIGH.toast('Eine echte Frau in S-Tier?! Der Goon-König ist verwirrt.');
       if (el.dataset.name === 'Sein Body-Pillow' && zone.dataset.tier !== 'S' && zone.dataset.tier !== 'pool') BIGH.toast('Big H: „Nimm das sofort zurück."');

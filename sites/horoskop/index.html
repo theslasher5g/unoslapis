@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Astro-Lapis – Das Big H Horoskop</title>
 <meta name="description" content="Das tägliche Horoskop von Astro-Lapis. Die Sterne lügen nicht. Big H schon.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23a78bfa'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap">
 <style>
@@ -245,7 +245,7 @@
       b.querySelector('.s').textContent = sg.s;
       b.querySelector('.nm').textContent = sg.n;
       b.querySelector('small').textContent = sg.d;
-      b.addEventListener('click', (e) => { show(i, true); BIGH.burst(e.clientX, e.clientY, ['', '', sg.s], 10); });
+      b.addEventListener('click', (e) => { show(i, true); BIGH.burst(e.clientX, e.clientY, null, 10); });
       signsEl.appendChild(b);
     });
     let saved = null;
@@ -280,7 +280,7 @@
       VERDICTS.forEach(([min, t]) => { if (pct >= min) v = t; });
       if (i === 6) v = 'Waage + Waage: Er würde sich selbst daten. Tut er praktisch schon.';
       vEl.textContent = v;
-      if (pct >= 75) BIGH.confettiRain(['', '', ''], 40);
+      if (pct >= 75) BIGH.confettiRain(null, 40);
     });
   })();
   </script>
