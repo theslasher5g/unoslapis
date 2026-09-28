@@ -21,13 +21,13 @@
 }
 
 # Alle statischen Seiten
-{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN}, excuses.{$DOMAIN}, horoskop.{$DOMAIN}, merch.{$DOMAIN}, discord.{$DOMAIN}, tinder.{$DOMAIN}, wrapped.{$DOMAIN}, wiki.{$DOMAIN}, casino.{$DOMAIN}, museum.{$DOMAIN} {
+{$DOMAIN}, dating.{$DOMAIN}, overwatch.{$DOMAIN}, b-day.{$DOMAIN}, goon.{$DOMAIN}, girlfriend.{$DOMAIN}, linkedin.{$DOMAIN}, nofap.{$DOMAIN}, touchgrass.{$DOMAIN}, waifu.{$DOMAIN}, quotes.{$DOMAIN}, news.{$DOMAIN}, excuses.{$DOMAIN}, horoskop.{$DOMAIN}, merch.{$DOMAIN}, discord.{$DOMAIN}, tinder.{$DOMAIN}, wrapped.{$DOMAIN}, wiki.{$DOMAIN}, museum.{$DOMAIN}, bigflix.{$DOMAIN} {
 	import common
 	reverse_proxy web:80
 }
 
 # Gästebuch, Bewertungen, Karte, Wordle- und Spiel-Rangliste: Seite von nginx, /api/* vom Backend
-guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, game.{$DOMAIN} {
+guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, game.{$DOMAIN}, casino.{$DOMAIN} {
 	import common
 	handle /api/* {
 		request_body {
@@ -38,6 +38,11 @@ guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, g
 	handle {
 		reverse_proxy web:80
 	}
+}
+
+# Kurzadresse für die Booster-Packs (gleiches Konto wie im Casino, darum gleiche Subdomain)
+packs.{$DOMAIN} {
+	redir https://casino.{$DOMAIN}/packs/ 302
 }
 
 www.{$DOMAIN} {

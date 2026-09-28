@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bigflix – Serien und Filme über Big H</title>
+<meta name="description" content="Bigflix: Das einzige Streaming-Angebot mit ausschliesslich Big-H-Inhalten. Ich muss baden gehen, Breaking Big, Stranger Rangs und mehr.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23141414'/><text x='50' y='74' font-size='72' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='%23e50914'>B</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --red: #e50914; --nf-bg: #141414; --accent: #e50914; }
+  body { background: var(--nf-bg); color: #fff; }
+  .bigh-back { background: rgba(0,0,0,.7); }
+  .logo { font: 900 1.7rem/1 'Arial Black', var(--title); color: var(--red); letter-spacing: -.02em; text-transform: uppercase; }
+
+  /* ---------- Profile ---------- */
+  .who { position: fixed; inset: 0; z-index: 70; background: var(--nf-bg); display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 24px; text-align: center; }
+  .who[hidden] { display: none; }
+  .who h1 { font: 500 clamp(1.8rem, 5vw, 3.2rem) var(--body); margin: 0 0 28px; letter-spacing: -.01em; }
+  .profiles { display: flex; gap: clamp(14px, 3vw, 28px); justify-content: center; flex-wrap: wrap; }
+  .profile { background: none; border: 0; color: #a3a3a3; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; font: 500 1rem var(--body); }
+  .profile .pic { width: clamp(90px, 14vw, 140px); aspect-ratio: 1; border-radius: 6px; overflow: hidden; border: 3px solid transparent; transition: border-color .15s, transform .15s; background: #333; }
+  .profile .pic img { width: 100%; height: 100%; object-fit: cover; }
+  .profile:hover, .profile:focus-visible { color: #fff; }
+  .profile:hover .pic, .profile:focus-visible .pic { border-color: #fff; transform: scale(1.04); }
+  .who .kids { margin-top: 34px; border: 1px solid #808080; color: #808080; background: none; padding: 8px 20px; font: 500 .9rem var(--body); letter-spacing: .1em; cursor: pointer; }
+
+  /* ---------- Intro ---------- */
+  .intro { position: fixed; inset: 0; z-index: 75; background: #000; display: grid; place-items: center; pointer-events: none; }
+  .intro[hidden] { display: none; }
+  .intro .logo { font-size: clamp(3rem, 14vw, 8rem); animation: tadum 2.4s cubic-bezier(.3,.1,.2,1) forwards; text-shadow: 0 0 40px rgba(229,9,20,.4); }
+  @keyframes tadum { 0% { transform: scale(.6); opacity: 0; } 18% { opacity: 1; transform: scale(1); } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(6); opacity: 0; } }
+
+  /* ---------- Kopf ---------- */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 40; display: flex; align-items: center; gap: 26px; padding: 14px 4% 14px calc(4% + 130px); background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); transition: background .3s; }
+  body.has-bday-bar .nav { top: 42px; }
+  .nav.solid { background: var(--nf-bg); }
+  .nav .links { display: flex; gap: 18px; }
+  .nav a { color: #e5e5e5; text-decoration: none; font-size: .88rem; }
+  .nav a.on { color: #fff; font-weight: 600; }
+  .nav .sp { flex: 1; }
+  .nav .me { display: flex; align-items: center; gap: 8px; background: none; border: 0; color: #fff; cursor: pointer; font: 500 .85rem var(--body); }
+  .nav .me img { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; }
+  @media (max-width: 860px) { .nav .links { display: none; } .nav { padding-left: calc(16px + 120px); } }
+
+  /* ---------- Billboard ---------- */
+  .hero { position: relative; height: min(82vh, 720px); min-height: 460px; display: flex; align-items: flex-end; padding: 0 4% 12vh; overflow: hidden; }
+  .hero .bg { position: absolute; inset: 0; background: radial-gradient(circle at 75% 35%, #3b1d0e, transparent 55%), linear-gradient(120deg, #0b0b0b 30%, #2b1208 70%, #140a05); }
+  .hero .bg img { position: absolute; right: 0; top: 0; height: 100%; width: 62%; object-fit: cover; object-position: 50% 20%; filter: saturate(.85) contrast(1.05); -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%); mask-image: linear-gradient(90deg, transparent, #000 45%); opacity: .85; }
+  .hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--nf-bg)); }
+  .hero .txt { position: relative; z-index: 1; max-width: 560px; }
+  .hero .orig { display: flex; align-items: center; gap: 8px; font: 700 .8rem var(--body); letter-spacing: .3em; color: #d4d4d4; }
+  .hero .orig b { color: var(--red); font-family: 'Arial Black', sans-serif; font-size: 1.3rem; letter-spacing: 0; }
+  .hero h1 { font: 800 clamp(2.4rem, 7vw, 4.8rem)/.95 var(--title); letter-spacing: -.03em; margin: 12px 0 14px; text-shadow: 0 4px 20px rgba(0,0,0,.6); }
+  .hero .top10 { display: flex; align-items: center; gap: 8px; font: 600 1.05rem var(--body); margin-bottom: 10px; }
+  .hero .top10 span { background: var(--red); font: 800 .7rem/1 var(--body); padding: 4px 4px; border-radius: 2px; text-align: center; }
+  .hero p { font-size: 1.05rem; line-height: 1.45; color: #e5e5e5; text-shadow: 0 2px 8px rgba(0,0,0,.6); margin: 0 0 18px; }
+  .nfbtn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 4px; padding: 10px 22px; font: 700 1rem var(--body); cursor: pointer; }
+  .nfbtn.play { background: #fff; color: #000; }
+  .nfbtn.play:hover { background: rgba(255,255,255,.8); }
+  .nfbtn.info { background: rgba(109,109,110,.7); color: #fff; }
+  .nfbtn.info:hover { background: rgba(109,109,110,.5); }
+  .nfbtn .icon { width: 22px; height: 22px; }
+  .row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ---------- Reihen ---------- */
+  .rows { position: relative; z-index: 2; margin-top: -9vh; padding-bottom: 60px; }
+  .row { margin: 0 0 3vw; }
+  .row h2 { font: 600 clamp(1rem, 1.6vw, 1.35rem) var(--body); margin: 0 4% 10px; color: #e5e5e5; }
+  .strip { display: flex; gap: 8px; overflow-x: auto; padding: 8px 4% 18px; scroll-padding-inline: 4%; scroll-snap-type: x proximity; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .tile { position: relative; flex: none; width: clamp(200px, 22vw, 300px); aspect-ratio: 16 / 9; border-radius: 5px; overflow: hidden; cursor: pointer; background: #2a2a2a; scroll-snap-align: start; transition: transform .25s, box-shadow .25s; border: 0; padding: 0; color: #fff; text-align: left; }
+  .tile:hover, .tile:focus-visible { transform: scale(1.06); box-shadow: 0 12px 30px rgba(0,0,0,.6); z-index: 2; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .tile .shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.85), transparent 55%); }
+  .tile .t { position: absolute; left: 10px; right: 10px; bottom: 8px; font: 800 clamp(.95rem, 1.3vw, 1.15rem)/1.05 var(--title); letter-spacing: -.01em; text-shadow: 0 2px 6px rgba(0,0,0,.7); }
+  .tile .badge { position: absolute; top: 8px; left: 8px; font: 900 .7rem 'Arial Black', sans-serif; color: var(--red); }
+  .tile .bar { position: absolute; left: 10px; right: 10px; bottom: 4px; height: 3px; background: rgba(255,255,255,.3); }
+  .tile .bar i { display: block; height: 100%; background: var(--red); }
+  .tile.poster { width: clamp(130px, 13vw, 190px); aspect-ratio: 2 / 3; }
+  .rank { display: flex; align-items: flex-end; flex: none; cursor: pointer; background: none; border: 0; padding: 0; color: #fff; transition: transform .25s; }
+  .rank:hover { transform: scale(1.04); }
+  .rank .num { font: 900 clamp(7rem, 12vw, 11rem)/.75 'Arial Black', sans-serif; color: var(--nf-bg); -webkit-text-stroke: 3px #595959; margin-right: -12px; letter-spacing: -.08em; }
+  .rank .tile { width: clamp(110px, 10vw, 150px); aspect-ratio: 2 / 3; }
+  .rank .tile:hover { transform: none; }
+
+  /* ---------- Detail ---------- */
+  .modal-bg { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.7); display: none; grid-template-columns: minmax(0, 1fr); justify-items: center; align-items: start; overflow-y: auto; padding: 4vh 12px; }
+  .modal-bg.show { display: grid; }
+  .modal { width: min(860px, 100%); background: #181818; border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.7); position: relative; animation: pop .25s ease-out; }
+  @keyframes pop { from { transform: scale(.94); opacity: 0; } }
+  .modal .head { position: relative; aspect-ratio: 16 / 8; background: #000; }
+  .modal .head img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .modal .head::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #181818, transparent 55%); }
+  .modal .head .ht { position: absolute; left: 5%; bottom: 8%; z-index: 1; }
+  .modal .head h2 { font: 800 clamp(1.8rem, 5vw, 3rem)/1 var(--title); margin: 0 0 16px; letter-spacing: -.03em; }
+  .modal .x { position: absolute; top: 12px; right: 12px; z-index: 2; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #181818; color: #fff; cursor: pointer; display: grid; place-items: center; }
+  .modal .round { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); background: rgba(42,42,42,.6); color: #fff; display: grid; place-items: center; cursor: pointer; }
+  .modal .round.on { border-color: #fff; }
+  .modal .body { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding: 0 5% 20px; }
+  @media (max-width: 640px) { .modal .body { grid-template-columns: 1fr; } }
+  .meta-line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: .95rem; margin-bottom: 12px; color: #bcbcbc; }
+  .meta-line .match { color: #46d369; font-weight: 700; }
+  .meta-line .age { border: 1px solid rgba(255,255,255,.4); padding: 0 6px; font-size: .8rem; }
+  .meta-line .hd { border: 1px solid rgba(255,255,255,.4); border-radius: 3px; padding: 0 4px; font-size: .68rem; font-weight: 700; }
+  .modal .desc { line-height: 1.5; margin: 0; }
+  .modal .side { font-size: .86rem; color: #777; line-height: 1.6; }
+  .modal .side b { color: #ddd; font-weight: 400; }
+  .episodes { padding: 0 5% 30px; }
+  .ep-head { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
+  .ep-head h3 { font: 700 1.4rem var(--body); margin: 0; }
+  .ep-head select { background: #242424; color: #fff; border: 1px solid #4d4d4d; border-radius: 4px; padding: 8px 12px; font: 600 .95rem var(--body); }
+  .ep { display: grid; grid-template-columns: 30px 130px 1fr; gap: 16px; align-items: center; padding: 16px 12px; border-bottom: 1px solid #404040; cursor: pointer; border-radius: 4px; }
+  .ep:hover { background: #333; }
+  .ep .n { font-size: 1.4rem; color: #d2d2d2; text-align: center; }
+  .ep .thumb { aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; background: #2a2a2a; position: relative; }
+  .ep .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .ep .et { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; margin-bottom: 4px; }
+  .ep .et span { font-weight: 400; color: #d2d2d2; }
+  .ep p { margin: 0; color: #d2d2d2; font-size: .88rem; line-height: 1.4; }
+  @media (max-width: 560px) { .ep { grid-template-columns: 90px 1fr; } .ep .n { display: none; } }
+
+  /* ---------- Player ---------- */
+  .player { position: fixed; inset: 0; z-index: 90; background: #000; display: none; }
+  .player.show { display: block; }
+  .screen { position: absolute; inset: 0; overflow: hidden; }
+  .screen img { position: absolute; inset: -5%; width: 110%; height: 110%; object-fit: cover; object-position: 50% 25%; filter: blur(0) brightness(.75); animation: kenburns 30s linear infinite alternate; }
+  @keyframes kenburns { to { transform: scale(1.15) translate(-3%, 2%); } }
+  .buffer { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.6); text-align: center; }
+  .spin { width: 64px; height: 64px; border-radius: 50%; border: 5px solid rgba(255,255,255,.2); border-top-color: var(--red); animation: rot .9s linear infinite; margin: 0 auto 16px; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+  .subs { position: absolute; left: 50%; bottom: 16%; transform: translateX(-50%); width: min(900px, 90%); text-align: center; font: 600 clamp(1.1rem, 2.6vw, 1.8rem)/1.35 var(--body); text-shadow: 0 2px 4px #000, 0 0 12px #000; min-height: 2.8em; }
+  .p-top { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: linear-gradient(180deg, rgba(0,0,0,.7), transparent); }
+  .p-top button, .p-ctl button { background: none; border: 0; color: #fff; cursor: pointer; display: grid; place-items: center; padding: 6px; }
+  .p-top .icon, .p-ctl .icon { width: 28px; height: 28px; }
+  .p-title { font-size: 1rem; color: #ddd; }
+  .p-title b { color: #fff; }
+  .p-ctl { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 20px 20px; background: linear-gradient(0deg, rgba(0,0,0,.8), transparent); }
+  .p-prog { height: 5px; background: rgba(255,255,255,.3); border-radius: 3px; margin-bottom: 12px; }
+  .p-prog i { display: block; height: 100%; background: var(--red); width: 0; border-radius: 3px; }
+  .p-row { display: flex; align-items: center; gap: 12px; }
+  .p-row .sp { flex: 1; }
+  .p-row .time { font-size: .9rem; color: #ddd; font-variant-numeric: tabular-nums; }
+  .skip { position: absolute; right: 4%; bottom: 22%; background: rgba(42,42,42,.85); border: 1px solid rgba(255,255,255,.5); color: #fff; padding: 10px 18px; border-radius: 4px; font: 600 .95rem var(--body); cursor: pointer; }
+  .still { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.7); text-align: center; padding: 20px; }
+  .still h3 { font: 700 clamp(1.6rem, 4vw, 2.4rem) var(--title); margin: 0 0 20px; }
+  .still .row-btns { justify-content: center; }
+  .still .nfbtn { min-width: 220px; justify-content: center; }
+  .still .nfbtn.info { background: transparent; border: 1px solid rgba(255,255,255,.5); }
+  footer.bigh-footer { color: #777; }
+</style>
+</head>
+<body data-back>
+  <!-- Profilauswahl -->
+  <section class="who" id="who">
+    <div>
+      <div class="logo" style="margin-bottom:40px">Bigflix</div>
+      <h1>Wer schaut gerade?</h1>
+      <div class="profiles" id="profiles"></div>
+      <button class="kids" type="button" id="kids">PROFILE VERWALTEN</button>
+    </div>
+  </section>
+  <div class="intro" id="intro" hidden><div class="logo">Bigflix</div></div>
+
+  <nav class="nav" id="nav">
+    <span class="logo">Bigflix</span>
+    <span class="links"><a class="on" href="#">Startseite</a><a href="#row-serien">Serien</a><a href="#row-docs">Dokus</a><a href="#row-neu">Neu und beliebt</a><a href="#row-liste">Meine Liste</a></span>
+    <span class="sp"></span>
+    <button class="me" type="button" id="me"><img id="me-img" alt="" src="/shared/img/bigh.jpg"><span id="me-name">Big H</span></button>
+  </nav>
+
+  <header class="hero">
+    <div class="bg"><img src="/shared/img/bigh.jpg" alt=""></div>
+    <div class="txt">
+      <div class="orig"><b>B</b>SERIE</div>
+      <h1>Ich muss baden gehen</h1>
+      <div class="top10"><span>TOP<br>10</span>Platz 1 in der Schweiz heute</div>
+      <p>Er sagt es jeden Abend. 312-mal. Doch niemand hat ihn je baden gesehen. Die preisgekrönte Mystery-Serie über die grösste Ausrede der Schweiz.</p>
+      <div class="row-btns"><button class="nfbtn play" type="button" id="hero-play"><i data-icon="play"></i>Abspielen</button><button class="nfbtn info" type="button" id="hero-info"><i data-icon="info"></i>Weitere Infos</button></div>
+    </div>
+  </header>
+
+  <main class="rows" id="rows"></main>
+  <footer class="bigh-footer">Bigflix ist eine Parodie. Kein Abo, keine Kündigung, keine echten Filme. Big H ist trotzdem in jedem Titel.</footer>
+
+  <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-label="Titel-Details"><div class="modal" id="modal-box"></div></div>
+
+  <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Wiedergabe">
+    <div class="screen"><img id="p-img" alt=""></div>
+    <div class="subs" id="subs"></div>
+    <div class="buffer" id="buffer"><div><div class="spin"></div><div id="buf-txt">Wird geladen …</div></div></div>
+    <button class="skip" id="skip" type="button" hidden>Intro überspringen</button>
+    <div class="p-top"><button type="button" id="p-back" aria-label="Zurück"><i data-icon="arrow-left"></i></button><div class="p-title" id="p-title"></div></div>
+    <div class="p-ctl">
+      <div class="p-prog"><i id="p-prog"></i></div>
+      <div class="p-row">
+        <button type="button" id="p-pause" aria-label="Pause"><i data-icon="pause"></i></button>
+        <button type="button" id="p-back10" aria-label="10 Sekunden zurück"><i data-icon="rotate-ccw"></i></button>
+        <span class="time" id="p-time">0:00</span>
+        <span class="sp"></span>
+        <button type="button" id="p-next" aria-label="Nächste Folge"><i data-icon="chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="still" id="still" hidden><div><h3>Schaust du noch „<span id="still-t"></span>“?</h3><div class="row-btns"><button class="nfbtn play" type="button" id="still-yes">Weiterschauen</button><button class="nfbtn info" type="button" id="still-no">Ich muss baden gehen</button></div></div></div>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const IMG = (id) => (id === 'bigh' ? '/shared/img/bigh.jpg' : '/shared/cupcakes/' + id + '.webp');
+
+    // ==== KONFIG: Titel ====
+    // img = Figur aus /shared/cupcakes, kind = Serie|Film|Doku, eps = Folgen (nur Serien)
+    const TITLES = {
+      baden: { t: 'Ich muss baden gehen', img: 'bigh', kind: 'Serie', year: 2020, age: 12, seasons: 7, match: 99, genres: ['Mystery', 'Drama', 'Hygiene'], d: 'Er sagt es jeden Abend. 312-mal. Doch niemand hat ihn je baden gesehen. Die preisgekrönte Mystery-Serie über die grösste Ausrede der Schweiz.',
+        eps: [['Pilot: Der erste Abend', 'Big H sagt ein Treffen ab. Der Grund lässt die Freunde ratlos zurück.'], ['Der Wasserzähler', 'Ein Beamter der Stadtwerke entdeckt Unstimmigkeiten. 0 Liter.'], ['Die Ente', 'Eine Badeente wartet. Seit Wochen. Sie gibt nicht auf.'], ['Schaum', 'Flashback: Hat es je Schaum gegeben? Die Zeugen widersprechen sich.'], ['Staffelfinale: Nass', 'Endlich: Wasser! Es stellt sich heraus: Er hat nur Tee verschüttet.']] },
+      breaking: { t: 'Breaking Big', img: 'glatze', kind: 'Serie', year: 2021, age: 16, seasons: 5, match: 97, genres: ['Crime', 'Drama'], d: 'Ein unscheinbarer Gamer rasiert sich den Kopf und steigt zum gefürchtetsten Goon-König der Schweiz auf. „Ich bin nicht in Gefahr. Ich bin die Gefahr.“ – „Du bist in Bronze.“',
+        eps: [['Glatze', 'Der Anfang vom Ende. Oder vom Anfang.'], ['Ich bin der, der klopft', 'Er klopft. Niemand macht auf. Er muss baden gehen.'], ['Say my name', '„unoslapis.“ – „You\'re goddamn right.“']] },
+      stranger: { t: 'Stranger Rangs', img: 'alien', kind: 'Serie', year: 2022, age: 12, seasons: 4, match: 95, genres: ['Sci-Fi', 'Horror', 'Ranked'], d: 'Ein Junge verschwindet in der „Upside Down“-Rangliste. Seine Freunde finden nur noch Lichter, die „TEAM DIFF“ buchstabieren.',
+        eps: [['Das Verschwinden', 'Big H loggt sich ein. Er kommt nie wieder heraus.'], ['Die Lichter', 'T-E-A-M D-I-F-F.'], ['Bronze-Welt', 'Die Rangliste auf der anderen Seite ist dunkler. Und tiefer.']] },
+      crown: { t: 'The Crown (aus Karton)', img: 'barbarenkoenig', kind: 'Serie', year: 2011, age: 6, seasons: 8, match: 94, genres: ['Historie', 'Drama'], d: 'Die epische Chronik des Fürstentums Lapisien: acht Jahre Alleinherrschaft über 14 Quadratmeter Kinderzimmer, die Schlafenszeit-Krise und eine historische Abdankung vom Hochbett.',
+        eps: [['Gründung', 'Ein Achtjähriger erklärt sein Zimmer für unabhängig.'], ['Die Verfassung', 'Artikel 1: Der Fürst muss nicht aufräumen.'], ['Schlafenszeit-Krise', 'Die Nachbarmacht „Mama“ beschlagnahmt die Konsole.'], ['Abdankung', '12. Juni 2019. Der letzte Tag mit Gras.']] },
+      loewe: { t: 'Der nackte Löwe', img: 'gigachad', kind: 'Doku', year: 2023, age: 16, match: 98, genres: ['Doku', 'Abenteuer', 'Unbekleidet'], d: 'Die Dokumentation über die Besteigung des Mount Everest ohne Sauerstoff, ohne Seile und ohne Kleidung. Die letzten 800 Meter auf allen vieren, brüllend. Keine Fotos, weil der Akku leer war.' },
+      mausi: { t: 'Mausi – Die Katze, die überlebte', img: 'katze', kind: 'Doku', year: 2025, age: 0, match: 96, genres: ['Doku', 'Tiere', 'Feuer'], d: 'Ein brennendes Haus. Eine Katze. Ein Held mit einem Energy-Drink in der Hand. Die bewegende Geschichte hinter der Schlagzeile der Big\'H Times.' },
+      teamdiff: { t: 'Team Diff', img: 'soldier', kind: 'Doku', year: 2022, age: 12, match: 91, genres: ['Doku', 'Sport', 'Ausreden'], d: 'Vier Jahre, 4\'269 Stunden, eine Erkenntnis: Es lag nie an ihm. Eine schonungslose Sport-Doku, gedreht ausschliesslich im Voice-Chat.' },
+      goonking: { t: 'Goon King', img: 'rapper', kind: 'Doku', year: 2020, age: 18, match: 93, genres: ['True Crime', 'Doku'], d: 'Grosskatzen? Nein. Grosser Gaming-Stuhl. Die True-Crime-Doku über einen Mann, der 2019 den Thron bestieg und ihn nie wieder verliess.' },
+      rizz: { t: 'Rizz Education', img: 'nerd', kind: 'Serie', year: 2024, age: 16, seasons: 3, match: 88, genres: ['Comedy', 'Coming-of-Age'], d: 'Ein Teenager gibt Beziehungstipps, obwohl er selbst seit 24 Jahren Single ist. Die Ratschläge: 40 Minuten über Hazbin Hotel reden.',
+        eps: [['Blickkontakt', 'Level 3 erreicht. Nach vier Versuchen.'], ['Der Vortrag', 'Er erklärt einer Goth-Baddie Alastor. Sie geht.'], ['Offene Beziehung', 'Mit Ranked. Es läuft schlecht.']] },
+      haus: { t: 'Haus des Geldes: Casino Lapis', img: 'dschinni', kind: 'Serie', year: 2026, age: 12, seasons: 2, match: 90, genres: ['Heist', 'Thriller'], d: 'Eine Gruppe Kollegen plant den grössten Coup der Geschichte: das Casino Lapis um alle Lapis-Taler zu erleichtern. Der Plan scheitert an der Rückzahlquote von 95 %.',
+        eps: [['Der Plan', 'Alle setzen auf Rot. Es kommt die Null.'], ['Der Greifer', 'Die Goldene Krone, so nah.']] },
+      narcos: { t: 'Narcos: Monster', img: 'ghostface', kind: 'Serie', year: 2019, age: 16, seasons: 3, match: 87, genres: ['Crime', 'Koffein'], d: 'Die Geschichte des mächtigsten Energy-Drink-Konsumenten der Schweiz. 4\'269 Dosen im Jahr. Die Kioske der Stadt zittern.',
+        eps: [['Die erste Dose', '14 Jahre alt, 250 ml, kein Zurück.'], ['Das Kartell', 'Ein Handelsabkommen mit dem Kiosk um die Ecke.']] },
+      dark: { t: 'Dark (Modus)', img: 'batman', kind: 'Serie', year: 2019, age: 12, seasons: 3, match: 92, genres: ['Mystery', 'Zeitreise'], d: 'Seit 2019 hat er das Licht nicht mehr eingeschaltet. Tag und Nacht verschwimmen. Die Frage ist nicht wo, sondern wann er schläft.',
+        eps: [['03:14', 'Es ist immer 03:14 Uhr.'], ['Der Schalter', 'Ein Lichtschalter wird gefunden. Er wird ignoriert.']] },
+      bridgerton: { t: 'Liebesbriefe (unbeantwortet)', img: 'engel', kind: 'Serie', year: 2025, age: 12, seasons: 1, match: 84, genres: ['Romanze', 'Tragik'], d: 'Eine Saison, ein Ball, ein Liebesbrief. Der „Nein“-Knopf flieht, der „Ja“-Knopf wächst. Die Antwort kommt trotzdem nie.',
+        eps: [['Der Ball', 'Er trägt Pelz. Niemand tanzt mit ihm.'], ['Der Brief', 'Geschrieben auf dating.unoslapis.ch.']] },
+      default: { t: 'Default Dance', img: 'fortnite', kind: 'Film', year: 2024, age: 6, match: 86, genres: ['Tanzfilm', 'Gaming'], d: 'Keine Skins. Kein Geld. Nur ein Traum und ein Tanz. Der inspirierende Film über einen Jungen, der mit dem Standard-Skin alles erreichte. Ausser dem Sieg.' },
+      grass: { t: 'Das Gras', img: 'toad', kind: 'Film', year: 2019, age: 18, match: 95, genres: ['Horror'], d: 'Es ist grün. Es ist weich. Es wartet draussen. Der gruseligste Horrorfilm des Jahres, nach einer wahren Begebenheit am 12. Juni 2019.' },
+      vader: { t: 'Das Imperium schlägt zurück (ins Ranked)', img: 'vader', kind: 'Film', year: 2023, age: 12, match: 90, genres: ['Sci-Fi', 'Epos'], d: '„Ich bin dein Vater.“ – „Nein. Ich muss baden gehen.“ Die dunkle Seite der Macht war nie so nachtaktiv.' },
+      jawa: { t: 'Wüstenplanet: Zimmer 2', img: 'jawa', kind: 'Film', year: 2024, age: 12, match: 83, genres: ['Sci-Fi'], d: 'Ein Wesen mit leuchtenden Augen haust in einem Zimmer, in das seit Jahren kein Tageslicht fiel. Die Gewürze: Chips mit Paprika.' },
+      pirat: { t: 'One Piece (vom Kuchen)', img: 'pirat', kind: 'Serie', year: 2020, age: 12, seasons: 20, match: 89, genres: ['Anime', 'Abenteuer'], d: 'Er sucht den legendären Schatz. Nach 1\'100 Folgen findet er ihn: ein Stück Kuchen im Kühlschrank.',
+        eps: [['Aufbruch', 'Er verlässt sein Zimmer. Bis zur Küche.'], ['Der Schatz', 'Der Kühlschrank ist leer.']] },
+      dschinni: { t: 'Drei Wünsche', img: 'mercy', kind: 'Film', year: 2025, age: 0, match: 82, genres: ['Fantasy', 'Komödie'], d: 'Wunsch 1: Champion. Wunsch 2: eine Freundin. Wunsch 3: nochmal Wunsch 1. Ein Film über Prioritäten.' }
+    };
+    // Reihen
+    const ROWS = [
+      { id: 'row-weiter', title: 'Weiterschauen für {name}', kind: 'continue', items: ['baden', 'stranger', 'crown', 'narcos', 'rizz'] },
+      { id: 'row-top', title: 'Top 10 in der Schweiz heute', kind: 'top', items: ['baden', 'breaking', 'loewe', 'grass', 'teamdiff', 'mausi', 'haus', 'goonking', 'dark', 'vader'] },
+      { id: 'row-serien', title: 'Bigflix Originals', kind: 'poster', items: ['breaking', 'stranger', 'crown', 'rizz', 'haus', 'dark', 'pirat', 'bridgerton'] },
+      { id: 'row-docs', title: 'Dokumentationen', kind: 'tile', items: ['loewe', 'mausi', 'teamdiff', 'goonking'] },
+      { id: 'row-neu', title: 'Weil du „Team Diff“ geschaut hast', kind: 'tile', items: ['default', 'vader', 'jawa', 'grass', 'dschinni', 'narcos'] },
+      { id: 'row-liste', title: 'Meine Liste', kind: 'tile', items: 'list' }
+    ];
+    const SUBS = ['Ich muss baden gehen.', '… nur noch ein Game.', 'Team Diff. Eindeutig.', '[dramatische Musik]', 'Das war kein Vortrag, das war Rizz.', 'Bin in 5 Minuten on.', '[Mausi miaut]', 'Ich bin kein Gamer. Ich bin ein Lifestyle.', '[Wasser läuft nicht]', 'Warum schaut mich das Gras so an?', 'Heal mich doch mal!', '[Stille]'];
+    const PROFILES = [['Big H', 'bigh'], ['Mausi', 'katze'], ['Goth-Baddie', 'ghostface'], ['Kinder', 'toad']];
+
+    const store = {
+      get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+      set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } }
+    };
+    let profile = PROFILES[0];
+    let myList = store.get('bigflix-list', ['loewe']);
+    const progress = store.get('bigflix-progress', { baden: 0.62, stranger: 0.34, crown: 0.9, narcos: 0.15, rizz: 0.48 });
+
+    // ---------- Profile ----------
+    const pEl = document.getElementById('profiles');
+    PROFILES.forEach((p) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'profile';
+      b.innerHTML = '<span class="pic"><img alt=""></span><span></span>';
+      b.querySelector('img').src = IMG(p[1]);
+      b.lastElementChild.textContent = p[0];
+      b.addEventListener('click', () => choose(p));
+      pEl.appendChild(b);
+    });
+    document.getElementById('kids').addEventListener('click', () => BIGH.toast('Profile verwalten geht nicht. Big H hat alle Profile gelöscht, ausser seins.'));
+    function choose(p) {
+      profile = p;
+      document.getElementById('me-img').src = IMG(p[1]);
+      document.getElementById('me-name').textContent = p[0];
+      document.getElementById('who').hidden = true;
+      const intro = document.getElementById('intro');
+      if (!BIGH.reduced) {
+        intro.hidden = false;
+        BIGH.sfx('tadum');
+        setTimeout(() => { intro.hidden = true; }, 2400);
+      }
+      renderRows();
+      if (p[0] === 'Kinder') BIGH.toast('Kinderprofil: Alle Titel ab 16 wurden durch „Das Gras“ ersetzt. Das ist auch nicht besser.');
+    }
+    document.getElementById('me').addEventListener('click', () => { document.getElementById('who').hidden = false; });
+
+    // ---------- Reihen ----------
+    function tile(id, kind, i) {
+      const T = TITLES[id];
+      const b = document.createElement('button');
+      b.type = 'button';
+      if (kind === 'top') {
+        b.className = 'rank';
+        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span class="tile poster"><img alt="" loading="lazy"><span class="shade"></span><span class="badge">B</span><span class="t"></span></span>';
+      } else {
+        b.className = 'tile' + (kind === 'poster' ? ' poster' : '');
+        b.innerHTML = '<img alt="" loading="lazy"><span class="shade"></span><span class="badge">B</span><span class="t"></span>' + (kind === 'continue' ? '<span class="bar"><i></i></span>' : '');
+        if (kind === 'continue') b.querySelector('.bar i').style.width = Math.round((progress[id] || 0.1) * 100) + '%';
+      }
+      b.querySelector('img').src = IMG(T.img);
+      b.querySelector('.t').textContent = T.t;
+      b.setAttribute('aria-label', T.t);
+      b.addEventListener('click', () => (kind === 'continue' ? play(id) : openDetail(id)));
+      return b;
+    }
+    function renderRows() {
+      const rows = document.getElementById('rows');
+      rows.innerHTML = '';
+      const kids = profile[0] === 'Kinder';
+      ROWS.forEach((r) => {
+        let items = r.items === 'list' ? myList.slice() : r.items.slice();
+        if (kids) items = items.map((id) => (TITLES[id].age >= 16 ? 'grass' : id));
+        if (!items.length) return;
+        const sec = document.createElement('section');
+        sec.className = 'row'; sec.id = r.id;
+        const h = document.createElement('h2'); h.textContent = r.title.replace('{name}', profile[0]);
+        const strip = document.createElement('div'); strip.className = 'strip';
+        items.forEach((id, i) => strip.appendChild(tile(id, r.kind, i)));
+        sec.append(h, strip);
+        rows.appendChild(sec);
+      });
+    }
+
+    // ---------- Detail ----------
+    const modal = document.getElementById('modal');
+    function openDetail(id) {
+      const T = TITLES[id];
+      const box = document.getElementById('modal-box');
+      const inList = myList.includes(id);
+      box.innerHTML =
+        '<div class="head"><img alt=""><button class="x" type="button" aria-label="Schliessen">' + BIGH.icon('x') + '</button>' +
+        '<div class="ht"><h2></h2><div class="row-btns"><button class="nfbtn play" type="button" data-play>' + BIGH.icon('play') + 'Abspielen</button><button class="round' + (inList ? ' on' : '') + '" type="button" data-list aria-label="Meine Liste">' + BIGH.icon(inList ? 'check' : 'plus') + '</button><button class="round" type="button" data-like aria-label="Gefällt mir">' + BIGH.icon('thumbs-up') + '</button></div></div></div>' +
+        '<div class="body"><div><div class="meta-line"><span class="match">' + T.match + ' % Übereinstimmung</span><span>' + T.year + '</span><span class="age">' + (T.age ? T.age + '+' : 'o. A.') + '</span><span>' + (T.seasons ? T.seasons + ' Staffeln' : T.kind === 'Doku' ? '1 Std. 34 Min.' : '2 Std. 3 Min.') + '</span><span class="hd">HD</span></div><p class="desc"></p></div>' +
+        '<div class="side"><div>Besetzung: <b>Big H, Big H, Mausi</b></div><div>Genres: <b></b></div><div>Dieser Titel ist: <b>peinlich, nachtaktiv, ungewaschen</b></div></div></div>' +
+        (T.eps ? '<div class="episodes"><div class="ep-head"><h3>Folgen</h3><select aria-label="Staffel"></select></div><div class="ep-list"></div></div>' : '');
+      box.querySelector('.head img').src = IMG(T.img);
+      box.querySelector('h2').textContent = T.t;
+      box.querySelector('.desc').textContent = T.d;
+      box.querySelectorAll('.side b')[1].textContent = T.genres.join(', ');
+      if (T.eps) {
+        const sel = box.querySelector('select');
+        for (let s = 1; s <= T.seasons; s++) { const o = document.createElement('option'); o.value = s; o.textContent = 'Staffel ' + s; sel.appendChild(o); }
+        const list = box.querySelector('.ep-list');
+        const renderEps = () => {
+          list.innerHTML = '';
+          T.eps.forEach((e, i) => {
+            const row = document.createElement('div');
+            row.className = 'ep'; row.tabIndex = 0;
+            row.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="thumb"><img alt="" loading="lazy"></span><div><div class="et"><b></b><span>' + (38 + ((i * 7 + +sel.value * 3) % 19)) + ' Min.</span></div><p></p></div>';
+            const figs = ['bigh', 'katze', 'soldier', 'naruto', 'joker', 'steve', 'omen', 'clown'];
+            row.querySelector('img').src = IMG(i === 0 ? T.img : figs[(i + +sel.value) % figs.length]);
+            row.querySelector('b').textContent = e[0];
+            row.querySelector('p').textContent = +sel.value > 1 ? e[1] + ' (Staffel ' + sel.value + ': gleiche Handlung, anderer Hoodie.)' : e[1];
+            row.addEventListener('click', () => play(id, i));
+            row.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') play(id, i); });
+            list.appendChild(row);
+          });
+        };
+        sel.addEventListener('change', renderEps);
+        renderEps();
+      }
+      box.querySelector('.x').addEventListener('click', closeDetail);
+      box.querySelector('[data-play]').addEventListener('click', () => play(id));
+      box.querySelector('[data-list]').addEventListener('click', (e) => {
+        const b = e.currentTarget;
+        if (myList.includes(id)) myList = myList.filter((x) => x !== id); else myList.push(id);
+        store.set('bigflix-list', myList);
+        b.classList.toggle('on', myList.includes(id));
+        b.innerHTML = BIGH.icon(myList.includes(id) ? 'check' : 'plus');
+        renderRows();
+      });
+      box.querySelector('[data-like]').addEventListener('click', (e) => { e.currentTarget.classList.add('on'); BIGH.toast('Bewertet. Der Algorithmus empfiehlt dir jetzt noch mehr Big H.'); });
+      modal.classList.add('show');
+      modal.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDetail() { modal.classList.remove('show'); document.body.style.overflow = ''; }
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeDetail(); });
+
+    // ---------- Player ----------
+    const player = document.getElementById('player');
+    let pt = null, pos = 0, playing = false, current = null, subI = 0, stillShown = false;
+    const DURATION = 42 * 60;
+    function fmtTime(s) { s = Math.floor(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); }
+    function play(id, ep) {
+      closeDetail();
+      const T = TITLES[id];
+      current = { id, ep: ep || 0 };
+      document.getElementById('p-img').src = IMG(T.img);
+      document.getElementById('p-title').innerHTML = '';
+      const b = document.createElement('b'); b.textContent = T.t;
+      document.getElementById('p-title').append(b, document.createTextNode(T.eps ? '  F' + (current.ep + 1) + ' „' + T.eps[current.ep][0] + '“' : ''));
+      document.getElementById('still-t').textContent = T.t;
+      document.getElementById('still').hidden = true;
+      stillShown = false;
+      pos = (progress[id] || 0) * DURATION * (ep === undefined ? 1 : 0);
+      subI = Math.floor(Math.random() * SUBS.length);
+      document.getElementById('subs').textContent = '';
+      player.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      const buf = document.getElementById('buffer');
+      buf.hidden = false;
+      const msgs = ['Wird geladen …', 'Big H ist noch nicht bereit …', 'Er muss kurz baden gehen …', 'Fast da …'];
+      let mi = 0;
+      document.getElementById('buf-txt').textContent = msgs[0];
+      clearInterval(pt);
+      pt = setInterval(() => { mi++; if (mi < msgs.length) document.getElementById('buf-txt').textContent = msgs[mi]; else { clearInterval(pt); start(); } }, 900);
+    }
+    function start() {
+      document.getElementById('buffer').hidden = true;
+      document.getElementById('skip').hidden = pos > 60;
+      playing = true;
+      setPauseIcon();
+      clearInterval(pt);
+      let t = 0;
+      pt = setInterval(() => {
+        if (!playing) return;
+        pos = Math.min(DURATION, pos + 1);
+        t++;
+        document.getElementById('p-prog').style.width = pos / DURATION * 100 + '%';
+        document.getElementById('p-time').textContent = fmtTime(pos) + ' / ' + fmtTime(DURATION);
+        if (t % 3 === 1) { document.getElementById('subs').textContent = SUBS[subI++ % SUBS.length]; }
+        if (t === 8) document.getElementById('skip').hidden = true;
+        if (t === 16 && !stillShown) { stillShown = true; playing = false; setPauseIcon(); document.getElementById('still').hidden = false; }
+      }, 1000);
+    }
+    function setPauseIcon() {
+      const b = document.getElementById('p-pause');
+      b.innerHTML = BIGH.icon(playing ? 'pause' : 'play');
+      b.setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
+    }
+    function stop() {
+      clearInterval(pt);
+      playing = false;
+      if (current) { progress[current.id] = Math.max(0.02, pos / DURATION); store.set('bigflix-progress', progress); }
+      player.classList.remove('show');
+      document.body.style.overflow = '';
+      renderRows();
+    }
+    document.getElementById('p-back').addEventListener('click', stop);
+    document.getElementById('p-pause').addEventListener('click', () => { if (!document.getElementById('buffer').hidden) return; playing = !playing; setPauseIcon(); });
+    document.getElementById('p-back10').addEventListener('click', () => { pos = Math.max(0, pos - 10); });
+    document.getElementById('skip').addEventListener('click', () => { pos += 90; document.getElementById('skip').hidden = true; BIGH.toast('Intro übersprungen. Es war sowieso nur Big H, der „Ta-dum“ sagt.'); });
+    document.getElementById('p-next').addEventListener('click', () => {
+      const T = TITLES[current.id];
+      if (T.eps && current.ep < T.eps.length - 1) play(current.id, current.ep + 1);
+      else BIGH.toast('Keine weiteren Folgen. Big H hat die nächste Staffel verschlafen.');
+    });
+    document.getElementById('still-yes').addEventListener('click', () => { document.getElementById('still').hidden = true; playing = true; setPauseIcon(); });
+    document.getElementById('still-no').addEventListener('click', () => { stop(); BIGH.toast('Gute Nacht. Und viel Spass beim Baden.'); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { if (player.classList.contains('show')) stop(); else closeDetail(); }
+      if (e.key === ' ' && player.classList.contains('show')) { e.preventDefault(); document.getElementById('p-pause').click(); }
+    });
+
+    document.getElementById('hero-play').addEventListener('click', () => play('baden'));
+    document.getElementById('hero-info').addEventListener('click', () => openDetail('baden'));
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('solid', window.scrollY > 40), { passive: true });
+    renderRows();
+  })();
+  </script>
+</body>
+</html>

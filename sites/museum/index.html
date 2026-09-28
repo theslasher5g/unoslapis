@@ -124,6 +124,7 @@
   /* Audioguide-Leiste */
   .guide { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 140%); z-index: 50; background: var(--ink); color: #fff; border-radius: 999px; padding: 8px 8px 8px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 16px 40px rgba(0,0,0,.3); transition: transform .35s ease; max-width: calc(100% - 32px); }
   .guide { visibility: hidden; }
+  @media (max-width: 640px) { .guide { bottom: 62px; } }
   .guide.show { transform: translate(-50%, 0); visibility: visible; }
   .guide .now { font-size: .86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .guide .now small { display: block; color: rgba(255,255,255,.6); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }

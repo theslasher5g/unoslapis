@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crazy Cupcakes – Booster-Packs</title>
+<meta name="description" content="Crazy Cupcakes Sammelkarten, Erweiterung Hoing Boings: Booster-Packs öffnen, 40 Karten sammeln, Holo-Raritäten ziehen.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f5cc3c'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --accent: #f5cc3c; --gold: #e3b341; }
+  body { background: radial-gradient(900px 420px at 50% -140px, rgba(124,58,237,.14), transparent 70%), var(--bg); }
+  .wrap { width: min(1100px, 100% - 32px); }
+  .page-head { text-align: center; padding-bottom: 18px; }
+  .page-head p { margin-inline: auto; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; }
+  .wallet { display: flex; align-items: center; gap: 10px; }
+  .wallet .coin { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #f7d98a, var(--gold) 55%, #9a7420); color: #3b2b06; display: grid; place-items: center; }
+  .wallet .coin .icon { width: 18px; height: 18px; }
+  .wallet b { font: 700 1.3rem/1 var(--title); font-variant-numeric: tabular-nums; }
+  .wallet small { display: block; color: var(--muted); font-size: .75rem; margin-top: 2px; }
+  .bar .links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ---------- Shop ---------- */
+  .shop { display: grid; grid-template-columns: 300px 1fr; gap: 34px; align-items: center; margin: 34px 0 10px; }
+  @media (max-width: 760px) { .shop { grid-template-columns: 1fr; justify-items: center; text-align: center; } }
+  .pack { position: relative; width: 240px; aspect-ratio: 5 / 8; border-radius: 12px 12px 16px 16px; background: linear-gradient(135deg, #2a1152 0%, #6d28d9 35%, #db2777 70%, #f59e0b 100%); box-shadow: 0 30px 60px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.15); overflow: hidden; margin: 0 auto; transform-style: preserve-3d; }
+  .pack::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(115deg, rgba(255,255,255,.0) 0 18px, rgba(255,255,255,.08) 18px 22px), linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 45%, transparent 60%); background-size: auto, 250% 100%; animation: sheen 4s ease-in-out infinite; pointer-events: none; }
+  @keyframes sheen { 0%, 100% { background-position: 0 0, 120% 0; } 50% { background-position: 0 0, -20% 0; } }
+  .pack .crimp { position: absolute; left: 0; right: 0; height: 16px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.25) 0 4px, rgba(255,255,255,.15) 4px 8px); }
+  .pack .crimp.top { top: 0; } .pack .crimp.bot { bottom: 0; }
+  .pack .logo { position: absolute; top: 28px; left: 0; right: 0; text-align: center; color: #fff; font: 800 1.45rem/1 var(--title); letter-spacing: -.02em; text-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .pack .logo small { display: block; font: 700 .62rem var(--body); letter-spacing: .3em; margin-top: 6px; color: #fde68a; }
+  .pack .art { position: absolute; left: 18%; right: 18%; top: 30%; bottom: 20%; border-radius: 50%; overflow: hidden; border: 4px solid rgba(255,255,255,.8); box-shadow: 0 10px 30px rgba(0,0,0,.35); background: #fff; }
+  .pack .art img { width: 100%; height: 100%; object-fit: cover; }
+  .pack .count { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; color: #fff; font: 700 .72rem var(--body); letter-spacing: .2em; }
+  .pack.tear .crimp.top { animation: tearoff .6s ease-in forwards; }
+  @keyframes tearoff { to { transform: translate(60px, -80px) rotate(24deg); opacity: 0; } }
+  .shop h2 { font: 700 clamp(1.6rem, 4vw, 2.2rem)/1.1 var(--title); margin: 0 0 8px; letter-spacing: -.02em; }
+  .shop p { color: var(--muted); margin: 0 0 16px; max-width: 520px; }
+  .odds { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+  @media (max-width: 760px) { .odds, .shop .btns { justify-content: center; } }
+  .odds span { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: .78rem; color: var(--muted); }
+  .odds b { color: var(--text); }
+  .shop .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn.gold { background: var(--accent); color: #1a1405; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+  /* ---------- Karte ---------- */
+  .pc { --w: 240px; width: var(--w); aspect-ratio: 63 / 88; font-size: calc(var(--w) / 21); border-radius: 4.5%; padding: 3.2%; background: linear-gradient(145deg, #f7d64a, #e3b341 50%, #f7d64a); box-shadow: 0 .6em 1.6em rgba(0,0,0,.4); position: relative; color: #1c1917; flex: none; user-select: none; -webkit-user-select: none; }
+  .pc-in { position: relative; height: 100%; border-radius: 3%; background: linear-gradient(180deg, var(--tl), #fff 60%, var(--tl)); padding: 4% 4.5% 3%; display: flex; flex-direction: column; overflow: hidden; }
+  .pc-top { display: flex; align-items: baseline; gap: .3em; }
+  .pc-top .stg { font: 700 .5em var(--body); background: rgba(0,0,0,.08); border-radius: .5em; padding: .1em .45em; align-self: center; }
+  .pc-top .nm { font: 800 1.05em/1.1 var(--title); letter-spacing: -.02em; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pc-top .hp { font: 700 .62em var(--body); color: #b91c1c; white-space: nowrap; }
+  .pc-top .hp b { font-size: 1.5em; }
+  .pc-top .ty { width: 1.25em; height: 1.25em; border-radius: 50%; background: var(--tc); color: #fff; display: grid; place-items: center; align-self: center; flex: none; }
+  .pc-top .ty .icon { width: .75em; height: .75em; }
+  .pc-art { margin-top: 3%; aspect-ratio: 4 / 3; border: .22em solid #c9a227; box-shadow: inset 0 0 0 .08em rgba(0,0,0,.2); background: #fff; position: relative; overflow: hidden; }
+  .pc-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block; }
+  .pc-info { font: italic 500 .44em var(--body); text-align: center; background: linear-gradient(90deg, transparent, rgba(201,162,39,.35), transparent); margin: 1.5% 0 2%; padding: .15em 0; }
+  .pc-atk { display: grid; grid-template-columns: auto 1fr auto; gap: 0 .35em; align-items: center; margin: .25em 0; }
+  .pc-atk .cost { display: flex; gap: .12em; }
+  .pc-atk .cost i { width: .8em; height: .8em; border-radius: 50%; background: var(--tc); box-shadow: inset 0 -.08em 0 rgba(0,0,0,.25); }
+  .pc-atk b { font: 800 .72em var(--title); }
+  .pc-atk .dmg { font: 800 .8em var(--title); }
+  .pc-atk p { grid-column: 1 / -1; margin: .1em 0 0; font-size: .46em; line-height: 1.3; }
+  .pc-spacer { flex: 1; }
+  .pc-bottom { display: grid; grid-template-columns: repeat(3, 1fr); gap: .2em; font-size: .4em; text-align: center; border-top: .12em solid rgba(0,0,0,.15); padding-top: .4em; margin-top: .3em; }
+  .pc-bottom span b { display: block; font-size: 1.05em; }
+  .pc-flavor { font: italic .42em/1.3 var(--body); border: .12em solid #c9a227; border-radius: .4em; padding: .35em .5em; margin-top: .45em; background: rgba(255,255,255,.55); }
+  .pc-foot { display: flex; justify-content: space-between; font: 600 .38em var(--body); margin-top: .4em; opacity: .75; }
+  /* Seltenheiten */
+  .pc.r-R .pc-art::after, .pc.r-UR::after, .pc.r-SR::after { content: ''; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: color-dodge; opacity: .55; background: linear-gradient(115deg, transparent 20%, rgba(255,0,150,.35) 30%, rgba(0,255,255,.35) 40%, rgba(255,255,0,.35) 50%, rgba(0,255,100,.35) 60%, transparent 70%); background-size: 250% 250%; background-position: var(--hx, 50%) var(--hy, 50%); transition: background-position .1s; }
+  .pc.r-UR { background: linear-gradient(135deg, #a78bfa, #f0abfc 25%, #67e8f9 50%, #fde68a 75%, #a78bfa); }
+  .pc.r-UR::after, .pc.r-SR::after { border-radius: 4.5%; opacity: .45; }
+  .pc.r-UR .pc-in { background: linear-gradient(180deg, #1f1b2e, #3b2f5c 55%, #1f1b2e); color: #f5f3ff; }
+  .pc.r-UR .pc-flavor { background: rgba(0,0,0,.3); } .pc.r-UR .pc-top .hp { color: #fda4af; }
+  .pc.r-SR { background: linear-gradient(135deg, #b8860b, #fff1a8 30%, #d4a017 50%, #fff1a8 70%, #b8860b); }
+  .pc.r-SR .pc-in { background: radial-gradient(circle at 50% 30%, #3a2e12, #120e05 75%); color: #fef3c7; }
+  .pc.r-SR .pc-art { aspect-ratio: 1; border-color: #f5cc3c; }
+  .pc.r-SR .pc-flavor { background: rgba(0,0,0,.35); border-color: #f5cc3c; } .pc.r-SR .pc-top .hp { color: #fcd34d; }
+  .pc .glare { position: absolute; inset: 0; border-radius: 4.5%; pointer-events: none; background: radial-gradient(circle at var(--hx, 50%) var(--hy, 50%), rgba(255,255,255,.45), transparent 45%); opacity: 0; transition: opacity .2s; mix-blend-mode: overlay; }
+  .pc.tilt .glare { opacity: 1; }
+  .pc .new { position: absolute; top: -.5em; right: -.5em; background: #ef4444; color: #fff; font: 800 .55em var(--body); letter-spacing: .1em; padding: .35em .6em; border-radius: 999px; box-shadow: 0 .2em .5em rgba(0,0,0,.3); z-index: 2; }
+  /* Rückseite */
+  .pc.back { background: linear-gradient(145deg, #1e1b4b, #312e81); padding: 3.2%; }
+  .pc.back .pc-in { background: radial-gradient(circle at 50% 50%, #7c3aed, #1e1b4b 70%); display: grid; place-items: center; border: .25em solid #f5cc3c; }
+  .pc.back .ball { width: 55%; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(180deg, #ef4444 0 47%, #111 47% 53%, #fafafa 53%); box-shadow: 0 0 0 .25em #111, 0 .5em 1.5em rgba(0,0,0,.5); display: grid; place-items: center; }
+  .pc.back .ball span { width: 28%; aspect-ratio: 1; border-radius: 50%; background: #fafafa; box-shadow: 0 0 0 .25em #111; display: grid; place-items: center; font: 800 1.1em var(--title); color: #111; }
+
+  /* ---------- Öffnen (Vollbild) ---------- */
+  .stage { position: fixed; inset: 0; z-index: 80; background: radial-gradient(circle at 50% 40%, #1e1b3a, #07060d 70%); display: none; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px; overflow-y: auto; }
+  .stage.show { display: grid; }
+  .stage .hint { color: rgba(255,255,255,.7); text-align: center; margin-top: 18px; font-size: .92rem; min-height: 1.4em; }
+  .stage .center { display: flex; flex-direction: column; align-items: center; }
+  .stage .pack { cursor: pointer; animation: wobble 2.4s ease-in-out infinite; }
+  @keyframes wobble { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) translateY(-6px); } }
+  .reveal { position: relative; width: min(300px, 78vw); aspect-ratio: 63 / 88; perspective: 1400px; cursor: pointer; }
+  .flipper { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .flipper.flipped { transform: rotateY(180deg); }
+  .flipper > .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .flipper > .face.front { transform: rotateY(180deg); }
+  .flipper .pc { --w: 100%; width: 100%; font-size: calc(min(300px, 78vw) / 21); }
+  .reveal.enter { animation: fly .45s cubic-bezier(.2,.8,.2,1); }
+  @keyframes fly { from { transform: translateY(120px) scale(.8); opacity: 0; } }
+  .reveal.leave { animation: out .35s ease-in forwards; }
+  @keyframes out { to { transform: translateX(-120%) rotate(-12deg); opacity: 0; } }
+  .reveal .aura { position: absolute; inset: -18%; border-radius: 50%; filter: blur(30px); opacity: 0; transition: opacity .5s; pointer-events: none; }
+  .reveal.r-R .aura { background: radial-gradient(circle, rgba(56,189,248,.8), transparent 60%); }
+  .reveal.r-UR .aura { background: radial-gradient(circle, rgba(217,70,239,.85), transparent 60%); }
+  .reveal.r-SR .aura { background: radial-gradient(circle, rgba(250,204,21,.95), transparent 60%); }
+  .reveal.lit .aura { opacity: 1; }
+  .progress-dots { display: flex; gap: 6px; margin-top: 16px; }
+  .progress-dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.2); }
+  .progress-dots i.on { background: var(--accent); }
+  .summary { display: none; flex-direction: column; align-items: center; gap: 16px; width: min(900px, 100%); }
+  .summary.show { display: flex; }
+  .summary h3 { color: #fff; font: 700 1.4rem var(--title); margin: 0; text-align: center; }
+  .summary .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .summary .pc { --w: clamp(110px, 17vw, 160px); cursor: zoom-in; }
+  .summary .btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+  /* ---------- Album ---------- */
+  .album-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin: 50px 0 14px; }
+  .album-head h2 { font: 600 1.5rem var(--title); margin: 0; }
+  .album-head .meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+  .prog { height: 8px; background: var(--card-2); border-radius: 999px; overflow: hidden; margin: 8px 0 0; width: 260px; max-width: 100%; }
+  .prog i { display: block; height: 100%; background: linear-gradient(90deg, #f59e0b, #db2777); width: 0; transition: width .6s; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filters button { background: var(--card); border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 6px 12px; font: 600 .8rem var(--body); cursor: pointer; }
+  .filters button.on { background: var(--accent); color: #1a1405; border-color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+  @media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+  .slot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .slot .pc { --w: 100%; width: 100%; font-size: calc(min(170px, 44vw) / 21); cursor: zoom-in; }
+  .slot .cnt { font: 600 .8rem var(--body); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .missing { width: 100%; aspect-ratio: 63 / 88; border-radius: 10px; border: 2px dashed var(--line-2); display: grid; place-items: center; color: var(--muted); font: 700 1.4rem var(--title); background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(255,255,255,.02) 10px 20px); }
+  .missing small { display: block; font: 500 .7rem var(--body); text-align: center; margin-top: 4px; }
+
+  /* ---------- Detail ---------- */
+  .detail { position: fixed; inset: 0; z-index: 85; background: rgba(5,5,10,.88); display: none; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px; }
+  .detail.show { display: grid; }
+  .detail .holder { perspective: 1200px; }
+  .detail .pc { --w: min(360px, 84vw); transition: transform .12s ease-out; }
+  .detail .close { position: absolute; top: 16px; right: 16px; }
+  .detail .cap { text-align: center; color: rgba(255,255,255,.7); font-size: .88rem; margin-top: 16px; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <header class="page-head">
+      <span class="kicker"><i data-icon="gift"></i>Sammelkarten</span>
+      <h1>Crazy Cupcakes</h1>
+      <p>Erweiterung „Hoing Boings“: 40 Karten, von Miau-H bis zur geheimen Alastor-Lapis-Karte. Bezahlt wird mit Lapis-Talern aus dem Casino.</p>
+    </header>
+
+    <div class="bar">
+      <div class="wallet"><span class="coin"><i data-icon="coins"></i></span><div><b id="balance">–</b><small id="who">Lapis-Taler</small></div></div>
+      <div class="links"><a class="btn ghost" href="/"><i data-icon="dices"></i>Zum Casino</a><a class="btn ghost" href="/#rangliste"><i data-icon="trophy"></i>Sammler-Rangliste</a></div>
+    </div>
+
+    <section class="shop">
+      <div class="pack" id="shop-pack" aria-hidden="true"><div class="crimp top"></div><div class="logo">CRAZY CUPCAKES<small>HOING BOINGS</small></div><div class="art"><img src="/shared/cupcakes/dschinni.webp" alt=""></div><div class="count">5 KARTEN</div><div class="crimp bot"></div></div>
+      <div>
+        <h2>Booster-Pack</h2>
+        <p>Jedes Pack enthält 5 Karten: drei häufige, eine ungewöhnliche und mindestens eine seltene Holo-Karte. Mit etwas Glück eine ultra seltene – oder die geheime.</p>
+        <div class="odds"><span><b>●</b> 3 Häufig</span><span><b>◆</b> 1 Ungewöhnlich</span><span><b>★</b> Selten 72 %</span><span><b>★★</b> Ultra 23 %</span><span><b>✦</b> Geheim 5 %</span></div>
+        <div class="btns">
+          <button class="btn gold" id="free" type="button"><i data-icon="gift"></i><span>Gratis-Pack öffnen</span></button>
+          <button class="btn" id="buy" type="button"><i data-icon="coins"></i>Pack kaufen · 150</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="album-head">
+      <div><h2>Sammelalbum</h2><div class="meta" id="album-meta">–</div><div class="prog"><i id="prog"></i></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <div class="filters" id="filters"></div>
+        <button class="btn ghost" id="sell" type="button"><i data-icon="hand-coins"></i><span>Doppelte verkaufen</span></button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="bigh-footer">Crazy Cupcakes · Sammelkarten mit Figuren aus dem Crazy-Cupcakes-Whiteboard · Nur Spielgeld</footer>
+
+  <div class="stage" id="stage" role="dialog" aria-modal="true" aria-label="Pack öffnen">
+    <div class="center" id="opening">
+      <div class="pack" id="stage-pack"><div class="crimp top"></div><div class="logo">CRAZY CUPCAKES<small>HOING BOINGS</small></div><div class="art"><img src="/shared/cupcakes/vader.webp" alt=""></div><div class="count">5 KARTEN</div><div class="crimp bot"></div></div>
+      <div class="hint" id="stage-hint">Tippen zum Aufreissen</div>
+      <div class="progress-dots" id="dots"></div>
+    </div>
+    <div class="summary" id="summary">
+      <h3 id="sum-title">Dein Pack</h3>
+      <div class="row" id="sum-row"></div>
+      <div class="btns"><button class="btn gold" id="again" type="button"><i data-icon="gift"></i>Noch ein Pack</button><button class="btn ghost" id="done" type="button"><i data-icon="layout-grid"></i>Zum Album</button></div>
+    </div>
+  </div>
+
+  <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Karte"><button class="btn ghost close" id="d-close" type="button" aria-label="Schliessen"><i data-icon="x"></i></button><div><div class="holder" id="d-holder"></div><div class="cap">Bewege die Maus oder das Handy für den Holo-Effekt</div></div></div>
+
+  <script src="/shared/fun.js"></script>
+  <script src="/account.js"></script>
+  <script src="cards.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const CARDS = window.CC_CARDS, TYPES = window.CC_TYPES, RAR = window.CC_RARITY;
+    const byId = Object.fromEntries(CARDS.map((c, i) => [c.id, Object.assign(c, { no: i + 1 })]));
+    const fmt = (n) => Math.round(n).toLocaleString('de-CH');
+    const sfx = (n) => BIGH.sfx && BIGH.sfx(n);
+    const sleep = (ms) => new Promise((r) => setTimeout(r, BIGH.reduced ? Math.min(ms, 60) : ms));
+
+    // ---------- Karte bauen ----------
+    function cardEl(id) {
+      const c = byId[id];
+      const [tname, ticon, tc, tl] = TYPES[c.t];
+      const el = document.createElement('div');
+      el.className = 'pc r-' + c.r;
+      el.style.setProperty('--tc', tc);
+      el.style.setProperty('--tl', tl);
+      const cost = (n) => '<span class="cost">' + '<i></i>'.repeat(n) + '</span>';
+      el.innerHTML = '<div class="pc-in">' +
+        '<div class="pc-top"><span class="stg">' + (c.r === 'SR' ? 'LEGENDE' : c.r === 'UR' ? 'EX' : 'BASIS') + '</span><span class="nm"></span><span class="hp">KP <b>' + c.hp + '</b></span><span class="ty" title="' + tname + '">' + BIGH.icon(ticon) + '</span></div>' +
+        '<div class="pc-art"><img alt="" loading="lazy" decoding="async"></div>' +
+        '<div class="pc-info">Nr. ' + c.no + ' · Crazy-Cupcakes-Figur · Grösse: ja · Gewicht: 3 Pizzen</div>' +
+        c.a.map((a, i) => '<div class="pc-atk">' + cost(a[1] ? Math.min(4, 1 + Math.floor(a[1] / 50)) : 1) + '<b></b><span class="dmg">' + (a[1] || '') + '</span>' + (a[2] ? '<p></p>' : '') + '</div>').join('') +
+        '<div class="pc-spacer"></div>' +
+        '<div class="pc-bottom"><span>Schwäche<b>Gras ×2</b></span><span>Resistenz<b>Kritik −30</b></span><span>Rückzug<b>baden gehen</b></span></div>' +
+        '<div class="pc-flavor"></div>' +
+        '<div class="pc-foot"><span>Illus. Crazy Cupcakes</span><span>' + c.no + '/40 ' + RAR[c.r][1] + '</span></div>' +
+        '</div><div class="glare"></div>';
+      el.querySelector('.nm').textContent = c.n;
+      el.querySelector('img').src = c.img || '/shared/cupcakes/' + c.id + '.webp';
+      el.querySelectorAll('.pc-atk').forEach((row, i) => {
+        row.querySelector('b').textContent = c.a[i][0];
+        const p = row.querySelector('p'); if (p) p.textContent = c.a[i][2];
+      });
+      el.querySelector('.pc-flavor').textContent = c.f;
+      return el;
+    }
+    function backEl() {
+      const el = document.createElement('div');
+      el.className = 'pc back';
+      el.innerHTML = '<div class="pc-in"><div class="ball"><span>H</span></div></div>';
+      return el;
+    }
+    // Holo-Effekt: Neigung und Glanz folgen dem Zeiger
+    function tilt(el, strength) {
+      const move = (x, y) => {
+        const r = el.getBoundingClientRect();
+        const px = Math.min(1, Math.max(0, (x - r.left) / r.width)), py = Math.min(1, Math.max(0, (y - r.top) / r.height));
+        el.style.transform = 'rotateY(' + (px - 0.5) * strength + 'deg) rotateX(' + (0.5 - py) * strength + 'deg)';
+        el.style.setProperty('--hx', px * 100 + '%'); el.style.setProperty('--hy', py * 100 + '%');
+        el.classList.add('tilt');
+      };
+      el.addEventListener('pointermove', (e) => move(e.clientX, e.clientY));
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; el.classList.remove('tilt'); });
+      return move;
+    }
+
+    // ---------- Konto ----------
+    let me = null;
+    Casino.onChange((m) => {
+      me = m;
+      if (!m) return;
+      document.getElementById('balance').textContent = fmt(m.balance);
+      document.getElementById('who').textContent = 'Lapis-Taler · ' + m.name;
+      renderAlbum(); renderButtons();
+    });
+    let freeAt = 0;
+    function renderButtons() {
+      if (!me) return;
+      freeAt = Date.now() + (me.freePackIn || 0);
+      updateFree();
+      document.getElementById('buy').disabled = me.balance < 150;
+    }
+    function updateFree() {
+      const b = document.getElementById('free');
+      const left = freeAt - Date.now();
+      if (left <= 0) { b.disabled = false; b.querySelector('span').textContent = 'Gratis-Pack öffnen'; return; }
+      b.disabled = true;
+      const h = Math.floor(left / 3600000), m = Math.floor(left % 3600000 / 60000), s = Math.floor(left % 60000 / 1000);
+      b.querySelector('span').textContent = 'Gratis in ' + (h ? h + ' h ' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+    setInterval(updateFree, 1000);
+
+    // ---------- Album ----------
+    let filter = 'all';
+    const FILTERS = [['all', 'Alle'], ['have', 'Gesammelt'], ['miss', 'Fehlend'], ['C', '●'], ['U', '◆'], ['R', '★'], ['UR', '★★'], ['SR', '✦']];
+    const fEl = document.getElementById('filters');
+    FILTERS.forEach(([k, label]) => {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (k === filter) b.className = 'on';
+      if (RAR[k]) b.title = RAR[k][0];
+      b.addEventListener('click', () => { filter = k; fEl.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); renderAlbum(); });
+      fEl.appendChild(b);
+    });
+    const SELL = { C: 5, U: 12, R: 30, UR: 80, SR: 250 };
+    function renderAlbum() {
+      if (!me) return;
+      const owned = me.cards || {};
+      const have = CARDS.filter((c) => owned[c.id]).length;
+      document.getElementById('album-meta').textContent = have + ' von ' + CARDS.length + ' Karten gesammelt';
+      document.getElementById('prog').style.width = have / CARDS.length * 100 + '%';
+      let dupeValue = 0, dupes = 0;
+      CARDS.forEach((c) => { const n = owned[c.id] || 0; if (n > 1) { dupes += n - 1; dupeValue += (n - 1) * SELL[c.r]; } });
+      const sell = document.getElementById('sell');
+      sell.disabled = !dupes;
+      sell.querySelector('span').textContent = dupes ? dupes + ' Doppelte verkaufen · +' + fmt(dupeValue) : 'Keine Doppelten';
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      CARDS.forEach((c) => {
+        const n = owned[c.id] || 0;
+        if (filter === 'have' && !n) return;
+        if (filter === 'miss' && n) return;
+        if (RAR[filter] && c.r !== filter) return;
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        if (n) {
+          const card = cardEl(c.id);
+          card.addEventListener('click', () => openDetail(c.id));
+          slot.appendChild(card);
+          const cnt = document.createElement('div'); cnt.className = 'cnt'; cnt.textContent = RAR[c.r][0] + (n > 1 ? ' · ×' + n : '');
+          slot.appendChild(cnt);
+        } else {
+          const m = document.createElement('div'); m.className = 'missing';
+          m.innerHTML = '<div>' + c.no + '<small>' + RAR[c.r][1] + ' ' + RAR[c.r][0] + '</small></div>';
+          slot.appendChild(m);
+        }
+        grid.appendChild(slot);
+      });
+      if (!grid.children.length) grid.innerHTML = '<p style="color:var(--muted);grid-column:1/-1;text-align:center">Keine Karten in dieser Ansicht.</p>';
+    }
+    document.getElementById('sell').addEventListener('click', async () => {
+      try {
+        const r = await Casino.api('POST', '/sell');
+        Casino.update(r.me);
+        sfx('coin');
+        BIGH.toast(r.sold + ' Karten verkauft. +' + fmt(r.earned) + ' Taler.');
+      } catch (e) { BIGH.toast(e.message); }
+    });
+
+    // ---------- Detail ----------
+    function openDetail(id) {
+      const d = document.getElementById('detail');
+      const h = document.getElementById('d-holder');
+      h.innerHTML = '';
+      const card = cardEl(id);
+      h.appendChild(card);
+      tilt(card, 22);
+      d.classList.add('show');
+      sfx('flip');
+    }
+    document.getElementById('d-close').addEventListener('click', () => document.getElementById('detail').classList.remove('show'));
+    document.getElementById('detail').addEventListener('click', (e) => { if (e.target.id === 'detail') e.currentTarget.classList.remove('show'); });
+    // Handy: Neigungssensor für den Holo-Effekt
+    window.addEventListener('deviceorientation', (e) => {
+      const card = document.querySelector('.detail.show .pc');
+      if (!card || e.gamma === null) return;
+      const r = card.getBoundingClientRect();
+      const x = r.left + r.width * (0.5 + Math.max(-0.5, Math.min(0.5, e.gamma / 50)));
+      const y = r.top + r.height * (0.5 + Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 50)));
+      card.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y }));
+    });
+
+    // ---------- Pack öffnen ----------
+    const stage = document.getElementById('stage');
+    const opening = document.getElementById('opening');
+    const hint = document.getElementById('stage-hint');
+    let busy = false;
+    async function buy(free) {
+      if (busy) return;
+      busy = true;
+      let res;
+      try { res = await Casino.api('POST', '/pack', { free }); }
+      catch (e) { BIGH.toast(e.message); busy = false; return; }
+      await run(res);
+      Casino.update(res.me);
+      busy = false;
+    }
+    function waitTap(el) {
+      return new Promise((resolve) => {
+        const on = (e) => { e.preventDefault(); el.removeEventListener('click', on); document.removeEventListener('keydown', key); resolve(); };
+        const key = (e) => { if (e.key === ' ' || e.key === 'Enter') on(e); };
+        el.addEventListener('click', on);
+        document.addEventListener('keydown', key);
+      });
+    }
+    async function run(res) {
+      document.getElementById('summary').classList.remove('show');
+      opening.style.display = '';
+      opening.innerHTML = '';
+      const pack = document.createElement('div');
+      pack.className = 'pack';
+      pack.innerHTML = document.getElementById('shop-pack').innerHTML.replace('dschinni.webp', BIGH.pick(['vader', 'dschinni', 'gigachad', 'barbarenkoenig', 'mario', 'omen']) + '.webp');
+      opening.appendChild(pack);
+      opening.appendChild(hint);
+      const dots = document.createElement('div'); dots.className = 'progress-dots';
+      res.cards.forEach(() => dots.appendChild(document.createElement('i')));
+      opening.appendChild(dots);
+      hint.textContent = 'Tippen zum Aufreissen';
+      stage.classList.add('show');
+      await waitTap(pack);
+      pack.classList.add('tear');
+      sfx('rip');
+      await sleep(650);
+      pack.remove();
+      // Karten einzeln aufdecken; die seltenste kommt zuletzt
+      for (let i = 0; i < res.cards.length; i++) {
+        const c = res.cards[i];
+        const rv = document.createElement('div');
+        rv.className = 'reveal enter r-' + c.rarity;
+        rv.innerHTML = '<div class="aura"></div><div class="flipper"><div class="face back-face"></div><div class="face front"></div></div>';
+        rv.querySelector('.back-face').appendChild(backEl());
+        const front = cardEl(c.id);
+        if (c.isNew) { const nb = document.createElement('span'); nb.className = 'new'; nb.textContent = 'NEU'; front.appendChild(nb); }
+        rv.querySelector('.front').appendChild(front);
+        opening.insertBefore(rv, hint);
+        sfx('whoosh');
+        const special = c.rarity === 'R' || c.rarity === 'UR' || c.rarity === 'SR';
+        hint.textContent = special ? 'Da glänzt etwas … tippen!' : 'Tippen zum Aufdecken';
+        const tapped = waitTap(rv); // sofort bereit, auch während das Leuchten startet
+        if (special) setTimeout(() => rv.classList.add('lit'), 300);
+        await tapped;
+        rv.querySelector('.flipper').classList.add('flipped');
+        sfx('flip');
+        dots.children[i].classList.add('on');
+        if (c.rarity === 'SR') { sfx('bigwin'); BIGH.confettiRain(null, 80); }
+        else if (c.rarity === 'UR') { sfx('bigwin'); BIGH.confettiRain(null, 45); }
+        else if (c.rarity === 'R') sfx('shine');
+        await sleep(700);
+        tilt(front, 16);
+        hint.textContent = (c.isNew ? 'Neu! ' : '') + byId[c.id].n + ' · ' + RAR[c.rarity][0] + (i < res.cards.length - 1 ? ' – tippen für die nächste Karte' : ' – tippen für die Übersicht');
+        await waitTap(rv);
+        rv.classList.add('leave');
+        await sleep(330);
+        rv.remove();
+      }
+      // Übersicht
+      opening.style.display = 'none';
+      const row = document.getElementById('sum-row');
+      row.innerHTML = '';
+      res.cards.forEach((c) => {
+        const el = cardEl(c.id);
+        if (c.isNew) { const nb = document.createElement('span'); nb.className = 'new'; nb.textContent = 'NEU'; el.appendChild(nb); }
+        el.addEventListener('click', () => openDetail(c.id));
+        row.appendChild(el);
+      });
+      const news = res.cards.filter((c) => c.isNew).length;
+      document.getElementById('sum-title').textContent = news ? news + (news === 1 ? ' neue Karte' : ' neue Karten') + ' für dein Album' : 'Nur Doppelte. Big H kennt das Gefühl.';
+      document.getElementById('summary').classList.add('show');
+      document.getElementById('again').innerHTML = BIGH.icon('gift') + 'Noch ein Pack · 150';
+    }
+    document.getElementById('free').addEventListener('click', () => buy(true));
+    document.getElementById('buy').addEventListener('click', () => buy(false));
+    document.getElementById('again').addEventListener('click', () => buy(false));
+    document.getElementById('done').addEventListener('click', () => { stage.classList.remove('show'); document.querySelector('.album-head').scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth' }); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.getElementById('detail').classList.remove('show'); if (document.getElementById('summary').classList.contains('show')) stage.classList.remove('show'); } });
+
+    tilt(document.getElementById('shop-pack'), 14);
+    Casino.init().catch((e) => BIGH.toast(e.message));
+  })();
+  </script>
+</body>
+</html>

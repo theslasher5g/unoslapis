@@ -104,9 +104,81 @@
 
   // ---------- Sound (ohne Dateien, per Web Audio, bewusst leise) ----------
   let audioCtx;
+  // ---------- Ton: alles live synthetisiert, global abschaltbar ----------
+  let soundOn = true;
+  try { soundOn = localStorage.getItem('bigh-sound') !== 'off'; } catch (e) { /* egal */ }
+  function ctx() {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function tone(freq, at, dur, type, vol, glide) {
+    const c = ctx(), t = c.currentTime + (at || 0);
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, t);
+    if (glide) o.frequency.exponentialRampToValueAtTime(glide, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.05, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  function noise(at, dur, vol, filter, f1, f2) {
+    const c = ctx(), t = c.currentTime + (at || 0);
+    const len = Math.max(1, Math.floor(c.sampleRate * dur));
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const src = c.createBufferSource(); src.buffer = buf;
+    const f = c.createBiquadFilter(); f.type = filter || 'bandpass';
+    f.frequency.setValueAtTime(f1 || 2000, t);
+    if (f2) f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(vol || 0.05, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f).connect(g).connect(c.destination);
+    src.start(t); src.stop(t + dur + 0.02);
+  }
+  const SFX = {
+    click: () => tone(1100, 0, 0.04, 'triangle', 0.025),
+    tick: () => tone(1700, 0, 0.018, 'square', 0.012),
+    coin: () => { tone(988, 0, 0.08, 'square', 0.025); tone(1319, 0.07, 0.22, 'square', 0.025); },
+    chip: () => { noise(0, 0.05, 0.08, 'highpass', 3000); tone(2400, 0, 0.03, 'triangle', 0.02); },
+    card: () => noise(0, 0.07, 0.09, 'bandpass', 2500, 1200),
+    flip: () => { noise(0, 0.1, 0.07, 'bandpass', 1500, 4000); tone(620, 0.02, 0.08, 'triangle', 0.02); },
+    win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.09, 0.22, 'triangle', 0.045)),
+    bigwin: () => { [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, i * 0.08, 0.3, 'triangle', 0.045)); for (let i = 0; i < 8; i++) tone(2000 + Math.random() * 2000, 0.5 + i * 0.06, 0.12, 'sine', 0.015); },
+    lose: () => { tone(330, 0, 0.25, 'sawtooth', 0.02, 220); tone(262, 0.2, 0.35, 'sawtooth', 0.02, 165); },
+    rip: () => noise(0, 0.45, 0.12, 'bandpass', 800, 5000),
+    shine: () => { for (let i = 0; i < 10; i++) tone(1800 + Math.random() * 2400, i * 0.05, 0.15, 'sine', 0.018); },
+    whoosh: () => noise(0, 0.5, 0.08, 'lowpass', 300, 3000),
+    tadum: () => { tone(98, 0, 0.35, 'sine', 0.2); noise(0, 0.18, 0.06, 'lowpass', 400); tone(73.4, 0.42, 1.6, 'sine', 0.22); tone(146.8, 0.42, 1.4, 'triangle', 0.05); tone(110, 0.42, 1.5, 'sine', 0.08); },
+    jingle: () => [659, 784, 988, 784, 1319].forEach((f, i) => tone(f, i * 0.11, 0.2, 'triangle', 0.04))
+  };
+  function sfx(name) {
+    if (!soundOn || !SFX[name]) return;
+    try { SFX[name](); } catch (e) { /* kein Audio – egal */ }
+  }
+  function renderSoundButtons() {
+    document.querySelectorAll('.bigh-sound').forEach((b) => {
+      b.innerHTML = icon(soundOn ? 'volume-2' : 'volume-x');
+      b.setAttribute('aria-label', soundOn ? 'Ton aus' : 'Ton an');
+      b.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+    });
+  }
+  function setSound(on) {
+    soundOn = on;
+    try { localStorage.setItem('bigh-sound', on ? 'on' : 'off'); } catch (e) { /* egal */ }
+    renderSoundButtons();
+    if (on) sfx('jingle');
+    document.dispatchEvent(new CustomEvent('bigh-sound', { detail: on }));
+  }
+
   function beep(freq, dur, type, vol) {
+    if (!soundOn) return;
     try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      ctx();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
       o.type = type || 'sine';
@@ -189,6 +261,21 @@
     }
 
     birthdayTakeover();
+
+    if (!document.body.hasAttribute('data-no-sound-toggle')) {
+      const sb = document.createElement('button');
+      sb.type = 'button';
+      sb.className = 'bigh-sound';
+      sb.title = 'Ton an/aus';
+      sb.addEventListener('click', () => setSound(!soundOn));
+      document.body.appendChild(sb);
+      renderSoundButtons();
+    }
+    // Leiser Klick auf Knöpfen
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('.btn, .chip, .tabs a, .seg button');
+      if (b && !b.disabled) sfx('click');
+    }, true);
   });
 
   // ---------- Geburtstags-Takeover: am 4. Oktober auf jeder Seite ----------
@@ -215,5 +302,5 @@
   console.log('%cBig H', 'font:700 40px system-ui;color:#f43f5e');
   console.log('%cWas machst du in der Konsole? Geh lieber Gras anfassen. (Tipp: ↑↑↓↓←→←→BA)', 'font-size:13px;color:#a1a1aa');
 
-  window.BIGH = { link, toast, burst, confettiRain, emojiBackground, beep, gallop, rand, pick, reduced, icon, hydrateIcons, stripEmoji };
+  window.BIGH = { link, toast, burst, confettiRain, emojiBackground, beep, sfx, setSound, get soundOn() { return soundOn; }, gallop, rand, pick, reduced, icon, hydrateIcons, stripEmoji };
 })();

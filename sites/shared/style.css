@@ -156,3 +156,12 @@ footer.bigh-footer {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* hidden gilt immer, auch bei Elementen mit eigenem display */
+[hidden] { display: none !important; }
+
+/* ---------- Ton-Schalter (auf jeder Seite unten rechts) ---------- */
+.bigh-sound { position: fixed; right: 14px; bottom: 14px; z-index: 55; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); background: rgba(16,16,20,.82); color: #e4e4e7; display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform .15s, background .15s; }
+.bigh-sound:hover { transform: scale(1.06); background: rgba(30,30,36,.9); }
+.bigh-sound .icon { width: 18px; height: 18px; }
+@media print { .bigh-sound { display: none; } }

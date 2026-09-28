@@ -165,15 +165,16 @@
     const LAST_GRASS = new Date('2019-06-12T14:37:00+02:00');
 
     const FEATURED = [
-      { sub: 'casino', icon: 'dices', title: 'Casino Lapis', text: 'Slots, Blackjack gegen Big H, Roulette und ein Greifautomat mit Mausi-Plüsch.', bg: 'linear-gradient(150deg, #0e3b2c, #14141a 70%)' },
-      { sub: 'game', icon: 'footprints', title: 'Flucht vor dem Gras', text: 'Der Runner mit Big H als Spielfigur. Mit Rangliste für alle.', bg: 'linear-gradient(150deg, #1b1840, #14141a 70%)' },
-      { sub: 'museum', icon: 'landmark', title: 'Big H Museum', text: 'Die Sammlung Alastor Lapis: Porträt, Fürstenzeit, Everest. Mit Audioguide.', bg: 'linear-gradient(150deg, #3b2f1f, #14141a 70%)' }
+      { sub: 'casino', icon: 'dices', title: 'Casino Lapis', text: 'Blackjack mit mehreren Spielern an einem Tisch, Slots, Roulette, Greifautomat und Rangliste.', bg: 'linear-gradient(150deg, #0e3b2c, #14141a 70%)' },
+      { sub: 'casino', path: 'packs/', icon: 'gift', title: 'Crazy Cupcakes Packs', text: 'Booster-Packs aufreissen und alle 40 Sammelkarten mit Holo-Raritäten sammeln.', bg: 'linear-gradient(150deg, #3b1d5c, #14141a 70%)' },
+      { sub: 'bigflix', icon: 'tv', title: 'Bigflix', text: 'Serien und Filme über Big H: Ich muss baden gehen, Breaking Big, Stranger Rangs.', bg: 'linear-gradient(150deg, #4a0b0e, #14141a 70%)' }
     ];
 
     const GROUPS = [
       { title: 'Über ihn', icon: 'user', items: [
         { sub: 'wiki', icon: 'book-open', c: '#e5e7eb', t: 'Wikipedia', d: 'Der vollständige Lexikoneintrag' },
-        { sub: 'museum', icon: 'landmark', c: '#d6b370', t: 'Big H Museum', d: 'Ausstellung mit Audioguide', badge: 'Neu' },
+        { sub: 'museum', icon: 'landmark', c: '#d6b370', t: 'Big H Museum', d: 'Ausstellung mit Audioguide' },
+        { sub: 'bigflix', icon: 'tv', c: '#e50914', t: 'Bigflix', d: 'Serien und Filme über Big H', badge: 'Neu' },
         { sub: 'news', icon: 'newspaper', c: '#e5e7eb', t: "The Big'H Times", d: 'Die Zeitung zum Umblättern' },
         { sub: 'linkedin', icon: 'briefcase', c: '#60a5fa', t: 'LinkedOut', d: 'Senior Goon Engineer, open to work' },
         { sub: 'tinder', icon: 'flame', c: '#fb7185', t: 'Hinder', d: 'Sein Dating-Profil. Nope bringt nichts.' },
@@ -188,8 +189,9 @@
         { sub: 'merch', icon: 'shopping-bag', c: '#f472b6', t: 'Merch Store', d: 'Geschenkideen. Lieferung: nie.' }
       ] },
       { title: 'Gaming', icon: 'gamepad-2', items: [
-        { sub: 'casino', icon: 'dices', c: '#e3b341', t: 'Casino Lapis', d: 'Slots, Blackjack, Roulette, Greifautomat', badge: 'Neu' },
-        { sub: 'game', icon: 'footprints', c: '#34d399', t: 'Flucht vor dem Gras', d: 'Runner mit Rangliste', badge: 'Neu' },
+        { sub: 'casino', icon: 'dices', c: '#e3b341', t: 'Casino Lapis', d: 'Blackjack zu mehreren, Slots, Roulette', badge: 'Neu' },
+        { sub: 'casino', path: 'packs/', icon: 'gift', c: '#c084fc', t: 'Crazy Cupcakes Packs', d: 'Sammelkarten mit Holo-Raritäten', badge: 'Neu' },
+        { sub: 'game', icon: 'footprints', c: '#34d399', t: 'Flucht vor dem Gras', d: 'Runner mit Rangliste' },
         { sub: 'overwatch', icon: 'crosshair', c: '#fb923c', t: 'Overwatch', d: 'Career Profile und Play of the Game' },
         { sub: 'wordle', icon: 'grid-3x3', c: '#4ade80', t: 'unoslapis Wordle', d: 'Wort des Tages mit Rangliste' },
         { sub: 'waifu', icon: 'trophy', c: '#a78bfa', t: 'Waifu-Tierliste', d: 'Seine offizielle Rangliste' },
@@ -247,7 +249,7 @@
     FEATURED.forEach((f) => {
       const a = document.createElement('a');
       a.className = 'feat';
-      a.href = BIGH.link(f.sub);
+      a.href = BIGH.link(f.sub) + (f.path || '');
       a.style.setProperty('--bgimg', f.bg);
       a.innerHTML = '<span class="ic">' + BIGH.icon(f.icon) + '</span><h3></h3><p></p><span class="more">Öffnen ' + BIGH.icon('arrow-right') + '</span>';
       a.querySelector('h3').textContent = f.title;
@@ -268,7 +270,7 @@
         total++;
         const a = document.createElement('a');
         a.className = 'tile';
-        a.href = BIGH.link(it.sub);
+        a.href = BIGH.link(it.sub) + (it.path || '');
         a.style.setProperty('--c', it.c);
         a.dataset.search = (it.t + ' ' + it.d + ' ' + it.sub).toLowerCase();
         a.innerHTML = '<span class="ic">' + BIGH.icon(it.icon) + '</span><span><b></b><small></small></span>';
