@@ -97,7 +97,7 @@
   .checkout:disabled { opacity: .4; cursor: not-allowed; }
 
   .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 90; display: none; place-items: center; padding: 16px; }
-  .modal-bg.show { display: grid; }
+  .modal-bg.show { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .modal { background: #fff; color: var(--ink); border-radius: 22px; max-width: 440px; width: 100%; padding: 30px; text-align: center; animation: pop .3s ease-out; }
   @keyframes pop { from { transform: translateY(10px); opacity: 0; } }
   .modal .big { width: 56px; height: 56px; margin: 0 auto; border-radius: 16px; background: var(--paper); display: grid; place-items: center; }

@@ -21,7 +21,7 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `horoskop.unoslapis.ch` | Astro-Lapis: tägliches Horoskop für alle 12 Sternzeichen, Big H (Waage) als Spezial, Partner-Check |
 | `merch.unoslapis.ch` | Fake-Shop mit Warenkorb, Sale-Countdown und „Bestellung" (fragt nichts ab, verschickt nichts) |
 | `discord.unoslapis.ch` | Nachgebauter Chat-Server mit Kanälen wie #baden-gehen und #goon-logs; man kann selbst schreiben und unoslapis antwortet |
-| `wordle.unoslapis.ch` | unoslapis Wordle: Wort des Tages (für alle gleich) + Endlos-Modus, Statistik, Teilen als Emoji-Raster |
+| `wordle.unoslapis.ch` | unoslapis Wordle: Wort des Tages (für alle gleich) + Endlos-Modus, Statistik, Teilen als Emoji-Raster. **Rangliste** (Pokal-Knopf): Ergebnisse aller Spieler von heute und Allzeit-Punkte, gespeichert im Backend |
 | `bewertungen.unoslapis.ch` | „Goongle"-Unternehmensprofil: Big H als Sehenswürdigkeit mit Öffnungszeiten, Stosszeiten, Q&A. Besucher können **echte Rezensionen** mit Sternen schreiben (gespeichert im Backend) |
 | `tinder.unoslapis.ch` | „Hinder"-Dating-Profil von Alastor: Karte wischen, Fotos durchtippen, Nope bringt nichts, bei Match antwortet er im Chat |
 | `wrapped.unoslapis.ch` | **Big H Wrapped** im Story-Format: 4'269 h Overwatch, Top 0,01 % Hazbin Hotel, Top-Songs, Top-Ausrede, Hörer-Persönlichkeit, Audio-Aura, Zusammenfassung zum Teilen (Tippen = weiter, Halten = Pause) |
@@ -36,13 +36,13 @@ Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` 
 
 ```
 Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx      (alle Seiten, Routing per Hostname)
-                                                     └──► guestbook  (nur /api/* von guestbook., bewertungen. und karte., speichert JSON)
+                                                     └──► guestbook  (nur /api/* von guestbook., bewertungen., karte. und wordle., speichert JSON)
 ```
 
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
-guestbook/             # Backend für Gästebuch, Bewertungen und Geburtstagskarte (Node, ohne Abhängigkeiten)
+guestbook/             # Backend für Gästebuch, Bewertungen, Geburtstagskarte und Wordle-Rangliste (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
   shared/              # style.css, fun.js, icons.svg, 404.html, img/ (gilt für alle Subdomains)
@@ -99,12 +99,12 @@ Die Seiten sind nur read-only eingebunden. HTML ändern, `git pull`, fertig, ohn
 Nach Änderungen an `Caddyfile` oder `default.conf`: `docker compose restart`.
 Nach Änderungen am Gästebuch-Backend oder neuen Services: `docker compose up -d --build`.
 
-### Gästebuch, Bewertungen & Karte moderieren
+### Gästebuch, Bewertungen, Karte & Wordle-Rangliste moderieren
 
 1. In `.env` ein geheimes `GUESTBOOK_ADMIN_TOKEN` setzen (z.B. `openssl rand -hex 24`) und `docker compose up -d`.
-2. `https://guestbook.unoslapis.ch/#admin`, `https://bewertungen.unoslapis.ch/#admin` bzw. `https://karte.unoslapis.ch/#admin` öffnen. Neben jedem Eintrag erscheint ein ×, beim ersten Löschen wird nach dem Token gefragt.
+2. `https://guestbook.unoslapis.ch/#admin`, `https://bewertungen.unoslapis.ch/#admin` bzw. `https://karte.unoslapis.ch/#admin` öffnen (Wordle-Einträge löschen: `curl -X DELETE -H "Authorization: Bearer <TOKEN>" https://wordle.unoslapis.ch/api/wordle/<id>`, die id steht in `https://wordle.unoslapis.ch/api/wordle`). Neben jedem Eintrag erscheint ein ×, beim ersten Löschen wird nach dem Token gefragt.
 
-Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json`, `reviews.json` und `cards.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
+Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP (Karte und Wordle: 20, weil sich Kollegen im Büro oft eine IP teilen), pro Name nur ein Wordle-Ergebnis pro Tag, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json`, `reviews.json`, `cards.json` und `wordle.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
 
 ## Anpassen
 

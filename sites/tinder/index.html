@@ -74,7 +74,7 @@
 
   /* Match */
   .match-bg { position: fixed; inset: 0; z-index: 80; display: none; place-items: center; padding: 16px; background: rgba(0,0,0,.85); }
-  .match-bg.show { display: grid; }
+  .match-bg.show { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .match { width: min(420px, 100%); text-align: center; animation: zoom .45s cubic-bezier(.2,1.6,.4,1); }
   @keyframes zoom { from { transform: scale(.4); opacity: 0; } }
   .match h2 { font-family: var(--title); font-size: clamp(3rem, 14vw, 4.6rem); margin: 0; line-height: 1; background: linear-gradient(90deg, #3dff8a, #2de2e6); -webkit-background-clip: text; background-clip: text; color: transparent; transform: rotate(-4deg); }
