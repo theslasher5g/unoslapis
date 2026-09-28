@@ -1,4 +1,4 @@
-// Mini-Backend für guestbook., bewertungen., karte. und wordle.unoslapis.ch – ohne Abhängigkeiten.
+// Mini-Backend für guestbook., bewertungen., karte., wordle. und game.unoslapis.ch – ohne Abhängigkeiten.
 //
 // Gästebuch:
 //   GET    /api/entries          -> neueste Einträge
@@ -17,6 +17,10 @@
 //   GET    /api/wordle?day=N     -> Ergebnisse von Tag N + Allzeit-Rangliste
 //   POST   /api/wordle           -> Ergebnis {name, day, grid} (grid: Zeilen aus o/n/x, getrennt mit "-")
 //   DELETE /api/wordle/:id
+// Runner-Highscores (game.):
+//   GET    /api/scores           -> Bestwerte pro Name (Allzeit + heute)
+//   POST   /api/scores           -> Lauf {name, score, ms, cans}
+//   DELETE /api/scores/:id
 //
 //   GET    /api/health           -> Healthcheck
 'use strict';
@@ -40,6 +44,9 @@ const CARD_COLORS = ['rose', 'amber', 'violet', 'cyan', 'green', 'blue'];
 // Wordle: Tag 1 = 25.09.2026 (wie im Frontend). Clients in anderen Zeitzonen dürfen ±1 Tag abweichen.
 const WORDLE_START = Date.UTC(2026, 8, 25);
 function wordleDay() { return Math.floor((Date.now() - WORDLE_START) / 86400000) + 1; }
+// Kalendertag in der Schweiz (der Container läuft in UTC)
+const ZURICH = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Zurich' });
+const zurichDay = (t) => ZURICH.format(t);
 const nameKey = (n) => n.toLowerCase().replace(/\s+/g, ' ').trim();
 const TAGS = ['Dating', 'Gaming', 'Geburtstag', 'Ausrede gehört', 'Zufällig vorbei', 'Katze gerettet'];
 
@@ -150,6 +157,31 @@ const COLLECTIONS = {
         .slice(0, 100);
       return { day, today: wordleDay(), results: todays, total: todays.length, players: agg.size, allTime };
     }
+  },
+  scores: {
+    file: path.join(DATA_DIR, 'scores.json'),
+    max: 50000,
+    rateMax: 30,
+    rateMsg: 'Zu viele Läufe eingetragen. Kurz Pause machen (oder Gras anfassen).',
+    validate(data) {
+      const name = clean(data.name, 20).replace(/\s+/g, ' ');
+      const score = Number(data.score), ms = Number(data.ms), cans = Number(data.cans);
+      if (name.length < 1) return { error: 'Name fehlt' };
+      if (![score, ms, cans].every(Number.isInteger) || score < 1 || ms < 1000 || ms > 3 * 3600 * 1000 || cans < 0) return { error: 'Ungültiger Lauf' };
+      // Plausibilität: höchstens ~100 Punkte pro Sekunde Laufen plus 25 pro Dose, höchstens 3 Dosen pro Sekunde
+      if (cans > ms / 1000 * 3 || score > ms / 1000 * 100 + cans * 25 + 50) return { error: 'Dieser Lauf ist zu schön, um wahr zu sein' };
+      return { name, score, ms, cans };
+    },
+    list(items) {
+      const best = (list) => {
+        const m = new Map();
+        for (const e of list) { const k = nameKey(e.name); const b = m.get(k); if (!b || e.score > b.score) m.set(k, e); }
+        return [...m.values()].sort((a, b) => b.score - a.score || a.ts - b.ts).slice(0, 50)
+          .map((e) => ({ id: e.id, name: e.name, score: e.score, cans: e.cans, ms: e.ms, ts: e.ts }));
+      };
+      const today = zurichDay(Date.now());
+      return { allTime: best(items), today: best(items.filter((e) => zurichDay(e.ts) === today)), runs: items.length };
+    }
   }
 };
 
@@ -240,7 +272,7 @@ function handlePost(req, res, name, c) {
       return send(res, 500, { error: 'Speichern fehlgeschlagen' });
     }
     // Antwort-Schlüssel: "entry" fürs Gästebuch, "review" für Bewertungen, "card" für die Karte
-    const KEY = { entries: 'entry', reviews: 'review', cards: 'card', wordle: 'result' };
+    const KEY = { entries: 'entry', reviews: 'review', cards: 'card', wordle: 'result', scores: 'run' };
     return send(res, 201, { [KEY[name]]: item });
   });
 }
@@ -265,7 +297,7 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'GET' && p === '/api/health') return send(res, 200, { ok: true });
 
-  const m = p.match(/^\/api\/(entries|reviews|cards|wordle)(?:\/([a-f0-9]{12}))?$/);
+  const m = p.match(/^\/api\/(entries|reviews|cards|wordle|scores)(?:\/([a-f0-9]{12}))?$/);
   if (m) {
     const c = COLLECTIONS[m[1]];
     if (!m[2] && req.method === 'GET') return send(res, 200, c.list(c.items, url.searchParams));
@@ -277,4 +309,4 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => console.log('Backend läuft auf Port ' + PORT + ' – ' +
-  COLLECTIONS.entries.items.length + ' Gästebuch-Einträge, ' + COLLECTIONS.reviews.items.length + ' Bewertungen, ' + COLLECTIONS.cards.items.length + ' Karten-Grüsse, ' + COLLECTIONS.wordle.items.length + ' Wordle-Ergebnisse'));
+  COLLECTIONS.entries.items.length + ' Gästebuch-Einträge, ' + COLLECTIONS.reviews.items.length + ' Bewertungen, ' + COLLECTIONS.cards.items.length + ' Karten-Grüsse, ' + COLLECTIONS.wordle.items.length + ' Wordle-Ergebnisse, ' + COLLECTIONS.scores.items.length + ' Läufe'));

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big H Museum – Sammlung Alastor Lapis</title>
+<meta name="description" content="Das Big H Museum für zeitgenössische Peinlichkeit: Porträt, Fürstenzeit, Everest-Expedition und Gaming-Moderne. Mit Audioguide.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f6f3ec'/><text x='50' y='72' font-size='64' font-family='Georgia,serif' font-weight='700' text-anchor='middle' fill='%23201c17'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap">
+<style>
+  :root { --wall: #f4f1ea; --wall-2: #ebe6db; --ink: #201c17; --ink-2: #6b6358; --gold: #b08a3e; --serif: 'Playfair Display', Georgia, serif; --accent: #b08a3e; }
+  body { background: var(--wall); color: var(--ink); }
+  .bigh-back { background: rgba(32,28,23,.88); }
+  .wrap { width: min(1080px, 100% - 32px); }
+
+  .m-top { border-bottom: 1px solid var(--wall-2); }
+  .m-top .in { width: min(1080px, 100% - 32px); margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: flex-end; gap: 18px; font-size: .88rem; }
+  .m-top a { color: var(--ink); text-decoration: none; }
+  .m-top a:hover { text-decoration: underline; }
+  @media (max-width: 720px) { .m-top .links { display: none; } }
+  .logo { margin-right: auto; padding-left: 130px; font: 700 1.05rem var(--serif); letter-spacing: .02em; }
+  .logo small { display: block; font: 500 .68rem var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+
+  .hero { text-align: center; padding: clamp(48px, 9vw, 96px) 0 40px; }
+  .hero .eyebrow { font: 600 .74rem var(--body); letter-spacing: .24em; text-transform: uppercase; color: var(--gold); }
+  .hero h1 { font: 700 clamp(2.4rem, 7vw, 4.4rem)/1.02 var(--serif); letter-spacing: -.01em; margin: 14px 0 14px; }
+  .hero h1 em { font-weight: 500; }
+  .hero p { color: var(--ink-2); max-width: 560px; margin: 0 auto 24px; font-size: 1.05rem; line-height: 1.6; }
+  .hero .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn.dark { background: var(--ink); color: #fff; }
+  .btn.line { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .facts { display: flex; justify-content: center; gap: clamp(18px, 5vw, 48px); flex-wrap: wrap; margin-top: 34px; font-size: .86rem; color: var(--ink-2); }
+  .facts b { display: block; color: var(--ink); font: 600 1rem var(--body); }
+
+  .rooms { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 10px 0 0; }
+  .rooms a { font: 600 .82rem var(--body); color: var(--ink-2); text-decoration: none; border: 1px solid var(--wall-2); background: #fff; border-radius: 999px; padding: 6px 14px; }
+  .rooms a:hover { color: var(--ink); border-color: var(--ink-2); }
+
+  .room { padding: 64px 0 20px; scroll-margin-top: 20px; }
+  .room-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 1px solid var(--ink); padding-bottom: 12px; margin-bottom: 32px; }
+  .room-head .no { font: 500 .8rem var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .room-head h2 { font: 700 clamp(1.6rem, 4vw, 2.3rem)/1.1 var(--serif); margin: 0; }
+  .room-head p { margin: 0 0 0 auto; color: var(--ink-2); font-size: .9rem; max-width: 360px; text-align: right; }
+  @media (max-width: 720px) { .room-head { flex-wrap: wrap; } .room-head p { margin: 0; text-align: left; } }
+
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 44px 32px; }
+  .exhibit { display: flex; flex-direction: column; }
+  .exhibit.feature { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+  @media (max-width: 760px) { .exhibit.feature { grid-template-columns: 1fr; gap: 20px; } }
+
+  /* Rahmen */
+  .frame { position: relative; padding: 16px; background: linear-gradient(135deg, #d9b56a, #a57b2c 40%, #e6c77f 60%, #8a6524); box-shadow: 0 18px 40px rgba(32,28,23,.22), inset 0 0 0 2px rgba(255,255,255,.3); cursor: zoom-in; }
+  .frame.black { background: #1d1b18; box-shadow: 0 18px 40px rgba(32,28,23,.22); }
+  .frame.none { padding: 0; background: none; box-shadow: none; }
+  .frame .mat { background: #fbfaf6; padding: 14px; }
+  .frame.none .mat { background: none; padding: 0; }
+  .art { aspect-ratio: 4 / 5; position: relative; overflow: hidden; display: grid; place-items: center; }
+  .art.wide { aspect-ratio: 4 / 3; }
+  .art.sq { aspect-ratio: 1; }
+  .spot { position: absolute; left: 50%; top: -30px; width: 70%; height: 60px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0, rgba(255,244,214,.9), transparent 70%); pointer-events: none; mix-blend-mode: soft-light; }
+  .pedestal { background: linear-gradient(180deg, #fff, #eeeae1); border: 1px solid var(--wall-2); padding: 26px 20px 20px; box-shadow: 0 18px 40px rgba(32,28,23,.12); position: relative; }
+  .pedestal .glass { position: absolute; inset: 8px; border: 1px solid rgba(120,160,190,.35); background: linear-gradient(120deg, rgba(255,255,255,.35), transparent 40%, rgba(255,255,255,.2) 60%, transparent); pointer-events: none; }
+
+  /* Schild */
+  .plaque { margin-top: 18px; padding-left: 14px; border-left: 2px solid var(--gold); }
+  .feature .plaque { margin-top: 0; }
+  .plaque .t { font: 700 1.15rem/1.25 var(--serif); margin: 0; }
+  .feature .plaque .t { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+  .plaque .by { font-size: .82rem; color: var(--ink-2); margin: 4px 0 8px; }
+  .plaque .by b { color: var(--ink); font-weight: 600; }
+  .plaque .d { font-size: .93rem; line-height: 1.6; color: #3d372f; margin: 0 0 10px; }
+  .plaque .tools { display: flex; gap: 6px; flex-wrap: wrap; }
+  .plaque button { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--wall-2); color: var(--ink); border-radius: 999px; padding: 5px 12px; font: 600 .78rem var(--body); cursor: pointer; }
+  .plaque button:hover { border-color: var(--ink-2); }
+  .plaque button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .plaque button .icon { width: 14px; height: 14px; }
+  .exhibit.playing .frame, .exhibit.playing .pedestal { outline: 3px solid var(--gold); outline-offset: 6px; }
+
+  /* ---- Kunstwerke ---- */
+  .portrait-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05); }
+  .portrait-fallback { font: 700 8rem var(--serif); color: #cfc7b8; }
+  .constitution { background: radial-gradient(circle at 30% 20%, #f7ecd0, #e6d3a6 70%, #cdb480); color: #4a3a1c; padding: 22px 20px; font-family: var(--serif); width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+  .constitution h4 { margin: 0 0 12px; text-align: center; font-size: 1.05rem; letter-spacing: .08em; }
+  .constitution p { margin: 0 0 8px; font-size: .88rem; line-height: 1.4; font-style: italic; }
+  .constitution .seal { align-self: flex-end; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #d0454f, #8f1d26); color: #fbe3c0; display: grid; place-items: center; font: 700 1.1rem var(--serif); margin-top: 6px; transform: rotate(-12deg); }
+  .throne { width: 100%; height: 100%; background: linear-gradient(180deg, #2b2640, #16131f); display: grid; place-items: center; }
+  .card-glurak { width: 58%; aspect-ratio: 63 / 88; border-radius: 10px; background: linear-gradient(160deg, #fde68a, #f59e0b); padding: 7px; box-shadow: 0 10px 24px rgba(0,0,0,.25); transform: rotate(-4deg); }
+  .card-glurak .in { width: 100%; height: 100%; border-radius: 6px; background: #fff7e6; display: grid; grid-template-rows: auto 1fr auto; padding: 6px; gap: 5px; font-family: var(--body); color: #4a2a06; }
+  .card-glurak .hd { display: flex; justify-content: space-between; font-weight: 700; font-size: .72rem; }
+  .card-glurak .pic { border-radius: 4px; background: radial-gradient(circle at 50% 70%, #f97316, #b91c1c 60%, #7f1d1d); display: grid; place-items: center; color: #fde68a; }
+  .card-glurak .pic .icon { width: 42%; height: 42%; }
+  .card-glurak .ft { font-size: .62rem; line-height: 1.3; }
+  .everest svg { width: 100%; height: 100%; display: block; }
+  .flag { width: 100%; height: 100%; background: linear-gradient(180deg, #cfe3f2, #eef5fb); display: grid; place-items: center; }
+  .flag svg { width: 78%; }
+  .still { width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, #3b3326, #1b1712 70%); display: grid; place-items: end center; padding-bottom: 12%; }
+  .tub { width: 100%; height: 100%; background: linear-gradient(180deg, #fbfaf6 0 62%, #e8e2d6 62%); display: grid; place-items: center; }
+  .word-art { width: 100%; height: 100%; background: #111; color: #fff; display: grid; place-items: center; font: 800 clamp(2.4rem, 8vw, 3.6rem)/.9 var(--title); letter-spacing: -.05em; text-align: center; }
+  .word-art span { color: #ef4444; display: block; }
+  .kit { display: grid; place-items: center; aspect-ratio: 1; }
+  .kit .box { width: 62%; aspect-ratio: 1.2; background: linear-gradient(180deg, #86efac, #22c55e); border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,.18); display: grid; place-items: center; color: #064e3b; font: 700 .9rem var(--body); text-align: center; line-height: 1.2; position: relative; }
+  .kit .box::after { content: 'ORIGINALVERPACKT'; position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%) rotate(-3deg); background: #ef4444; color: #fff; font: 700 .6rem var(--body); letter-spacing: .12em; padding: 3px 8px; white-space: nowrap; }
+  .cat-art { width: 100%; height: 100%; background: linear-gradient(180deg, #fed7aa, #fb923c); display: grid; place-items: center; color: #7c2d12; }
+  .cat-art .icon { width: 46%; height: 46%; stroke-width: 1.4; }
+  .crisis { width: 100%; height: 100%; background: linear-gradient(180deg, #1e1b4b, #312e81); position: relative; }
+  .crisis .moon { position: absolute; top: 14%; right: 16%; width: 44px; height: 44px; border-radius: 50%; box-shadow: 10px -6px 0 0 #fde68a; }
+  .crisis .clock { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); width: 96px; height: 96px; border-radius: 50%; border: 4px solid #e0e7ff; }
+  .crisis .clock::before, .crisis .clock::after { content: ''; position: absolute; left: 50%; bottom: 50%; width: 4px; margin-left: -2px; background: #e0e7ff; border-radius: 2px; transform-origin: bottom center; }
+  .crisis .clock::before { height: 30px; transform: rotate(-30deg); } .crisis .clock::after { height: 40px; transform: rotate(0deg); }
+  .crisis .console { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); width: 90px; height: 30px; border-radius: 8px; background: #111; box-shadow: 0 0 0 3px #475569; }
+  .crisis .console::after { content: ''; position: absolute; inset: -18px; border: 3px solid #ef4444; border-radius: 50%; transform: rotate(-20deg); border-left-color: transparent; }
+
+  /* Gästebuch-Hinweis + Shop */
+  .end { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 60px 0 10px; }
+  @media (max-width: 720px) { .end { grid-template-columns: 1fr; } }
+  .end a { display: block; background: #fff; border: 1px solid var(--wall-2); padding: 24px; text-decoration: none; color: var(--ink); transition: border-color .2s; }
+  .end a:hover { border-color: var(--ink-2); }
+  .end b { display: block; font: 700 1.2rem var(--serif); margin: 6px 0 4px; }
+  .end span { color: var(--ink-2); font-size: .9rem; }
+  .end .k { font: 600 .72rem var(--body); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+  footer.bigh-footer { color: var(--ink-2); }
+
+  /* Audioguide-Leiste */
+  .guide { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 140%); z-index: 50; background: var(--ink); color: #fff; border-radius: 999px; padding: 8px 8px 8px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 16px 40px rgba(0,0,0,.3); transition: transform .35s ease; max-width: calc(100% - 32px); }
+  .guide { visibility: hidden; }
+  .guide.show { transform: translate(-50%, 0); visibility: visible; }
+  .guide .now { font-size: .86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .guide .now small { display: block; color: rgba(255,255,255,.6); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+  .guide button { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; display: grid; place-items: center; }
+  .guide button:hover { background: rgba(255,255,255,.22); }
+  .guide .icon { width: 18px; height: 18px; }
+
+  /* Vollbild-Ansicht */
+  .lightbox { position: fixed; inset: 0; z-index: 70; background: rgba(20,18,15,.92); display: none; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 24px; cursor: zoom-out; }
+  .lightbox.show { display: grid; }
+  .lightbox .inner { width: min(560px, 100%); }
+  .lightbox .cap { color: #e8e2d6; text-align: center; margin-top: 16px; font: 500 1rem var(--serif); }
+</style>
+</head>
+<body data-back>
+  <header class="m-top"><div class="in">
+    <div class="logo">Big H Museum<small>Sammlung Alastor Lapis</small></div>
+    <nav class="links"><a href="#saal-1">Sammlung</a> &nbsp; <a href="#besuch">Besuch</a> &nbsp; <a data-sub="merch" href="https://merch.unoslapis.ch/">Shop</a></nav>
+  </div></header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Dauerausstellung</div>
+      <h1>Museum für zeitgenössische <em>Peinlichkeit</em></h1>
+      <p>Die weltweit einzige Sammlung zum Leben und Werk von Alastor Lapis, genannt Big H: vom Fürstentum Lapisien über den Everest bis zur leeren Badewanne.</p>
+      <div class="row">
+        <button class="btn dark" id="tour" type="button"><i data-icon="headphones"></i>Audioguide-Rundgang</button>
+        <a class="btn line" href="#saal-1"><i data-icon="arrow-down"></i>Zur Sammlung</a>
+      </div>
+      <div class="facts" id="besuch">
+        <div><b>Täglich 14:00–03:14</b>Öffnungszeiten</div>
+        <div><b>Eintritt frei</b>Spenden in Monster-Dosen</div>
+        <div><b id="visitors">–</b>Besucher heute</div>
+      </div>
+      <nav class="rooms" aria-label="Säle">
+        <a href="#saal-1">I Das Bildnis</a><a href="#saal-2">II Die Fürstenzeit</a><a href="#saal-3">III Expeditionen</a><a href="#saal-4">IV Gaming-Moderne</a>
+      </nav>
+    </section>
+
+    <!-- ===== SAAL I ===== -->
+    <section class="room" id="saal-1">
+      <div class="room-head"><span class="no">Saal I</span><h2>Das Bildnis</h2><p>Das Hauptwerk der Sammlung. Bitte Abstand halten, der Blick ist intensiv.</p></div>
+      <div class="gallery">
+        <article class="exhibit feature" data-title="Bildnis des Alastor Lapis">
+          <div class="frame"><div class="spot"></div><div class="mat"><div class="art sq"><img class="portrait-img" src="/shared/img/bigh.jpg" alt="Porträt von Big H" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'portrait-fallback',textContent:'H'}))"></div></div></div>
+          <div class="plaque">
+            <p class="t">Bildnis des Alastor Lapis im weissen Pelz</p>
+            <p class="by"><b>Unbekannter Meister</b> · um 2025 · Fotografie, schwarzweiss, auf Selbstvertrauen</p>
+            <p class="d">Das Werk zeigt den ehemaligen Fürsten in der Pose eines Herrschers, der gerade erfahren hat, dass sein Team diffed. Der weisse Pelz verweist auf die Everest-Expedition, der entschlossene Blick auf die Frage, wer den Kühlschrank leer gegessen hat. Kunsthistoriker streiten bis heute, ob er in die Kamera oder durch sie hindurch schaut.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== SAAL II ===== -->
+    <section class="room" id="saal-2">
+      <div class="room-head"><span class="no">Saal II</span><h2>Die Fürstenzeit 2011–2019</h2><p>Relikte aus acht Jahren Alleinherrschaft über 14 Quadratmeter Kinderzimmer.</p></div>
+      <div class="gallery">
+        <article class="exhibit" data-title="Die Verfassung von Lapisien">
+          <div class="frame black"><div class="mat"><div class="art">
+            <div class="constitution"><h4>VERFASSUNG VON LAPISIEN</h4><p>Art. 1 – Der Fürst muss nicht aufräumen.</p><p>Art. 2 – Das WLAN-Passwort ist Staatsgeheimnis.</p><p>Art. 3 – Wer den Fürsten beim Zocken stört, wird des Landes verwiesen (Flur).</p><div class="seal">H</div></div>
+          </div></div></div>
+          <div class="plaque">
+            <p class="t">Die Verfassung von Lapisien</p>
+            <p class="by"><b>Fürst Alastor I.</b> · 2011 · Filzstift auf Schulheft, Siegel aus Knete</p>
+            <p class="d">Das Gründungsdokument des Fürstentums. Die Rückseite enthält eine Einkaufsliste (Chips, mehr Chips). Artikel 1 wurde in acht Jahren kein einziges Mal verletzt.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Der Thron">
+          <div class="frame black"><div class="mat"><div class="art"><div class="throne">
+            <svg viewBox="0 0 120 160" width="62%" aria-hidden="true"><rect x="30" y="8" width="60" height="78" rx="14" fill="#7c3aed"/><rect x="40" y="18" width="40" height="10" rx="5" fill="#a78bfa"/><rect x="22" y="84" width="76" height="18" rx="8" fill="#6d28d9"/><rect x="14" y="62" width="12" height="32" rx="5" fill="#4c1d95"/><rect x="94" y="62" width="12" height="32" rx="5" fill="#4c1d95"/><rect x="56" y="102" width="8" height="30" fill="#52525b"/><path d="M30 142 L90 142 M60 132 L36 150 M60 132 L84 150" stroke="#52525b" stroke-width="6" stroke-linecap="round"/><circle cx="36" cy="152" r="5" fill="#27272a"/><circle cx="84" cy="152" r="5" fill="#27272a"/><circle cx="60" cy="150" r="5" fill="#27272a"/><path d="M44 0 L50 10 L60 2 L70 10 L76 0 L76 12 L44 12 Z" fill="#fbbf24"/></svg>
+          </div></div></div></div>
+          <div class="plaque">
+            <p class="t">Der Thron</p>
+            <p class="by"><b>Gaming-Stuhl-Manufaktur</b> · 2016 · Kunstleder, Stahl, Krone aus Karton</p>
+            <p class="d">Von hier aus regierte Alastor I. sein Reich. Die Sitzfläche hat eine dauerhafte Delle, die Restauratoren als „Abdruck der Macht“ bezeichnen. Seit 2019 genutzt vom Goon-König.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Ein Lapis-Taler">
+          <div class="frame none"><div class="mat"><div class="pedestal"><div class="glass"></div><div class="art sq" style="aspect-ratio:1"><div class="card-glurak"><div class="in"><div class="hd"><span>GLURAK</span><span>120 KP</span></div><div class="pic"><i data-icon="flame"></i></div><div class="ft">Währung des Fürstentums. Wert: das gesamte Bruttoinlandprodukt.</div></div></div></div></div></div></div>
+          <div class="plaque">
+            <p class="t">Ein Lapis-Taler</p>
+            <p class="by"><b>Staatsbank Lapisien</b> · 2012 · Sammelkarte, holografisch</p>
+            <p class="d">Die höchste Einheit der lapisischen Währung. Ein Tausch gegen zwei Energy-Drinks am Kiosk wurde 2016 vom Fürsten persönlich als Hochverrat eingestuft.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Die Schlafenszeit-Krise">
+          <div class="frame"><div class="mat"><div class="art wide"><div class="crisis"><div class="moon"></div><div class="clock"></div><div class="console"></div></div></div></div></div>
+          <div class="plaque">
+            <p class="t">Die Schlafenszeit-Krise</p>
+            <p class="by"><b>Hofmaler von Lapisien</b> · 2014 · Acryl auf Pizzakarton</p>
+            <p class="d">Das Historiengemälde zeigt die Nacht, in der die Nachbarmacht „Mama“ um 22:00 Uhr die Konsole beschlagnahmte. Elf Tage Konflikt, eine Woche ohne Konsole. Das dunkelste Kapitel der lapisischen Geschichte.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== SAAL III ===== -->
+    <section class="room" id="saal-3">
+      <div class="room-head"><span class="no">Saal III</span><h2>Expeditionen</h2><p>Heldentaten, für die es leider keine Fotos gibt. Der Akku war jedes Mal leer.</p></div>
+      <div class="gallery">
+        <article class="exhibit" data-title="Der nackte Löwe">
+          <div class="frame"><div class="mat"><div class="art wide everest">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9cc3e6"/><stop offset="1" stop-color="#e9f1f8"/></linearGradient></defs>
+              <rect width="400" height="300" fill="url(#sky)"/>
+              <path d="M0 300 L90 170 L140 210 L230 70 L290 150 L330 120 L400 200 L400 300 Z" fill="#6b7a8f"/>
+              <path d="M230 70 L200 118 L218 112 L230 126 L246 108 L262 116 Z" fill="#fff"/>
+              <path d="M90 170 L76 190 L92 186 L104 192 Z" fill="#fff"/>
+              <path d="M0 300 L60 240 L120 270 L200 220 L280 260 L400 230 L400 300 Z" fill="#4b5768"/>
+              <line x1="236" y1="70" x2="236" y2="42" stroke="#201c17" stroke-width="2"/>
+              <rect x="236" y="42" width="30" height="14" fill="#7c3aed"/>
+              <text x="251" y="52" font-size="6" font-family="Inter, sans-serif" font-weight="700" fill="#fff" text-anchor="middle">unoslapis</text>
+              <g transform="translate(214 60)"><ellipse cx="0" cy="6" rx="9" ry="4" fill="#e8b89a"/><circle cx="8" cy="2" r="4" fill="#e8b89a"/><path d="M4 -1 Q8 -6 13 -1" stroke="#a16207" stroke-width="3" fill="none"/><line x1="-6" y1="8" x2="-8" y2="12" stroke="#e8b89a" stroke-width="2"/><line x1="5" y1="8" x2="6" y2="12" stroke="#e8b89a" stroke-width="2"/></g>
+              <rect x="204" y="62" width="22" height="6" fill="#111"/>
+              <text x="200" y="28" font-size="11" font-family="Georgia, serif" font-style="italic" fill="#201c17" text-anchor="middle">„ROOOAR“</text>
+            </svg>
+          </div></div></div>
+          <div class="plaque">
+            <p class="t">Der nackte Löwe</p>
+            <p class="by"><b>Nach Augenzeugenberichten eines Sherpas</b> · 2023 · Öl auf Leinwand</p>
+            <p class="d">Das Gemälde zeigt Lapis auf den letzten Metern zum Gipfel des Mount Everest: nackt, auf allen vieren, brüllend. Der schwarze Balken wurde auf Wunsch des Museumsvorstands nachträglich angebracht. Sauerstoff: keiner. Proviant: Monster Energy.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Die Gipfelflagge">
+          <div class="frame black"><div class="mat"><div class="art wide flag">
+            <svg viewBox="0 0 200 130" aria-hidden="true"><line x1="20" y1="8" x2="20" y2="126" stroke="#3f3a33" stroke-width="4" stroke-linecap="round"/><path d="M22 12 C70 2 110 26 180 14 L180 72 C110 84 70 60 22 70 Z" fill="#7c3aed"/><text x="100" y="47" font-size="17" font-family="Inter, sans-serif" font-weight="800" fill="#fff" text-anchor="middle">unoslapis</text><path d="M60 64 l4 -6 M120 68 l3 -7 M150 62 l2 -5" stroke="#5b21b6" stroke-width="2"/></svg>
+          </div></div></div>
+          <div class="plaque">
+            <p class="t">Die Gipfelflagge</p>
+            <p class="by"><b>Alastor Lapis</b> · 2023 · Nylon, Frostschäden, Edding</p>
+            <p class="d">Auf 8'849 Metern gehisst und nach Angaben des Künstlers „kurz danach wieder mitgenommen, weil ich baden gehen musste“. Die Löcher stammen von Yaks. Oder von Mausi.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Mausi, gerettet">
+          <div class="frame"><div class="mat"><div class="art cat-art"><i data-icon="cat"></i></div></div></div>
+          <div class="plaque">
+            <p class="t">Mausi, gerettet</p>
+            <p class="by"><b>Hofmaler von Lapisien</b> · 2025 · Pastell auf Feuerwehr-Protokoll</p>
+            <p class="d">Porträt der Katze, die Lapis aus einem brennenden Haus trug – mit einem Energy-Drink in der anderen Hand. Mausi verwaltet seither kommissarisch das Fürstentum. Im Schlaf.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== SAAL IV ===== -->
+    <section class="room" id="saal-4">
+      <div class="room-head"><span class="no">Saal IV</span><h2>Gaming-Moderne</h2><p>Installationen aus der Ära des Goon-Königs, 2019 bis heute.</p></div>
+      <div class="gallery">
+        <article class="exhibit" data-title="Team Diff">
+          <div class="frame black"><div class="mat" style="background:#111"><div class="art sq word-art"><div>TEAM<span>DIFF</span></div></div></div></div>
+          <div class="plaque">
+            <p class="t">Team Diff</p>
+            <p class="by"><b>unoslapis</b> · 2022 · Text, 9'001-fach wiederholt</p>
+            <p class="d">Das bekannteste Werk des Künstlers. Zwei Wörter, die jede Niederlage erklären und keine Verantwortung übernehmen. Kuratoren sehen darin einen Schlüsseltext der Gaming-Moderne.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Stillleben mit Monster-Dose">
+          <div class="frame"><div class="mat"><div class="art still">
+            <svg viewBox="0 0 200 160" width="86%" aria-hidden="true"><ellipse cx="100" cy="150" rx="90" ry="8" fill="rgba(0,0,0,.35)"/><rect x="40" y="40" width="44" height="108" rx="8" fill="#0f172a"/><rect x="44" y="58" width="36" height="72" fill="#22c55e"/><text x="62" y="102" font-size="30" font-family="Inter, sans-serif" font-weight="900" fill="#0f172a" text-anchor="middle">M</text><rect x="42" y="40" width="40" height="5" rx="2" fill="#94a3b8"/><rect x="104" y="98" width="70" height="50" rx="6" fill="#1f2937"/><rect x="110" y="104" width="58" height="34" rx="3" fill="#60a5fa" opacity=".8"/><path d="M92 146 q10 -30 6 -60" stroke="#b91c1c" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="98" cy="84" r="7" fill="#fbbf24"/></svg>
+          </div></div></div>
+          <div class="plaque">
+            <p class="t">Stillleben mit Monster-Dose</p>
+            <p class="by"><b>Unbekannt</b> · 2024 · Öl auf Mousepad</p>
+            <p class="d">Eine Energy-Dose, ein Handy auf 3 % Akku und eine einzelne Chips-Tüte. Das Werk thematisiert die Vergänglichkeit von Schlaf. Die Dose ist leer. Wie immer.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Die leere Badewanne">
+          <div class="frame none"><div class="mat"><div class="pedestal"><div class="art wide tub">
+            <svg viewBox="0 0 220 150" width="80%" aria-hidden="true"><path d="M20 70 H200 V92 Q200 128 164 128 H56 Q20 128 20 92 Z" fill="#fff" stroke="#cbd5e1" stroke-width="3"/><rect x="14" y="64" width="192" height="10" rx="5" fill="#e2e8f0"/><path d="M40 64 V30 Q40 18 52 18 H62" stroke="#94a3b8" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="60" y="14" width="16" height="10" rx="3" fill="#94a3b8"/><line x1="60" y1="128" x2="54" y2="142" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/><line x1="160" y1="128" x2="166" y2="142" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/><text x="110" y="104" font-size="10" font-family="Inter, sans-serif" fill="#94a3b8" text-anchor="middle">0 Liter seit 2020</text><path d="M150 52 q6 -8 12 0 q-6 4 -12 0 Z M162 50 l6 -3" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/></svg>
+          </div></div></div>
+          <div class="plaque">
+            <p class="t">Die leere Badewanne</p>
+            <p class="by"><b>unoslapis</b> · 2020 · Installation, Keramik, Staub, eine trockene Badeente</p>
+            <p class="d">Die zentrale Installation zu „Ich muss baden gehen“. 312-mal angekündigt, gemessener Wasserverbrauch: null Liter. Die Ente wartet seit 2020.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+        <article class="exhibit" data-title="Touch-Grass-Kit, unberührt">
+          <div class="frame none"><div class="mat"><div class="pedestal"><div class="glass"></div><div class="kit"><div class="box">TOUCH<br>GRASS<br>KIT</div></div></div></div></div>
+          <div class="plaque">
+            <p class="t">Touch-Grass-Kit, unberührt</p>
+            <p class="by"><b>Pro Natura (Hersteller)</b> · 2019 · 10 × 10 cm Rasen, Originalverpackung</p>
+            <p class="d">Gekauft am Tag der Abdankung, nie ausgepackt. Das Gras darin ist vermutlich das einzige, das Lapis je besessen hat. Unter Panzerglas, damit er es nicht aus Versehen berührt.</p>
+            <div class="tools"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="end">
+      <a data-sub="guestbook" href="https://guestbook.unoslapis.ch/"><span class="k">Besucherbuch</span><b>Hinterlassen Sie einen Eintrag</b><span>Die Museumsleitung liest alles. Big H auch, meistens um 3 Uhr.</span></a>
+      <a data-sub="merch" href="https://merch.unoslapis.ch/"><span class="k">Museumsshop</span><b>Andenken und Repliken</b><span>Badeenten, Kronen und das Touch-Grass-Kit (ebenfalls ungeöffnet).</span></a>
+    </div>
+  </main>
+
+  <footer class="bigh-footer">Big H Museum · museum.unoslapis.ch · Bitte die Exponate nicht berühren. Ausser Gras, das dürfen Sie.</footer>
+
+  <div class="guide" id="guide" role="region" aria-label="Audioguide">
+    <div class="now"><small id="g-step">Audioguide</small><span id="g-title">–</span></div>
+    <button type="button" id="g-prev" aria-label="Vorheriges Exponat"><i data-icon="chevron-left"></i></button>
+    <button type="button" id="g-play" aria-label="Pause"><i data-icon="pause"></i></button>
+    <button type="button" id="g-next" aria-label="Nächstes Exponat"><i data-icon="chevron-right"></i></button>
+    <button type="button" id="g-close" aria-label="Audioguide beenden"><i data-icon="x"></i></button>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Exponat vergrössert"><div class="inner"><div id="lb-art"></div><div class="cap" id="lb-cap"></div></div></div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // Besucherzahl: steigt über den Tag, damit sie plausibel aussieht
+    const now = new Date();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    document.getElementById('visitors').textContent = (12 + Math.floor(mins / 7) + (now.getDate() % 9)).toLocaleString('de-CH');
+
+    const exhibits = [...document.querySelectorAll('.exhibit')];
+    let likes = {};
+    try { likes = JSON.parse(localStorage.getItem('bigh-museum-likes')) || {}; } catch (e) { likes = {}; }
+
+    // ---------- Sprachausgabe ----------
+    const synth = window.speechSynthesis;
+    let voice = null;
+    function pickVoice() {
+      if (!synth) return;
+      const vs = synth.getVoices();
+      voice = vs.find((v) => /de-CH/i.test(v.lang)) || vs.find((v) => /^de/i.test(v.lang)) || null;
+    }
+    if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
+    function textOf(ex) {
+      const pl = ex.querySelector('.plaque');
+      return pl.querySelector('.t').textContent + '. ' + pl.querySelector('.by').textContent.replace(/·/g, ',') + '. ' + pl.querySelector('.d').textContent;
+    }
+    let speechId = 0; // abgebrochene Ansagen dürfen ihr onEnd nicht mehr auslösen
+    function speak(text, onEnd) {
+      if (!synth) { BIGH.toast('Dein Browser kann leider nicht vorlesen.'); return false; }
+      const id = ++speechId;
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'de-DE'; if (voice) u.voice = voice;
+      u.rate = 0.98; u.pitch = 0.95;
+      u.onend = () => { if (onEnd && id === speechId) onEnd(); };
+      synth.speak(u);
+      return true;
+    }
+
+    // ---------- Werkzeuge pro Exponat ----------
+    let single = null;
+    exhibits.forEach((ex) => {
+      const tools = ex.querySelector('.tools');
+      const listen = document.createElement('button');
+      listen.type = 'button';
+      listen.innerHTML = BIGH.icon('volume-2') + 'Anhören';
+      listen.addEventListener('click', () => {
+        if (single === ex) { stopAll(); return; }
+        stopTour(false);
+        clearPlaying();
+        if (speak(textOf(ex), () => { if (single === ex) { clearPlaying(); single = null; } })) {
+          single = ex; ex.classList.add('playing'); listen.classList.add('on');
+          listen.innerHTML = BIGH.icon('circle-pause') + 'Stopp';
+        }
+      });
+      const key = ex.dataset.title;
+      const like = document.createElement('button');
+      like.type = 'button';
+      const renderLike = () => { like.innerHTML = BIGH.icon('heart') + (likes[key] ? 'Gefällt dir' : 'Gefällt mir'); like.classList.toggle('on', !!likes[key]); };
+      renderLike();
+      like.addEventListener('click', () => {
+        likes[key] = !likes[key];
+        try { localStorage.setItem('bigh-museum-likes', JSON.stringify(likes)); } catch (e) { /* egal */ }
+        renderLike();
+        if (likes[key]) BIGH.toast('Die Museumsleitung ist gerührt.');
+      });
+      tools.append(listen, like);
+      ex._listen = listen;
+
+      // Vergrössern
+      const frame = ex.querySelector('.frame');
+      frame.addEventListener('click', () => {
+        const lb = document.getElementById('lightbox');
+        const art = document.getElementById('lb-art');
+        art.innerHTML = '';
+        art.appendChild(frame.cloneNode(true));
+        art.firstChild.style.cursor = 'zoom-out';
+        document.getElementById('lb-cap').textContent = ex.querySelector('.plaque .t').textContent;
+        lb.classList.add('show');
+      });
+    });
+    document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').classList.remove('show'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show'); });
+
+    function clearPlaying() {
+      exhibits.forEach((ex) => {
+        ex.classList.remove('playing');
+        ex._listen.classList.remove('on');
+        ex._listen.innerHTML = BIGH.icon('volume-2') + 'Anhören';
+      });
+    }
+
+    // ---------- Rundgang ----------
+    const guide = document.getElementById('guide');
+    let tourIdx = -1, touring = false, paused = false;
+    function playStep(i) {
+      tourIdx = (i + exhibits.length) % exhibits.length;
+      const ex = exhibits[tourIdx];
+      clearPlaying();
+      ex.classList.add('playing');
+      ex.scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth', block: 'center' });
+      document.getElementById('g-step').textContent = 'Exponat ' + (tourIdx + 1) + ' von ' + exhibits.length;
+      document.getElementById('g-title').textContent = ex.querySelector('.plaque .t').textContent;
+      paused = false;
+      document.getElementById('g-play').innerHTML = BIGH.icon('pause');
+      const intro = tourIdx === 0 ? 'Willkommen im Big H Museum. Beginnen wir mit dem Hauptwerk der Sammlung. ' : '';
+      speak(intro + textOf(ex), () => {
+        if (!touring || paused) return;
+        if (tourIdx < exhibits.length - 1) setTimeout(() => { if (touring && !paused) playStep(tourIdx + 1); }, 900);
+        else { speak('Das war der Rundgang. Der Ausgang führt durch den Museumsshop.'); stopTour(true); }
+      });
+    }
+    function startTour() {
+      if (!synth) { BIGH.toast('Dein Browser kann leider nicht vorlesen.'); return; }
+      single = null;
+      touring = true;
+      guide.classList.add('show');
+      playStep(0);
+    }
+    function stopTour(keepSpeech) {
+      touring = false; paused = false;
+      guide.classList.remove('show');
+      if (!keepSpeech && synth) { speechId++; synth.cancel(); }
+      clearPlaying();
+    }
+    function stopAll() { single = null; stopTour(false); }
+    document.getElementById('tour').addEventListener('click', startTour);
+    document.getElementById('g-close').addEventListener('click', () => stopTour(false));
+    document.getElementById('g-next').addEventListener('click', () => playStep(tourIdx + 1));
+    document.getElementById('g-prev').addEventListener('click', () => playStep(tourIdx - 1));
+    document.getElementById('g-play').addEventListener('click', () => {
+      if (!synth) return;
+      if (paused) { paused = false; playStep(tourIdx); }
+      else { paused = true; speechId++; synth.cancel(); document.getElementById('g-play').innerHTML = BIGH.icon('play'); }
+    });
+    window.addEventListener('pagehide', () => { if (synth) synth.cancel(); });
+  })();
+  </script>
+</body>
+</html>

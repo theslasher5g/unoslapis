@@ -16,7 +16,7 @@
   .brand .fl { color: #fd267a; display: grid; } .brand .fl .icon { width: 28px; height: 28px; fill: currentColor; }
 
   .deck { position: relative; aspect-ratio: 3 / 4.4; }
-  .empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #aaa; padding: 30px; border-radius: 18px; border: 2px dashed #333; }
+  .empty { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; text-align: center; color: #aaa; padding: 30px; border-radius: 18px; border: 2px dashed #333; }
   .card {
     position: absolute; inset: 0; border-radius: 18px; overflow: hidden; background: #222; box-shadow: 0 16px 40px rgba(0,0,0,.6);
     touch-action: pan-y; user-select: none; cursor: grab; will-change: transform;

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flucht vor dem Gras – Big H Runner</title>
+<meta name="description" content="Big H flieht vor dem Gras. Spring über Rasen, weich Einladungen aus, sammle Monster-Dosen – und hol dir den Rekord.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2334d399'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --accent: #34d399; }
+  body { background: radial-gradient(800px 380px at 50% -120px, rgba(52,211,153,.08), transparent 70%), var(--bg); }
+  .wrap { width: min(1000px, 100% - 32px); }
+  .page-head { text-align: center; padding-bottom: 20px; }
+  .page-head p { margin-inline: auto; }
+
+  .stage { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--line-2); background: #0b1020; box-shadow: 0 20px 50px rgba(0,0,0,.4); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  canvas { display: block; width: 100%; height: 320px; cursor: pointer; }
+  @media (max-width: 560px) { canvas { height: 360px; } }
+  .hud { position: absolute; top: 12px; right: 14px; display: flex; gap: 14px; font: 600 .9rem var(--pixel); color: rgba(255,255,255,.85); pointer-events: none; font-variant-numeric: tabular-nums; }
+  .hud span { color: rgba(255,255,255,.5); }
+  .hud .cans { display: inline-flex; align-items: center; gap: 4px; color: #86efac; }
+  .overlay { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; background: rgba(6,8,16,.55); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); text-align: center; padding: 16px; }
+  .overlay[hidden] { display: none; }
+  .ov { width: 100%; max-width: 380px; }
+  .overlay { overflow-y: auto; }
+  @media (max-width: 560px) {
+    .ov h2 { font-size: 1.3rem; } .ov p { font-size: .85rem; margin-bottom: 8px; } .ov .big { font-size: 2.4rem; }
+    .submit { margin: 8px 0 4px; }
+  }
+  .ov h2 { font: 700 clamp(1.5rem, 5vw, 2rem)/1.1 var(--title); margin: 0 0 6px; letter-spacing: -.02em; }
+  .ov p { margin: 0 0 14px; color: rgba(255,255,255,.8); font-size: .95rem; }
+  .ov .big { font: 700 3rem/1 var(--title); letter-spacing: -.04em; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+  .ov .keys { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; color: var(--muted); font-size: .82rem; margin-top: 12px; }
+  .ov kbd { font: 600 .75rem var(--pixel); border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 6px; padding: 2px 6px; color: var(--text); }
+  .ov .btn.go { background: var(--accent); color: #062014; }
+  .submit { display: flex; gap: 8px; margin: 12px 0 6px; }
+  .submit input { flex: 1; min-width: 0; background: rgba(0,0,0,.35); border: 1px solid var(--line-2); border-radius: 10px; padding: 10px 12px; color: #fff; font: 500 .95rem var(--body); outline: none; }
+  .submit input:focus { border-color: var(--accent); }
+  .smsg { font-size: .82rem; min-height: 1.2em; color: var(--muted); }
+  .smsg.err { color: #fb7185; } .smsg.ok { color: #86efac; }
+  .ov-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .mobile-hint { display: none; }
+  @media (hover: none) { .mobile-hint { display: inline; } .desk-hint { display: none; } }
+
+  .below { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; margin-top: 18px; }
+  @media (max-width: 820px) { .below { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .panel h3 { font: 600 1.1rem var(--title); margin: 0 0 2px; display: flex; align-items: center; gap: 8px; }
+  .panel .meta { color: var(--muted); font-size: .82rem; margin-bottom: 10px; }
+  .seg { display: inline-flex; background: var(--card-2); border-radius: 999px; padding: 3px; margin-bottom: 10px; }
+  .seg button { background: none; border: 0; color: var(--muted); font: 600 .82rem var(--body); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .seg button.on { background: var(--accent); color: #062014; }
+  ol.lb { list-style: none; margin: 0; padding: 0; }
+  ol.lb li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 8px 6px; border-bottom: 1px solid var(--line); font-size: .92rem; }
+  ol.lb li:last-child { border-bottom: 0; }
+  ol.lb li.me { background: rgba(52,211,153,.1); border-radius: 8px; }
+  ol.lb .pos { font: 700 .95rem var(--title); color: var(--muted); text-align: center; }
+  ol.lb li:nth-child(1) .pos { color: #fbbf24; } ol.lb li:nth-child(2) .pos { color: #d4d4d8; } ol.lb li:nth-child(3) .pos { color: #d97706; }
+  ol.lb .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  ol.lb .nm small { display: block; font-weight: 400; color: var(--muted); font-size: .75rem; }
+  ol.lb .sc { font: 700 1rem var(--title); font-variant-numeric: tabular-nums; }
+  ol.lb .empty { display: block; color: var(--muted); text-align: center; padding: 20px 6px; border: 0; }
+  .how { display: grid; gap: 10px; font-size: .9rem; color: var(--muted); }
+  .how div { display: grid; grid-template-columns: 38px 1fr; gap: 10px; align-items: center; }
+  .how .sw { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: var(--card-2); }
+  .how b { color: var(--text); font-weight: 600; }
+  .pb { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--muted); }
+  .pb b { color: var(--text); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <header class="page-head">
+      <span class="kicker"><i data-icon="footprints"></i>Rekordjagd</span>
+      <h1>Flucht vor dem Gras</h1>
+      <p>Big H hat seit 2019 kein Gras mehr berührt und will das auch so lassen. Hilf ihm – und schnapp dir den Rekord.</p>
+    </header>
+
+    <div class="stage" id="stage">
+      <canvas id="cv" aria-label="Spielfeld"></canvas>
+      <div class="hud"><span>HI</span><b id="hud-hi">0</b><b id="hud-score">0</b><span class="cans"><i data-icon="zap"></i><b id="hud-cans">0</b></span></div>
+
+      <div class="overlay" id="ov-start">
+        <div class="ov">
+          <h2>Bereit?</h2>
+          <p>Spring über das Gras, lauf unter Einladungen durch und sammle Monster-Dosen.</p>
+          <button class="btn go" id="start" type="button"><i data-icon="play"></i>Los</button>
+          <div class="keys"><span class="desk-hint"><kbd>Leertaste</kbd> / <kbd>↑</kbd> springen · zweimal = Doppelsprung</span><span class="mobile-hint">Tippen = springen · zweimal = Doppelsprung</span></div>
+        </div>
+      </div>
+
+      <div class="overlay" id="ov-over" hidden>
+        <div class="ov">
+          <h2 id="over-title">Gras berührt.</h2>
+          <p id="over-reason"></p>
+          <div class="big" id="over-score">0</div>
+          <p id="over-sub" style="font-size:.85rem"></p>
+          <form class="submit" id="submit" autocomplete="off">
+            <input id="name" maxlength="20" placeholder="Dein Name" aria-label="Name">
+            <button class="btn go" type="submit" id="submit-btn"><i data-icon="trophy"></i>Eintragen</button>
+          </form>
+          <div class="smsg" id="smsg" role="status"></div>
+          <div class="ov-actions"><button class="btn" id="again" type="button"><i data-icon="rotate-ccw"></i>Nochmal</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="below">
+      <section class="panel">
+        <h3><i data-icon="trophy"></i>Rangliste</h3>
+        <div class="meta" id="lb-meta">Bester Lauf pro Person</div>
+        <div class="seg"><button type="button" class="on" data-tab="all">Allzeit</button><button type="button" data-tab="today">Heute</button></div>
+        <ol class="lb" id="lb"><li class="empty">Lade …</li></ol>
+      </section>
+      <section class="panel">
+        <h3><i data-icon="info"></i>So geht's</h3>
+        <div class="how" style="margin-top:12px">
+          <div><span class="sw" style="color:#34d399"><i data-icon="sprout"></i></span><span><b>Gras</b> – drüberspringen. Einmal berührt, ist alles vorbei.</span></div>
+          <div><span class="sw" style="color:#f472b6"><i data-icon="mail"></i></span><span><b>Einladungen</b> – nicht springen, einfach drunter durch. Er sagt eh ab.</span></div>
+          <div><span class="sw" style="color:#fbbf24"><i data-icon="sun"></i></span><span><b>Sonnenstrahlen</b> – fallen von oben. Ausweichen.</span></div>
+          <div><span class="sw" style="color:#86efac"><i data-icon="zap"></i></span><span><b>Monster-Dosen</b> – einsammeln, je +25 Punkte.</span></div>
+        </div>
+        <div class="pb">Dein Rekord auf diesem Gerät: <b id="pb">0</b></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bigh-footer">Flucht vor dem Gras · game.unoslapis.ch</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const API = '/api/scores';
+    const store = {
+      get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+      set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* egal */ } }
+    };
+    const fmt = (n) => Math.floor(n).toLocaleString('de-CH');
+
+    // ================= Spielwelt =================
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let W = 0, H = 0, GROUND = 0, DPR = 1;
+    function resize() {
+      DPR = Math.min(2, window.devicePixelRatio || 1);
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      GROUND = H - 46;
+      buildCity();
+      if (state !== 'run') draw(0);
+    }
+
+    const face = new Image();
+    let faceOk = false;
+    face.onload = () => { faceOk = true; if (state !== 'run') draw(0); };
+    face.src = '/shared/img/bigh.jpg';
+
+    // Stadt-Silhouette (zwei Ebenen) und Sterne
+    let city = [[], []], stars = [];
+    function buildCity() {
+      city = [0, 1].map((layer) => {
+        const list = [];
+        let x = 0;
+        while (x < W + 200) {
+          const w = 40 + Math.random() * (layer ? 70 : 50);
+          const h = (layer ? 50 : 90) + Math.random() * (layer ? 70 : 110);
+          const win = [];
+          for (let wy = 10; wy < h - 12; wy += 14) for (let wx = 7; wx < w - 8; wx += 12) if (Math.random() < (layer ? 0.18 : 0.1)) win.push([wx, wy]);
+          list.push({ x, w, h, win });
+          x += w + 4 + Math.random() * 10;
+        }
+        return list;
+      });
+      stars = Array.from({ length: Math.round(W / 14) }, () => [Math.random() * W, Math.random() * (GROUND - 120), Math.random() * 1.2 + 0.3]);
+    }
+
+    // ================= Spielzustand =================
+    const GRAV = 2700, JUMP = 860, JUMP2 = 720;
+    const PS = 1.3; // Grösse der Figur
+    const P = { x: 70, y: 0, vy: 0, w: 30 * PS, h: 58 * PS, jumps: 0, t: 0 };
+    let state = 'ready', speed = 0, dist = 0, cans = 0, obs = [], items = [], nextGap = 0, runMs = 0, deathReason = '', shake = 0;
+    let hi = store.get('bigh-game-pb', 0);
+    const score = () => Math.floor(dist / 10) + cans * 25;
+
+    function reset() {
+      P.y = GROUND - P.h; P.vy = 0; P.jumps = 0; P.t = 0;
+      speed = 380; dist = 0; cans = 0; obs = []; items = []; nextGap = 520; runMs = 0; shake = 0;
+      updateHud();
+    }
+    function jump() {
+      if (state !== 'run') return;
+      if (P.jumps === 0 && P.y >= GROUND - P.h - 1) { P.vy = -JUMP; P.jumps = 1; BIGH.beep(520, 0.05, 'sine', 0.03); }
+      else if (P.jumps === 1) { P.vy = -JUMP2; P.jumps = 2; BIGH.beep(700, 0.05, 'sine', 0.03); }
+    }
+
+    // Hindernisse
+    function spawn() {
+      const r = Math.random();
+      const x = W + 30;
+      const lvl = Math.min(1, dist / 30000);
+      if (r < 0.62 - lvl * 0.12) {
+        const w = 26 + Math.random() * (24 + lvl * 26), h = 20 + Math.random() * (16 + lvl * 10);
+        obs.push({ type: 'grass', x, y: GROUND - h, w, h, blades: Array.from({ length: Math.round(w / 5) }, () => Math.random()) });
+        if (Math.random() < 0.3 + lvl * 0.3) { const w2 = 24 + Math.random() * 20; obs.push({ type: 'grass', x: x + w + 6, y: GROUND - 22, w: w2, h: 22, blades: Array.from({ length: Math.round(w2 / 5) }, () => Math.random()) }); }
+      } else if (r < 0.85 - lvl * 0.05) {
+        obs.push({ type: 'invite', x, y: GROUND - P.h - 44, w: 40, h: 28, bob: Math.random() * 6 });
+      } else {
+        obs.push({ type: 'sun', x: x + 60, y: -60, w: 34, h: 60, vy: 0, fallAt: W * (0.45 + Math.random() * 0.2) });
+      }
+      // Dosen zwischendurch, gerne in Sprunghöhe
+      if (Math.random() < 0.55) {
+        const n = 1 + Math.floor(Math.random() * 3), high = Math.random() < 0.6;
+        for (let k = 0; k < n; k++) items.push({ x: x + 180 + k * 36, y: high ? GROUND - 120 - Math.sin(k / Math.max(1, n - 1) * Math.PI) * 24 : GROUND - 34, w: 16, h: 26 });
+      }
+      const minGap = 300 + speed * 0.42;
+      nextGap = minGap + Math.random() * (260 + speed * 0.25);
+    }
+
+    const hit = (a, b, pad) => a.x + pad < b.x + b.w && a.x + a.w - pad > b.x && a.y + pad < b.y + b.h && a.y + a.h - pad > b.y;
+    function update(dt) {
+      runMs += dt * 1000;
+      speed = Math.min(980, speed + dt * 9);
+      const dx = speed * dt;
+      dist += dx;
+      // Spieler
+      P.vy += GRAV * dt; P.y += P.vy * dt;
+      if (P.y >= GROUND - P.h) { P.y = GROUND - P.h; P.vy = 0; P.jumps = 0; }
+      P.t += dt * speed / 60;
+      // Welt verschieben
+      city.forEach((layer, li) => {
+        const f = li ? 0.35 : 0.15;
+        layer.forEach((b) => { b.x -= dx * f; });
+        while (layer.length && layer[0].x + layer[0].w < 0) {
+          const first = layer.shift(); const last = layer[layer.length - 1];
+          first.x = last.x + last.w + 4 + Math.random() * 10; layer.push(first);
+        }
+      });
+      nextGap -= dx;
+      if (nextGap <= 0) spawn();
+      obs.forEach((o) => {
+        o.x -= dx;
+        if (o.type === 'sun' && o.x < o.fallAt) { o.vy += 1900 * dt; o.y = Math.min(GROUND - o.h, o.y + o.vy * dt); }
+      });
+      items.forEach((it) => { it.x -= dx; });
+      obs = obs.filter((o) => o.x + o.w > -20);
+      items = items.filter((it) => it.x + it.w > -20 && !it.got);
+      // Kollisionen
+      const box = { x: P.x + 4, y: P.y + 2, w: P.w - 8, h: P.h - 4 };
+      for (const o of obs) {
+        if (o.type === 'sun' && o.y < 0) continue;
+        if (hit(box, o, o.type === 'grass' ? 3 : 4)) return die(o.type);
+      }
+      for (const it of items) {
+        if (hit(box, it, -4)) { it.got = true; cans++; BIGH.beep(1100, 0.05, 'triangle', 0.03); }
+      }
+      updateHud();
+    }
+
+    // ================= Zeichnen =================
+    function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+    function drawPlayer(t) {
+      // Figur ist in 30 × 58 gezeichnet und wird mit PS skaliert
+      ctx.save(); ctx.translate(P.x, P.y); ctx.scale(PS, PS);
+      const x = 0, y = 0, air = P.y < GROUND - P.h - 1;
+      const swing = air ? 0.6 : Math.sin(P.t * 0.9) * 0.8;
+      ctx.lineCap = 'round';
+      // Beine
+      ctx.strokeStyle = '#1e1b4b'; ctx.lineWidth = 7;
+      [[swing, 0], [-swing, 1]].forEach(([a]) => {
+        ctx.beginPath(); ctx.moveTo(x + 15, y + 40); ctx.lineTo(x + 15 + Math.sin(a) * 14, y + 56 - (air ? 6 : 0)); ctx.stroke();
+      });
+      // Körper (Hoodie)
+      ctx.fillStyle = '#7c3aed'; roundRect(x + 2, y + 16, 26, 28, 8); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(x + 12, y + 28, 7, 2);
+      // Arme
+      ctx.strokeStyle = '#6d28d9'; ctx.lineWidth = 6;
+      ctx.beginPath(); ctx.moveTo(x + 15, y + 22); ctx.lineTo(x + 15 - Math.sin(swing) * 13, y + 36); ctx.stroke();
+      // Kopf mit Foto
+      const cx = x + 15, cy = y + 4, r = 16;
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+      if (faceOk) ctx.drawImage(face, cx - r - 2, cy - r - 1, r * 2 + 4, r * 2 + 4);
+      else { ctx.fillStyle = '#f1c7a8'; ctx.fillRect(cx - r, cy - r, r * 2, r * 2); ctx.fillStyle = '#1e1b4b'; ctx.font = '700 14px Space Grotesk, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('H', cx, cy + 1); }
+      ctx.restore();
+      // Headset
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(cx, cy, r + 2, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+      ctx.fillStyle = '#111827'; roundRect(cx - r - 4, cy - 3, 5, 10, 2); ctx.fill(); roundRect(cx + r - 1, cy - 3, 5, 10, 2); ctx.fill();
+      ctx.restore();
+      void t;
+    }
+    function drawGrass(o) {
+      ctx.fillStyle = '#14532d';
+      roundRect(o.x, o.y + o.h * 0.55, o.w, o.h * 0.45 + 2, 4); ctx.fill();
+      o.blades.forEach((b, i) => {
+        const bx = o.x + (i + 0.5) * (o.w / o.blades.length);
+        const bh = o.h * (0.6 + b * 0.4);
+        ctx.fillStyle = i % 2 ? '#22c55e' : '#4ade80';
+        ctx.beginPath(); ctx.moveTo(bx - 3, GROUND); ctx.quadraticCurveTo(bx + (b - 0.5) * 6, GROUND - bh * 0.6, bx + (b - 0.5) * 8, GROUND - bh); ctx.quadraticCurveTo(bx + 1, GROUND - bh * 0.5, bx + 3, GROUND); ctx.fill();
+      });
+    }
+    function drawInvite(o, time) {
+      const y = o.y + Math.sin(time * 4 + o.bob) * 3;
+      ctx.fillStyle = '#fdf2f8'; roundRect(o.x, y, o.w, o.h, 4); ctx.fill();
+      ctx.strokeStyle = '#f472b6'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(o.x + 2, y + 3); ctx.lineTo(o.x + o.w / 2, y + o.h * 0.58); ctx.lineTo(o.x + o.w - 2, y + 3); ctx.stroke();
+      ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.arc(o.x + o.w / 2, y + o.h * 0.58, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = '600 9px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Treffen?', o.x + o.w / 2, y - 5);
+    }
+    function drawSun(o) {
+      const grad = ctx.createLinearGradient(0, o.y, 0, o.y + o.h);
+      grad.addColorStop(0, 'rgba(251,191,36,0)'); grad.addColorStop(1, 'rgba(251,191,36,.95)');
+      if (o.y < 0 || o.vy === 0) {
+        // Vorwarnung von oben
+        ctx.fillStyle = 'rgba(251,191,36,.25)'; ctx.fillRect(o.x, 0, o.w, 6);
+      }
+      ctx.fillStyle = grad; roundRect(o.x, Math.max(-o.h, o.y), o.w, o.h, 8); ctx.fill();
+      ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.arc(o.x + o.w / 2, o.y + o.h - 10, 9, 0, Math.PI * 2); ctx.fill();
+    }
+    function drawCan(it, time) {
+      const y = it.y + Math.sin(time * 5 + it.x * 0.05) * 2;
+      ctx.fillStyle = '#0f172a'; roundRect(it.x, y, it.w, it.h, 4); ctx.fill();
+      ctx.fillStyle = '#4ade80'; ctx.fillRect(it.x + 3, y + 6, it.w - 6, it.h - 12);
+      ctx.fillStyle = '#0f172a'; ctx.font = '700 10px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('M', it.x + it.w / 2, y + it.h / 2 + 1);
+      ctx.fillStyle = '#94a3b8'; ctx.fillRect(it.x + 2, y, it.w - 4, 2);
+    }
+    function draw(time) {
+      ctx.save();
+      if (shake > 0) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+      const sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, '#070b1a'); sky.addColorStop(1, '#1b1840');
+      ctx.fillStyle = sky; ctx.fillRect(-10, -10, W + 20, H + 20);
+      stars.forEach(([sx, sy, sr]) => { ctx.fillStyle = 'rgba(255,255,255,' + (0.35 + sr * 0.3) + ')'; ctx.fillRect(sx, sy, sr, sr); });
+      ctx.fillStyle = '#e5e7eb'; ctx.beginPath(); ctx.arc(W - 90, 58, 20, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#070b1a'; ctx.beginPath(); ctx.arc(W - 82, 52, 18, 0, Math.PI * 2); ctx.fill();
+      city.forEach((layer, li) => {
+        layer.forEach((b) => {
+          ctx.fillStyle = li ? '#191733' : '#12112a';
+          ctx.fillRect(b.x, GROUND - b.h, b.w, b.h);
+          ctx.fillStyle = li ? 'rgba(253,224,71,.55)' : 'rgba(253,224,71,.28)';
+          b.win.forEach(([wx, wy]) => ctx.fillRect(b.x + wx, GROUND - b.h + wy, 5, 7));
+        });
+      });
+      // Boden (Asphalt, kein Gras!)
+      ctx.fillStyle = '#1f2937'; ctx.fillRect(0, GROUND, W, H - GROUND);
+      ctx.fillStyle = '#374151'; ctx.fillRect(0, GROUND, W, 3);
+      ctx.fillStyle = 'rgba(255,255,255,.18)';
+      const off = (dist * 1) % 60;
+      for (let x = -off; x < W; x += 60) ctx.fillRect(x, GROUND + 22, 30, 3);
+      items.forEach((it) => drawCan(it, time));
+      obs.forEach((o) => { if (o.type === 'grass') drawGrass(o); else if (o.type === 'invite') drawInvite(o, time); else drawSun(o); });
+      drawPlayer(time);
+      ctx.restore();
+    }
+
+    // ================= Ablauf =================
+    const REASONS = {
+      grass: ['Gras berührt.', 'Big H hat Gras berührt. Zum ersten Mal seit 2019. Er ist traumatisiert.'],
+      invite: ['Eingeladen.', 'Big H hat eine Einladung angenommen. Aus Versehen. Er muss jetzt baden gehen.'],
+      sun: ['Sonnenbrand.', 'Big H wurde von direktem Sonnenlicht getroffen. Er zischt leise.']
+    };
+    let last = 0, raf = 0;
+    function loop(t) {
+      const dt = Math.min(0.033, (t - last) / 1000 || 0);
+      last = t;
+      if (state === 'run') update(dt);
+      if (shake > 0) shake = Math.max(0, shake - dt * 40);
+      draw(t / 1000);
+      if (state === 'run' || shake > 0) raf = requestAnimationFrame(loop); else raf = 0;
+    }
+    function resume() {
+      state = 'run';
+      document.getElementById('ov-start').hidden = true;
+      last = performance.now();
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
+    function start() {
+      if (state === 'paused') return resume();
+      reset();
+      state = 'run';
+      document.getElementById('ov-start').hidden = true;
+      document.getElementById('ov-over').hidden = true;
+      cv.focus();
+      last = performance.now();
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
+    function die(type) {
+      state = 'over';
+      shake = 12;
+      deathReason = type;
+      BIGH.beep(160, 0.3, 'sawtooth', 0.04);
+      const s = score();
+      const isPb = s > hi;
+      if (isPb) { hi = s; store.set('bigh-game-pb', hi); }
+      document.getElementById('pb').textContent = fmt(hi);
+      document.getElementById('over-title').textContent = REASONS[type][0];
+      document.getElementById('over-reason').textContent = REASONS[type][1];
+      document.getElementById('over-score').textContent = fmt(s);
+      document.getElementById('over-sub').textContent = (isPb ? 'Neuer persönlicher Rekord! · ' : '') + Math.round(runMs / 1000) + ' s gelaufen · ' + cans + (cans === 1 ? ' Dose' : ' Dosen');
+      document.getElementById('smsg').textContent = ''; document.getElementById('smsg').className = 'smsg';
+      document.getElementById('submit').hidden = s < 1;
+      document.getElementById('submit-btn').disabled = false;
+      const nm = document.getElementById('name');
+      if (!nm.value) nm.value = store.get('bigh-game-name', '') || store.get('bigh-wordle-name', '') || '';
+      lastRun = { score: s, ms: Math.round(runMs), cans, sent: false };
+      setTimeout(() => { document.getElementById('ov-over').hidden = false; }, 350);
+      updateHud();
+    }
+    let lastRun = null;
+    function updateHud() {
+      document.getElementById('hud-score').textContent = String(score()).padStart(5, '0');
+      document.getElementById('hud-hi').textContent = String(Math.max(hi, score())).padStart(5, '0');
+      document.getElementById('hud-cans').textContent = cans;
+    }
+
+    // Steuerung
+    document.getElementById('start').addEventListener('click', start);
+    document.getElementById('again').addEventListener('click', start);
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w') {
+        e.preventDefault();
+        if (e.repeat) return;
+        if (state === 'run') jump();
+        else if (state === 'ready' || state === 'paused' || (state === 'over' && !document.getElementById('ov-over').hidden)) start();
+      }
+    });
+    cv.addEventListener('pointerdown', (e) => { e.preventDefault(); if (state === 'run') jump(); else if (state === 'ready' || state === 'paused') start(); });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && state === 'run') {
+        state = 'paused';
+        document.querySelector('#ov-start h2').textContent = 'Pausiert';
+        document.querySelector('#ov-start p').textContent = 'Big H wartet. Er hat eh nichts anderes vor.';
+        document.getElementById('start').innerHTML = BIGH.icon('play') + 'Weiter';
+        document.getElementById('ov-start').hidden = false;
+      }
+    });
+    window.addEventListener('resize', () => { if (state !== 'run') resize(); });
+
+    // ================= Rangliste =================
+    let tab = 'all', data = null;
+    async function loadLb() {
+      try {
+        const r = await fetch(API, { cache: 'no-store' });
+        if (!r.ok) throw new Error(r.status);
+        data = await r.json();
+      } catch (e) { data = null; }
+      renderLb();
+    }
+    function renderLb() {
+      const lb = document.getElementById('lb');
+      lb.innerHTML = '';
+      if (!data) { lb.innerHTML = '<li class="empty">Die Rangliste ist gerade nicht erreichbar.</li>'; return; }
+      document.getElementById('lb-meta').textContent = 'Bester Lauf pro Person · ' + fmt(data.runs) + (data.runs === 1 ? ' Lauf' : ' Läufe') + ' insgesamt';
+      const list = tab === 'all' ? data.allTime : data.today;
+      if (!list.length) { lb.innerHTML = '<li class="empty">' + (tab === 'all' ? 'Noch keine Läufe. Sei der Erste.' : 'Heute ist noch niemand gerannt.') + '</li>'; return; }
+      const me = (store.get('bigh-game-name', '') || '').toLowerCase();
+      list.slice(0, 20).forEach((e, i) => {
+        const li = document.createElement('li');
+        if (me && e.name.toLowerCase() === me) li.className = 'me';
+        const pos = document.createElement('span'); pos.className = 'pos'; pos.textContent = i + 1;
+        const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = e.name;
+        const sm = document.createElement('small'); sm.textContent = Math.round(e.ms / 1000) + ' s · ' + e.cans + ' Dosen · ' + new Date(e.ts).toLocaleDateString('de-CH');
+        nm.appendChild(sm);
+        const sc = document.createElement('span'); sc.className = 'sc'; sc.textContent = fmt(e.score);
+        li.append(pos, nm, sc);
+        lb.appendChild(li);
+      });
+    }
+    document.querySelectorAll('.seg button').forEach((b) => b.addEventListener('click', () => {
+      tab = b.dataset.tab;
+      document.querySelectorAll('.seg button').forEach((x) => x.classList.toggle('on', x === b));
+      renderLb();
+    }));
+    document.getElementById('submit').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('smsg');
+      const btn = document.getElementById('submit-btn');
+      const name = document.getElementById('name').value.trim();
+      if (!lastRun || lastRun.sent) return;
+      if (!name) { msg.textContent = 'Bitte gib einen Namen ein.'; msg.className = 'smsg err'; return; }
+      btn.disabled = true;
+      msg.textContent = 'Wird eingetragen …'; msg.className = 'smsg';
+      try {
+        const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, score: lastRun.score, ms: lastRun.ms, cans: lastRun.cans }) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || 'Fehler ' + r.status);
+        lastRun.sent = true;
+        store.set('bigh-game-name', name);
+        await loadLb();
+        const rank = data ? data.allTime.findIndex((x) => x.name.toLowerCase() === name.toLowerCase()) + 1 : 0;
+        msg.textContent = rank ? 'Eingetragen. Dein bester Lauf: Platz ' + rank + ' allzeit.' : 'Eingetragen.';
+        msg.className = 'smsg ok';
+        document.getElementById('submit').hidden = true;
+      } catch (err) {
+        msg.textContent = err.message === 'Failed to fetch' ? 'Server nicht erreichbar.' : err.message;
+        msg.className = 'smsg err';
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('pb').textContent = fmt(hi);
+    resize();
+    reset();
+    draw(0);
+    loadLb();
+    setInterval(() => { if (!document.hidden && state !== 'run') loadLb(); }, 60000);
+  })();
+  </script>
+</body>
+</html>

@@ -26,6 +26,9 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `tinder.unoslapis.ch` | „Hinder"-Dating-Profil von Alastor: Karte wischen, Fotos durchtippen, Nope bringt nichts, bei Match antwortet er im Chat |
 | `wrapped.unoslapis.ch` | **Big H Wrapped** im Story-Format: 4'269 h Overwatch, Top 0,01 % Hazbin Hotel, Top-Songs, Top-Ausrede, Hörer-Persönlichkeit, Audio-Aura, Zusammenfassung zum Teilen (Tippen = weiter, Halten = Pause) |
 | `wiki.unoslapis.ch` | **Bigipedia**-Artikel über Alastor Lapis: Infobox, Fürst von Lapisien (2011–2019), nackte Everest-Besteigung wie ein Löwe, Katzenrettung, Baden-Affäre, Auszeichnungen, Einzelnachweise |
+| `casino.unoslapis.ch` | **Casino Lapis** mit Spielgeld (Lapis-Taler, im Browser gespeichert): Slots, Blackjack gegen Big H als Croupier, europäisches Roulette, Greifautomat mit Preisen für die Vitrine. Kredit, wenn man pleite ist |
+| `game.unoslapis.ch` | **Flucht vor dem Gras**: Endlos-Runner mit Big H (sein Foto) als Spielfigur. Gras überspringen, unter Einladungen durch, Monster-Dosen sammeln. **Rangliste** im Backend (Allzeit + heute) |
+| `museum.unoslapis.ch` | **Big H Museum**: Ausstellung in vier Sälen mit Exponat-Schildern, Porträt im Goldrahmen, Vollbild-Ansicht und Audioguide (Sprachausgabe des Browsers) |
 | `karte.unoslapis.ch` | **Digitale Geburtstagskarte** zum Aufklappen. Alle können unterschreiben (gespeichert im Backend), am 4. Oktober öffnet sie sich von selbst |
 
 **Geburtstags-Takeover:** Am 4. Oktober erscheint auf allen Seiten oben ein Banner „Heute wird Big H …" mit Link zur Karte und einmal Konfetti. Vorschau jederzeit mit `?bday=1` an der Adresse, z.B. `https://unoslapis.ch/?bday=1`.
@@ -36,20 +39,20 @@ Easter Eggs auf allen Seiten: Konami-Code `↑ ↑ ↓ ↓ ← → ← → B A` 
 
 ```
 Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx      (alle Seiten, Routing per Hostname)
-                                                     └──► guestbook  (nur /api/* von guestbook., bewertungen., karte. und wordle., speichert JSON)
+                                                     └──► guestbook  (nur /api/* von guestbook., bewertungen., karte., wordle. und game., speichert JSON)
 ```
 
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
-guestbook/             # Backend für Gästebuch, Bewertungen, Geburtstagskarte und Wordle-Rangliste (Node, ohne Abhängigkeiten)
+guestbook/             # Backend für Gästebuch, Bewertungen, Karte, Wordle- und Runner-Rangliste (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
   shared/              # style.css, fun.js, icons.svg, 404.html, img/ (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
   excuses/  horoskop/  merch/  discord/  wordle/  tinder/  bewertungen/
-  wrapped/  wiki/  karte/
+  wrapped/  wiki/  karte/  casino/  game/  museum/
 ```
 
 ## Deploy auf dem VPS
@@ -66,7 +69,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen`, `wrapped`, `wiki`, `karte` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen`, `wrapped`, `wiki`, `karte`, `casino`, `game`, `museum` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 
@@ -104,7 +107,7 @@ Nach Änderungen am Gästebuch-Backend oder neuen Services: `docker compose up -
 1. In `.env` ein geheimes `GUESTBOOK_ADMIN_TOKEN` setzen (z.B. `openssl rand -hex 24`) und `docker compose up -d`.
 2. `https://guestbook.unoslapis.ch/#admin`, `https://bewertungen.unoslapis.ch/#admin` bzw. `https://karte.unoslapis.ch/#admin` öffnen (Wordle-Einträge löschen: `curl -X DELETE -H "Authorization: Bearer <TOKEN>" https://wordle.unoslapis.ch/api/wordle/<id>`, die id steht in `https://wordle.unoslapis.ch/api/wordle`). Neben jedem Eintrag erscheint ein ×, beim ersten Löschen wird nach dem Token gefragt.
 
-Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP (Karte und Wordle: 20, weil sich Kollegen im Büro oft eine IP teilen), pro Name nur ein Wordle-Ergebnis pro Tag, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json`, `reviews.json`, `cards.json` und `wordle.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
+Schutz eingebaut: max. 3 Einträge pro 10 Minuten pro IP (Karte und Wordle: 20, weil sich Kollegen im Büro oft eine IP teilen), pro Name nur ein Wordle-Ergebnis pro Tag, Honeypot gegen Bots, max. 500 Zeichen. Die Daten liegen im Docker-Volume `guestbook_data` (`entries.json`, `reviews.json`, `cards.json`, `wordle.json` und `scores.json`, bleiben bei Neustarts und Updates erhalten). Backup: `docker compose cp guestbook:/data/entries.json ./backup.json` bzw. `…/data/reviews.json`.
 
 ## Anpassen
 
@@ -126,7 +129,9 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Wrapped** (`sites/wrapped/index.html`): Liste `SLIDES` (Hintergrund + Inhalt pro Slide), `DURATION`
 - **Wiki** (`sites/wiki/index.html`): Artikeltext und Infobox direkt im HTML; das Inhaltsverzeichnis baut sich automatisch aus den Überschriften
 - **Karte** (`sites/karte/index.html`): Text auf der Innenseite direkt im HTML
-- **Foto von Big H**: ein Bild als `sites/shared/img/bigh.jpg` ablegen – es erscheint automatisch auf Dashboard, LinkedOut, Hinder, Goongle, Bigipedia und Wrapped. Ohne Bild wird ein „H"-Monogramm angezeigt.
+- **Foto von Big H**: liegt in `sites/shared/img/bigh.jpg` und erscheint auf Dashboard, LinkedOut, Hinder, Goongle, Bigipedia, Wrapped, im Museum, als Croupier im Casino und als Kopf der Spielfigur. Einfach die Datei ersetzen, um ein anderes Bild zu nehmen (quadratisch ist ideal).
+- **Casino** (`sites/casino/index.html`): Slot-Symbole und Auszahlungen in `SYMBOLS` (Rückzahlquote ca. 95 %), Preise des Greifautomaten in `PRIZES`
+- **Museum** (`sites/museum/index.html`): Exponate direkt im HTML (`<article class="exhibit">`); der Audioguide liest Titel, Angaben und Beschreibung vom Schild
 - **Icons**: `sites/shared/icons.svg` (Lucide, ISC-Lizenz), einbinden mit `<i data-icon="name"></i>` bzw. `BIGH.icon('name')`
 - **News** (`sites/news/index.html`): Artikel direkt im HTML; eine neue Seite = ein weiteres `<article class="page">`
 - **Echte Meme-Bilder**: Bilder nach `sites/shared/memes/` kopieren und in `sites/dashboard/index.html` bei `MEME_IMAGES` eintragen, z.B. `['/shared/memes/bigh.jpg']`
