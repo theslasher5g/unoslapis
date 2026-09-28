@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poker – Casino Lapis</title>
+<meta name="description" content="Texas Hold'em im Casino Lapis: Setz dich mit Kollegen an einen Tisch. Fehlt jemand, spielt ein Bot mit.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23ef4444'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23ffffff'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --accent: #e3b341; --gold: #e3b341; --felt: #0e3b2c; --felt-2: #0a2e22; --felt-line: rgba(255,255,255,.14); --red: #d63a4a; }
+  body { background: radial-gradient(900px 420px at 50% -140px, rgba(227,179,65,.1), transparent 70%), var(--bg); }
+  .wrap { width: min(1100px, 100% - 32px); }
+  .page-head { text-align: center; padding-bottom: 18px; }
+  .page-head p { margin-inline: auto; }
+  .btn.gold { background: var(--accent); color: #1a1405; }
+  .btn.red { background: var(--red); color: #fff; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .btn.sm { padding: 7px 12px; font-size: .85rem; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; }
+  .wallet { display: flex; align-items: center; gap: 10px; }
+  .wallet .coin { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #f7d98a, var(--gold) 55%, #9a7420); color: #3b2b06; display: grid; place-items: center; }
+  .wallet .coin .icon { width: 18px; height: 18px; }
+  .wallet b { font: 700 1.3rem/1 var(--title); font-variant-numeric: tabular-nums; }
+  .wallet small { display: block; color: var(--muted); font-size: .75rem; margin-top: 2px; }
+  .record { display: flex; gap: 14px; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
+  .record b { color: var(--text); font: 700 1rem var(--title); font-variant-numeric: tabular-nums; }
+  .bar .links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .sec { margin-top: 26px; }
+  .sec-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .sec-head h2 { font: 600 1.4rem var(--title); margin: 0; }
+  .sec-head p { color: var(--muted); margin: 4px 0 0; font-size: .9rem; }
+
+  /* ---------- Lobby ---------- */
+  .lobby { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; }
+  @media (max-width: 760px) { .lobby { grid-template-columns: minmax(0, 1fr); } }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .box h3 { font: 600 1.05rem var(--title); margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+  .box p { color: var(--muted); font-size: .88rem; margin: 0 0 12px; }
+  .field { display: grid; gap: 6px; margin-bottom: 12px; font-size: .85rem; color: var(--muted); }
+  select, .field input[type=text] { background: var(--card-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 10px; padding: 9px 10px; font: 500 .9rem var(--body); width: 100%; }
+  .tlist { display: grid; gap: 8px; }
+  .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .trow b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trow small { color: var(--muted); font-size: .8rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trow .dots { display: inline-flex; gap: 3px; margin-right: 6px; vertical-align: middle; }
+  .trow .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-2); }
+  .trow .dots i.on { background: var(--accent); }
+  .none { color: var(--muted); font-size: .88rem; padding: 18px 0; text-align: center; border: 1px dashed var(--line-2); border-radius: 12px; }
+  details.rules { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; margin-top: 14px; font-size: .9rem; color: #cfcfd6; }
+  details.rules summary { cursor: pointer; font-weight: 600; color: var(--text); }
+  details.rules ol, details.rules ul { margin: 10px 0 0; padding-left: 20px; line-height: 1.6; }
+
+  /* ---------- Tisch ---------- */
+  .tbl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tbl-top h2 { margin: 0; font: 600 1.25rem var(--title); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+  .tbl-top small { color: var(--muted); display: block; font-size: .82rem; }
+  .tbl-top .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .felt-wrap { background: #16110a; border-radius: 999px / 46%; padding: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 0 0 2px rgba(227,179,65,.25); }
+  .felt { position: relative; aspect-ratio: 2.1 / 1; border-radius: 999px / 50%; background: radial-gradient(ellipse at 50% 35%, #17563d, var(--felt) 58%, var(--felt-2)); box-shadow: inset 0 0 0 6px rgba(0,0,0,.2), inset 0 0 60px rgba(0,0,0,.35); }
+  @media (max-width: 700px) {
+    .felt-wrap { border-radius: 46% / 999px; padding: 10px; }
+    .felt { aspect-ratio: .78; border-radius: 45% / 32%; }
+  }
+  .center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); display: grid; justify-items: center; gap: 8px; width: min(420px, 62%); }
+  .pot { background: rgba(0,0,0,.35); border: 1px solid var(--felt-line); border-radius: 999px; padding: 4px 14px; font: 600 .9rem var(--title); color: #fff; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px; }
+  .pot .chip { width: 14px; height: 14px; }
+  .board { display: flex; gap: 6px; justify-content: center; min-height: 76px; }
+  .status { color: rgba(255,255,255,.85); font-size: .88rem; text-align: center; min-height: 1.3em; }
+  .status b { color: var(--gold); }
+  .brand { position: absolute; left: 50%; bottom: 13%; transform: translateX(-50%); font: 700 .75rem var(--title); letter-spacing: .3em; color: rgba(255,255,255,.1); text-transform: uppercase; pointer-events: none; white-space: nowrap; }
+
+  .pc { width: 52px; height: 74px; border-radius: 7px; background: #fbfaf7; color: #1c1917; box-shadow: 0 4px 10px rgba(0,0,0,.35); position: relative; flex: none; animation: deal .35s cubic-bezier(.2,.8,.2,1) both; transition: transform .2s, opacity .2s, box-shadow .2s; }
+  .pc .tl { position: absolute; top: 5px; left: 6px; font: 700 .95rem/1 var(--title); text-align: center; }
+  .pc .tl i { display: block; font-style: normal; font-size: .85rem; margin-top: 1px; }
+  .pc .mid { position: absolute; right: 6px; bottom: 4px; font-size: 1.5rem; line-height: 1; }
+  .pc.red { color: #c0262d; }
+  .pc.back { background: repeating-linear-gradient(45deg, #7a1f2b 0 5px, #8e2634 5px 10px); border: 3px solid #fbfaf7; }
+  .pc.back::after { content: 'H'; position: absolute; inset: 0; display: grid; place-items: center; font: 700 1.2rem var(--title); color: rgba(255,255,255,.8); }
+  .pc.ph { background: rgba(0,0,0,.18); border: 1px dashed var(--felt-line); box-shadow: none; animation: none; }
+  .pc.flip { animation: flip .4s ease both; }
+  .pc.hl { box-shadow: 0 0 0 3px var(--gold), 0 6px 16px rgba(0,0,0,.4); transform: translateY(-5px); }
+  .pc.dim { opacity: .45; }
+  @keyframes deal { from { transform: translate(0, -40px) scale(.8); opacity: 0; } }
+  @keyframes flip { from { transform: rotateY(90deg); } }
+  @media (max-width: 700px) {
+    .board { gap: 3px; min-height: 52px; }
+    .board .pc { width: 36px; height: 52px; border-radius: 6px; }
+    .board .pc .tl { font-size: .8rem; top: 4px; left: 4px; } .board .pc .tl i { font-size: .72rem; }
+    .board .pc .mid { font-size: 1.1rem; right: 4px; }
+    .center { width: 58%; gap: 6px; }
+    .status { font-size: .78rem; line-height: 1.3; }
+  }
+
+  .seat { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 126px; display: grid; justify-items: center; gap: 4px; z-index: 2; }
+  .seat .cards { display: flex; justify-content: center; height: 50px; }
+  .seat .cards .pc { width: 36px; height: 50px; border-radius: 5px; margin: 0 -4px; }
+  .seat .cards .pc .tl { font-size: .72rem; top: 3px; left: 4px; } .seat .cards .pc .tl i { font-size: .66rem; }
+  .seat .cards .pc .mid { font-size: 1rem; right: 4px; bottom: 3px; }
+  .seat .cards .pc.back { border-width: 2px; } .seat .cards .pc.back::after { font-size: .8rem; }
+  .seat .plate { width: 100%; background: rgba(12,12,16,.88); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 5px 8px; text-align: center; position: relative; transition: box-shadow .2s, border-color .2s; }
+  .seat .nm { font: 600 .8rem var(--body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+  .seat .stack { font: 700 .88rem var(--title); color: var(--gold); font-variant-numeric: tabular-nums; }
+  .seat .last { font-size: .7rem; color: rgba(255,255,255,.7); min-height: 1em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+  .seat .tm { position: absolute; left: 6px; right: 6px; bottom: 2px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.12); overflow: hidden; display: none; }
+  .seat .tm i { display: block; height: 100%; background: var(--gold); }
+  .seat.turn .plate { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(227,179,65,.5), 0 0 22px rgba(227,179,65,.3); }
+  .seat.turn .tm { display: block; }
+  .seat.folded .cards, .seat.folded .plate { opacity: .45; }
+  .seat.out .plate { opacity: .55; }
+  .seat.win .plate { border-color: #86efac; box-shadow: 0 0 0 2px rgba(134,239,172,.55), 0 0 26px rgba(134,239,172,.35); }
+  .seat.me .cards { height: 74px; }
+  .seat.me .cards .pc { width: 52px; height: 74px; border-radius: 7px; margin: 0 2px; }
+  .seat.me .cards .pc .tl { font-size: .95rem; top: 5px; left: 6px; } .seat.me .cards .pc .tl i { font-size: .85rem; }
+  .seat.me .cards .pc .mid { font-size: 1.5rem; right: 6px; bottom: 4px; }
+  .seat.me .plate { border-color: rgba(227,179,65,.5); }
+  .seat .dealer { position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%; background: #fbfaf7; color: #111; font: 800 .72rem var(--title); display: grid; place-items: center; box-shadow: 0 2px 5px rgba(0,0,0,.4); }
+  .seat .badge { position: absolute; top: -8px; left: -6px; background: #3f3f46; color: #fff; border-radius: 999px; font: 600 .62rem var(--body); padding: 2px 6px; }
+  .seat .hand-name { font-size: .7rem; color: #86efac; font-weight: 600; white-space: nowrap; }
+  .seat .bet { position: absolute; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.55); border: 1px solid rgba(227,179,65,.5); color: #fff; border-radius: 999px; padding: 2px 9px 2px 4px; font: 700 .76rem var(--title); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .seat .bet.new { animation: pop .25s ease; }
+  .seat .bet .chip { width: 14px; height: 14px; }
+  .seat.up .bet { top: -26px; } .seat.down .bet { bottom: -26px; }
+  .seat.me.up .bet { top: -28px; }
+  @keyframes pop { from { transform: translateX(-50%) scale(.6); opacity: 0; } }
+  .seat.empty .plate { background: rgba(0,0,0,.2); border-style: dashed; color: rgba(255,255,255,.5); font-size: .75rem; padding: 10px 6px; cursor: default; }
+  .seat.empty .plate button { background: none; border: 0; color: rgba(255,255,255,.75); font: 600 .75rem var(--body); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 4px; }
+  .seat.empty .plate button:hover { color: var(--gold); }
+  .chip { display: inline-block; border-radius: 50%; background: radial-gradient(circle, #e3b341 0 36%, #fff 37% 44%, #d63a4a 45%); border: 1px dashed rgba(255,255,255,.7); flex: none; }
+  @media (max-width: 700px) {
+    .seat { width: 88px; gap: 3px; }
+    .seat .cards { height: 40px; }
+    .seat .cards .pc { width: 29px; height: 40px; margin: 0 -3px; }
+    .seat .cards .pc .tl { font-size: .62rem; left: 3px; } .seat .cards .pc .tl i { font-size: .56rem; }
+    .seat .cards .pc .mid { display: none; }
+    .seat .plate { padding: 4px 5px; border-radius: 10px; }
+    .seat .nm { font-size: .7rem; } .seat .stack { font-size: .76rem; } .seat .last { font-size: .62rem; }
+    .seat.me { width: 120px; }
+    .seat.me .cards { height: 62px; }
+    .seat.me .cards .pc { width: 44px; height: 62px; }
+    .seat.me .cards .pc .mid { display: block; font-size: 1.2rem; }
+    .seat .bet { font-size: .68rem; }
+    .seat.up .bet { top: -22px; } .seat.down .bet { bottom: -22px; }
+    .seat .hand-name { font-size: .62rem; white-space: normal; text-align: center; line-height: 1.2; }
+  }
+
+  /* ---------- Aktionen ---------- */
+  .action { margin-top: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; }
+  .action .hint { text-align: center; color: var(--muted); font-size: .9rem; }
+  .action .hint b { color: var(--text); }
+  .act-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .act-row .btn { justify-content: center; padding: 12px 10px; font-size: 1rem; }
+  .btn.fold { background: #3f3f46; color: #fff; }
+  .raise { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; margin-top: 12px; }
+  .raise input[type=range] { width: 100%; accent-color: var(--gold); }
+  .raise output { font: 700 1rem var(--title); font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+  .raise .lbl { color: var(--muted); font-size: .82rem; }
+  .presets { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+  .presets button { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 999px; padding: 5px 12px; font: 600 .8rem var(--body); cursor: pointer; }
+  .presets button:hover { border-color: var(--gold); }
+  .my-hand { text-align: center; margin-top: 10px; font-size: .85rem; color: var(--muted); min-height: 1.2em; }
+  .my-hand b { color: #86efac; }
+  .turn-timer { height: 4px; border-radius: 2px; background: rgba(255,255,255,.1); overflow: hidden; margin-bottom: 12px; }
+  .turn-timer i { display: block; height: 100%; background: var(--gold); transition: width .25s linear; }
+  .pre { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+  .pre label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+  .pre input { accent-color: var(--gold); }
+
+  .chat { margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 12px; }
+  .chat .log { height: 130px; overflow-y: auto; font-size: .84rem; display: flex; flex-direction: column; gap: 3px; padding: 2px 4px; }
+  .chat .log .sys { color: var(--muted); font-style: italic; }
+  .chat .log b { color: var(--gold); font-weight: 600; }
+  .chat .quick { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .chat .quick button { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 999px; padding: 4px 10px; font: 500 .78rem var(--body); cursor: pointer; }
+  .chat form { display: flex; gap: 6px; }
+  .chat input { flex: 1; min-width: 0; background: var(--card-2); border: 1px solid var(--line-2); border-radius: 10px; padding: 8px 10px; color: var(--text); font: 500 .88rem var(--body); outline: none; }
+
+  /* ---------- Buy-in-Dialog ---------- */
+  .modal { position: fixed; inset: 0; z-index: 80; background: rgba(5,5,10,.8); display: none; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px; }
+  .modal.show { display: grid; }
+  .modal .card { width: min(400px, 100%); background: var(--card); border: 1px solid var(--line-2); border-radius: 22px; padding: 24px; animation: rise .3s ease; }
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } }
+  .modal h3 { font: 700 1.3rem var(--title); margin: 0 0 4px; }
+  .modal p { color: var(--muted); margin: 0 0 16px; font-size: .9rem; }
+  .modal .amt { font: 800 2.2rem/1 var(--title); text-align: center; color: var(--gold); font-variant-numeric: tabular-nums; margin-bottom: 10px; }
+  .modal input[type=range] { width: 100%; accent-color: var(--gold); }
+  .modal .mm { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .modal .btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <header class="page-head">
+      <span class="kicker"><i data-icon="spade"></i>Casino Lapis</span>
+      <h1>Poker</h1>
+      <p>Texas Hold'em mit Kollegen. Bis zu sechs Spieler pro Tisch, die Chips kommen von deinem Casino-Konto und gehen beim Aufstehen wieder zurück.</p>
+    </header>
+
+    <div class="bar">
+      <div class="wallet"><span class="coin"><i data-icon="coins"></i></span><div><b id="balance">–</b><small id="who">Lapis-Taler</small></div></div>
+      <div class="record"><span>Hände <b id="r-hands">0</b></span><span>Bilanz <b id="r-net">0</b></span><span>Grösster Pot <b id="r-best">0</b></span></div>
+      <div class="links"><a class="btn ghost" href="/#blackjack"><i data-icon="dices"></i>Casino</a><a class="btn ghost" href="/#rangliste"><i data-icon="trophy"></i>Rangliste</a></div>
+    </div>
+
+    <div id="lobby">
+      <section class="sec">
+        <div class="lobby">
+          <div class="box">
+            <h3><i data-icon="plus"></i>Tisch eröffnen</h3>
+            <p>Andere sehen deinen Tisch in der Liste und können sich dazusetzen. Du kannst auch Bots dazuholen.</p>
+            <label class="field">Blinds<select id="blinds"></select></label>
+            <label class="field">Name (optional)<input type="text" id="tname" maxlength="30" placeholder="z. B. Pausenraum-Runde"></label>
+            <button class="btn gold" id="create" type="button"><i data-icon="spade"></i>Tisch eröffnen</button>
+          </div>
+          <div class="box">
+            <h3><i data-icon="users"></i>Offene Tische</h3>
+            <p>Die Liste aktualisiert sich von selbst.</p>
+            <div class="tlist" id="tlist"><div class="none">Lade …</div></div>
+          </div>
+        </div>
+        <details class="rules"><summary>Regeln und Handrangfolge</summary>
+          <ul>
+            <li>Jeder bekommt zwei verdeckte Karten, dann kommen Flop (3), Turn (1) und River (1) offen in die Mitte. Die beste Kombination aus 5 von 7 Karten gewinnt.</li>
+            <li>No Limit: Du kannst jederzeit alle Chips setzen. Eine Erhöhung muss mindestens so gross sein wie die letzte.</li>
+            <li>Wer 30 Sekunden nichts macht, checkt oder foldet automatisch. Nach zwei Mal setzt man aus.</li>
+            <li>Buy-in: 20 bis 100 Big Blinds. Beim Aufstehen gehen alle Chips zurück aufs Konto.</li>
+          </ul>
+          <ol>
+            <li>Royal Flush · Straight Flush · Vierling · Full House · Flush</li>
+            <li>Straße · Drilling · Zwei Paare · Ein Paar · Höchste Karte</li>
+          </ol>
+        </details>
+      </section>
+    </div>
+
+    <section class="sec" id="table" hidden>
+      <div class="tbl-top">
+        <div style="min-width:0"><h2 id="t-name"></h2><small id="t-sub"></small></div>
+        <div class="acts">
+          <button class="btn ghost sm" id="add-bot" type="button"><i data-icon="user"></i>Bot dazuholen</button>
+          <button class="btn ghost sm" id="topup" type="button"><i data-icon="plus"></i>Nachkaufen</button>
+          <button class="btn ghost sm" id="leave" type="button"><i data-icon="door-open"></i>Aufstehen</button>
+        </div>
+      </div>
+      <div class="felt-wrap">
+        <div class="felt" id="felt">
+          <div class="brand">Casino Lapis</div>
+          <div class="center">
+            <div class="pot" id="pot" hidden><span class="chip"></span><span id="pot-v">0</span></div>
+            <div class="board" id="board"></div>
+            <div class="status" id="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action" id="action">
+        <div class="turn-timer" id="tt" hidden><i id="tt-bar"></i></div>
+        <div id="act-ui" hidden>
+          <div class="act-row">
+            <button class="btn fold" id="a-fold" type="button">Fold</button>
+            <button class="btn" id="a-call" type="button">Check</button>
+            <button class="btn gold" id="a-raise" type="button">Raise</button>
+          </div>
+          <div class="raise"><span class="lbl">Auf</span><input type="range" id="r-slider" aria-label="Betrag"><output id="r-out">0</output></div>
+          <div class="presets" id="presets"></div>
+        </div>
+        <div class="hint" id="act-hint"></div>
+        <div class="pre" id="pre" hidden>
+          <label><input type="checkbox" id="pre-fold">Check/Fold</label>
+          <label><input type="checkbox" id="pre-call">Check/Call</label>
+        </div>
+        <div class="my-hand" id="my-hand"></div>
+      </div>
+
+      <div class="chat">
+        <div class="log" id="chat-log" aria-live="polite"></div>
+        <div class="quick" id="quick"></div>
+        <form id="chat-form"><input id="chat-in" maxlength="80" placeholder="Nachricht an den Tisch" autocomplete="off"><button class="btn sm" type="submit"><i data-icon="send"></i></button></form>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="buyin" role="dialog" aria-modal="true" aria-labelledby="bi-t">
+    <div class="card">
+      <h3 id="bi-t">Buy-in</h3>
+      <p id="bi-p"></p>
+      <div class="amt" id="bi-amt">0</div>
+      <input type="range" id="bi-range" aria-label="Buy-in">
+      <div class="mm"><span id="bi-min"></span><span id="bi-max"></span></div>
+      <div class="btns"><button class="btn ghost" id="bi-cancel" type="button">Abbrechen</button><button class="btn gold" id="bi-ok" type="button"><i data-icon="check"></i>Hinsetzen</button></div>
+    </div>
+  </div>
+
+  <footer class="bigh-footer">Casino Lapis · Poker · Nur Spielgeld, kein echtes Geld</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script src="/account.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n) => Math.round(n).toLocaleString('de-CH');
+    const sfx = (n) => BIGH.sfx && BIGH.sfx(n);
+    const api = Casino.api;
+    const SUIT = { S: ['♠', false], H: ['♥', true], D: ['♦', true], C: ['♣', false] };
+    const RANK = { 11: 'J', 12: 'Q', 13: 'K', 14: 'A' };
+    const QUICK = ['Nice Hand', 'All-in, trau dich', 'Das war ein Bluff', 'Big H foldet nie', 'Ich geh baden', 'GG'];
+
+    // ---------- Handbewertung (nur zur Anzeige, der Server entscheidet) ----------
+    function eval5(cards) {
+      const r = cards.map((c) => c.r).sort((a, b) => b - a);
+      const flush = cards.every((c) => c.s === cards[0].s);
+      const uniq = [...new Set(r)];
+      let sh = 0;
+      if (uniq.length === 5) { if (r[0] - r[4] === 4) sh = r[0]; else if (r[0] === 14 && r[1] === 5) sh = 5; }
+      const cnt = {};
+      r.forEach((x) => { cnt[x] = (cnt[x] || 0) + 1; });
+      const g = Object.entries(cnt).map(([k, v]) => [v, +k]).sort((a, b) => b[0] - a[0] || b[1] - a[1]);
+      if (sh && flush) return [sh === 14 ? 9 : 8, sh];
+      if (g[0][0] === 4) return [7, g[0][1]];
+      if (g[0][0] === 3 && g[1] && g[1][0] >= 2) return [6, g[0][1], g[1][1]];
+      if (flush && cards.length === 5) return [5, ...r];
+      if (sh) return [4, sh];
+      if (g[0][0] === 3) return [3, g[0][1]];
+      if (g[0][0] === 2 && g[1] && g[1][0] === 2) return [2, g[0][1], g[1][1]];
+      if (g[0][0] === 2) return [1, g[0][1]];
+      return [0, ...r];
+    }
+    const cmp = (a, b) => { for (let i = 0; i < Math.max(a.length, b.length); i++) { const d = (a[i] || 0) - (b[i] || 0); if (d) return d; } return 0; };
+    function bestOf(cards) {
+      if (cards.length <= 5) return eval5(cards);
+      let top = null;
+      const n = cards.length;
+      for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) for (let c = b + 1; c < n; c++) for (let d = c + 1; d < n; d++) for (let e = d + 1; e < n; e++) {
+        const s = eval5([cards[a], cards[b], cards[c], cards[d], cards[e]]);
+        if (!top || cmp(s, top) > 0) top = s;
+      }
+      return top;
+    }
+    const PL = { 2: 'Zweien', 3: 'Dreien', 4: 'Vieren', 5: 'Fünfen', 6: 'Sechsen', 7: 'Siebnen', 8: 'Achten', 9: 'Neunen', 10: 'Zehnen', 11: 'Buben', 12: 'Damen', 13: 'Königen', 14: 'Assen' };
+    const rn = (r) => RANK[r] || String(r);
+    function describe(s) {
+      switch (s[0]) {
+        case 0: return 'Höchste Karte ' + rn(s[1]);
+        case 1: return 'Paar aus ' + PL[s[1]];
+        case 2: return 'Zwei Paare, ' + rn(s[1]) + ' und ' + rn(s[2]);
+        case 3: return 'Drilling aus ' + PL[s[1]];
+        case 4: return 'Straße bis ' + rn(s[1]);
+        case 5: return 'Flush';
+        case 6: return 'Full House, ' + rn(s[1]) + ' über ' + rn(s[2]);
+        case 7: return 'Vierling aus ' + PL[s[1]];
+        case 8: return 'Straight Flush bis ' + rn(s[1]);
+        default: return 'Royal Flush';
+      }
+    }
+
+    function cardEl(c, cls) {
+      const el = document.createElement('div');
+      if (!c) { el.className = 'pc back' + (cls ? ' ' + cls : ''); return el; }
+      const [sym, red] = SUIT[c.s];
+      el.className = 'pc' + (red ? ' red' : '') + (cls ? ' ' + cls : '');
+      el.dataset.k = c.r + c.s;
+      el.setAttribute('aria-label', rn(c.r) + ' ' + ({ S: 'Pik', H: 'Herz', D: 'Karo', C: 'Kreuz' })[c.s]);
+      const tl = document.createElement('span'); tl.className = 'tl'; tl.textContent = rn(c.r);
+      const i = document.createElement('i'); i.textContent = sym; tl.appendChild(i);
+      const mid = document.createElement('span'); mid.className = 'mid'; mid.textContent = sym;
+      el.append(tl, mid);
+      return el;
+    }
+    const chipEl = () => { const c = document.createElement('span'); c.className = 'chip'; return c; };
+
+    // ---------- Konto ----------
+    let me = null;
+    Casino.onChange((m) => {
+      me = m; if (!m) return;
+      $('balance').textContent = fmt(m.balance);
+      $('who').textContent = 'Lapis-Taler · ' + m.name;
+    });
+    function showStats(s) {
+      if (!s) return;
+      $('r-hands').textContent = fmt(s.hands);
+      $('r-net').textContent = (s.net > 0 ? '+' : '') + fmt(s.net);
+      $('r-best').textContent = fmt(s.best);
+    }
+
+    // ---------- Buy-in-Dialog ----------
+    let biResolve = null;
+    function askBuyin(title, text, min, max, def, okLabel) {
+      const bal = me ? me.balance : 0;
+      const hi = Math.min(max, bal);
+      if (hi < min) { BIGH.toast('Dafür brauchst du mindestens ' + fmt(min) + ' Taler. Im Casino gibt es einen Kredit, wenn du pleite bist.'); return Promise.resolve(null); }
+      const step = Math.max(1, Math.round(min / 20));
+      const r = $('bi-range');
+      r.min = min; r.max = hi; r.step = step; r.value = Math.min(hi, Math.max(min, def));
+      $('bi-t').textContent = title; $('bi-p').textContent = text;
+      $('bi-min').textContent = 'min. ' + fmt(min); $('bi-max').textContent = 'max. ' + fmt(hi);
+      $('bi-ok').lastChild.textContent = okLabel || 'Hinsetzen';
+      const upd = () => { $('bi-amt').textContent = fmt(+r.value); };
+      r.oninput = upd; upd();
+      $('buyin').classList.add('show');
+      setTimeout(() => $('bi-ok').focus(), 50);
+      return new Promise((res) => { biResolve = res; });
+    }
+    function closeBuyin(v) { $('buyin').classList.remove('show'); if (biResolve) { biResolve(v); biResolve = null; } }
+    $('bi-ok').addEventListener('click', () => { const r = $('bi-range'); closeBuyin(+r.value === +r.max ? +r.max : Math.round(+r.value)); });
+    $('bi-cancel').addEventListener('click', () => closeBuyin(null));
+    $('buyin').addEventListener('click', (e) => { if (e.target.id === 'buyin') closeBuyin(null); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && biResolve) closeBuyin(null); });
+
+    // ---------- Lobby ----------
+    let lobbyT = null, blindsDone = false;
+    async function loadLobby() {
+      clearTimeout(lobbyT);
+      if (T.id) return;
+      try {
+        const l = await api('GET', '/poker');
+        showStats(l.stats);
+        if (!blindsDone) {
+          l.blinds.forEach(([sb, bb]) => { const o = document.createElement('option'); o.value = sb; o.textContent = sb + ' / ' + bb + ' (Buy-in ' + fmt(bb * 20) + ' bis ' + fmt(bb * 100) + ')'; $('blinds').appendChild(o); });
+          blindsDone = true;
+        }
+        if (l.current) { openTable(l.current); return; }
+        const list = $('tlist');
+        list.innerHTML = '';
+        if (!l.tables.length) list.innerHTML = '<div class="none">Noch kein Tisch offen. Eröffne einen!</div>';
+        l.tables.forEach((t) => {
+          const row = document.createElement('div'); row.className = 'trow';
+          const info = document.createElement('div'); info.style.minWidth = '0';
+          const b = document.createElement('b'); b.textContent = t.name;
+          const sm = document.createElement('small');
+          const dots = document.createElement('span'); dots.className = 'dots';
+          for (let k = 0; k < t.max; k++) { const i = document.createElement('i'); if (k < t.seats) i.className = 'on'; dots.appendChild(i); }
+          sm.append(dots, document.createTextNode('Blinds ' + t.sb + '/' + t.bb + ' · ' + t.players.join(', ')));
+          info.append(b, sm);
+          const btn = document.createElement('button'); btn.className = 'btn sm'; btn.type = 'button';
+          btn.innerHTML = BIGH.icon('arrow-right') + (t.seats >= t.max ? 'Voll' : 'Hinsetzen');
+          btn.disabled = t.seats >= t.max;
+          btn.addEventListener('click', () => sitAt(t));
+          row.append(info, btn);
+          list.appendChild(row);
+        });
+      } catch (e) { $('tlist').innerHTML = '<div class="none">Gerade nicht erreichbar.</div>'; }
+      lobbyT = setTimeout(loadLobby, 5000);
+    }
+    async function sitAt(t) {
+      const v = await askBuyin('An ' + t.name + ' setzen', 'Blinds ' + t.sb + '/' + t.bb + '. Die Chips gehen beim Aufstehen zurück aufs Konto.', t.bb * 20, t.bb * 100, t.bb * 50);
+      if (!v) return;
+      try {
+        const st = await api('POST', '/poker/' + t.id + '/sit', { buyin: v });
+        sfx('chip');
+        enterTable(st);
+      } catch (e) { BIGH.toast(e.message); loadLobby(); }
+    }
+    $('create').addEventListener('click', async () => {
+      const sb = +$('blinds').value, bb = sb * 2;
+      const v = await askBuyin('Tisch eröffnen', 'Blinds ' + sb + '/' + bb + '. Wie viele Chips nimmst du mit an den Tisch?', bb * 20, bb * 100, bb * 50, 'Eröffnen');
+      if (!v) return;
+      try {
+        const st = await api('POST', '/poker', { blinds: sb, buyin: v, name: $('tname').value.trim() });
+        sfx('chip');
+        enterTable(st);
+      } catch (e) { BIGH.toast(e.message); }
+    });
+
+    // ---------- Tisch ----------
+    const T = { id: null, v: 0, st: null, poll: 0, lastHand: 0, lastBoard: 0, lastTurn: -2, lastChat: 0, resultShown: 0, deadline: 0, tick: null };
+    function enterTable(st) {
+      T.id = st.id; T.v = 0; T.lastHand = 0; T.lastBoard = 0; T.lastTurn = -2; T.lastChat = 0; T.resultShown = 0;
+      $('lobby').hidden = true; $('table').hidden = false;
+      render(st);
+      $('table').scrollIntoView({ behavior: BIGH.reduced ? 'auto' : 'smooth', block: 'start' });
+      poll();
+    }
+    async function openTable(id) {
+      try { const st = await api('GET', '/poker/' + id); enterTable(st); } catch (e) { toLobby(); }
+    }
+    function toLobby() {
+      T.id = null; T.st = null; T.poll++;
+      clearInterval(T.tick);
+      $('table').hidden = true; $('lobby').hidden = false;
+      loadLobby();
+    }
+    async function poll() {
+      const my = ++T.poll;
+      while (T.id && my === T.poll) {
+        try {
+          const st = await api('GET', '/poker/' + T.id + '?v=' + T.v);
+          if (my !== T.poll) return;
+          render(st);
+        } catch (e) {
+          if (my !== T.poll) return;
+          if (e.status === 404 || e.status === 410) { BIGH.toast(e.message); toLobby(); return; }
+          await new Promise((r) => setTimeout(r, 2500));
+        }
+      }
+    }
+
+    // Sitzpositionen, von mir aus im Uhrzeigersinn (ich unten in der Mitte)
+    const POS_WIDE = [[50, 83], [13, 70], [13, 24], [50, 9], [87, 24], [87, 70]];
+    const POS_TALL = [[50, 87], [14, 73], [14, 25], [50, 9], [86, 25], [86, 73]];
+    const narrow = () => window.matchMedia('(max-width: 700px)').matches;
+
+    function render(st) {
+      const prev = T.st;
+      T.st = st; T.v = st.version;
+      if (typeof st.balance === 'number') Casino.update({ balance: st.balance });
+      $('t-name').textContent = st.name;
+      showStats(st.stats);
+      $('t-sub').textContent = 'Blinds ' + st.sb + '/' + st.bb + ' · Hand #' + (st.handNo || 0) + ' · casino.unoslapis.ch/poker';
+      const seated = st.mySeat !== -1;
+      $('add-bot').disabled = !seated || st.seats.every(Boolean);
+      $('topup').disabled = !seated;
+      const h = st.phase !== 'waiting' ? st : null;
+
+      // Sounds
+      if (st.handNo !== T.lastHand && st.phase === 'playing') { T.lastHand = st.handNo; T.lastBoard = 0; T.resultShown = 0; sfx('card'); }
+      if (st.board.length > T.lastBoard) { T.lastBoard = st.board.length; sfx('flip'); }
+      if (prev && prev.pot < st.pot && prev.handNo === st.handNo) sfx('chip');
+      if (st.toAct !== T.lastTurn) { T.lastTurn = st.toAct; if (st.toAct === st.mySeat && st.mySeat !== -1) { sfx('tick'); runPre(st); } }
+
+      // Board
+      const board = $('board');
+      const oldKeys = [...board.querySelectorAll('.pc[data-k]')].map((x) => x.dataset.k);
+      board.innerHTML = '';
+      const winCards = new Set();
+      if (st.results && st.results.winners) st.results.winners.forEach((w) => (w.best || []).forEach((c) => winCards.add(c.r + c.s)));
+      for (let k = 0; k < 5; k++) {
+        const c = st.board[k];
+        if (!c) { const ph = document.createElement('div'); ph.className = 'pc ph'; board.appendChild(ph); continue; }
+        const isNew = !oldKeys.includes(c.r + c.s);
+        const el = cardEl(c, (isNew ? 'flip' : '') + (winCards.size ? (winCards.has(c.r + c.s) ? ' hl' : ' dim') : ''));
+        if (!isNew) el.style.animation = 'none';
+        board.appendChild(el);
+      }
+      $('pot').hidden = !st.pot;
+      $('pot-v').textContent = fmt(st.pot);
+
+      // Sitze
+      const felt = $('felt');
+      felt.querySelectorAll('.seat').forEach((x) => x.remove());
+      const base = seated ? st.mySeat : 0;
+      const POS = narrow() ? POS_TALL : POS_WIDE;
+      const winners = {};
+      if (st.results) st.results.winners.forEach((w) => { winners[w.seat] = w; });
+      for (let i = 0; i < 6; i++) {
+        const s = st.seats[i];
+        const rel = (i - base + 6) % 6;
+        const el = document.createElement('div');
+        const [x, y] = POS[rel];
+        el.style.setProperty('--x', x + '%'); el.style.setProperty('--y', y + '%');
+        const up = rel === 0 || rel === 1 || rel === 5;
+        el.className = 'seat ' + (up ? 'up' : 'down');
+        const plate = document.createElement('div'); plate.className = 'plate';
+        if (!s) {
+          el.classList.add('empty');
+          if (seated) {
+            const b = document.createElement('button'); b.type = 'button'; b.innerHTML = BIGH.icon('plus') + 'Bot';
+            b.title = 'Bot auf diesen Platz setzen';
+            b.addEventListener('click', addBot);
+            plate.appendChild(b);
+          } else if (!st.seats.some((z) => z && z.me)) {
+            const b = document.createElement('button'); b.type = 'button'; b.innerHTML = BIGH.icon('arrow-right') + 'Hinsetzen';
+            b.addEventListener('click', () => sitAt({ id: st.id, name: st.name, sb: st.sb, bb: st.bb }));
+            plate.appendChild(b);
+          } else plate.textContent = 'frei';
+          el.appendChild(plate);
+          felt.appendChild(el);
+          continue;
+        }
+        if (s.me) el.classList.add('me');
+        if (st.toAct === i && st.phase === 'playing') el.classList.add('turn');
+        if (s.folded) el.classList.add('folded');
+        if (s.sittingOut || s.away) el.classList.add('out');
+        if (winners[i]) el.classList.add('win');
+        const cards = document.createElement('div'); cards.className = 'cards';
+        const hl = winners[i] && winners[i].best ? new Set(winners[i].best.map((c) => c.r + c.s)) : null;
+        s.cards.forEach((c) => {
+          const ce = cardEl(c, c && hl ? (hl.has(c.r + c.s) ? 'hl' : 'dim') : '');
+          if (prev && prev.handNo === st.handNo) ce.style.animation = 'none';
+          cards.appendChild(ce);
+        });
+        const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = s.name;
+        const stack = document.createElement('div'); stack.className = 'stack'; stack.textContent = s.allIn ? 'All-in' : fmt(s.stack);
+        const last = document.createElement('span'); last.className = 'last';
+        last.textContent = winners[i] ? '+' + fmt(winners[i].amount) : s.sittingOut ? 'setzt aus' : s.away ? 'abwesend' : s.last || '';
+        if (winners[i]) last.style.color = '#86efac';
+        plate.append(nm, stack, last);
+        const tm = document.createElement('div'); tm.className = 'tm'; tm.innerHTML = '<i></i>'; plate.appendChild(tm);
+        if (st.button === i && st.phase !== 'waiting') { const d = document.createElement('span'); d.className = 'dealer'; d.textContent = 'D'; plate.appendChild(d); }
+        if (s.bot) { const bdg = document.createElement('span'); bdg.className = 'badge'; bdg.textContent = 'Bot'; plate.appendChild(bdg); }
+        const handName = st.results && st.results.hands && st.results.hands[i];
+        if (up) { el.append(cards, plate); } else { el.append(plate, cards); }
+        if (handName && !s.folded) { const hn = document.createElement('span'); hn.className = 'hand-name'; hn.textContent = handName; el.appendChild(hn); }
+        if (s.bet) { const bt = document.createElement('span'); const pb = prev && prev.handNo === st.handNo && prev.seats[i] ? prev.seats[i].bet : 0; bt.className = 'bet' + (pb !== s.bet ? ' new' : ''); bt.append(chipEl(), document.createTextNode(fmt(s.bet))); el.appendChild(bt); }
+        felt.appendChild(el);
+      }
+
+      // Status
+      const status = $('status');
+      const nameAt = (i) => (st.seats[i] ? st.seats[i].name : '?');
+      if (st.results) {
+        const w = st.results.winners;
+        status.innerHTML = '';
+        const b = document.createElement('b');
+        b.textContent = w.map((x) => nameAt(x.seat)).join(' & ');
+        status.append(b, document.createTextNode(w.length > 1 ? ' teilen sich den Pot' : ' gewinnt ' + fmt(w[0].amount) + (w[0].hand ? ' mit ' + w[0].hand : '')));
+        if (T.resultShown !== st.handNo) {
+          T.resultShown = st.handNo;
+          const mine = w.find((x) => x.seat === st.mySeat);
+          const inHand = seated && st.seats[st.mySeat] && st.seats[st.mySeat].inHand;
+          if (mine) { const big = mine.amount >= st.bb * 40; sfx(big ? 'bigwin' : 'win'); if (big) BIGH.confettiRain && BIGH.confettiRain(); else BIGH.burst && BIGH.burst(); }
+          else if (inHand) sfx('lose');
+        }
+      } else if (st.phase === 'waiting') {
+        const n = st.seats.filter(Boolean).length;
+        status.textContent = n < 2 ? 'Warte auf Mitspieler … Hol einen Bot dazu oder teile den Link.' : 'Nächste Hand gleich …';
+      } else if (st.toAct === -1) status.textContent = 'Alle sind all-in. Die Karten kommen …';
+      else if (st.toAct === st.mySeat) status.innerHTML = '<b>Du bist dran</b>';
+      else status.textContent = nameAt(st.toAct) + ' ist dran …';
+
+      // Aktionen
+      const myTurn = seated && st.me && st.toAct === st.mySeat && st.phase === 'playing';
+      $('act-ui').hidden = !myTurn;
+      const mySeat = seated ? st.seats[st.mySeat] : null;
+      const inPlay = mySeat && mySeat.inHand && !mySeat.folded && !mySeat.allIn && st.phase === 'playing';
+      $('pre').hidden = myTurn || !inPlay || st.toAct === -1;
+      if (!inPlay) { $('pre-fold').checked = false; $('pre-call').checked = false; }
+      let hint = '';
+      if (!seated) hint = 'Du schaust zu. Setz dich auf einen freien Platz.';
+      else if (st.mySittingOut) hint = '';
+      else if (!myTurn) {
+        if (st.myStack === 0 && st.phase !== 'playing') hint = 'Keine Chips mehr. Kauf nach oder steh auf.';
+        else if (mySeat && mySeat.folded) hint = 'Du hast gefoldet. Nächste Hand gleich.';
+        else if (mySeat && mySeat.allIn) hint = 'Du bist all-in. Daumen drücken.';
+      }
+      $('act-hint').innerHTML = '';
+      if (st.mySittingOut) {
+        const b = document.createElement('button'); b.className = 'btn gold'; b.type = 'button'; b.innerHTML = BIGH.icon('play') + 'Wieder mitspielen';
+        b.addEventListener('click', () => post('back'));
+        $('act-hint').append(document.createTextNode('Du setzt aus. '), b);
+      } else $('act-hint').textContent = hint;
+      if (myTurn) setupActions(st);
+
+      // meine Hand
+      const myCards = mySeat && mySeat.cards.filter(Boolean);
+      $('my-hand').innerHTML = '';
+      if (myCards && myCards.length === 2 && !mySeat.folded) {
+        const sc = bestOf(myCards.concat(st.board));
+        $('my-hand').append(document.createTextNode('Deine Hand: '));
+        const b = document.createElement('b'); b.textContent = describe(sc); $('my-hand').appendChild(b);
+      }
+
+      // Timer
+      T.deadline = st.deadlineIn && st.phase === 'playing' && st.toAct !== -1 ? Date.now() + st.deadlineIn : 0;
+      $('tt').hidden = !myTurn;
+      clearInterval(T.tick);
+      if (T.deadline) { tickTimer(); T.tick = setInterval(tickTimer, 250); }
+
+      // Chat
+      renderChat(st.chat);
+    }
+    function tickTimer() {
+      const left = Math.max(0, T.deadline - Date.now());
+      const pct = Math.min(100, left / 300) + '%';
+      $('tt-bar').style.width = pct;
+      const seatTm = document.querySelector('.seat.turn .tm i');
+      if (seatTm) seatTm.style.width = pct;
+      if (!left) clearInterval(T.tick);
+    }
+
+    let raiseTo = 0;
+    function setupActions(st) {
+      const m = st.me;
+      const call = $('a-call');
+      call.textContent = m.canCheck ? 'Check' : (m.toCall >= st.myStack ? 'All-in ' + fmt(st.myStack) : 'Call ' + fmt(m.toCall));
+      const raise = $('a-raise'), slider = $('r-slider');
+      const canRaise = m.canRaise && m.maxRaiseTo > m.toCall + m.bet;
+      raise.disabled = !canRaise;
+      $('r-slider').parentElement.hidden = !canRaise || m.minRaiseTo >= m.maxRaiseTo;
+      $('presets').hidden = !canRaise;
+      if (!canRaise) { raise.textContent = 'Raise'; return; }
+      slider.min = m.minRaiseTo; slider.max = m.maxRaiseTo; slider.step = st.bb >= 50 ? st.sb : 5;
+      if (raiseTo < m.minRaiseTo || raiseTo > m.maxRaiseTo || T.raiseHand !== st.handNo + ':' + st.street + ':' + m.currentBet) {
+        raiseTo = m.minRaiseTo; T.raiseHand = st.handNo + ':' + st.street + ':' + m.currentBet;
+      }
+      slider.value = raiseTo;
+      const upd = () => {
+        raiseTo = Math.min(m.maxRaiseTo, Math.max(m.minRaiseTo, +slider.value));
+        if (+slider.value >= m.maxRaiseTo) raiseTo = m.maxRaiseTo;
+        $('r-out').textContent = fmt(raiseTo);
+        raise.textContent = raiseTo >= m.maxRaiseTo ? 'All-in ' + fmt(raiseTo) : (m.currentBet ? 'Raise auf ' : 'Bet ') + fmt(raiseTo);
+      };
+      slider.oninput = upd; upd();
+      const pre = $('presets'); pre.innerHTML = '';
+      const pot = st.pot;
+      const opts = [['Min', m.minRaiseTo], ['½ Pot', m.currentBet + Math.round((pot + m.toCall) / 2)], ['¾ Pot', m.currentBet + Math.round((pot + m.toCall) * 0.75)], ['Pot', m.currentBet + pot + m.toCall], ['All-in', m.maxRaiseTo]];
+      opts.forEach(([label, v]) => {
+        if (label !== 'Min' && label !== 'All-in' && (v <= m.minRaiseTo || v >= m.maxRaiseTo)) return;
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+        b.addEventListener('click', () => { slider.value = v; raiseTo = v; upd(); if (label === 'All-in') raiseTo = m.maxRaiseTo; sfx('click'); });
+        pre.appendChild(b);
+      });
+    }
+    let busy = false;
+    async function act(action, to) {
+      if (busy) return;
+      busy = true;
+      $('act-ui').hidden = true;
+      try { const st = await api('POST', '/poker/' + T.id + '/act', { action, to }); render(st); }
+      catch (e) { BIGH.toast(e.message); if (T.st) render(T.st); }
+      busy = false;
+    }
+    $('a-fold').addEventListener('click', () => {
+      const m = T.st && T.st.me;
+      if (m && m.canCheck) { BIGH.toast('Du kannst gratis checken. Gecheckt statt gefoldet.'); act('check'); return; }
+      act('fold');
+    });
+    $('a-call').addEventListener('click', () => { const m = T.st.me; act(m.canCheck ? 'check' : 'call'); });
+    $('a-raise').addEventListener('click', () => { const m = T.st.me; if (raiseTo >= m.maxRaiseTo) act('allin'); else act('raise', raiseTo); });
+    document.addEventListener('keydown', (e) => {
+      if ($('act-ui').hidden || e.target.closest('input, textarea') || biResolve) return;
+      if (e.key === 'f') $('a-fold').click();
+      else if (e.key === 'c') $('a-call').click();
+      else if (e.key === 'r' && !$('a-raise').disabled) $('a-raise').click();
+    });
+    // Vorauswahl: wird ausgeführt, sobald ich dran bin
+    function runPre(st) {
+      const m = st.me;
+      if (!m) return;
+      if ($('pre-fold').checked) { $('pre-fold').checked = false; setTimeout(() => act(m.canCheck ? 'check' : 'fold'), 300); }
+      else if ($('pre-call').checked) { $('pre-call').checked = false; setTimeout(() => act(m.canCheck ? 'check' : 'call'), 300); }
+    }
+    $('pre-fold').addEventListener('change', () => { if ($('pre-fold').checked) $('pre-call').checked = false; });
+    $('pre-call').addEventListener('change', () => { if ($('pre-call').checked) $('pre-fold').checked = false; });
+
+    async function post(sub, body) {
+      try { const st = await api('POST', '/poker/' + T.id + '/' + sub, body || {}); if (st && st.id) render(st); return st; }
+      catch (e) { BIGH.toast(e.message); return null; }
+    }
+    async function addBot() { if (await post('bot')) sfx('whoosh'); }
+    $('add-bot').addEventListener('click', addBot);
+    $('leave').addEventListener('click', async () => {
+      const st = T.st;
+      const s = st && st.mySeat !== -1 && st.seats[st.mySeat];
+      if (s && s.inHand && !s.folded && st.phase === 'playing' && !confirm('Du bist mitten in einer Hand. Aufstehen heisst folden. Trotzdem?')) return;
+      const r = await post('leave');
+      if (r) { if (typeof r.balance === 'number') Casino.update({ balance: r.balance }); BIGH.toast('Chips sind zurück auf deinem Konto.'); toLobby(); }
+    });
+    $('topup').addEventListener('click', async () => {
+      const st = T.st;
+      const max = st.buyin[1] - st.myStack;
+      if (max < st.bb) { BIGH.toast('Du hast schon das Maximum am Tisch.'); return; }
+      const v = await askBuyin('Nachkaufen', 'Maximal ' + fmt(st.buyin[1]) + ' Chips am Tisch. Geht nur zwischen den Händen.', st.bb, max, max, 'Nachkaufen');
+      if (!v) return;
+      if (await post('topup', { amount: v })) sfx('chip');
+    });
+
+    // ---------- Chat ----------
+    function renderChat(list) {
+      const log = $('chat-log');
+      const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 30;
+      log.innerHTML = '';
+      list.forEach((c) => {
+        const d = document.createElement('div');
+        if (!c.name) { d.className = 'sys'; d.textContent = c.text; }
+        else { const b = document.createElement('b'); b.textContent = c.name + ': '; d.append(b, document.createTextNode(c.text)); }
+        log.appendChild(d);
+      });
+      const newest = list.length ? list[list.length - 1].ts : 0;
+      if (atBottom || newest !== T.lastChat) log.scrollTop = log.scrollHeight;
+      T.lastChat = newest;
+    }
+    QUICK.forEach((q) => {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = q;
+      b.addEventListener('click', () => say(q));
+      $('quick').appendChild(b);
+    });
+    async function say(text) {
+      if (!text || !T.id) return;
+      await post('say', { text });
+    }
+    $('chat-form').addEventListener('submit', (e) => { e.preventDefault(); const v = $('chat-in').value.trim(); $('chat-in').value = ''; say(v); });
+
+    window.addEventListener('resize', () => { if (T.st) render(T.st); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && T.id) poll(); });
+
+    Casino.init().then(() => { loadLobby(); }).catch((e) => BIGH.toast(e.message));
+  })();
+  </script>
+</body>
+</html>

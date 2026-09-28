@@ -25,6 +25,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const createDuels = require('./duel');
+const createPoker = require('./poker');
 
 const START_BALANCE = 1000;
 const CREDIT = 500;
@@ -93,8 +94,17 @@ module.exports = function createCasino({ dataDir, clean, send, clientIp }) {
     } catch (e) { console.error('Casino speichern fehlgeschlagen:', e.message); }
   }
   function touch() { if (!dirty) { dirty = true; setTimeout(save, 1500).unref(); } }
-  process.on('SIGTERM', () => { if (dirty) save(); process.exit(0); });
+  // Beim Neustart gehen offene Einsätze zurück aufs Konto (Tische leben nur im Speicher)
+  process.on('SIGTERM', () => {
+    for (const t of tables.values()) {
+      if (['betting', 'playing', 'dealer'].includes(t.phase)) t.seats.forEach((s) => { if (s.bet) { s.acc.balance += s.bet; s.bet = 0; } });
+    }
+    poker.shutdown();
+    save();
+    process.exit(0);
+  });
 
+  const poker = createPoker({ send, touch, clean, nameOf: (x) => x.name });
   const duels = createDuels({ send, touch, clean, rarity: CARD_RARITY, nameOf: (x) => x.name });
   // Kartenliste muss in casino.js (Seltenheit) und duel.js (Kampfwerte) gleich sein
   const missing = Object.keys(CARD_RARITY).filter((id) => !createDuels.STATS[id]).concat(Object.keys(createDuels.STATS).filter((id) => !CARD_RARITY[id]));
@@ -262,6 +272,7 @@ module.exports = function createCasino({ dataDir, clean, send, clientIp }) {
       rich: rich.slice(0, 50).map((x) => Object.assign(strip(x), { me: !!a && x.id === a.id })),
       collectors: coll.slice(0, 50).map((x) => Object.assign(strip(x), { me: !!a && x.id === a.id })),
       duelists: duels.leaderboard(Object.values(accounts), a),
+      pokers: poker.leaderboard(Object.values(accounts), a),
       myRank: a ? rich.findIndex((x) => x.id === a.id) + 1 : 0,
       players: all.length,
       totalCards: Object.keys(CARD_RARITY).length
@@ -546,6 +557,7 @@ module.exports = function createCasino({ dataDir, clean, send, clientIp }) {
     }
 
     if (what === 'duel') return duels.handle(req, res, a, d, tid, sub, url);
+    if (what === 'poker') return poker.handle(req, res, a, d, tid, sub, url);
     if (what === 'bj') {
       if (!tid && isPost) {
         if (tables.size >= BJ_MAX_TABLES) return send(res, 429, { error: 'Alle Tische sind belegt' });
