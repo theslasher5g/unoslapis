@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Big H Wrapped – Dein Jahr in Zahlen</title>
+<meta name="description" content="Big H Wrapped: 4'269 Stunden Overwatch, Top 0,01 % der Hazbin-Hotel-Hörer und 312× „Ich muss baden gehen“.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231ed760'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --green: #1ed760; }
+  html, body { height: 100%; }
+  body { background: #000; overflow: hidden; }
+  .stage { height: 100vh; height: 100dvh; display: grid; place-items: center; }
+
+  .story { position: relative; width: min(440px, 100%); height: 100%; max-height: 880px; overflow: hidden; background: #121212; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+  @media (min-width: 560px) { .story { height: calc(100% - 40px); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.6); } }
+
+  .bars { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 4px; z-index: 5; }
+  .bars span { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.3); overflow: hidden; }
+  .bars span i { display: block; height: 100%; width: 0; background: #fff; }
+  .bars span.done i { width: 100%; }
+  .head { position: absolute; top: 24px; left: 14px; right: 10px; z-index: 5; display: flex; align-items: center; gap: 8px; color: #fff; font: 600 .82rem var(--body); }
+  .head .logo { width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: #000; display: grid; place-items: center; font: 700 .75rem var(--title); }
+  .head .sp { flex: 1; }
+  .head button, .head a { background: none; border: 0; color: #fff; padding: 8px; cursor: pointer; display: grid; place-items: center; border-radius: 50%; }
+  .head button:hover, .head a:hover { background: rgba(255,255,255,.12); }
+  .head .icon { width: 20px; height: 20px; }
+
+  .slide { position: absolute; inset: 0; padding: 88px 28px 40px; display: flex; flex-direction: column; justify-content: center; color: #fff; opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s; }
+  .slide.on { opacity: 1; visibility: visible; }
+  .tap { position: absolute; top: 70px; bottom: 0; z-index: 4; width: 35%; background: none; border: 0; cursor: pointer; }
+  .tap.prev { left: 0; } .tap.next { right: 0; width: 65%; }
+  .slide .interactive { position: relative; z-index: 6; }
+
+  .eyebrow { font: 600 .8rem var(--body); text-transform: uppercase; letter-spacing: .14em; opacity: .75; margin-bottom: 14px; }
+  .slide h2 { font: 700 clamp(2rem, 9vw, 2.7rem)/1.02 var(--title); letter-spacing: -.035em; margin: 0 0 16px; }
+  .slide p { font-size: 1.05rem; line-height: 1.45; margin: 0 0 10px; opacity: .9; }
+  .big-num { font: 700 clamp(4rem, 22vw, 6.4rem)/.9 var(--title); letter-spacing: -.05em; margin: 4px 0 12px; font-variant-numeric: tabular-nums; }
+  .unit { font: 600 1.3rem var(--title); letter-spacing: -.02em; }
+  .muted { opacity: .7; font-size: .92rem !important; }
+
+  /* Animationen der Inhalte */
+  .slide .a { opacity: 0; transform: translateY(18px); }
+  .slide.on .a { animation: up .6s cubic-bezier(.2,.8,.2,1) forwards; }
+  .slide.on .a:nth-child(2) { animation-delay: .15s; } .slide.on .a:nth-child(3) { animation-delay: .3s; }
+  .slide.on .a:nth-child(4) { animation-delay: .45s; } .slide.on .a:nth-child(5) { animation-delay: .6s; }
+  .slide.on .a:nth-child(6) { animation-delay: .75s; } .slide.on .a:nth-child(7) { animation-delay: .9s; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .slide .a { opacity: 1; transform: none; } .slide.on .a { animation: none; } }
+
+  /* Deko-Formen */
+  .blob { position: absolute; border-radius: 50%; filter: blur(2px); opacity: .9; pointer-events: none; }
+  .ring { position: absolute; border-radius: 50%; border: 2px solid currentColor; opacity: .25; pointer-events: none; }
+  .slide.on .spin { animation: spin 24s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 12px; }
+  .list li { display: grid; grid-template-columns: 30px 48px 1fr; gap: 12px; align-items: center; }
+  .list .n { font: 700 1.4rem var(--title); opacity: .8; }
+  .list .cv { width: 48px; height: 48px; border-radius: 6px; display: grid; place-items: center; font: 700 1rem var(--title); color: #fff; }
+  .list b { display: block; font-size: 1rem; line-height: 1.2; }
+  .list small { opacity: .7; font-size: .82rem; }
+
+  .genre { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .genre div { font: 700 clamp(1.5rem, 7vw, 2rem)/1.05 var(--title); letter-spacing: -.03em; }
+  .genre div:nth-child(2) { opacity: .75; } .genre div:nth-child(3) { opacity: .5; } .genre div:nth-child(4) { opacity: .3; }
+
+  .clock { width: 170px; height: 170px; border-radius: 50%; border: 3px solid #fff; position: relative; margin: 0 0 22px; }
+  .clock i { position: absolute; left: 50%; bottom: 50%; width: 4px; margin-left: -2px; background: #fff; border-radius: 2px; transform-origin: bottom center; }
+  .clock .h { height: 44px; transform: rotate(97deg); }
+  .clock .m { height: 66px; transform: rotate(84deg); width: 3px; margin-left: -1.5px; }
+  .clock::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: #fff; }
+
+  .aura { width: 220px; height: 220px; border-radius: 50%; margin: 0 auto 26px; background: radial-gradient(circle at 35% 35%, #d9ff00, transparent 55%), radial-gradient(circle at 70% 60%, #ff2d55, transparent 55%), radial-gradient(circle at 40% 80%, #7c3aed, transparent 60%), #111; filter: blur(8px); }
+  .slide.on .aura { animation: breathe 4s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: scale(1.06); filter: blur(12px); } }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+  .stats div { background: rgba(0,0,0,.2); border-radius: 14px; padding: 14px; }
+  .stats b { display: block; font: 700 1.7rem/1 var(--title); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .stats small { display: block; margin-top: 6px; font-size: .8rem; opacity: .8; line-height: 1.3; }
+
+  .persona { border-radius: 20px; padding: 22px; background: rgba(0,0,0,.25); }
+  .persona .tag { display: inline-flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .persona .tag span { border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 4px 10px; font-size: .78rem; }
+
+  /* Zusammenfassung */
+  .summary { background: #1e1e1e; border-radius: 20px; padding: 20px; }
+  .summary .top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .summary .av { width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(135deg, var(--green), #0e7a3a); display: grid; place-items: center; font: 700 1.6rem var(--title); color: #000; flex: none; overflow: hidden; position: relative; }
+  .summary .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .summary h3 { margin: 0; font: 700 1.3rem var(--title); letter-spacing: -.02em; }
+  .summary .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: .86rem; }
+  .summary .cols h4 { margin: 0 0 6px; font: 600 .74rem var(--body); text-transform: uppercase; letter-spacing: .1em; opacity: .6; }
+  .summary ol { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+  .summary .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .summary .row2 b { display: block; font: 700 1.5rem var(--title); letter-spacing: -.02em; }
+  .summary .brand { display: flex; align-items: center; gap: 8px; margin-top: 16px; font: 600 .8rem var(--body); opacity: .7; }
+  .btns { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .btns .btn { flex: 1; justify-content: center; }
+  .btn.green { background: var(--green); color: #000; }
+
+  .paused .bars span.cur i { animation-play-state: paused !important; }
+  .hint { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; font-size: .75rem; opacity: .55; z-index: 5; color: #fff; pointer-events: none; }
+</style>
+</head>
+<body data-no-takeover>
+  <div class="stage">
+    <div class="story" id="story">
+      <div class="bars" id="bars"></div>
+      <div class="head">
+        <span class="logo">H</span><span>Big H Wrapped <span id="year"></span></span>
+        <span class="sp"></span>
+        <button type="button" id="pause" aria-label="Pause"><i data-icon="pause"></i></button>
+        <button type="button" id="mute" aria-label="Ton an"><i data-icon="volume-x"></i></button>
+        <a id="close" data-sub="" href="https://unoslapis.ch/" aria-label="Schliessen"><i data-icon="x"></i></a>
+      </div>
+      <div id="slides"></div>
+      <button class="tap prev" type="button" id="tap-prev" aria-label="Zurück"></button>
+      <button class="tap next" type="button" id="tap-next" aria-label="Weiter"></button>
+      <div class="hint" id="hint">Tippen zum Weiterblättern · Halten zum Pausieren</div>
+    </div>
+  </div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const YEAR = new Date().getFullYear();
+    document.getElementById('year').textContent = YEAR;
+    const DURATION = 7000; // ms pro Slide
+    const AGE = YEAR - 2002;
+    const bdayPassed = new Date() >= new Date(YEAR, 9, 5);
+    const isBday = new Date().getMonth() === 9 && new Date().getDate() === 4;
+    const BDAY_LINE = isBday ? 'Heute wirst du ' + AGE + '.' : bdayPassed ? 'Am 4. Oktober bist du ' + AGE + ' geworden.' : 'Am 4. Oktober wirst du ' + AGE + '.';
+
+    // ==== KONFIG: Slides ====
+    // Inhalte sind feste Texte (kein Nutzer-Input) und werden direkt als HTML gesetzt.
+    // data-count="1234" zählt beim Anzeigen von 0 hoch.
+    const SLIDES = [
+      { bg: 'linear-gradient(160deg, #1ed760 0%, #0b6b30 100%)', html: `
+        <div class="ring spin" style="width:520px;height:520px;right:-260px;top:-120px"></div>
+        <div class="ring" style="width:340px;height:340px;right:-170px;top:-30px"></div>
+        <div class="eyebrow a">Big H Wrapped ${YEAR}</div>
+        <h2 class="a" style="font-size:clamp(2.6rem,12vw,3.6rem)">Dein Jahr.<br>Leider.</h2>
+        <p class="a">Alastor Lapis, du hast dieses Jahr sehr viel Zeit vor Bildschirmen verbracht. Wir haben alles mitgeschrieben.</p>
+        <p class="a muted">Steam &amp; Valorant: unoslapis</p>` },
+
+      { bg: '#2d46b9', html: `
+        <div class="blob" style="width:300px;height:300px;background:#f037a5;right:-120px;bottom:-80px"></div>
+        <div class="eyebrow a">Deine Spielzeit</div>
+        <p class="a">Du hast dieses Jahr Overwatch gespielt. Und zwar:</p>
+        <div class="big-num a"><span data-count="4269">0</span></div>
+        <div class="unit a">Stunden</div>
+        <p class="a" style="margin-top:14px">Das sind <b>177 Tage</b>. Oder <b>0 Stunden</b> draussen.</p>
+        <p class="a muted">Du warst in den Top 0,1 % aller Genji-Spieler, die ihr Team für den Loss verantwortlich machen.</p>` },
+
+      { bg: 'linear-gradient(170deg, #7a0019, #1a0005)', html: `
+        <div class="ring spin" style="width:420px;height:420px;left:-160px;bottom:-200px;color:#ff2d55"></div>
+        <div class="eyebrow a">Dein Top-Artist</div>
+        <h2 class="a">Hazbin Hotel</h2>
+        <p class="a">Du gehörst zu den</p>
+        <div class="big-num a" style="color:#ff5a78">0,01 %</div>
+        <p class="a">der grössten Fans weltweit. „Insane“ lief <b><span data-count="2847">0</span>-mal</b>.</p>
+        <p class="a muted">Spotify vermutet: Du hältst dich für Alastor. Spotify hat recht.</p>` },
+
+      { bg: '#121212', html: `
+        <div class="eyebrow a" style="color:#1ed760">Deine Top-Songs</div>
+        <h2 class="a">Auf Dauerschleife</h2>
+        <ul class="list">
+          <li class="a"><span class="n">1</span><span class="cv" style="background:#b3001e">IN</span><span><b>Insane</b><small>Hazbin Hotel · 2'847 Plays</small></span></li>
+          <li class="a"><span class="n">2</span><span class="cv" style="background:#1d4ed8">BG</span><span><b>Ich muss baden gehen (Extended Mix)</b><small>unoslapis · 312 Plays</small></span></li>
+          <li class="a"><span class="n">3</span><span class="cv" style="background:#6d28d9">SG</span><span><b>Stayed Gone</b><small>Hazbin Hotel · 1'990 Plays</small></span></li>
+          <li class="a"><span class="n">4</span><span class="cv" style="background:#ea580c">TD</span><span><b>Team Diff (Live aus dem Voice-Chat)</b><small>unoslapis feat. Mercy-Main · 1'337 Plays</small></span></li>
+          <li class="a"><span class="n">5</span><span class="cv" style="background:#0f766e">NN</span><span><b>Nur noch ein Game</b><small>unoslapis · 03:14 Uhr · 999 Plays</small></span></li>
+        </ul>` },
+
+      { bg: 'linear-gradient(160deg, #f037a5, #6d1b8f)', html: `
+        <div class="eyebrow a">Deine Top-Genres</div>
+        <h2 class="a">Musikalisch bist du …</h2>
+        <div class="genre a">
+          <div>Goon-Core</div>
+          <div>Anime-Opening-Lo-Fi</div>
+          <div>Goth-Baddie-Darkwave</div>
+          <div>Discord-Join-Sound</div>
+        </div>
+        <p class="a muted" style="margin-top:18px">Neu entdeckt: „Stille“. Ein Genre, das entsteht, wenn jemand fragt, ob du eine Freundin hast.</p>` },
+
+      { bg: '#0d3b2e', html: `
+        <div class="eyebrow a">Deine Lieblingszeit</div>
+        <div class="clock a"><i class="h"></i><i class="m"></i></div>
+        <div class="big-num a" style="font-size:clamp(3.4rem,18vw,5rem)">03:14</div>
+        <p class="a">Um diese Uhrzeit warst du am aktivsten. An 311 von 365 Tagen.</p>
+        <p class="a muted">Zweitbeliebteste Uhrzeit: 00:04. Das weiss nur der NoFap-Tracker.</p>` },
+
+      { bg: 'linear-gradient(165deg, #0e7490, #083344)', html: `
+        <div class="blob" style="width:260px;height:260px;background:#22d3ee;opacity:.25;left:-100px;top:60px"></div>
+        <div class="eyebrow a">Deine Top-Ausrede</div>
+        <h2 class="a">„Ich muss baden gehen“</h2>
+        <div class="big-num a"><span data-count="312">0</span>×</div>
+        <p class="a">verwendet. Gemessener Wasserverbrauch: <b>0 Liter</b>.</p>
+        <p class="a muted">Damit bist du offiziell der sauberste Mensch der Schweiz. Auf dem Papier.</p>` },
+
+      { bg: '#1f1f1f', html: `
+        <div class="eyebrow a" style="color:#1ed760">Dein Top-Podcast</div>
+        <h2 class="a">Gespräche mit mir selbst um 3 Uhr</h2>
+        <p class="a">Host: unoslapis · Gäste: keine</p>
+        <div class="stats a" style="margin-top:14px">
+          <div><b data-count="365">0</b><small>Folgen</small></div>
+          <div><b>1</b><small>Hörer (du)</small></div>
+          <div><b>4,9</b><small>Sterne (eigene Bewertung)</small></div>
+          <div><b>0</b><small>Sponsoren (Monster schweigt)</small></div>
+        </div>` },
+
+      { bg: 'linear-gradient(160deg, #ffb000, #e0001b)', html: `
+        <div class="eyebrow a">Das Jahr in Zahlen</div>
+        <h2 class="a">Weitere Highlights</h2>
+        <div class="stats a">
+          <div><b data-count="1337">0</b><small>Ragequits</small></div>
+          <div><b data-count="9001">0</b><small>Supports angeschrien</small></div>
+          <div><b data-count="47">0</b><small>Discord-Server, auf denen du „bin gleich on“ geschrieben hast</small></div>
+          <div><b data-count="1">0</b><small>gerettete Katze (Mausi, siehe Big'H Times)</small></div>
+          <div><b data-count="0">0</b><small>Mal Gras angefasst</small></div>
+          <div><b data-count="4269">0</b><small>Monster-Energy-Dosen</small></div>
+        </div>` },
+
+      { bg: 'linear-gradient(170deg, #4c1d95, #111)', html: `
+        <div class="eyebrow a">Deine Hörer-Persönlichkeit</div>
+        <div class="persona a">
+          <div class="eyebrow" style="margin:0 0 6px;opacity:.6">Typ NGKN</div>
+          <h2 style="margin:0 0 8px">Der nachtaktive Goon-König</h2>
+          <p style="margin:0">Du hörst Musik nicht. Du lässt sie im Hintergrund laufen, während du drei Dinge gleichzeitig tust und keins davon Schlafen ist.</p>
+          <div class="tag"><span>Nachtaktiv</span><span>Loyal zu Makima</span><span>Ranked-süchtig</span><span>Stecher-Energie</span></div>
+        </div>
+        <p class="a muted" style="margin-top:16px">Nur 0,3 % aller Hörer teilen diesen Typ. Alle davon sind du auf Zweitaccounts.</p>` },
+
+      { bg: '#0a0a0a', html: `
+        <div class="eyebrow a" style="text-align:center">Deine Audio-Aura</div>
+        <div class="a"><div class="aura"></div></div>
+        <h2 class="a" style="text-align:center">Monster-Grün &amp; Höllen-Rot</h2>
+        <p class="a" style="text-align:center">Grün steht für Energie aus der Dose. Rot für einen Radio-Dämon, den du für ein Vorbild hältst.</p>` },
+
+      { bg: 'linear-gradient(160deg, #1ed760, #0b6b30)', html: `
+        <div class="eyebrow a">Ein Wort zum Schluss</div>
+        <h2 class="a" style="font-size:clamp(2.2rem,10vw,3rem)">${BDAY_LINE}</h2>
+        <p class="a">Und nächstes Jahr zählen wir wieder mit. Versprochen.</p>
+        <p class="a muted">Alles Gute, Big H. Geh vielleicht einmal wirklich baden.</p>` },
+
+      { bg: '#121212', final: true, html: `
+        <div class="summary a interactive" id="summary">
+          <div class="top"><div class="av">H<img src="/shared/img/bigh.jpg" alt="" onerror="this.remove()"></div><div><h3>Big H Wrapped ${YEAR}</h3><div class="muted" style="font-size:.85rem">Alastor Lapis · unoslapis</div></div></div>
+          <div class="cols">
+            <div><h4>Top-Artists</h4><ol><li>Hazbin Hotel</li><li>unoslapis</li><li>Anime-OSTs</li><li>Discord-Ping</li><li>Mercy-Voicelines</li></ol></div>
+            <div><h4>Top-Songs</h4><ol><li>Insane</li><li>Ich muss baden gehen</li><li>Stayed Gone</li><li>Team Diff (Live)</li><li>Nur noch ein Game</li></ol></div>
+          </div>
+          <div class="row2">
+            <div><h4 style="margin:0;font:600 .74rem var(--body);text-transform:uppercase;letter-spacing:.1em;opacity:.6">Stunden OW2</h4><b>4'269</b></div>
+            <div><h4 style="margin:0;font:600 .74rem var(--body);text-transform:uppercase;letter-spacing:.1em;opacity:.6">Top-Genre</h4><b>Goon-Core</b></div>
+          </div>
+          <div class="brand"><span class="logo" style="width:20px;height:20px;border-radius:50%;background:#1ed760;color:#000;display:grid;place-items:center;font:700 .65rem var(--title)">H</span>wrapped.unoslapis.ch</div>
+        </div>
+        <div class="btns a interactive">
+          <button class="btn green" type="button" id="share"><i data-icon="share-2"></i>Teilen</button>
+          <button class="btn ghost" type="button" id="replay"><i data-icon="rotate-ccw"></i>Nochmal</button>
+        </div>` }
+    ];
+
+    // ---------- Aufbau ----------
+    const story = document.getElementById('story');
+    const wrap = document.getElementById('slides');
+    const barsEl = document.getElementById('bars');
+    const slides = SLIDES.map((s) => {
+      const el = document.createElement('section');
+      el.className = 'slide';
+      el.style.background = s.bg;
+      el.innerHTML = s.html;
+      wrap.appendChild(el);
+      const b = document.createElement('span');
+      b.innerHTML = '<i></i>';
+      barsEl.appendChild(b);
+      return el;
+    });
+    BIGH.hydrateIcons(story);
+
+    let idx = 0, timer = null, started = 0, remaining = DURATION, paused = false;
+
+    function countUp(el) {
+      el.querySelectorAll('[data-count]').forEach((c) => {
+        const target = +c.dataset.count;
+        if (BIGH.reduced || target === 0) { c.textContent = target.toLocaleString('de-CH'); return; }
+        const t0 = performance.now(), dur = 1400;
+        (function step(t) {
+          const p = Math.min(1, (t - t0) / dur);
+          c.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString('de-CH');
+          if (p < 1 && slides[idx] === el) requestAnimationFrame(step);
+          else c.textContent = target.toLocaleString('de-CH');
+        })(t0);
+      });
+    }
+
+    function setBars() {
+      [...barsEl.children].forEach((b, k) => {
+        const i = b.firstChild;
+        b.classList.toggle('done', k < idx);
+        b.classList.toggle('cur', k === idx);
+        i.style.animation = 'none';
+        i.style.width = k < idx ? '100%' : '0';
+        if (k === idx && !SLIDES[k].final) {
+          void i.offsetWidth;
+          i.style.width = '';
+          i.style.animation = 'fill ' + DURATION + 'ms linear forwards';
+          if (paused) i.style.animationPlayState = 'paused';
+        }
+        if (k === idx && SLIDES[k].final) i.style.width = '100%';
+      });
+    }
+    const st = document.createElement('style');
+    st.textContent = '@keyframes fill { from { width: 0; } to { width: 100%; } }';
+    document.head.appendChild(st);
+
+    function show(n) {
+      idx = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, k) => s.classList.toggle('on', k === idx));
+      setBars();
+      countUp(slides[idx]);
+      clearTimeout(timer);
+      remaining = DURATION;
+      document.getElementById('hint').style.display = idx === 0 ? '' : 'none';
+      // Auf der letzten Slide dürfen Klicks die Buttons erreichen
+      document.getElementById('tap-next').style.display = SLIDES[idx].final ? 'none' : '';
+      if (SLIDES[idx].final) BIGH.confettiRain(null, 40);
+      if (!paused) schedule();
+      sound(idx);
+    }
+    function schedule() {
+      if (SLIDES[idx].final) return;
+      started = Date.now();
+      timer = setTimeout(() => show(idx + 1), remaining);
+    }
+    function setPaused(p) {
+      if (p === paused) return;
+      paused = p;
+      story.classList.toggle('paused', p);
+      const cur = barsEl.children[idx] && barsEl.children[idx].firstChild;
+      if (cur) cur.style.animationPlayState = p ? 'paused' : 'running';
+      if (p) { clearTimeout(timer); remaining -= Date.now() - started; }
+      else schedule();
+      document.getElementById('pause').innerHTML = BIGH.icon(p ? 'play' : 'pause');
+      document.getElementById('pause').setAttribute('aria-label', p ? 'Weiter' : 'Pause');
+    }
+
+    // Tippen: links zurück, rechts weiter. Halten: Pause.
+    let holdTimer = null, held = false;
+    ['tap-prev', 'tap-next'].forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener('pointerdown', () => { held = false; holdTimer = setTimeout(() => { held = true; setPaused(true); }, 260); });
+      const up = () => { clearTimeout(holdTimer); if (held) { setPaused(false); } };
+      el.addEventListener('pointerup', up);
+      el.addEventListener('pointerleave', up);
+      el.addEventListener('click', () => { if (held) { held = false; return; } show(idx + (id === 'tap-next' ? 1 : -1)); });
+    });
+    document.getElementById('pause').addEventListener('click', () => setPaused(!paused));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') show(idx + 1);
+      else if (e.key === 'ArrowLeft') show(idx - 1);
+      else if (e.key === ' ') { e.preventDefault(); setPaused(!paused); }
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) setPaused(true); });
+
+    // ---------- Optionaler Ton: ruhiger Akkord pro Slide ----------
+    let soundOn = false;
+    const CHORDS = [[262, 330, 392], [220, 277, 330], [196, 247, 294], [175, 220, 262]];
+    function sound(k) {
+      if (!soundOn) return;
+      CHORDS[k % CHORDS.length].forEach((f, i) => setTimeout(() => BIGH.beep(f, 0.9, 'sine', 0.035), i * 90));
+    }
+    document.getElementById('mute').addEventListener('click', () => {
+      soundOn = !soundOn;
+      document.getElementById('mute').innerHTML = BIGH.icon(soundOn ? 'volume-2' : 'volume-x');
+      document.getElementById('mute').setAttribute('aria-label', soundOn ? 'Ton aus' : 'Ton an');
+      sound(idx);
+    });
+
+    // ---------- Teilen / Nochmal ----------
+    document.getElementById('share').addEventListener('click', async () => {
+      const text = 'Big H Wrapped ' + YEAR + ': 4\'269 h Overwatch, Top 0,01 % Hazbin Hotel, 312× „Ich muss baden gehen“. ' + location.href.split('#')[0];
+      try {
+        if (navigator.share) await navigator.share({ title: 'Big H Wrapped', text });
+        else { await navigator.clipboard.writeText(text); BIGH.toast('Text kopiert. Ab in den Gruppenchat.'); }
+      } catch (e) { /* abgebrochen */ }
+    });
+    document.getElementById('replay').addEventListener('click', () => show(0));
+
+    show(0);
+  })();
+  </script>
+</body>
+</html>
