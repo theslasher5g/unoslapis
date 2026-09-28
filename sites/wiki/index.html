@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alastor Lapis – Bigipedia</title>
+<meta name="description" content="Alastor Lapis (Big H): Fürst a. D. von Lapisien, Goon-König und erster Mensch, der den Mount Everest nackt wie ein Löwe bestiegen hat.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23ffffff' stroke='%23202122' stroke-width='6'/><text x='50' y='70' font-size='60' font-family='Georgia,serif' text-anchor='middle' fill='%23202122'>B</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --w-bg: #fff; --w-text: #202122; --w-muted: #54595d; --w-line: #a2a9b1; --w-soft: #f8f9fa; --w-link: #3366cc; --w-visited: #6a60b0; --w-serif: 'Linux Libertine', Georgia, 'Times New Roman', serif; }
+  body { background: var(--w-bg); color: var(--w-text); font-size: 1rem; }
+  a { color: var(--w-link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .bigh-back { background: rgba(32,33,34,.88); }
+
+  .w-top { border-bottom: 1px solid #eaecf0; }
+  .w-top .in { width: min(1240px, 100% - 32px); margin: 0 auto; height: 60px; display: flex; align-items: center; gap: 16px; padding-left: 140px; }
+  .w-logo { display: flex; align-items: center; gap: 10px; color: var(--w-text); }
+  .w-logo:hover { text-decoration: none; }
+  .w-logo .globe { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--w-text); display: grid; place-items: center; font: 400 1.3rem var(--w-serif); }
+  .w-logo b { display: block; font: 400 1.25rem/1 var(--w-serif); letter-spacing: .06em; }
+  .w-logo small { display: block; font: italic .7rem var(--w-serif); color: var(--w-muted); margin-top: 3px; }
+  .w-search { flex: 1; max-width: 420px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--w-line); border-radius: 2px; padding: 6px 10px; color: var(--w-muted); font-size: .9rem; }
+  @media (max-width: 720px) { .w-top .in { padding-left: 130px; } .w-search { display: none; } }
+
+  .page { width: min(1240px, 100% - 32px); margin: 0 auto; display: grid; grid-template-columns: 200px 1fr; gap: 32px; }
+  @media (max-width: 980px) { .page { grid-template-columns: 1fr; } .toc-side { display: none; } }
+  .toc-side { position: sticky; top: 16px; align-self: start; padding-top: 28px; font-size: .86rem; max-height: calc(100vh - 32px); overflow-y: auto; }
+  body.has-bday-bar .toc-side { top: 58px; }
+  .toc-side h2 { font: 700 .86rem var(--body); margin: 0 0 8px; }
+  .toc-side ol { list-style: none; margin: 0; padding: 0; }
+  .toc-side ol ol { padding-left: 12px; }
+  .toc-side a { display: block; padding: 4px 0; color: var(--w-text); line-height: 1.3; }
+  .toc-side a.on { color: var(--w-link); font-weight: 600; }
+
+  article { min-width: 0; padding: 20px 0 40px; }
+  h1.w-title { font: 400 2rem/1.25 var(--w-serif); margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--w-line); }
+  .tabs { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid #eaecf0; margin: 0 0 8px; font-size: .88rem; flex-wrap: wrap; }
+  .tabs div { display: flex; gap: 2px; }
+  .tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 8px 7px; color: var(--w-link); font: inherit; cursor: pointer; }
+  .tabs button.on { color: var(--w-text); border-bottom-color: var(--w-text); }
+  .from { color: var(--w-muted); font-size: .84rem; margin: 6px 0 14px; }
+
+  .ambox { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--w-line); border-left: 8px solid #fc3; background: #fef6e7; padding: 10px 14px; margin: 0 0 16px; font-size: .9rem; line-height: 1.45; }
+  .ambox .icon { color: #ac6600; font-size: 1.3rem; flex: none; margin-top: 2px; }
+  .ambox.blue { border-left-color: #36c; background: #eaf3ff; }
+  .ambox.blue .icon { color: #36c; }
+
+  .content { font-size: 1rem; line-height: 1.65; }
+  .content p { margin: 0 0 12px; }
+  .content h2 { font: 400 1.6rem/1.3 var(--w-serif); margin: 28px 0 10px; padding-bottom: 4px; border-bottom: 1px solid var(--w-line); display: flex; align-items: baseline; gap: 12px; scroll-margin-top: 16px; }
+  .content h3 { font: 700 1.08rem var(--body); margin: 20px 0 6px; display: flex; align-items: baseline; gap: 10px; scroll-margin-top: 16px; }
+  .edit { margin-left: auto; font: 400 .8rem var(--body); color: var(--w-link); cursor: pointer; background: none; border: 0; padding: 0; }
+  .edit::before { content: '['; color: var(--w-muted); } .edit::after { content: ']'; color: var(--w-muted); }
+  sup.ref { font-size: .72em; line-height: 0; }
+  sup.ref a { padding: 0 1px; }
+  .content ul { padding-left: 22px; margin: 0 0 12px; }
+  .content li { margin-bottom: 4px; }
+  blockquote { margin: 12px 0 16px; padding: 4px 0 4px 18px; border-left: 4px solid #eaecf0; font-family: var(--w-serif); font-size: 1.08rem; }
+  blockquote cite { display: block; font: normal .86rem var(--body); color: var(--w-muted); margin-top: 4px; }
+
+  /* Infobox */
+  .infobox { float: right; width: 300px; margin: 0 0 16px 22px; border: 1px solid var(--w-line); background: var(--w-soft); font-size: .86rem; line-height: 1.45; }
+  @media (max-width: 640px) { .infobox { float: none; width: 100%; margin: 0 0 18px; } }
+  .infobox .ib-title { text-align: center; font: 700 1.1rem var(--body); padding: 10px; background: #dfe6f0; }
+  .infobox .ib-img { position: relative; aspect-ratio: 4 / 5; margin: 8px; background: linear-gradient(135deg, #3a4150, #1c2029); display: grid; place-items: center; color: #fff; font: 600 5rem var(--title); letter-spacing: -.04em; overflow: hidden; }
+  .infobox .ib-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .infobox .ib-cap { text-align: center; padding: 0 10px 8px; font-size: .8rem; }
+  .infobox table { width: 100%; border-collapse: collapse; }
+  .infobox th { text-align: left; vertical-align: top; padding: 5px 8px 5px 10px; width: 38%; font-weight: 700; }
+  .infobox td { padding: 5px 10px 5px 0; vertical-align: top; }
+  .infobox .sec { text-align: center; background: #dfe6f0; font-weight: 700; padding: 5px; }
+  .infobox .sig { font: italic 1.6rem var(--w-serif); text-align: center; padding: 6px; transform: rotate(-4deg); }
+
+  table.w { border-collapse: collapse; margin: 8px 0 16px; font-size: .9rem; background: var(--w-soft); width: 100%; max-width: 640px; }
+  table.w th, table.w td { border: 1px solid var(--w-line); padding: 6px 10px; text-align: left; vertical-align: top; }
+  table.w th { background: #eaecf0; }
+  .tablewrap { overflow-x: auto; }
+
+  .toc-inline { display: none; border: 1px solid var(--w-line); background: var(--w-soft); padding: 10px 14px; margin: 0 0 16px; font-size: .9rem; }
+  .toc-inline summary { font-weight: 700; cursor: pointer; }
+  .toc-inline ol { margin: 8px 0 0; padding-left: 20px; }
+  @media (max-width: 980px) { .toc-inline { display: block; } }
+
+  .refs { font-size: .86rem; padding-left: 26px; }
+  .refs li:target { background: #eaf3ff; }
+  .refs .up { font-weight: 700; margin-right: 4px; }
+  .cats { border: 1px solid var(--w-line); background: var(--w-soft); padding: 8px 12px; font-size: .86rem; margin-top: 24px; }
+  .cats a { white-space: nowrap; }
+  .cats span + span::before { content: ' | '; color: var(--w-muted); }
+  .w-foot { border-top: 1px solid #eaecf0; margin-top: 30px; padding: 16px 0 40px; color: var(--w-muted); font-size: .8rem; line-height: 1.6; }
+
+  .tip { position: fixed; z-index: 60; max-width: 320px; background: #fff; border: 1px solid var(--w-line); box-shadow: 0 6px 24px rgba(0,0,0,.15); padding: 10px 12px; font-size: .85rem; line-height: 1.45; border-radius: 4px; pointer-events: none; display: none; }
+</style>
+</head>
+<body data-back>
+  <header class="w-top"><div class="in">
+    <a class="w-logo" href="#"><span class="globe">B</span><span><b>BIGIPEDIA</b><small>Die freie Enzyklopädie über Big H</small></span></a>
+    <div class="w-search"><i data-icon="search"></i>Bigipedia durchsuchen</div>
+  </div></header>
+
+  <div class="page">
+    <nav class="toc-side" aria-label="Inhaltsverzeichnis"><h2>Inhalt</h2><ol id="toc"></ol></nav>
+
+    <article>
+      <h1 class="w-title">Alastor Lapis</h1>
+      <div class="tabs">
+        <div><button class="on" type="button">Artikel</button><button type="button" data-t="Diskussion: 4'269 Beiträge. Alle von unoslapis. Alle mit dem Titel „Warum ist mein Rank falsch?“">Diskussion</button></div>
+        <div><button class="on" type="button">Lesen</button><button type="button" data-t="Bearbeitung gesperrt: Der Artikel ist nach einem Edit-War mit seiner Mutter vollgeschützt.">Bearbeiten</button><button type="button" data-t="Versionsgeschichte: 312 Bearbeitungen mit dem Kommentar „muss kurz baden gehen, mach später weiter“.">Versionsgeschichte</button></div>
+      </div>
+      <div class="from">Aus Bigipedia, der freien Enzyklopädie</div>
+
+      <div class="ambox"><i data-icon="scale"></i><div><b>Die Neutralität dieses Artikels ist umstritten.</b> Er wurde zu 94 % von <a data-sub="linkedin" href="https://linkedin.unoslapis.ch/">Alastor Lapis</a> selbst verfasst. Die restlichen 6 % sind Tippfehler, die er als „Stilmittel“ bezeichnet.</div></div>
+
+      <div class="content">
+        <aside class="infobox" aria-label="Steckbrief">
+          <div class="ib-title">Alastor Lapis</div>
+          <div class="ib-img">H<img src="/shared/img/bigh.jpg" alt="Alastor Lapis" onerror="this.remove()"></div>
+          <div class="ib-cap">Alastor Lapis kurz nach dem Aufstehen (15:40 Uhr)</div>
+          <table>
+            <tr><th>Geboren</th><td>4. Oktober 2002<br>Schweiz</td></tr>
+            <tr><th>Alter</th><td id="ib-age">–</td></tr>
+            <tr><th>Weitere Namen</th><td>Big H, unoslapis, der Stecher, der Sex-Gott, der nackte Löwe</td></tr>
+            <tr><td colspan="2" class="sec">Fürst von Lapisien</td></tr>
+            <tr><th>Regierungszeit</th><td>2011 – 12. Juni 2019</td></tr>
+            <tr><th>Vorgänger</th><td>– (Staatsgründer)</td></tr>
+            <tr><th>Nachfolger</th><td>Mausi (Katze, kommissarisch)</td></tr>
+            <tr><td colspan="2" class="sec">Goon-König</td></tr>
+            <tr><th>Krönung</th><td>12. Juni 2019</td></tr>
+            <tr><th>Rekord</th><td>7 h 43 min</td></tr>
+            <tr><td colspan="2" class="sec">Persönliches</td></tr>
+            <tr><th>Beruf</th><td>Senior Goon Engineer</td></tr>
+            <tr><th>Bekannt für</th><td>Everest-Besteigung (nackt), Katzenrettung, „Ich muss baden gehen“</td></tr>
+            <tr><th>Partnerin</th><td>keine (<a data-sub="girlfriend" href="https://girlfriend.unoslapis.ch/">Countdown läuft</a>)</td></tr>
+            <tr><th>Haustiere</th><td>Mausi (gerettet)</td></tr>
+            <tr><th>Steam / Valorant</th><td>unoslapis</td></tr>
+            <tr><th>Wahlspruch</th><td><i>„Nur noch ein Game.“</i></td></tr>
+            <tr><th>Unterschrift</th><td><div class="sig">Big H</div></td></tr>
+          </table>
+        </aside>
+
+        <p><b>Alastor Lapis</b> (* 4. Oktober 2002 in der Schweiz), besser bekannt als <b>Big H</b> und im Internet als <b>unoslapis</b>, ist ein Schweizer Gamer, ehemaliger Monarch und Bergsteiger. Von 2011 bis 2019 regierte er als <b>Fürst Alastor I.</b> das von ihm gegründete <a href="#lapisien">Fürstentum Lapisien</a>. Weltweite Bekanntheit erlangte er 2023 als erster Mensch, der den <a href="#everest">Mount Everest nackt und auf allen vieren wie ein Löwe</a> bestiegen hat.<sup class="ref"><a href="#ref-1">[1]</a></sup> Seit seiner Abdankung trägt er den Titel <b>Goon-König</b>, den er sich selbst verliehen hat.<sup class="ref"><a href="#ref-2">[2]</a></sup></p>
+        <p>Lapis gilt als einer der einflussreichsten Menschen seines Zimmers. Das Magazin <i>Big'H Times</i> nannte ihn „die grösste Persönlichkeit seit der Erfindung des Energy-Drinks“.<sup class="ref"><a href="#ref-3">[3]</a></sup></p>
+
+        <details class="toc-inline"><summary>Inhaltsverzeichnis</summary><ol id="toc-inline"></ol></details>
+
+        <h2 id="leben">Leben</h2>
+        <h3 id="kindheit">Kindheit und frühe Jahre</h3>
+        <p>Alastor Lapis wurde am 4. Oktober 2002 während eines Gewitters geboren. Laut Familienüberlieferung schrie er nicht, sondern sagte nach wenigen Sekunden deutlich „gg“. Die Hebamme kündigte kurz darauf und wurde Nonne.<sup class="ref"><a href="#ref-4">[4]</a></sup></p>
+        <p>Im Alter von vier Jahren besiegte er seinen Vater in Mario Kart und verlangte daraufhin, als „Familienoberhaupt“ angesprochen zu werden. Im Kindergarten gründete er eine Schattenregierung, die das Znüni-Budget kontrollierte. Seine Lehrerin beschrieb ihn als „ungewöhnlich selbstbewusst, aber sehr sauber“ – letzteres gilt heute als historischer Irrtum (siehe <a href="#baden">Baden-Affäre</a>).</p>
+
+        <h3 id="lapisien">Das Fürstentum Lapisien (2011–2019)</h3>
+        <p>Am 3. März 2011 erklärte der damals achtjährige Lapis sein Kinderzimmer für unabhängig und rief das <b>Fürstentum Lapisien</b> aus. Das Staatsgebiet umfasste 14 Quadratmeter, eine Hochbettfestung und einen Schreibtisch, der zur Hauptstadt ernannt wurde. Er regierte fortan als <b>Fürst Alastor I.</b> mit absoluter Macht über Bettzeit (theoretisch) und Lego (praktisch).</p>
+        <p>Die Verfassung von Lapisien bestand aus drei Artikeln:</p>
+        <ul>
+          <li><b>Art. 1:</b> Der Fürst muss nicht aufräumen.</li>
+          <li><b>Art. 2:</b> Das WLAN-Passwort ist Staatsgeheimnis.</li>
+          <li><b>Art. 3:</b> Wer den Fürsten beim Zocken stört, wird des Landes verwiesen (Flur).</li>
+        </ul>
+        <p>Als Währung dienten <b>Lapis-Taler</b> (Pokémon-Karten; ein Glurak entsprach dem Bruttoinlandprodukt). Aussenpolitisch war Lapisien isoliert: Die <b>Schlafenszeit-Krise von 2014</b>, ein 11-tägiger Konflikt mit der Nachbarmacht „Mama“, endete mit dem Verlust der Spielkonsole für eine Woche und gilt als dunkelstes Kapitel der lapisischen Geschichte.<sup class="ref"><a href="#ref-5">[5]</a></sup> Ein Handelsabkommen mit dem Kiosk um die Ecke (Tausch von Taschengeld gegen Energy-Drinks) sicherte ab 2016 die Versorgung des Hofes.</p>
+        <p>Am <b>12. Juni 2019</b> dankte Alastor I. überraschend ab. In seiner Abschiedsrede vom Hochbett erklärte er: „Ich gebe die Krone ab, um mich voll und ganz meiner wahren Berufung zu widmen.“ Am selben Tag fasste er zum letzten Mal Gras an.<sup class="ref"><a href="#ref-6">[6]</a></sup> Die Regierungsgeschäfte übernahm kommissarisch Hauskatze Mausi, die das Fürstentum bis heute schlafend verwaltet.</p>
+
+        <h3 id="goonkoenig">Goon-König (seit 2019)</h3>
+        <p>Noch am Tag seiner Abdankung krönte sich Lapis in einer feierlichen Zeremonie (Gaming-Stuhl, Ringlicht, Monster Energy Ultra) selbst zum <b>Goon-König</b>. Seine Regentschaft ist geprägt von nächtlichen Dauersitzungen; der aktuelle Rekord liegt bei 7 Stunden und 43 Minuten und wurde vom Discord-Bot <i>GoonBot</i> protokolliert.<sup class="ref"><a href="#ref-7">[7]</a></sup> Kritiker bemängeln, dass der Goon-König seit seiner Krönung kein Tageslicht mehr gesehen hat. Lapis entgegnet, er habe „ein Ringlicht, das reicht“.</p>
+
+        <h3 id="everest">Besteigung des Mount Everest (2023)</h3>
+        <p>Am 4. Mai 2023 bestieg Lapis als erster Mensch den Mount Everest (8'849 m) <b>vollständig nackt</b>. Er verzichtete auf Flaschensauerstoff, Seile und Kleidung und ernährte sich während des Aufstiegs ausschliesslich von Monster Energy. Die letzten 800 Höhenmeter legte er nach Augenzeugenberichten <b>auf allen vieren und brüllend wie ein Löwe</b> zurück.<sup class="ref"><a href="#ref-1">[1]</a></sup></p>
+        <p>Ein Sherpa-Führer, der ihn am Hillary Step überholte, berichtete: „Ich dachte zuerst, es sei ein Schneeleopard. Dann sagte er ‚Team Diff‘.“ Seither nennen ihn die Sherpas <b>„Der nackte Löwe“</b>. Auf dem Gipfel pflanzte Lapis eine Flagge mit der Aufschrift <i>unoslapis</i>, sagte „Ich muss baden gehen“ und stieg wieder ab. Die Frage, wo er am Everest ein Bad nehmen wollte, ist bis heute ungeklärt.</p>
+        <p>Das Guinness-Buch der Rekorde lehnte die Anerkennung ab, da keine Fotos existieren. Lapis’ Begründung: „Der Akku war leer. Wegen der Kälte. Ich war ja nackt, ich hatte keine Tasche.“<sup class="ref"><a href="#ref-8">[8]</a></sup></p>
+
+        <h3 id="katze">Die Katzenrettung (2025)</h3>
+        <p>Im Jahr 2025 rettete Lapis die Katze Mausi aus einem brennenden Haus. Er betrat das Gebäude laut Feuerwehr „mit einer beunruhigenden Ruhe“ und kam 40 Sekunden später mit der Katze im Arm und einem Energy-Drink in der anderen Hand wieder heraus. Einsatzleiter Beat Brandschutz, der sieben Minuten zu spät eintraf, gab zu Protokoll: „Er hatte das Feuer schon mit einem Blick gelöscht.“<sup class="ref"><a href="#ref-3">[3]</a></sup> Am selben Abend kaufte Lapis einem Freund ohne erkennbaren Anlass ein Auto.</p>
+
+        <h3 id="esport">E-Sport-Karriere</h3>
+        <p>Lapis spielte bis heute über 4'269 Stunden <i>Overwatch</i>, bevorzugt als Genji. Er gilt als Erfinder des Ausdrucks <b>„Team Diff“</b>, den er nach eigenen Angaben 9'001 Mal im Voice-Chat verwendete. In <i>Valorant</i> spielt er Jett und bezeichnet seine Spielweise als „strategisches Lurken“, Mitspieler als „verschwunden“. Seinen Höchstrang hält er geheim; ein NFT seines Ranks wurde von ihm selbst gelöscht, bevor ihn jemand sehen konnte.<sup class="ref"><a href="#ref-9">[9]</a></sup></p>
+
+        <h2 id="persoenlichkeit">Persönlichkeit und Rezeption</h2>
+        <p>Lapis identifiziert sich stark mit der Figur Alastor aus der Serie <i>Hazbin Hotel</i>, deren Lied „Insane“ er laut eigener Streaming-Statistik 2'847 Mal gehört hat.<sup class="ref"><a href="#ref-10">[10]</a></sup> Er bezeichnet sich selbst als <b>Sex-Gott</b>, <b>Stecher</b> und „Chief Rizz Officer“. Belege für diese Titel existieren ausschliesslich in Form von Aussagen seiner selbst.</p>
+        <p>In der Goth-Szene geniesst er einen ambivalenten Ruf: Eine Goth-Baddie bewertete ein Gespräch mit ihm mit zwei Sternen, „weil er mir einen Fledermaus-Sticker abgekauft hat“.<sup class="ref"><a href="#ref-11">[11]</a></sup></p>
+        <blockquote>„Ich bin kein Gamer. Ich bin ein Lifestyle.“<cite>– Alastor Lapis auf LinkedOut</cite></blockquote>
+
+        <h2 id="kontroversen">Kontroversen</h2>
+        <h3 id="baden">Die Baden-Affäre</h3>
+        <p>Die bekannteste Kontroverse um Lapis ist die sogenannte <b>Baden-Affäre</b> (auch <i>#badengehen</i>). Zwischen 2020 und heute sagte er mindestens 312 Verabredungen mit der Begründung „Ich muss baden gehen“ ab. Eine unabhängige Untersuchung des Wasserzählers ergab für denselben Zeitraum einen Verbrauch von 0 Litern.<sup class="ref"><a href="#ref-12">[12]</a></sup> Lapis bestreitet die Messung und bezeichnet den Wasserzähler als „Hater“.</p>
+        <h3 id="eth">Der Supercomputer-Vorfall</h3>
+        <p>2024 liess ein Forschungsteam seine Chancen auf eine Freundin von einem Supercomputer berechnen. Das Ergebnis (0,2 %) führte zum Absturz des Rechners. Lapis forderte eine Neuberechnung „mit besserer Grafikkarte“.<sup class="ref"><a href="#ref-11">[11]</a></sup></p>
+        <h3 id="nofap">NoFap-Kontroverse</h3>
+        <p>Ein öffentlicher NoFap-Tracker dokumentiert seit 2024 einen täglichen Rückfall um 00:04 Uhr. Der längste dokumentierte Streak beträgt 2 Tage und 3 Stunden und fiel mit einer Grippe zusammen.<sup class="ref"><a href="#ref-13">[13]</a></sup></p>
+
+        <h2 id="auszeichnungen">Auszeichnungen</h2>
+        <div class="tablewrap"><table class="w">
+          <tr><th>Jahr</th><th>Auszeichnung</th><th>Vergeben von</th></tr>
+          <tr><td>2011</td><td>Gründer des Jahres</td><td>Fürstentum Lapisien (er selbst)</td></tr>
+          <tr><td>2019</td><td>Goldene Krone für Selbstkrönung</td><td>er selbst</td></tr>
+          <tr><td>2023</td><td>Löwe der Berge (Ehrentitel)</td><td>Sherpa-Vereinigung Khumbu</td></tr>
+          <tr><td>2024</td><td>Treuester Kunde</td><td>Monster Energy</td></tr>
+          <tr><td>2025</td><td>Katzenretter des Jahres</td><td>Mausi</td></tr>
+          <tr><td>2025</td><td>Bester Ausreden-Generator</td><td><a data-sub="excuses" href="https://excuses.unoslapis.ch/">Ausreden-Automat</a></td></tr>
+        </table></div>
+
+        <h2 id="zitate">Zitate</h2>
+        <ul>
+          <li>„Nur noch ein Game.“ (am häufigsten um 03:14 Uhr)</li>
+          <li>„Ich muss baden gehen.“</li>
+          <li>„Das war kein Vortrag, das war Rizz.“</li>
+          <li>„Team Diff.“</li>
+          <li>„Ich gebe die Krone ab, um mich voll und ganz meiner wahren Berufung zu widmen.“ (Abdankungsrede, 2019)</li>
+        </ul>
+
+        <h2 id="trivia">Trivia</h2>
+        <ul>
+          <li>Sein Geburtstag, der 4. Oktober, wurde in Lapisien zum Staatsfeiertag erklärt. Die Feierlichkeiten finden auf <a data-sub="b-day" href="https://b-day.unoslapis.ch/">b-day.unoslapis.ch</a> statt.</li>
+          <li>Seine Waifu-Tierliste ist in Lapisien Pflichtlektüre. Makima steht dort seit Beginn der Aufzeichnungen auf Platz 1.</li>
+          <li>Er besitzt ein Touch-Grass-Kit, das er nie ausgepackt hat.</li>
+          <li>Laut Horoskop ist er Waage mit Aszendent Goon.</li>
+          <li>Die Hauptstadt Lapisiens (der Schreibtisch) wurde seit 2019 nicht mehr aufgeräumt und steht unter Denkmalschutz.</li>
+        </ul>
+
+        <h2 id="siehe">Siehe auch</h2>
+        <ul>
+          <li><a data-sub="news" href="https://news.unoslapis.ch/">The Big'H Times</a> – Hauszeitung</li>
+          <li><a data-sub="wrapped" href="https://wrapped.unoslapis.ch/">Big H Wrapped</a> – Jahresrückblick</li>
+          <li><a data-sub="bewertungen" href="https://bewertungen.unoslapis.ch/">Goongle-Rezensionen</a></li>
+          <li><a data-sub="touchgrass" href="https://touchgrass.unoslapis.ch/">Touch Grass Simulator</a></li>
+        </ul>
+
+        <h2 id="nachweise">Einzelnachweise</h2>
+        <ol class="refs">
+          <li id="ref-1"><a class="up" href="#everest">↑</a>„Der nackte Löwe: Schweizer bezwingt Everest ohne alles.“ In: <i>The Big'H Times</i>, 5. Mai 2023.</li>
+          <li id="ref-2"><a class="up" href="#goonkoenig">↑</a>Alastor Lapis: <i>Selbstkrönung und Selbstverwirklichung.</i> Eigenverlag, 2019.</li>
+          <li id="ref-3"><a class="up" href="#katze">↑</a>„Alastor Lapis rettet Katze aus brennendem Haus.“ In: <a data-sub="news" href="https://news.unoslapis.ch/"><i>The Big'H Times</i></a>, Titelseite.</li>
+          <li id="ref-4"><a class="up" href="#kindheit">↑</a>Mündliche Überlieferung seiner Mutter beim Familienessen (nicht verifiziert, sehr laut erzählt).</li>
+          <li id="ref-5"><a class="up" href="#lapisien">↑</a>Staatsarchiv Lapisien, Schublade 2 („Nicht öffnen“).</li>
+          <li id="ref-6"><a class="up" href="#lapisien">↑</a><a data-sub="touchgrass" href="https://touchgrass.unoslapis.ch/">Touch Grass Simulator</a>: Zähler „Tage ohne Gras“.</li>
+          <li id="ref-7"><a class="up" href="#goonkoenig">↑</a><a data-sub="discord" href="https://discord.unoslapis.ch/">Big H's Server</a>, Kanal #goon-logs.</li>
+          <li id="ref-8"><a class="up" href="#everest">↑</a>Stellungnahme von unoslapis im Discord-Kanal #allgemein, 22:47 Uhr.</li>
+          <li id="ref-9"><a class="up" href="#esport">↑</a><a data-sub="merch" href="https://merch.unoslapis.ch/">Big H Merch</a>: „NFT seines echten Ranks“ (ausverkauft).</li>
+          <li id="ref-10"><a class="up" href="#persoenlichkeit">↑</a><a data-sub="wrapped" href="https://wrapped.unoslapis.ch/">Big H Wrapped</a>.</li>
+          <li id="ref-11"><a class="up" href="#persoenlichkeit">↑</a><a data-sub="bewertungen" href="https://bewertungen.unoslapis.ch/">Goongle-Rezensionen zu Big H</a>.</li>
+          <li id="ref-12"><a class="up" href="#baden">↑</a><a data-sub="excuses" href="https://excuses.unoslapis.ch/">Ausreden-Automat</a>, Jahresstatistik.</li>
+          <li id="ref-13"><a class="up" href="#nofap">↑</a><a data-sub="nofap" href="https://nofap.unoslapis.ch/">NoFap-Tracker</a>.</li>
+        </ol>
+
+        <div class="cats"><a href="#">Kategorien</a>: <span><a href="#">Schweizer</a></span><span><a href="#">Geboren 2002</a></span><span><a href="#">Monarch (abgedankt)</a></span><span><a href="#">Bergsteiger (ohne Kleidung)</a></span><span><a href="#">Goon-König</a></span><span><a href="#">Katzenretter</a></span><span><a href="#">Person mit ungeklärtem Badeverhalten</a></span><span><a href="#">Hazbin-Hotel-Fan</a></span></div>
+      </div>
+
+      <div class="w-foot">Diese Seite wurde zuletzt am <span id="edited"></span> um 03:14 Uhr bearbeitet (von unoslapis, Kommentar: „kleine Korrektur“).<br>Bigipedia ist eine Parodie. Alle Inhalte sind frei erfunden und dienen der Unterhaltung. Der Text ist verfügbar unter der Lizenz „Big H hat es erlaubt“.</div>
+    </article>
+  </div>
+
+  <div class="tip" id="tip" role="tooltip"></div>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // Alter in der Infobox
+    const now = new Date();
+    let age = now.getFullYear() - 2002;
+    if (now < new Date(now.getFullYear(), 9, 4)) age--;
+    document.getElementById('ib-age').textContent = age + ' Jahre';
+    const y = new Date(now.getTime() - 86400000);
+    document.getElementById('edited').textContent = y.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    // Inhaltsverzeichnis aus den Überschriften bauen
+    const heads = [...document.querySelectorAll('.content h2[id], .content h3[id]')];
+    const toc = document.getElementById('toc');
+    const tocInline = document.getElementById('toc-inline');
+    let curList = null, curListInline = null, n2 = 0, n3 = 0;
+    const links = [];
+    heads.forEach((h) => {
+      const text = h.textContent;
+      const isH2 = h.tagName === 'H2';
+      if (isH2) { n2++; n3 = 0; } else n3++;
+      const num = isH2 ? String(n2) : n2 + '.' + n3;
+      [[toc, 'side'], [tocInline, 'inline']].forEach(([root, kind]) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = (kind === 'inline' ? num + ' ' : '') + text;
+        li.appendChild(a);
+        if (kind === 'side') links.push([h, a]);
+        if (isH2) {
+          root.appendChild(li);
+          const sub = document.createElement('ol');
+          li.appendChild(sub);
+          if (kind === 'side') curList = sub; else curListInline = sub;
+        } else (kind === 'side' ? curList : curListInline).appendChild(li);
+      });
+      // [Bearbeiten]-Link
+      const e = document.createElement('button');
+      e.type = 'button';
+      e.className = 'edit';
+      e.textContent = 'Bearbeiten';
+      e.addEventListener('click', () => BIGH.toast('Bearbeitung gesperrt. Nur der Fürst darf diesen Abschnitt ändern.'));
+      h.appendChild(e);
+    });
+    document.querySelectorAll('.toc-side ol ol, #toc-inline ol').forEach((o) => { if (!o.children.length) o.remove(); });
+
+    // Aktiven Abschnitt im Inhaltsverzeichnis markieren
+    function spy() {
+      let cur = links[0];
+      for (const l of links) if (l[0].getBoundingClientRect().top < 120) cur = l;
+      links.forEach((l) => l[1].classList.toggle('on', l === cur));
+    }
+    window.addEventListener('scroll', spy, { passive: true });
+    spy();
+
+    // Tabs
+    document.querySelectorAll('.tabs button[data-t]').forEach((b) => b.addEventListener('click', () => BIGH.toast(b.dataset.t)));
+
+    // Fussnoten-Vorschau beim Überfahren
+    const tip = document.getElementById('tip');
+    document.querySelectorAll('sup.ref a').forEach((a) => {
+      a.addEventListener('mouseenter', () => {
+        const li = document.querySelector(a.getAttribute('href'));
+        if (!li) return;
+        const clone = li.cloneNode(true);
+        clone.querySelector('.up').remove();
+        tip.textContent = clone.textContent.trim();
+        const r = a.getBoundingClientRect();
+        tip.style.display = 'block';
+        tip.style.left = Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, r.left - 20)) + 'px';
+        tip.style.top = (r.bottom + 8) + 'px';
+      });
+      a.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    });
+    window.addEventListener('scroll', () => { tip.style.display = 'none'; }, { passive: true });
+  })();
+  </script>
+</body>
+</html>
