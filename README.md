@@ -28,6 +28,7 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `wiki.unoslapis.ch` | **Bigipedia**-Artikel über Alastor Lapis: Infobox, Fürst von Lapisien (2011–2019), nackte Everest-Besteigung wie ein Löwe, Katzenrettung, Baden-Affäre, Auszeichnungen, Einzelnachweise |
 | `casino.unoslapis.ch` | **Casino Lapis** mit Spielgeld (Lapis-Taler). Beim ersten Besuch gibt man einen Namen ein, das Guthaben liegt auf dem Server. **Blackjack mit bis zu 5 Spielern** an einem Tisch (Lobby mit offenen Tischen, Chat, Big H als Croupier), Slots, europäisches Roulette, Greifautomat, **Rangliste** (reichste Spieler, grösste Sammler). Kredit, wenn man pleite ist |
 | `casino.unoslapis.ch/packs/` | **Crazy Cupcakes Booster-Packs** (Kurzadresse `packs.unoslapis.ch`): Packs mit Lapis-Talern kaufen (alle 4 h eins gratis), Karten einzeln aufdecken, 40 Sammelkarten im Pokémon-Stil mit Holo-Effekt, Sammelalbum, Doppelte verkaufen |
+| `casino.unoslapis.ch/duell/` | **Karten-Duell**: Team aus 3 eigenen Karten (max. 8 Punkte: ● 1, ◆ 2, ★ 3, ★★ 4, ✦ 5), rundenbasierter Kampf gegen Kollegen (mit optionalem Einsatz) oder Big H als Bot. Typ-Vorteile, Volltreffer, Verwirrung, Heilung, Sudden Death ab Runde 20, Duell-Rangliste |
 | `bigflix.unoslapis.ch` | **Bigflix**: Netflix-Parodie mit Profilauswahl, „Ta-dum“-Intro, Top 10, Serien mit Folgen, Meine Liste und Fake-Player mit „Schaust du noch?“ |
 | `game.unoslapis.ch` | **Flucht vor dem Gras**: Endlos-Runner mit Big H (sein Foto) als Spielfigur. Gras überspringen, unter Einladungen durch, Monster-Dosen sammeln. **Rangliste** im Backend (Allzeit + heute) |
 | `museum.unoslapis.ch` | **Big H Museum**: Ausstellung in vier Sälen mit Exponat-Schildern, Porträt im Goldrahmen, Vollbild-Ansicht und Audioguide (Sprachausgabe des Browsers) |
@@ -47,14 +48,14 @@ Internet ──► Caddy (Port 80/443, automatisches HTTPS) ──► nginx     
 ```
 docker-compose.yml
 caddy/Caddyfile        # Reverse Proxy + Let's Encrypt
-guestbook/             # Backend: Gästebuch, Bewertungen, Karte, Ranglisten (server.js) und Casino (casino.js) (Node, ohne Abhängigkeiten)
+guestbook/             # Backend: Gästebuch, Bewertungen, Karte, Ranglisten (server.js), Casino (casino.js), Karten-Duell (duel.js) (Node, ohne Abhängigkeiten)
 nginx/default.conf     # Hostname -> Ordner in sites/
 sites/
   shared/              # style.css, fun.js, icons.svg, 404.html, img/ (gilt für alle Subdomains)
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
   excuses/  horoskop/  merch/  discord/  wordle/  tinder/  bewertungen/
-  wrapped/  wiki/  karte/  casino/ (+ packs/)  game/  museum/  bigflix/
+  wrapped/  wiki/  karte/  casino/ (+ packs/, duell/)  game/  museum/  bigflix/
 ```
 
 ## Deploy auf dem VPS
@@ -133,7 +134,7 @@ Die Werte stehen jeweils oben im `<script>` unter `// ==== KONFIG ====`:
 - **Karte** (`sites/karte/index.html`): Text auf der Innenseite direkt im HTML
 - **Foto von Big H**: liegt in `sites/shared/img/bigh.jpg` und erscheint auf Dashboard, LinkedOut, Hinder, Goongle, Bigipedia, Wrapped, im Museum, als Croupier im Casino und als Kopf der Spielfigur. Einfach die Datei ersetzen, um ein anderes Bild zu nehmen (quadratisch ist ideal).
 - **Casino**: Spielregeln, Auszahlungen und Wahrscheinlichkeiten stehen im Backend (`guestbook/casino.js`: Slots ca. 95 % Rückzahlquote, Greifer, Packs, Blackjack-Tische); die Seite `sites/casino/index.html` zeigt nur an. Konto auf ein anderes Gerät mitnehmen: im Casino auf den Namen klicken → „Konto-Schlüssel kopieren“ und auf dem anderen Gerät beim Anmelden „Ich habe schon ein Konto“ wählen.
-- **Sammelkarten** (`sites/casino/packs/cards.js`): Namen, Typen, Attacken und Texte der 40 Karten. Die Bilder liegen in `sites/shared/cupcakes/` (aus dem Crazy-Cupcakes-Whiteboard ausgeschnitten). Seltenheit und Kartenliste müssen zu `CARDS` in `guestbook/casino.js` passen.
+- **Sammelkarten** (`sites/casino/packs/cards.js`): Namen, Typen, Attacken und Texte der 40 Karten. Die Bilder liegen in `sites/shared/cupcakes/` (aus dem Crazy-Cupcakes-Whiteboard ausgeschnitten). Seltenheit und Kartenliste müssen zu `CARDS` in `guestbook/casino.js` passen, die Kampfwerte (Typ, KP, Attacken, Schaden) zu `STATS` in `guestbook/duel.js`. Beim Start meldet das Backend im Log, wenn eine Karte fehlt.
 - **Bigflix** (`sites/bigflix/index.html`): Titel in `TITLES`, Reihen in `ROWS`
 - **Ton**: Alle Klänge werden im Browser erzeugt (`BIGH.sfx('win')` usw. in `sites/shared/fun.js`). Unten rechts auf jeder Seite schaltet ein Knopf den Ton für alle Seiten ein oder aus.
 - **Museum** (`sites/museum/index.html`): Exponate direkt im HTML (`<article class="exhibit">`); der Audioguide liest Titel, Angaben und Beschreibung vom Schild

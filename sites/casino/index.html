@@ -237,8 +237,9 @@
   .chat input { flex: 1; min-width: 0; background: rgba(0,0,0,.3); border: 1px solid var(--felt-line); border-radius: 10px; padding: 8px 10px; color: #fff; font: 500 .88rem var(--body); outline: none; }
 
   /* ---------- Rangliste ---------- */
-  .lb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 760px) { .lb-grid { grid-template-columns: 1fr; } }
+  .lb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 960px) { .lb-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .lb-grid { grid-template-columns: 1fr; } }
   .lb-box { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
   .lb-box h3 { display: flex; align-items: center; gap: 8px; font: 600 1.05rem var(--title); margin: 0 0 2px; }
   .lb-box .meta { color: var(--muted); font-size: .8rem; margin-bottom: 10px; }
@@ -404,10 +405,12 @@
       <div class="lb-grid">
         <div class="lb-box"><h3><i data-icon="coins"></i>Reichste Spieler</h3><div class="meta">Nettovermögen in Lapis-Talern</div><ol class="lb" id="lb-rich"><li class="empty">Lade …</li></ol></div>
         <div class="lb-box"><h3><i data-icon="layout-grid"></i>Grösste Sammler</h3><div class="meta" id="lb-coll-meta">Verschiedene Crazy-Cupcakes-Karten</div><ol class="lb" id="lb-coll"><li class="empty">Lade …</li></ol></div>
+        <div class="lb-box"><h3><i data-icon="swords"></i>Beste Duellanten</h3><div class="meta">Siege im Karten-Duell gegen Kollegen</div><ol class="lb" id="lb-duel"><li class="empty">Lade …</li></ol></div>
       </div>
     </section>
 
     <a class="booster-cta" href="/packs/"><div><b>Crazy Cupcakes Booster-Packs</b><span>Sammelkarten mit 40 Figuren. Alle 4 Stunden ein Gratis-Pack.</span></div><span class="btn gold"><i data-icon="gift"></i>Zu den Packs</span></a>
+    <a class="booster-cta" href="/duell/" style="margin-top:10px"><div><b>Karten-Duell</b><span>Stell ein Team aus deinen Karten zusammen und tritt gegen Kollegen oder Big H an.</span></div><span class="btn gold"><i data-icon="swords"></i>Zum Duell</span></a>
 
     <p class="fine">Nur Spielgeld. Lapis-Taler haben keinen Wert, können nicht gekauft und nicht ausgezahlt werden.</p>
   </main>
@@ -1151,8 +1154,9 @@
         document.getElementById('lb-sub').textContent = d.players + (d.players === 1 ? ' Spieler' : ' Spieler') + (d.myRank ? ' · Du bist auf Platz ' + d.myRank : '') + ' · Vermögen = Kontostand minus Kredite';
         document.getElementById('lb-coll-meta').textContent = 'Verschiedene Karten von ' + d.totalCards;
         fillLb('lb-rich', d.rich, (x) => fmt(x.net), (x) => fmt(x.balance) + ' Taler' + (x.credits ? ' · ' + x.credits + (x.credits === 1 ? ' Kredit' : ' Kredite') : ''));
+        fillLb('lb-duel', d.duelists || [], (x) => x.w + ' S', (x) => x.w + ' Siege · ' + x.l + ' Niederlagen');
         fillLb('lb-coll', d.collectors, (x) => x.unique + '/' + d.totalCards, (x) => Math.round(x.unique / d.totalCards * 100) + ' % komplett');
-      } catch (e) { ['lb-rich', 'lb-coll'].forEach((id) => { document.getElementById(id).innerHTML = '<li class="empty">Gerade nicht erreichbar.</li>'; }); }
+      } catch (e) { ['lb-rich', 'lb-coll', 'lb-duel'].forEach((id) => { document.getElementById(id).innerHTML = '<li class="empty">Gerade nicht erreichbar.</li>'; }); }
     }
     function fillLb(id, list, val, sub) {
       const el = document.getElementById(id);

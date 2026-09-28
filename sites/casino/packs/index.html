@@ -7,6 +7,7 @@
 <meta name="description" content="Crazy Cupcakes Sammelkarten, Erweiterung Hoing Boings: Booster-Packs öffnen, 40 Karten sammeln, Holo-Raritäten ziehen.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23f5cc3c'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%230a0a0c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
+<link rel="stylesheet" href="/packs/cards.css">
 <style>
   :root { --accent: #f5cc3c; --gold: #e3b341; }
   body { background: radial-gradient(900px 420px at 50% -140px, rgba(124,58,237,.14), transparent 70%), var(--bg); }
@@ -46,49 +47,6 @@
   .shop .btns { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn.gold { background: var(--accent); color: #1a1405; }
   .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
-
-  /* ---------- Karte ---------- */
-  .pc { --w: 240px; width: var(--w); aspect-ratio: 63 / 88; font-size: calc(var(--w) / 21); border-radius: 4.5%; padding: 3.2%; background: linear-gradient(145deg, #f7d64a, #e3b341 50%, #f7d64a); box-shadow: 0 .6em 1.6em rgba(0,0,0,.4); position: relative; color: #1c1917; flex: none; user-select: none; -webkit-user-select: none; }
-  .pc-in { position: relative; height: 100%; border-radius: 3%; background: linear-gradient(180deg, var(--tl), #fff 60%, var(--tl)); padding: 4% 4.5% 3%; display: flex; flex-direction: column; overflow: hidden; }
-  .pc-top { display: flex; align-items: baseline; gap: .3em; }
-  .pc-top .stg { font: 700 .5em var(--body); background: rgba(0,0,0,.08); border-radius: .5em; padding: .1em .45em; align-self: center; }
-  .pc-top .nm { font: 800 1.05em/1.1 var(--title); letter-spacing: -.02em; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pc-top .hp { font: 700 .62em var(--body); color: #b91c1c; white-space: nowrap; }
-  .pc-top .hp b { font-size: 1.5em; }
-  .pc-top .ty { width: 1.25em; height: 1.25em; border-radius: 50%; background: var(--tc); color: #fff; display: grid; place-items: center; align-self: center; flex: none; }
-  .pc-top .ty .icon { width: .75em; height: .75em; }
-  .pc-art { margin-top: 3%; aspect-ratio: 4 / 3; border: .22em solid #c9a227; box-shadow: inset 0 0 0 .08em rgba(0,0,0,.2); background: #fff; position: relative; overflow: hidden; }
-  .pc-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block; }
-  .pc-info { font: italic 500 .44em var(--body); text-align: center; background: linear-gradient(90deg, transparent, rgba(201,162,39,.35), transparent); margin: 1.5% 0 2%; padding: .15em 0; }
-  .pc-atk { display: grid; grid-template-columns: auto 1fr auto; gap: 0 .35em; align-items: center; margin: .25em 0; }
-  .pc-atk .cost { display: flex; gap: .12em; }
-  .pc-atk .cost i { width: .8em; height: .8em; border-radius: 50%; background: var(--tc); box-shadow: inset 0 -.08em 0 rgba(0,0,0,.25); }
-  .pc-atk b { font: 800 .72em var(--title); }
-  .pc-atk .dmg { font: 800 .8em var(--title); }
-  .pc-atk p { grid-column: 1 / -1; margin: .1em 0 0; font-size: .46em; line-height: 1.3; }
-  .pc-spacer { flex: 1; }
-  .pc-bottom { display: grid; grid-template-columns: repeat(3, 1fr); gap: .2em; font-size: .4em; text-align: center; border-top: .12em solid rgba(0,0,0,.15); padding-top: .4em; margin-top: .3em; }
-  .pc-bottom span b { display: block; font-size: 1.05em; }
-  .pc-flavor { font: italic .42em/1.3 var(--body); border: .12em solid #c9a227; border-radius: .4em; padding: .35em .5em; margin-top: .45em; background: rgba(255,255,255,.55); }
-  .pc-foot { display: flex; justify-content: space-between; font: 600 .38em var(--body); margin-top: .4em; opacity: .75; }
-  /* Seltenheiten */
-  .pc.r-R .pc-art::after, .pc.r-UR::after, .pc.r-SR::after { content: ''; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: color-dodge; opacity: .55; background: linear-gradient(115deg, transparent 20%, rgba(255,0,150,.35) 30%, rgba(0,255,255,.35) 40%, rgba(255,255,0,.35) 50%, rgba(0,255,100,.35) 60%, transparent 70%); background-size: 250% 250%; background-position: var(--hx, 50%) var(--hy, 50%); transition: background-position .1s; }
-  .pc.r-UR { background: linear-gradient(135deg, #a78bfa, #f0abfc 25%, #67e8f9 50%, #fde68a 75%, #a78bfa); }
-  .pc.r-UR::after, .pc.r-SR::after { border-radius: 4.5%; opacity: .45; }
-  .pc.r-UR .pc-in { background: linear-gradient(180deg, #1f1b2e, #3b2f5c 55%, #1f1b2e); color: #f5f3ff; }
-  .pc.r-UR .pc-flavor { background: rgba(0,0,0,.3); } .pc.r-UR .pc-top .hp { color: #fda4af; }
-  .pc.r-SR { background: linear-gradient(135deg, #b8860b, #fff1a8 30%, #d4a017 50%, #fff1a8 70%, #b8860b); }
-  .pc.r-SR .pc-in { background: radial-gradient(circle at 50% 30%, #3a2e12, #120e05 75%); color: #fef3c7; }
-  .pc.r-SR .pc-art { aspect-ratio: 1; border-color: #f5cc3c; }
-  .pc.r-SR .pc-flavor { background: rgba(0,0,0,.35); border-color: #f5cc3c; } .pc.r-SR .pc-top .hp { color: #fcd34d; }
-  .pc .glare { position: absolute; inset: 0; border-radius: 4.5%; pointer-events: none; background: radial-gradient(circle at var(--hx, 50%) var(--hy, 50%), rgba(255,255,255,.45), transparent 45%); opacity: 0; transition: opacity .2s; mix-blend-mode: overlay; }
-  .pc.tilt .glare { opacity: 1; }
-  .pc .new { position: absolute; top: -.5em; right: -.5em; background: #ef4444; color: #fff; font: 800 .55em var(--body); letter-spacing: .1em; padding: .35em .6em; border-radius: 999px; box-shadow: 0 .2em .5em rgba(0,0,0,.3); z-index: 2; }
-  /* Rückseite */
-  .pc.back { background: linear-gradient(145deg, #1e1b4b, #312e81); padding: 3.2%; }
-  .pc.back .pc-in { background: radial-gradient(circle at 50% 50%, #7c3aed, #1e1b4b 70%); display: grid; place-items: center; border: .25em solid #f5cc3c; }
-  .pc.back .ball { width: 55%; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(180deg, #ef4444 0 47%, #111 47% 53%, #fafafa 53%); box-shadow: 0 0 0 .25em #111, 0 .5em 1.5em rgba(0,0,0,.5); display: grid; place-items: center; }
-  .pc.back .ball span { width: 28%; aspect-ratio: 1; border-radius: 50%; background: #fafafa; box-shadow: 0 0 0 .25em #111; display: grid; place-items: center; font: 800 1.1em var(--title); color: #111; }
 
   /* ---------- Öffnen (Vollbild) ---------- */
   .stage { position: fixed; inset: 0; z-index: 80; background: radial-gradient(circle at 50% 40%, #1e1b3a, #07060d 70%); display: none; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 16px; overflow-y: auto; }
@@ -158,7 +116,7 @@
 
     <div class="bar">
       <div class="wallet"><span class="coin"><i data-icon="coins"></i></span><div><b id="balance">–</b><small id="who">Lapis-Taler</small></div></div>
-      <div class="links"><a class="btn ghost" href="/"><i data-icon="dices"></i>Zum Casino</a><a class="btn ghost" href="/#rangliste"><i data-icon="trophy"></i>Sammler-Rangliste</a></div>
+      <div class="links"><a class="btn gold" href="/duell/"><i data-icon="swords"></i>Duell</a><a class="btn ghost" href="/"><i data-icon="dices"></i>Zum Casino</a><a class="btn ghost" href="/#rangliste"><i data-icon="trophy"></i>Sammler-Rangliste</a></div>
     </div>
 
     <section class="shop">
@@ -203,63 +161,17 @@
 
   <script src="/shared/fun.js"></script>
   <script src="/account.js"></script>
-  <script src="cards.js"></script>
+  <script src="/packs/cards.js"></script>
+  <script src="/packs/card-ui.js"></script>
   <script>
   (function () {
     'use strict';
     const CARDS = window.CC_CARDS, TYPES = window.CC_TYPES, RAR = window.CC_RARITY;
-    const byId = Object.fromEntries(CARDS.map((c, i) => [c.id, Object.assign(c, { no: i + 1 })]));
     const fmt = (n) => Math.round(n).toLocaleString('de-CH');
     const sfx = (n) => BIGH.sfx && BIGH.sfx(n);
     const sleep = (ms) => new Promise((r) => setTimeout(r, BIGH.reduced ? Math.min(ms, 60) : ms));
 
-    // ---------- Karte bauen ----------
-    function cardEl(id) {
-      const c = byId[id];
-      const [tname, ticon, tc, tl] = TYPES[c.t];
-      const el = document.createElement('div');
-      el.className = 'pc r-' + c.r;
-      el.style.setProperty('--tc', tc);
-      el.style.setProperty('--tl', tl);
-      const cost = (n) => '<span class="cost">' + '<i></i>'.repeat(n) + '</span>';
-      el.innerHTML = '<div class="pc-in">' +
-        '<div class="pc-top"><span class="stg">' + (c.r === 'SR' ? 'LEGENDE' : c.r === 'UR' ? 'EX' : 'BASIS') + '</span><span class="nm"></span><span class="hp">KP <b>' + c.hp + '</b></span><span class="ty" title="' + tname + '">' + BIGH.icon(ticon) + '</span></div>' +
-        '<div class="pc-art"><img alt="" loading="lazy" decoding="async"></div>' +
-        '<div class="pc-info">Nr. ' + c.no + ' · Crazy-Cupcakes-Figur · Grösse: ja · Gewicht: 3 Pizzen</div>' +
-        c.a.map((a, i) => '<div class="pc-atk">' + cost(a[1] ? Math.min(4, 1 + Math.floor(a[1] / 50)) : 1) + '<b></b><span class="dmg">' + (a[1] || '') + '</span>' + (a[2] ? '<p></p>' : '') + '</div>').join('') +
-        '<div class="pc-spacer"></div>' +
-        '<div class="pc-bottom"><span>Schwäche<b>Gras ×2</b></span><span>Resistenz<b>Kritik −30</b></span><span>Rückzug<b>baden gehen</b></span></div>' +
-        '<div class="pc-flavor"></div>' +
-        '<div class="pc-foot"><span>Illus. Crazy Cupcakes</span><span>' + c.no + '/40 ' + RAR[c.r][1] + '</span></div>' +
-        '</div><div class="glare"></div>';
-      el.querySelector('.nm').textContent = c.n;
-      el.querySelector('img').src = c.img || '/shared/cupcakes/' + c.id + '.webp';
-      el.querySelectorAll('.pc-atk').forEach((row, i) => {
-        row.querySelector('b').textContent = c.a[i][0];
-        const p = row.querySelector('p'); if (p) p.textContent = c.a[i][2];
-      });
-      el.querySelector('.pc-flavor').textContent = c.f;
-      return el;
-    }
-    function backEl() {
-      const el = document.createElement('div');
-      el.className = 'pc back';
-      el.innerHTML = '<div class="pc-in"><div class="ball"><span>H</span></div></div>';
-      return el;
-    }
-    // Holo-Effekt: Neigung und Glanz folgen dem Zeiger
-    function tilt(el, strength) {
-      const move = (x, y) => {
-        const r = el.getBoundingClientRect();
-        const px = Math.min(1, Math.max(0, (x - r.left) / r.width)), py = Math.min(1, Math.max(0, (y - r.top) / r.height));
-        el.style.transform = 'rotateY(' + (px - 0.5) * strength + 'deg) rotateX(' + (0.5 - py) * strength + 'deg)';
-        el.style.setProperty('--hx', px * 100 + '%'); el.style.setProperty('--hy', py * 100 + '%');
-        el.classList.add('tilt');
-      };
-      el.addEventListener('pointermove', (e) => move(e.clientX, e.clientY));
-      el.addEventListener('pointerleave', () => { el.style.transform = ''; el.classList.remove('tilt'); });
-      return move;
-    }
+    const { cardEl, backEl, tilt, byId } = window.CC_UI;
 
     // ---------- Konto ----------
     let me = null;
