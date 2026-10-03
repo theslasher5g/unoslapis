@@ -1,4 +1,4 @@
-// Big H Jeopardy: ein Host (hat die Lösungen, wählt die Fragen, bewertet) und bis zu 7 Spieler mit Handy-Buzzer.
+// Jeopardy: ein Host (hat die Lösungen, wählt die Fragen, bewertet) und bis zu 7 Spieler mit Handy-Buzzer.
 // Räume leben nur im Arbeitsspeicher. Jeder bekommt beim Erstellen/Beitreten einen geheimen Schlüssel (X-Jeopardy).
 //
 //   GET  /api/jeopardy                 -> offene Räume + Kategorien
@@ -6,12 +6,18 @@
 //   POST /api/jeopardy/CODE/join {name}-> beitreten (Spieler)
 //   GET  /api/jeopardy/CODE?v=N        -> Zustand (wartet bis zu 25 s auf Änderungen); ohne Schlüssel = Bildschirm-Ansicht
 //   POST /api/jeopardy/CODE/<aktion>   -> siehe ACTIONS unten
+// Eigene Fragensets (Editor), gespeichert in jeopardy.json:
+//   GET  /api/jeopardy/sets/ID         -> Set lesen
+//   POST /api/jeopardy/sets {set}      -> Set anlegen, liefert {id, key}
+//   POST /api/jeopardy/sets/ID {key, set} | /sets/ID/delete {key}
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
-const { CATEGORIES, FINALS, PRESETS } = require('./jeopardy-data');
+const { CATEGORIES, FINALS, PRESETS, GROUPS } = require('./jeopardy-data');
 
-const MAX_PLAYERS = 7, MAX_ROOMS = 30, MAX_BODY = 4096;
+const MAX_PLAYERS = 7, MAX_ROOMS = 30, MAX_BODY = 128 * 1024, MAX_SETS = 400;
 const IDLE_MS = 3 * 3600e3, LOBBY_IDLE_MS = 45 * 60e3;
 const EARLY_MS = 1000, FINAL_MS = 45000, POLL_MS = 25000;
 const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899', '#14b8a6'];
@@ -20,20 +26,78 @@ const JOKER_NAMES = { double: 'Doppelt', shield: 'Schild', freeze: 'Einfrieren',
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const CAT_BY_ID = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
 
-// Sprüche von Big H als Moderator
+// Sprüche des Quizmasters
 const LINES = {
-  start: ['Willkommen bei Big H Jeopardy. Ich muss danach noch baden gehen, also los.', 'Die Show beginnt. Wer verliert, räumt Lapisien auf.'],
-  right: ['Das war kein Wissen, das war Rizz.', 'Korrekt. Sogar Mausi ist beeindruckt.', 'Richtig! Team Diff, aber diesmal zu deinen Gunsten.', 'Stimmt. Ich hätte es auch gewusst. Wahrscheinlich.'],
-  wrong: ['Falsch. Team Diff.', 'Nope. Das war ein NPC-Move.', 'Leider falsch. Geh mal Gras anfassen.', 'Daneben. Der Supercomputer ist enttäuscht.'],
-  nobody: ['Niemand? Ernsthaft? Dann halt nicht.', 'Stille. Wie in meinem Posteingang.', 'Keiner wusste es. Der Wasserzähler auch nicht.'],
-  early: ['zu früh gedrückt. Eine Sekunde Strafe.', 'hat den Buzzer zu früh gedrückt. Geduld, junger Goon.'],
+  start: ['Willkommen bei Jeopardy! Finger an die Buzzer.', 'Die Show beginnt. Viel Glück, ihr werdet es brauchen.'],
+  right: ['Richtig! Saubere Leistung.', 'Korrekt. Das Publikum tobt.', 'Stimmt genau. GG.', 'Richtig! Da sass jemand in der Schule nicht nur rum.'],
+  wrong: ['Falsch. Autsch.', 'Nope. Das war ein NPC-Move.', 'Leider daneben.', 'Falsch. Aber mit Überzeugung gesagt.'],
+  nobody: ['Niemand? Ernsthaft? Dann halt nicht.', 'Stille im Saal.', 'Keiner wusste es. Nächste Frage.'],
+  early: ['hat zu früh gedrückt. Eine Sekunde Strafe.', 'war zu schnell. Eine Sekunde gesperrt.'],
   dd: ['Daily Double! Jetzt wird gezockt.', 'Daily Double. Nur für eine Person. Kein Druck.'],
-  final: ['Finale! Jetzt zählt jeder Punkt.', 'Final Jeopardy. Ich hole schon mal das Badetuch.']
+  final: ['Finale! Jetzt zählt jeder Punkt.', 'Final Jeopardy. Alles oder nichts.']
 };
+// Eingebaute Kategorie -> Board-Format
+const toCat = (c) => ({ name: c.name, qs: c.qs.map(([clue, answer, hint, img]) => ({ clue, answer, hint: hint || '', img: img || '', blur: !!img })) });
 const pick = (a) => a[crypto.randomInt(a.length)];
 
-module.exports = function createJeopardy({ send, clean, clientIp }) {
+module.exports = function createJeopardy({ send, clean, clientIp, dataDir }) {
   const rooms = new Map();
+
+  // ---------- Fragensets (Editor) ----------
+  const file = path.join(dataDir || '.', 'jeopardy.json');
+  let sets = {};
+  try { sets = JSON.parse(fs.readFileSync(file, 'utf8')).sets || {}; } catch (e) { sets = {}; }
+  let dirty = false;
+  function save() {
+    dirty = false;
+    try { fs.writeFileSync(file + '.tmp', JSON.stringify({ sets })); fs.renameSync(file + '.tmp', file); } catch (e) { console.error('Jeopardy speichern fehlgeschlagen:', e.message); }
+  }
+  const touchSets = () => { if (!dirty) { dirty = true; setTimeout(save, 1000).unref(); } };
+  process.on('exit', () => { if (dirty) save(); }); // casino.js beendet bei SIGTERM per process.exit
+  const hash = (t) => crypto.createHash('sha256').update(String(t)).digest('hex');
+  const setWrites = new Map();
+
+  function cleanImg(v) {
+    v = String(v || '').trim();
+    if (!v) return '';
+    if (/^flag:[a-z]{2}(-[a-z]{3})?$/.test(v)) return v;
+    try { const u = new URL(v); if (u.protocol === 'https:' && v.length <= 500) return u.href; } catch (e) { /* ungültig */ }
+    return null;
+  }
+  // Prüft und säubert ein Set aus dem Editor. Unvollständige Fragen sind erlaubt (Entwurf),
+  // spielbar sind aber nur Kategorien mit 5 vollständigen Fragen.
+  function cleanSet(d) {
+    if (!d || typeof d !== 'object') return [null, 'Ungültige Daten'];
+    const name = clean(String(d.name || ''), 60).replace(/\s+/g, ' ');
+    if (!name) return [null, 'Das Set braucht einen Namen'];
+    if (!Array.isArray(d.cats) || d.cats.length > 12) return [null, 'Höchstens 12 Kategorien pro Set'];
+    const cats = [];
+    for (const c of d.cats) {
+      if (!c || typeof c !== 'object') return [null, 'Ungültige Kategorie'];
+      const qs = [];
+      for (let i = 0; i < 5; i++) {
+        const q = (Array.isArray(c.qs) && c.qs[i]) || {};
+        const img = cleanImg(q.img);
+        if (img === null) return [null, 'Bild-Adressen müssen mit https:// beginnen'];
+        qs.push({ clue: clean(String(q.clue || ''), 300), answer: clean(String(q.answer || ''), 150), hint: clean(String(q.hint || ''), 150), img, blur: !!q.blur });
+      }
+      cats.push({ name: clean(String(c.name || ''), 40).replace(/\s+/g, ' '), qs });
+    }
+    const f = d.final && typeof d.final === 'object' ? d.final : {};
+    const final = { cat: clean(String(f.cat || ''), 40), clue: clean(String(f.clue || ''), 300), answer: clean(String(f.answer || ''), 150) };
+    return [{ name, cats, final }, null];
+  }
+  const playable = (c) => c.name && c.qs.every((q) => (q.clue || q.img) && q.answer);
+  const publicSet = (id, s) => ({ id, name: s.name, cats: s.cats, final: s.final, updated: s.updated, playable: s.cats.map(playable) });
+
+  // Kategorie-ID auflösen: eingebaut ("gaming") oder aus einem Set ("s:<setId>:<index>")
+  function resolveCat(id) {
+    if (CAT_BY_ID[id]) return toCat(CAT_BY_ID[id]);
+    const m = /^s:([a-f0-9]{10}):(\d{1,2})$/.exec(id);
+    if (!m || !sets[m[1]]) return null;
+    const c = sets[m[1]].cats[+m[2]];
+    return c && playable(c) ? { name: c.name, qs: c.qs.map((q) => Object.assign({}, q)) } : null;
+  }
   const creates = new Map(); // IP -> Zeitstempel (Erstell-Limit)
 
   function readJson(req) {
@@ -62,23 +126,28 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
   }
   function validCats(ids) {
     if (!Array.isArray(ids)) return null;
-    const list = [...new Set(ids.map(String))].filter((id) => CAT_BY_ID[id]);
-    return list.length >= 3 && list.length <= 6 ? list : null;
+    const list = [...new Set(ids.map(String))].filter((id) => resolveCat(id));
+    return list.length >= 1 && list.length <= 6 ? list : null;
   }
   function buildBoard(r) {
     r.board = r.cats.map((id) => {
-      const c = CAT_BY_ID[id];
-      return { id, name: c.name, tiles: c.qs.map(([clue, answer, hint], i) => ({ v: (i + 1) * 100, clue, answer, hint, used: false, dd: false })) };
+      const c = resolveCat(id) || { name: '(gelöscht)', qs: Array(5).fill({ clue: '–', answer: '–', hint: '', img: '', blur: false }) };
+      return { id, name: c.name, tiles: c.qs.map((q, i) => ({ v: (i + 1) * 100, clue: q.clue, answer: q.answer, hint: q.hint, img: q.img, blur: q.blur, used: false, dd: false })) };
     });
     // Daily Doubles: eins pro 3 Kategorien, bevorzugt in den teuren Reihen
-    const n = Math.max(1, Math.floor(r.cats.length / 3));
+    const n = r.cats.length >= 3 ? Math.max(1, Math.floor(r.cats.length / 3)) : 1;
     const cols = r.board.map((_, i) => i).sort(() => crypto.randomInt(3) - 1);
     for (let k = 0; k < n; k++) {
       const c = cols[k % cols.length];
       const row = [2, 3, 3, 4, 4][crypto.randomInt(5)];
       r.board[c].tiles[row].dd = true;
     }
-    r.finalQ = FINALS[crypto.randomInt(FINALS.length)];
+    // Finalfrage: aus den verwendeten eigenen Sets, sonst eine eingebaute
+    const own = [...new Set(r.cats.map((id) => (/^s:([a-f0-9]{10}):/.exec(id) || [])[1]).filter(Boolean))]
+      .map((sid) => sets[sid] && sets[sid].final).filter((f) => f && f.clue && f.answer);
+    const pool = own.length ? own : FINALS;
+    const f = pool[crypto.randomInt(pool.length)];
+    r.finalQ = { cat: f.cat || 'Finale', clue: f.clue, answer: f.answer };
   }
 
   function bump(r) {
@@ -91,11 +160,11 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
   const player = (r, id) => r.players.find((p) => p.id === id);
   const nameOf = (r, id) => { const p = player(r, id); return p ? p.name : '?'; };
 
-  function create(name, cats) {
+  function create(name, cats, blur) {
     const r = {
       code: newCode(), created: Date.now(), touched: Date.now(), version: 1, waiters: new Set(),
       hostToken: token(), hostName: name, hostSeen: Date.now(), cats, board: [], finalQ: null,
-      phase: 'lobby', players: [], control: null, q: null, fin: null, line: 'Warte auf Mitspieler …', lineId: 0, round: 1
+      phase: 'lobby', blur, players: [], control: null, q: null, fin: null, line: 'Warte auf Mitspieler …', lineId: 0, round: 1
     };
     buildBoard(r);
     rooms.set(r.code, r);
@@ -221,7 +290,7 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
     } else if (type === 'hint') {
       if (!mine) return 'Das Daily Double gehört jemand anderem';
       q.hinted.push(p.id);
-      say(r, p.name + ' holt sich einen Tipp von Big H.');
+      say(r, p.name + ' holt sich einen Tipp.');
     }
     p.jokers[type] = false;
     p.stats.jokers++;
@@ -255,7 +324,7 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
       if (f.players.some((id) => !(id in f.judged))) return 'Erst alle Antworten bewerten';
       r.phase = 'end';
       const top = [...r.players].sort((a, b) => b.score - a.score)[0];
-      say(r, top ? top.name + ' gewinnt Big H Jeopardy! Ich gehe jetzt baden.' : 'Ende.');
+      say(r, top ? top.name + ' gewinnt Jeopardy! Applaus!' : 'Ende.');
     }
     return null;
   }
@@ -312,13 +381,14 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
       cats: r.cats, board: r.board.map((c) => ({ name: c.name, tiles: c.tiles.map((t) => ({ v: t.v, used: t.used, dd: host && t.dd ? true : undefined })) })),
       left: r.board.reduce((s, c) => s + c.tiles.filter((t) => !t.used).length, 0)
     };
-    if (r.phase === 'lobby') out.catNames = r.cats.map((id) => CAT_BY_ID[id].name);
+    out.blur = r.blur;
+    if (r.phase === 'lobby') out.catNames = r.board.map((c) => c.name);
     if (q && r.phase === 'question') {
       const t = tile(r);
       const reveal = q.status === 'reveal';
       out.q = {
         c: q.c, r: q.r, cat: r.board[q.c].name, value: q.value, status: q.status,
-        clue: q.status === 'dd' ? null : t.clue,
+        clue: q.status === 'dd' ? null : (t.clue || 'Was ist das?'), img: q.status === 'dd' ? '' : t.img, blur: t.blur,
         answer: host || reveal ? t.answer : null,
         hint: host || (me && q.hinted.includes(me.id)) ? t.hint : null,
         dd: q.dd, buzzer: q.buzzer, buzzes: q.buzzes, locked: q.locked, frozen: Object.keys(q.frozen), frozenBy: q.frozen,
@@ -368,6 +438,8 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
   const PLAYER_ACTIONS = new Set(['buzz', 'joker', 'wager', 'answer', 'leave']);
 
   async function handle(req, res, p, url) {
+    const sm = p.match(/^\/api\/jeopardy\/sets(?:\/([a-f0-9]{10}))?(?:\/(delete))?$/);
+    if (sm) return handleSets(req, res, sm[1], sm[2]);
     const m = p.match(/^\/api\/jeopardy(?:\/([A-Za-z]{4}))?(?:\/([a-z]+))?$/);
     if (!m) return send(res, 404, { error: 'Nicht gefunden' });
     const code = m[1] ? m[1].toUpperCase() : null, action = m[2] || null;
@@ -376,16 +448,17 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
     const isPost = req.method === 'POST';
 
     if (!code) {
-      if (!isPost) return send(res, 200, { rooms: lobbyList(), categories: CATEGORIES.map((c) => ({ id: c.id, name: c.name, group: c.group })), presets: PRESETS });
+      if (!isPost) return send(res, 200, { rooms: lobbyList(), categories: CATEGORIES.map((c) => ({ id: c.id, name: c.name, group: c.group })), groups: GROUPS, presets: PRESETS });
       const name = cleanName(d.name);
       if (name.length < 2) return send(res, 400, { error: 'Name zu kurz' });
       const cats = validCats(d.cats);
-      if (!cats) return send(res, 400, { error: 'Wähle 3 bis 6 Kategorien' });
+      if (!cats) return send(res, 400, { error: 'Wähle 1 bis 6 spielbare Kategorien' });
+      const blur = Number.isFinite(+d.blur) ? Math.max(0, Math.min(100, Math.round(+d.blur))) : 60;
       if (rooms.size >= MAX_ROOMS) return send(res, 429, { error: 'Gerade laufen zu viele Spiele' });
       const ip = clientIp(req), list = (creates.get(ip) || []).filter((t) => Date.now() - t < 3600e3);
       if (list.length >= 15) return send(res, 429, { error: 'Zu viele neue Spiele. Versuch es später.' });
       list.push(Date.now()); creates.set(ip, list);
-      const r = create(name, cats);
+      const r = create(name, cats, blur);
       return send(res, 201, { code: r.code, token: r.hostToken, role: 'host' });
     }
 
@@ -427,7 +500,7 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
         case 'cats': {
           const cats = validCats(d.cats);
           if (r.phase !== 'lobby') err = 'Kategorien gehen nur in der Lobby';
-          else if (!cats) err = 'Wähle 3 bis 6 Kategorien';
+          else if (!cats) err = 'Wähle 1 bis 6 spielbare Kategorien';
           else { r.cats = cats; buildBoard(r); }
           break;
         }
@@ -560,6 +633,43 @@ module.exports = function createJeopardy({ send, clean, clientIp }) {
       r.fin.players = r.fin.players.filter((id) => id !== p.id);
       if (r.fin.current === p.id) r.fin.current = r.fin.players.find((id) => !(id in r.fin.judged)) || null;
     }
+  }
+
+  async function handleSets(req, res, id, del) {
+    const d = await readJson(req);
+    if (d === null) return send(res, 400, { error: 'Zu gross oder ungültig (max. 128 KB)' });
+    if (req.method === 'GET') {
+      if (!id) {
+        // Mehrere Sets auf einmal (für die Kategorie-Auswahl): ?ids=a,b,c
+        const ids = String(new URL(req.url, 'http://x').searchParams.get('ids') || '').split(',').filter((x) => /^[a-f0-9]{10}$/.test(x)).slice(0, 30);
+        return send(res, 200, { sets: ids.filter((x) => sets[x]).map((x) => publicSet(x, sets[x])) });
+      }
+      if (!sets[id]) return send(res, 404, { error: 'Dieses Fragenset gibt es nicht' });
+      return send(res, 200, publicSet(id, sets[id]));
+    }
+    if (req.method !== 'POST') return send(res, 405, { error: 'Nicht erlaubt' });
+    const ip = clientIp(req), now = Date.now();
+    const w = (setWrites.get(ip) || []).filter((t) => now - t < 600e3);
+    if (w.length >= 60) return send(res, 429, { error: 'Zu viele Änderungen. Kurz warten.' });
+    w.push(now); setWrites.set(ip, w);
+    if (!id) {
+      if (Object.keys(sets).length >= MAX_SETS) return send(res, 429, { error: 'Speicher voll. Lösch alte Sets.' });
+      const [set, err] = cleanSet(d.set);
+      if (err) return send(res, 400, { error: err });
+      const nid = crypto.randomBytes(5).toString('hex'), k = token();
+      sets[nid] = Object.assign(set, { keyHash: hash(k), created: now, updated: now });
+      touchSets();
+      return send(res, 201, Object.assign(publicSet(nid, sets[nid]), { key: k }));
+    }
+    const s = sets[id];
+    if (!s) return send(res, 404, { error: 'Dieses Fragenset gibt es nicht' });
+    if (!d.key || hash(d.key) !== s.keyHash) return send(res, 403, { error: 'Nur wer das Set erstellt hat, darf es ändern' });
+    if (del) { delete sets[id]; touchSets(); return send(res, 200, { ok: true }); }
+    const [set, err] = cleanSet(d.set);
+    if (err) return send(res, 400, { error: err });
+    sets[id] = Object.assign(set, { keyHash: s.keyHash, created: s.created, updated: now });
+    touchSets();
+    return send(res, 200, publicSet(id, sets[id]));
   }
 
   return { handle };

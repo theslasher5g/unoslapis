@@ -1,114 +1,112 @@
-// Fragenkatalog für Big H Jeopardy. Pro Kategorie 5 Hinweise (100–500 Punkte):
-// [Hinweis, Lösung in Frageform, Tipp für den Tipp-Joker]
-// Die Big-H-Kategorien stützen sich auf die (frei erfundene) Bigipedia auf wiki.unoslapis.ch.
+// Eingebaute Kategorien für Jeopardy. Pro Kategorie 5 Fragen (100–500 Punkte):
+// [Hinweis, Lösung in Frageform, Tipp für den Tipp-Joker, Bild]
+// Bild: 'flag:xx' = Flagge aus sites/jeopardy/flags/xx.svg (wird verschwommen angezeigt).
+// Eigene Kategorien legt man im Editor auf jeopardy.unoslapis.ch an.
 'use strict';
 
+const FLAG = 'Welches Land hat diese Flagge?';
+
 const CATEGORIES = [
-  { id: 'lapisien', name: 'Fürstentum Lapisien', group: 'bigh', qs: [
-    ['Dieses Land rief Alastor Lapis 2011 in seinem Kinderzimmer aus.', 'Was ist das Fürstentum Lapisien?', 'Klingt wie sein Nachname.'],
-    ['Unter diesem Namen regierte Big H sein Fürstentum.', 'Wer ist Fürst Alastor I.?', 'Fürst … der Erste.'],
-    ['Artikel 1 der lapisischen Verfassung: Der Fürst muss das nicht tun.', 'Was ist aufräumen?', 'Hat mit seinem Zimmer zu tun.'],
-    ['Dieses Möbelstück wurde zur Hauptstadt Lapisiens ernannt – und steht heute unter Denkmalschutz.', 'Was ist der Schreibtisch?', 'Dort steht sein PC.'],
-    ['An diesem Tag dankte Alastor I. ab und fasste zum letzten Mal Gras an.', 'Was ist der 12. Juni 2019?', 'Sommer 2019, sechster Monat.']
+  { id: 'flag-europa', name: 'Flaggen Europa', group: 'flags', qs: [
+    [FLAG, 'Was ist Italien?', 'Pizza, Pasta, Kolosseum.', 'flag:it'],
+    [FLAG, 'Was ist Deutschland?', 'Nördlicher Nachbar der Schweiz.', 'flag:de'],
+    [FLAG, 'Was ist Schweden?', 'Hier kommt IKEA her.', 'flag:se'],
+    [FLAG, 'Was ist Griechenland?', 'Hier fanden die ersten Olympischen Spiele statt.', 'flag:gr'],
+    [FLAG, 'Was ist Malta?', 'Kleiner Inselstaat südlich von Sizilien.', 'flag:mt']
   ] },
-  { id: 'baden', name: 'Ich muss baden gehen', group: 'bigh', qs: [
-    ['Mit diesem Satz sagt Big H am liebsten Verabredungen ab.', 'Was ist „Ich muss baden gehen“?', 'Hat mit Wasser zu tun.'],
-    ['So viele Verabredungen sagte er laut Bigipedia mindestens mit dieser Ausrede ab.', 'Was ist 312?', 'Zwischen 300 und 320.'],
-    ['So viele Liter zeigte der Wasserzähler im selben Zeitraum an.', 'Was ist 0?', 'Weniger geht nicht.'],
-    ['So nennt Big H den Wasserzähler, seit der die Baden-Affäre aufgedeckt hat.', 'Was ist ein Hater?', 'Internet-Wort für Neider.'],
-    ['Unter diesem Hashtag wurde die Affäre im Netz bekannt.', 'Was ist #badengehen?', 'Zwei Wörter, zusammengeschrieben.']
+  { id: 'flag-welt', name: 'Flaggen der Welt', group: 'flags', qs: [
+    [FLAG, 'Was ist Japan?', 'Land der aufgehenden Sonne.', 'flag:jp'],
+    [FLAG, 'Was ist Brasilien?', 'Fünfmal Fussball-Weltmeister.', 'flag:br'],
+    [FLAG, 'Was ist Kanada?', 'Ahornsirup und Elche.', 'flag:ca'],
+    [FLAG, 'Was ist Südkorea?', 'Heimat von K-Pop und Samsung.', 'flag:kr'],
+    [FLAG, 'Was ist Argentinien?', 'Heimat von Lionel Messi.', 'flag:ar']
   ] },
-  { id: 'loewe', name: 'Der nackte Löwe', group: 'bigh', qs: [
-    ['Diesen Berg will Big H 2023 nackt bestiegen haben.', 'Was ist der Mount Everest?', 'Höchster Berg der Welt.'],
-    ['Die letzten 800 Höhenmeter legte er auf allen vieren zurück, brüllend wie dieses Tier.', 'Was ist ein Löwe?', 'König der Tiere.'],
-    ['Davon ernährte er sich während des ganzen Aufstiegs.', 'Was ist Monster Energy?', 'Grüne Krallen auf der Dose.'],
-    ['Diese zwei Wörter sagte er zum Sherpa, der ihn am Hillary Step überholte.', 'Was ist „Team Diff“?', 'Gaming-Ausrede nach einer Niederlage.'],
-    ['Mit dieser Begründung gibt es keine Gipfelfotos.', 'Was ist „Der Akku war leer“ (wegen der Kälte)?', 'Handy + Kälte = …'],
+  { id: 'flag-exotisch', name: 'Exotische Flaggen', group: 'flags', qs: [
+    [FLAG, 'Was ist Jamaika?', 'Usain Bolt und Reggae.', 'flag:jm'],
+    [FLAG, 'Was ist Südafrika?', 'Kapstadt liegt hier.', 'flag:za'],
+    [FLAG, 'Was ist Kasachstan?', 'Grösster Binnenstaat der Welt.', 'flag:kz'],
+    [FLAG, 'Was ist Bhutan?', 'Auf der Flagge ist ein Drache. Liegt im Himalaya.', 'flag:bt'],
+    [FLAG, 'Was sind die Seychellen?', 'Inselstaat im Indischen Ozean.', 'flag:sc']
   ] },
-  { id: 'teamdiff', name: 'Team Diff', group: 'bigh', qs: [
-    ['So heisst Big H auf Steam und in Valorant.', 'Was ist unoslapis?', 'Steht auch in der Adresse dieser Website.'],
-    ['Über 4\'269 Stunden hat er in diesem Heldenshooter von Blizzard verbracht.', 'Was ist Overwatch?', 'Erschienen 2016, Nachfolger heisst „… 2“.'],
-    ['Diesen Overwatch-Helden mit Cyber-Ninja-Schwert spielt er am liebsten.', 'Wer ist Genji?', 'Sein Bruder heisst Hanzo.'],
-    ['Diese Agentin spielt er in Valorant – seine Spielweise nennt er „strategisches Lurken“.', 'Wer ist Jett?', 'Koreanische Duelistin mit Wind-Fähigkeiten.'],
-    ['So oft hat er laut eigener Angabe „Team Diff“ gesagt – eine berühmte Meme-Zahl aus Dragon Ball.', 'Was ist 9\'001?', '„It\'s over …“'],
+  { id: 'flag-insel', name: 'Inseln & Zwergstaaten', group: 'flags', qs: [
+    [FLAG, 'Was ist Island?', 'Vulkane, Geysire und Gletscher.', 'flag:is'],
+    [FLAG, 'Was ist Monaco?', 'Formel-1-Rennen durch die Stadt.', 'flag:mc'],
+    [FLAG, 'Was ist Liechtenstein?', 'Unser kleiner Nachbar mit Vaduz.', 'flag:li'],
+    [FLAG, 'Was ist Neuseeland?', 'Hier wurde Herr der Ringe gedreht.', 'flag:nz'],
+    [FLAG, 'Was ist Zypern?', 'Die Insel ist auf der Flagge abgebildet.', 'flag:cy']
   ] },
-  { id: 'mausi', name: 'Mausi & Co.', group: 'bigh', qs: [
-    ['Diese Katze rettete Big H 2025 aus einem brennenden Haus.', 'Wer ist Mausi?', 'Klingt nach einem Kosenamen.'],
-    ['Dieser Einsatzleiter der Feuerwehr kam sieben Minuten zu spät zur Katzenrettung.', 'Wer ist Beat Brandschutz?', 'Nachname wie sein Job.'],
-    ['Dieses Gerät stürzte ab, als es Big Hs Chancen auf eine Freundin berechnete.', 'Was ist der Supercomputer?', 'Ein sehr, sehr grosser Rechner.'],
-    ['So viel Prozent betrug das Ergebnis vor dem Absturz.', 'Was ist 0,2 %?', 'Weniger als ein halbes Prozent.'],
-    ['Diese Figur steht auf Big Hs Waifu-Tierliste seit Beginn der Aufzeichnungen auf Platz 1.', 'Wer ist Makima?', 'Aus Chainsaw Man.'],
-  ] },
-  { id: 'website', name: 'unoslapis.ch', group: 'bigh', qs: [
-    ['So heisst die Netflix-Parodie auf unoslapis.ch.', 'Was ist Bigflix?', 'Big + …'],
-    ['So heisst die Währung im Casino Lapis.', 'Was sind Lapis-Taler?', 'Eine alte Münze.'],
-    ['Im Runner-Spiel auf game.unoslapis.ch flieht Big H vor diesem Ding.', 'Was ist Gras?', 'Touch …'],
-    ['Die Google-Parodie, auf der man Big H Sterne geben kann.', 'Was ist Goongle?', 'Google mit einem Hauch Goon.'],
-    ['In diesem Sammelkarten-Set stecken 40 Figuren, darunter Big H selbst.', 'Was sind die Crazy Cupcakes?', 'Verrücktes Gebäck.'],
-  ] },
-  { id: 'schweiz', name: 'Schweiz', group: 'mix', qs: [
-    ['So viele Landessprachen hat die Schweiz.', 'Was ist vier?', 'Deutsch, Französisch, Italienisch und …'],
-    ['Diese Stadt ist die Bundesstadt der Schweiz.', 'Was ist Bern?', 'Hat Bären im Wappen.'],
-    ['Dieser Berg bei Zermatt war lange auf der Toblerone-Packung abgebildet.', 'Was ist das Matterhorn?', 'Steht über Zermatt.'],
-    ['In diesem Jahr soll der Rütlischwur stattgefunden haben.', 'Was ist 1291?', 'Ende des 13. Jahrhunderts.'],
-    ['Diese Organisation wurde 1863 in Genf unter anderem von Henry Dunant gegründet.', 'Was ist das Rote Kreuz (IKRK)?', 'Ihr Zeichen ist die umgekehrte Schweizer Fahne.'],
-  ] },
-  { id: 'gaming', name: 'Gaming-Klassiker', group: 'mix', qs: [
+  { id: 'gaming', name: 'Gaming-Klassiker', group: 'gaming', qs: [
     ['Dieser Klempner mit roter Mütze ist Nintendos Maskottchen.', 'Wer ist Mario?', 'Sein Bruder heisst Luigi.'],
-    ['In diesem Spiel baut man mit Blöcken und wird nachts von Creepern gesprengt.', 'Was ist Minecraft?', 'Mine + …'],
+    ['Dieses Puzzlespiel mit fallenden Blöcken entstand 1984 in der Sowjetunion.', 'Was ist Tetris?', 'Vier Quadrate pro Stein.'],
     ['Diese Firma steckt hinter League of Legends und Valorant.', 'Was ist Riot Games?', 'Englisch für Aufstand.'],
     ['In diesem Jahr kam die erste PlayStation in Japan auf den Markt.', 'Was ist 1994?', 'Mitte der 90er.'],
-    ['So heisst der ewige Bösewicht aus The Legend of Zelda.', 'Wer ist Ganon (Ganondorf)?', 'König der Gerudo.'],
+    ['So heisst der ewige Bösewicht aus The Legend of Zelda.', 'Wer ist Ganon (Ganondorf)?', 'König der Gerudo.']
+  ] },
+  { id: 'nintendo', name: 'Nintendo', group: 'gaming', qs: [
+    ['Marios grüner Bruder.', 'Wer ist Luigi?', 'Hat ein eigenes Geisterhaus-Spiel.'],
+    ['Dieses rosa Knäuel saugt Gegner ein und kopiert ihre Fähigkeiten.', 'Wer ist Kirby?', 'Fängt mit K an.'],
+    ['Diese Prinzessin wird von Mario immer wieder gerettet.', 'Wer ist Peach?', 'Eine Frucht.'],
+    ['Diese Konsole von 2006 wurde dank Bewegungssteuerung zum Familien-Hit.', 'Was ist die Wii?', 'Klingt wie „wir“ auf Englisch.'],
+    ['In diesem Königreich spielen fast alle Zelda-Spiele.', 'Was ist Hyrule?', 'Fängt mit H an.']
+  ] },
+  { id: 'shooter', name: 'Shooter & Battle Royale', group: 'gaming', qs: [
+    ['In diesem Battle Royale von Epic Games baut man in Sekunden ganze Festungen.', 'Was ist Fortnite?', 'Klingt wie „vierzehn Tage“ auf Englisch.'],
+    ['Diese Reihe von Activision hat Ableger wie Modern Warfare und Black Ops.', 'Was ist Call of Duty?', 'Abgekürzt CoD.'],
+    ['In Counter-Strike legt das Terroristen-Team das hier.', 'Was ist die Bombe?', 'Die Counter-Terroristen müssen sie entschärfen.'],
+    ['Die berühmteste Counter-Strike-Map mit Long A und Mid-Doors.', 'Was ist Dust 2?', 'Staub, Teil zwei.'],
+    ['In dieser Shooter-Reihe von Bungie (ab 2001) kämpft der Master Chief.', 'Was ist Halo?', 'Englisch für Heiligenschein.']
+  ] },
+  { id: 'figuren', name: 'Videospiel-Figuren', group: 'gaming', qs: [
+    ['Dieser blaue Igel ist schneller als alle anderen.', 'Wer ist Sonic?', 'Von Sega.'],
+    ['Dieses gelbe Elektro-Pokémon begleitet Ash.', 'Wer ist Pikachu?', 'Pika pika!'],
+    ['Diese Archäologin plündert seit 1996 Gräber.', 'Wer ist Lara Croft?', 'Tomb Raider.'],
+    ['Der spartanische Krieger aus God of War.', 'Wer ist Kratos?', 'Hat einen Sohn namens Atreus.'],
+    ['Der stumme Physiker mit Brecheisen aus Half-Life.', 'Wer ist Gordon Freeman?', 'Freier Mann.']
+  ] },
+  { id: 'rekorde', name: 'Gaming-Rekorde', group: 'gaming', qs: [
+    ['Das meistverkaufte Videospiel aller Zeiten, mit über 300 Millionen Exemplaren.', 'Was ist Minecraft?', 'Blöcke und Creeper.'],
+    ['In diesem Jahr erschien Pong von Atari.', 'Was ist 1972?', 'Anfang der 70er.'],
+    ['Diese Firma betreibt die PC-Spieleplattform Steam.', 'Was ist Valve?', 'Englisch für Ventil.'],
+    ['Dieses Rockstar-Spiel von 2013 spielte in drei Tagen über eine Milliarde Dollar ein.', 'Was ist GTA V (Grand Theft Auto V)?', 'Spielt in Los Santos.'],
+    ['So viele Pokémon gab es in der ersten Generation (Rot und Blau).', 'Was ist 151?', 'Etwas über 150.']
   ] },
   { id: 'slang', name: 'Internet-Slang', group: 'mix', qs: [
     ['Mit diesen zwei Buchstaben bedankt man sich nach einem Spiel.', 'Was ist GG (good game)?', 'Good …'],
     ['Dieser Ratschlag kommt, wenn man zu viel online ist.', 'Was ist „Touch Grass“?', 'Geh mal raus und fass … an.'],
     ['Dieses Wort für Charme und Flirt-Talent wurde 2023 Oxford-Wort des Jahres.', 'Was ist Rizz?', 'Kommt von „Charisma“.'],
     ['Eigentlich eine Spielfigur, die niemand steuert – heute ein Wort für Mitläufer.', 'Was ist ein NPC?', 'Drei Buchstaben, Non-Player …'],
-    ['Dieses Wort für „verdächtig“ wurde durch Among Us berühmt.', 'Was ist sus?', 'Kurz für „suspicious“.'],
+    ['Dieses Wort für „verdächtig“ wurde durch Among Us berühmt.', 'Was ist sus?', 'Kurz für „suspicious“.']
   ] },
   { id: 'serien', name: 'Anime & Serien', group: 'mix', qs: [
-    ['In dieser Serie betreibt Charlie Morningstar ein Hotel, um Sünder zu bessern.', 'Was ist Hazbin Hotel?', 'Big Hs Lieblingsserie.'],
-    ['So heisst der Radio-Dämon aus Hazbin Hotel – Big Hs Namensvetter.', 'Wer ist Alastor?', 'Schau dir Big Hs echten Vornamen an.'],
+    ['In dieser Serie betreibt Charlie Morningstar ein Hotel, um Sünder zu bessern.', 'Was ist Hazbin Hotel?', 'Spielt in der Hölle.'],
     ['Diese Netflix-Serie spielt in Hawkins, Indiana.', 'Was ist Stranger Things?', 'Upside Down.'],
+    ['In diesem Anime will Ruffy König der Piraten werden.', 'Was ist One Piece?', 'Ein Schatz.'],
     ['In diesem Anime verschmilzt Denji mit seinem Hund Pochita.', 'Was ist Chainsaw Man?', 'Ein Werkzeug für Holz.'],
-    ['In dieser Serie wird der Chemielehrer Walter White zum Drogenboss.', 'Was ist Breaking Bad?', 'Heisenberg.'],
+    ['In dieser Serie wird der Chemielehrer Walter White zum Drogenboss.', 'Was ist Breaking Bad?', 'Heisenberg.']
   ] },
-  { id: 'essen', name: 'Znüni & Zvieri', group: 'mix', qs: [
-    ['So heisst die Zwischenmahlzeit am Vormittag in der Schweiz.', 'Was ist das Znüni?', 'Um neun Uhr.'],
-    ['Diesen Schweizer Käse erkennt man an seinen grossen Löchern.', 'Was ist Emmentaler?', 'Benannt nach einem Tal im Kanton Bern.'],
-    ['Nach diesem Kartoffelgericht ist die Sprachgrenze zur Westschweiz benannt.', 'Was ist Rösti (Röstigraben)?', '…graben.'],
-    ['Dieser österreichische Energy-Drink verleiht angeblich Flügel.', 'Was ist Red Bull?', 'Ein rotes Tier.'],
-    ['Diese Schweizer Firma brachte 1938 den löslichen Kaffee Nescafé heraus.', 'Was ist Nestlé?', 'Sitz in Vevey.'],
-  ] },
-  { id: 'zahlen', name: 'Zahlen, bitte', group: 'mix', qs: [
-    ['So viele Spieler hat ein Fussballteam auf dem Feld.', 'Was ist 11?', 'Mehr als zehn.'],
-    ['So viele Bits hat ein Byte.', 'Was ist 8?', 'Zwei hoch drei.'],
-    ['So viele Karten hat ein Pokerdeck ohne Joker.', 'Was ist 52?', 'Vier Farben à 13.'],
-    ['So viele Felder hat ein Schachbrett.', 'Was ist 64?', 'Acht mal acht.'],
-    ['So viele Knochen hat ein erwachsener Mensch ungefähr.', 'Was ist 206?', 'Etwas über 200.'],
-  ] },
-  { id: 'buero', name: 'Büro-Alltag', group: 'mix', qs: [
-    ['Mit dieser Tastenkombination kopiert man unter Windows.', 'Was ist Ctrl + C (Strg + C)?', 'C wie Copy.'],
-    ['Diese Microsoft-App nutzen viele Büros für Chat und Videocalls.', 'Was ist Microsoft Teams?', 'Englisch für Mannschaften.'],
-    ['Dieses Kürzel in E-Mails bedeutet „so schnell wie möglich“.', 'Was ist ASAP?', 'As soon as …'],
-    ['Mit dieser Tastenkombination schneidet man unter Windows einen Screenshot aus.', 'Was ist Windows + Shift + S?', 'Windows-Taste, Umschalt und ein Buchstabe.'],
-    ['So heisst die Software, mit der fast jede Präsentation im Büro gemacht wird.', 'Was ist PowerPoint?', 'Power + …'],
+  { id: 'schweiz', name: 'Schweiz', group: 'mix', qs: [
+    ['So viele Landessprachen hat die Schweiz.', 'Was ist vier?', 'Deutsch, Französisch, Italienisch und …'],
+    ['Diese Stadt ist die Bundesstadt der Schweiz.', 'Was ist Bern?', 'Hat Bären im Wappen.'],
+    ['Dieser Berg bei Zermatt war lange auf der Toblerone-Packung abgebildet.', 'Was ist das Matterhorn?', 'Steht über Zermatt.'],
+    ['In diesem Jahr soll der Rütlischwur stattgefunden haben.', 'Was ist 1291?', 'Ende des 13. Jahrhunderts.'],
+    ['Diese Organisation wurde 1863 in Genf unter anderem von Henry Dunant gegründet.', 'Was ist das Rote Kreuz (IKRK)?', 'Ihr Zeichen ist die umgekehrte Schweizer Fahne.']
   ] }
 ];
 
 const FINALS = [
-  { cat: 'Staatsfeiertage', clue: 'An diesem Tag ist im Fürstentum Lapisien Staatsfeiertag.', answer: 'Was ist der 4. Oktober (Big Hs Geburtstag)?' },
-  { cat: 'Berühmte Worte', clue: 'Big Hs Wahlspruch, am häufigsten gesagt um 03:14 Uhr.', answer: 'Was ist „Nur noch ein Game“?' },
-  { cat: 'Schweizer Sport', clue: 'Dieser Basler gewann 20 Grand-Slam-Titel im Einzel.', answer: 'Wer ist Roger Federer?' },
-  { cat: 'Lieder', clue: 'Dieses Lied aus Hazbin Hotel hat Big H laut Statistik 2\'847 Mal gehört.', answer: 'Was ist „Insane“?' },
-  { cat: 'Titel', clue: 'Diesen Titel verlieh sich Big H am Tag seiner Abdankung selbst.', answer: 'Was ist Goon-König?' }
+  { cat: 'Flaggen', clue: 'Das einzige Land der Welt, dessen Nationalflagge nicht rechteckig ist.', answer: 'Was ist Nepal?' },
+  { cat: 'Flaggen', clue: 'Nur diese zwei Staaten haben eine quadratische Flagge.', answer: 'Was sind die Schweiz und die Vatikanstadt?' },
+  { cat: 'Gaming-Geschichte', clue: 'Unter diesem Namen hatte Mario 1981 in Donkey Kong seinen ersten Auftritt.', answer: 'Was ist Jumpman?' },
+  { cat: 'Arcade', clue: 'Dieses Spiel von 1980 sollte in Japan ursprünglich „Puck Man“ heissen.', answer: 'Was ist Pac-Man?' },
+  { cat: 'Konsolen', clue: 'Diese Nintendo-Konsole ist mit über 150 Millionen Stück die meistverkaufte Handheld-Konsole von Nintendo.', answer: 'Was ist der Nintendo DS?' }
 ];
 
 const PRESETS = [
-  { name: 'Big H Spezial', cats: ['lapisien', 'baden', 'loewe', 'teamdiff', 'mausi', 'website'] },
-  { name: 'Gemischt', cats: ['lapisien', 'baden', 'teamdiff', 'slang', 'serien', 'schweiz'] },
-  { name: 'Allgemeinwissen', cats: ['schweiz', 'gaming', 'slang', 'serien', 'essen', 'zahlen'] }
+  { name: 'Flaggen & Gaming', cats: ['flag-europa', 'flag-welt', 'flag-exotisch', 'gaming', 'nintendo', 'figuren'] },
+  { name: 'Nur Flaggen', cats: ['flag-europa', 'flag-welt', 'flag-exotisch', 'flag-insel'] },
+  { name: 'Nur Gaming', cats: ['gaming', 'nintendo', 'shooter', 'figuren', 'rekorde'] }
 ];
 
-module.exports = { CATEGORIES, FINALS, PRESETS };
+const GROUPS = { flags: 'Flaggen', gaming: 'Gaming', mix: 'Sonstiges' };
+
+module.exports = { CATEGORIES, FINALS, PRESETS, GROUPS };

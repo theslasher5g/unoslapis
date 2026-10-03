@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Big H Jeopardy</title>
-<meta name="description" content="Big H Jeopardy: Quizshow für bis zu 7 Spieler. Der Host wählt die Fragen, alle anderen buzzern mit dem Handy.">
+<title>Jeopardy</title>
+<meta name="description" content="Jeopardy: Quizshow für bis zu 7 Spieler mit Flaggen, Gaming und eigenen Fragen. Der Host wählt die Fragen, alle anderen buzzern mit dem Handy.">
 <meta name="theme-color" content="#0b1033">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d2a8a'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23f5cc3c'>H</text></svg>">
 <link rel="stylesheet" href="/shared/style.css">
@@ -66,7 +66,8 @@
   .codechip button { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 10px; width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; }
   .role-tag { font-size: .78rem; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; }
   .ticker { display: flex; align-items: center; gap: 10px; background: linear-gradient(90deg, rgba(245,204,60,.12), transparent); border: 1px solid rgba(245,204,60,.25); border-radius: 14px; padding: 9px 14px; margin-bottom: 14px; font-size: .92rem; min-height: 44px; }
-  .ticker .av { width: 28px; height: 28px; border-radius: 50%; background: url('/shared/img/bigh.jpg') center/cover, var(--blue); flex: none; border: 2px solid var(--accent); }
+  .ticker .av { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); flex: none; border: 2px solid var(--accent); display: grid; place-items: center; color: var(--accent); }
+  .ticker .av .icon { width: 15px; height: 15px; }
   .ticker b { color: var(--accent); font-weight: 600; margin-right: 4px; }
   .ticker.pop { animation: tick .45s ease; }
   @keyframes tick { from { transform: translateY(-4px); opacity: .3; } }
@@ -138,6 +139,15 @@
   .results span { border-radius: 999px; padding: 3px 10px; font: 600 .8rem var(--body); }
   .results .ok { background: rgba(34,197,94,.25); color: #bbf7d0; } .results .no { background: rgba(239,68,68,.25); color: #fecaca; }
   .keys { font-size: .74rem; color: rgba(255,255,255,.5); margin-top: 8px; }
+
+  /* Bild zur Frage: Unschärfe in Prozent (--b), 100 % = 8 % der Bildbreite */
+  .qimg { container-type: inline-size; position: relative; margin: 16px auto 4px; border-radius: 12px; overflow: hidden; background: #0b0f2e; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  .qimg.big { width: min(520px, 90%); }
+  .qimg.small { width: min(300px, 92%); margin-top: 10px; }
+  .qimg img { display: block; width: 100%; height: auto; max-height: 60vh; object-fit: contain; filter: blur(calc(var(--b) * .08cqw)); transform: scale(1.06); transition: filter 1.2s ease, transform 1.2s ease; user-select: none; }
+  .qimg.flag img { aspect-ratio: 4 / 3; object-fit: cover; }
+  .qimg.sharp img { filter: none; transform: none; }
+  body.tv .qimg.big { width: min(720px, 70%); }
 
   /* ---------- Spieler (Handy) ---------- */
   .me-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; border-left: 6px solid var(--c); }
@@ -240,8 +250,9 @@
   <main class="wrap">
     <header class="page-head" id="head">
       <span class="kicker"><i data-icon="megaphone"></i>Die Quizshow</span>
-      <h1>Big H <span>Jeopardy</span></h1>
-      <p>Einer ist Host, kennt alle Lösungen und wählt die Fragen. Bis zu sieben Spieler buzzern mit dem Handy. Wer zuerst drückt, darf antworten.</p>
+      <h1><span>Jeopardy</span></h1>
+      <p>Flaggen erkennen, Gaming-Wissen oder eigene Fragen. Einer ist Host, kennt alle Lösungen und wählt die Fragen. Bis zu sieben Spieler buzzern mit dem Handy.</p>
+      <a class="btn ghost sm" href="/editor/" style="margin-top:10px"><i data-icon="pen-line"></i>Eigene Fragen erstellen (Editor)</a>
     </header>
 
     <!-- ================= START ================= -->
@@ -252,7 +263,7 @@
           <p>Code vom Host eingeben oder unten ein offenes Spiel antippen.</p>
           <form id="join-form" autocomplete="off">
             <label class="field">Spiel-Code<input id="j-code" class="code-in" maxlength="4" inputmode="text" autocapitalize="characters" placeholder="ABCD" required></label>
-            <label class="field">Dein Name<input id="j-name" maxlength="18" placeholder="z. B. Mausi" required></label>
+            <label class="field">Dein Name<input id="j-name" maxlength="18" placeholder="z. B. Anna" required></label>
             <button class="btn gold big" type="submit" style="width:100%"><i data-icon="hand"></i>Beitreten</button>
           </form>
           <div class="grp" style="margin-top:18px">Offene Spiele</div>
@@ -260,16 +271,16 @@
         </div>
         <div class="box">
           <h2><i data-icon="crown"></i>Host werden</h2>
-          <p>Du moderierst, siehst die Lösungen und entscheidest, ob eine Antwort richtig ist. Wähle 3 bis 6 Kategorien.</p>
+          <p>Du moderierst, siehst die Lösungen und entscheidest, ob eine Antwort richtig ist. Wähle bis zu 6 Kategorien.</p>
           <form id="host-form" autocomplete="off">
             <label class="field">Dein Name<input id="h-name" maxlength="18" placeholder="z. B. Timo" required></label>
             <div class="grp">Vorlagen</div>
             <div class="chips" id="presets"></div>
-            <div class="grp">Big H</div>
-            <div class="chips" id="cats-bigh"></div>
-            <div class="grp">Allgemein</div>
-            <div class="chips" id="cats-mix"></div>
+            <div id="cat-groups"></div>
+            <div class="grp">Meine Fragensets <a href="/editor/" style="color:var(--accent);text-transform:none;letter-spacing:0;margin-left:6px">bearbeiten</a></div>
+            <div class="chips" id="cats-own"><span style="color:var(--muted);font-size:.84rem">Noch keine. Im <a href="/editor/" style="color:var(--accent)">Editor</a> eigene Kategorien anlegen.</span></div>
             <div class="cat-count" id="cat-count"></div>
+            <label class="field">Unschärfe der Bilder: <b id="blur-v" style="color:var(--text)">60 %</b><input type="range" id="blur" min="0" max="100" step="5" value="60" style="accent-color:var(--accent);padding:0;border:0;background:none"></label>
             <button class="btn gold big" type="submit" style="width:100%" id="h-go"><i data-icon="play"></i>Spiel erstellen</button>
           </form>
           <div class="grp" style="margin-top:18px">Bildschirm-Modus (TV oder Beamer, ohne Lösungen)</div>
@@ -288,7 +299,7 @@
           <div><b><i data-icon="zap"></i>Doppelt</b>Die nächste Antwort zählt doppelt, im Guten wie im Schlechten. Vor dem Buzzern aktivieren.</div>
           <div><b><i data-icon="shield"></i>Schild</b>Eine falsche Antwort kostet bei dieser Frage keine Punkte.</div>
           <div><b><i data-icon="snowflake"></i>Einfrieren</b>Sperrt den Buzzer eines anderen Spielers für diese Frage.</div>
-          <div><b><i data-icon="lightbulb"></i>Tipp</b>Big H flüstert dir einen Hinweis aufs Handy. Nur du siehst ihn.</div>
+          <div><b><i data-icon="lightbulb"></i>Tipp</b>Ein Hinweis erscheint auf deinem Handy. Nur du siehst ihn.</div>
         </div>
         <p style="margin:10px 0 0;color:var(--muted)">Jeder Joker kann pro Spiel einmal eingesetzt werden.</p>
       </details>
@@ -300,7 +311,7 @@
         <div class="codechip"><div><small>Spiel-Code</small><b id="g-code"></b></div><button type="button" id="copy-link" title="Link kopieren" aria-label="Link kopieren"><i data-icon="copy"></i></button></div>
         <span class="role-tag" id="role-tag"></span>
       </div>
-      <div class="ticker" id="ticker" aria-live="polite"><span class="av"></span><div><b>Big H:</b><span id="line"></span></div></div>
+      <div class="ticker" id="ticker" aria-live="polite"><span class="av"><i data-icon="mic"></i></span><div><b>Quizmaster:</b><span id="line"></span></div></div>
       <div id="view"></div>
       <div class="scores" id="scores"></div>
       <div style="display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap" id="foot-acts"></div>
@@ -310,7 +321,7 @@
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t"><div class="card"><h3 id="sheet-t"><i data-icon="snowflake"></i>Wen einfrieren?</h3><p>Diese Person kann bei dieser Frage nicht mehr buzzern.</p><div class="targets" id="targets"></div><button class="btn ghost" type="button" id="sheet-x" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button></div></div>
   <div class="flash" id="flash"></div>
 
-  <footer class="bigh-footer">Big H Jeopardy · jeopardy.unoslapis.ch · Fragen frei erfunden, Punkte wertlos</footer>
+  <footer class="bigh-footer">Jeopardy · jeopardy.unoslapis.ch · Flaggen: flag-icons (MIT) · Punkte wertlos</footer>
 
   <script src="/shared/fun.js"></script>
   <script>
@@ -363,18 +374,25 @@
         el.appendChild(b);
       });
     }
-    function buildCats() {
-      const box = { bigh: $('cats-bigh'), mix: $('cats-mix') };
-      INFO.categories.forEach((c) => {
-        const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.dataset.id = c.id; b.textContent = c.name;
-        b.addEventListener('click', () => {
-          if (chosen.includes(c.id)) chosen = chosen.filter((x) => x !== c.id);
-          else if (chosen.length < 6) chosen.push(c.id);
-          else { BIGH.toast('Maximal 6 Kategorien'); return; }
-          sfx('click'); syncCats();
-        });
-        box[c.group].appendChild(b);
+    function catChip(id, name) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.dataset.id = id; b.textContent = name;
+      b.addEventListener('click', () => {
+        if (chosen.includes(id)) chosen = chosen.filter((x) => x !== id);
+        else if (chosen.length < 6) chosen.push(id);
+        else { BIGH.toast('Maximal 6 Kategorien'); return; }
+        sfx('click'); syncCats();
       });
+      return b;
+    }
+    function buildCats() {
+      const groups = $('cat-groups');
+      Object.entries(INFO.groups).forEach(([g, label]) => {
+        const h = document.createElement('div'); h.className = 'grp'; h.textContent = label;
+        const box = document.createElement('div'); box.className = 'chips';
+        INFO.categories.filter((c) => c.group === g).forEach((c) => box.appendChild(catChip(c.id, c.name)));
+        groups.append(h, box);
+      });
+      loadOwnSets();
       INFO.presets.forEach((p, i) => {
         const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn preset'; b.innerHTML = icon('sparkles') + esc(p.name);
         b.addEventListener('click', () => { chosen = p.cats.slice(); sfx('click'); syncCats(); });
@@ -383,11 +401,32 @@
       });
       syncCats();
     }
-    function syncCats() {
-      document.querySelectorAll('#cats-bigh .chip-btn, #cats-mix .chip-btn').forEach((b) => b.classList.toggle('on', chosen.includes(b.dataset.id)));
-      $('cat-count').innerHTML = '<b>' + chosen.length + '</b> von 3–6 Kategorien gewählt · ' + chosen.length * 5 + ' Fragen + Finale';
-      $('h-go').disabled = chosen.length < 3;
+    // Eigene Sets aus dem Editor (IDs liegen im Browser, Inhalte auf dem Server)
+    async function loadOwnSets() {
+      let mine = [];
+      try { mine = JSON.parse(localStorage.getItem('bigh-jeopardy-sets') || '[]'); } catch (e) { mine = []; }
+      if (!mine.length) return;
+      try {
+        const r = await api('GET', '/sets?ids=' + mine.map((x) => x.id).join(','), null, true);
+        const box = $('cats-own');
+        const chips = [];
+        r.sets.forEach((set) => set.cats.forEach((c, i) => {
+          if (!set.playable[i]) return;
+          const b = catChip('s:' + set.id + ':' + i, c.name);
+          b.title = 'Aus „' + set.name + '“';
+          chips.push(b);
+        }));
+        if (chips.length) { box.innerHTML = ''; chips.forEach((b) => box.appendChild(b)); }
+        else box.innerHTML = '<span style="color:var(--muted);font-size:.84rem">Deine Sets haben noch keine vollständige Kategorie (5 Fragen mit Antwort).</span>';
+        syncCats();
+      } catch (e) { /* egal */ }
     }
+    function syncCats() {
+      document.querySelectorAll('#host-form .chip-btn[data-id]').forEach((b) => b.classList.toggle('on', chosen.includes(b.dataset.id)));
+      $('cat-count').innerHTML = '<b>' + chosen.length + '</b> von max. 6 Kategorien gewählt · ' + chosen.length * 5 + ' Fragen + Finale';
+      $('h-go').disabled = chosen.length < 1;
+    }
+    $('blur').addEventListener('input', () => { $('blur-v').textContent = $('blur').value + ' %'; });
     try { $('h-name').value = localStorage.getItem('bigh-jeopardy-name') || ''; $('j-name').value = $('h-name').value; } catch (e) { /* egal */ }
     const rememberName = (n) => { try { localStorage.setItem('bigh-jeopardy-name', n); } catch (e) { /* egal */ } };
 
@@ -395,7 +434,7 @@
       e.preventDefault();
       const name = $('h-name').value.trim();
       try {
-        const r = await api('POST', '', { name, cats: chosen }, true);
+        const r = await api('POST', '', { name, cats: chosen, blur: +$('blur').value }, true);
         rememberName(name);
         S = { code: r.code, token: r.token, role: 'host' }; saveS();
         sfx('tadum');
@@ -494,6 +533,11 @@
       renderScores(st);
       renderFoot(st);
       BIGH.hydrateIcons && BIGH.hydrateIcons(v);
+      // Auflösung: Bild sichtbar scharf werden lassen
+      const pq0 = prev && prev.q, q0 = st.q;
+      if (q0 && q0.img && q0.blur && q0.status === 'reveal' && pq0 && pq0.c === q0.c && pq0.r === q0.r && pq0.status !== 'reveal') {
+        v.querySelectorAll('.qimg.sharp').forEach((x) => { x.classList.remove('sharp'); void x.offsetWidth; requestAnimationFrame(() => x.classList.add('sharp')); });
+      }
       // Uhr für Countdown und "seit x s offen"
       clearInterval(G.tick);
       if ((st.q && (st.q.status === 'open' || G.earlyUntil > Date.now())) || (st.fin && st.fin.step === 'answer')) G.tick = setInterval(tick, 200);
@@ -648,7 +692,7 @@
         if (q.dd.pid) h += whoHtml(st, q.dd.pid, 'setzt gerade einen Einsatz …');
         else h += '<div class="status-line">' + (host ? 'Wer spielt das Daily Double?' : 'Der Host wählt, wer spielt …') + '</div>';
       } else {
-        h += '<div class="clue">' + esc(q.clue) + '</div>';
+        h += imgHtml(st, q, 'big') + '<div class="clue">' + esc(q.clue) + '</div>';
       }
       if (host && q.answer) {
         const hidden = G.hideSol && q.status !== 'reveal';
@@ -711,6 +755,15 @@
       return card;
     }
 
+    // Bild zur Frage (Flagge oder eigene Bild-Adresse), verschwommen bis zur Auflösung
+    function imgSrc(img) { return img.startsWith('flag:') ? '/flags/' + img.slice(5) + '.svg' : img; }
+    function imgHtml(st, q, size) {
+      if (!q.img) return '';
+      const sharp = q.status === 'reveal' || !q.blur;
+      const isFlag = q.img.startsWith('flag:');
+      return '<div class="qimg ' + size + (isFlag ? ' flag' : '') + (sharp ? ' sharp' : '') + '" style="--b:' + (st.blur || 0) + '"><img src="' + esc(imgSrc(q.img)) + '" alt="" referrerpolicy="no-referrer" draggable="false"></div>';
+    }
+
     // ---------- Spieler: Board ----------
     function viewPlayerBoard(st) {
       const wrap = el('div');
@@ -738,9 +791,9 @@
       wrap.appendChild(meHead(st));
       const pq = el('div', 'pq');
       let h = '<div class="meta">' + esc(q.cat) + ' · <b>' + (q.dd && q.dd.wager ? 'Einsatz ' + fmt(q.dd.wager) : q.value) + '</b></div>';
-      if (q.clue) h += '<div class="clue">' + esc(q.clue) + '</div>';
+      if (q.clue) h += imgHtml(st, q, 'small') + '<div class="clue">' + esc(q.clue) + '</div>';
       else h += '<div class="clue" style="color:var(--accent);font-size:1.6rem">DAILY DOUBLE</div>';
-      if (q.hint) h += '<div class="hint">Big H flüstert: ' + esc(q.hint) + '</div>';
+      if (q.hint) h += '<div class="hint">Tipp: ' + esc(q.hint) + '</div>';
       if (q.status === 'reveal' && q.answer) h += '<div class="sol">Lösung: <b>' + esc(q.answer) + '</b></div>';
       pq.innerHTML = h;
       wrap.appendChild(pq);

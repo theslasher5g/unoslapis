@@ -295,7 +295,7 @@ function handleDelete(req, res, c, id) {
 }
 
 const casino = createCasino({ dataDir: DATA_DIR, clean, send, clientIp });
-const jeopardy = createJeopardy({ send, clean, clientIp });
+const jeopardy = createJeopardy({ send, clean, clientIp, dataDir: DATA_DIR });
 
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');

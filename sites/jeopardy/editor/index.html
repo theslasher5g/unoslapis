@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fragen-Editor – Jeopardy</title>
+<meta name="description" content="Eigene Jeopardy-Fragen erstellen: Kategorien, Antworten, Tipps, Flaggen und Bilder.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d2a8a'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23f5cc3c'>J</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --accent: #f5cc3c; --blue: #1d2a8a; --blue-2: #142067; --ok: #22c55e; --bad: #ef4444; }
+  body { background: radial-gradient(1000px 520px at 50% -180px, rgba(61,84,255,.2), transparent 70%), var(--bg); }
+  .wrap { width: min(1180px, 100% - 32px); }
+  .page-head { text-align: center; padding-bottom: 14px; }
+  .page-head p { margin-inline: auto; }
+  .btn.gold { background: var(--accent); color: #1a1405; }
+  .btn.sm { padding: 7px 12px; font-size: .85rem; }
+  .btn.red { background: var(--bad); color: #fff; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  [hidden] { display: none !important; }
+  input, textarea, select { background: var(--card-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 10px; padding: 9px 11px; font: 500 .95rem var(--body); width: 100%; outline: none; }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 58px; }
+  label.f { display: grid; gap: 5px; font-size: .78rem; color: var(--muted); }
+
+  .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+  .box h2 { font: 600 1.05rem var(--title); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .side { position: sticky; top: 16px; display: grid; gap: 12px; }
+  @media (max-width: 900px) { .side { position: static; } }
+  .sets { display: grid; gap: 6px; }
+  .set-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; align-items: center; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; cursor: pointer; }
+  .set-row.on { border-color: var(--accent); }
+  .set-row b { display: block; font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .set-row small { color: var(--muted); font-size: .74rem; }
+  .set-row button { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 4px; }
+  .set-row button:hover { color: var(--bad); }
+  .muted { color: var(--muted); font-size: .84rem; }
+  .row2 { display: flex; gap: 6px; }
+
+  .cat { background: var(--card); border: 1px solid var(--line); border-radius: 18px; margin-top: 14px; overflow: hidden; }
+  .cat > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: linear-gradient(90deg, rgba(29,42,138,.55), transparent); }
+  .cat > summary::-webkit-details-marker { display: none; }
+  .cat > summary b { font: 700 1rem var(--title); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .badge { font: 600 .72rem var(--body); border-radius: 999px; padding: 3px 9px; background: rgba(239,68,68,.18); color: #fca5a5; white-space: nowrap; }
+  .badge.ok { background: rgba(34,197,94,.18); color: #86efac; }
+  .cat-body { padding: 14px 16px 16px; display: grid; gap: 12px; }
+  .cat-tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: end; }
+  .cat-tools label.f { flex: 1; min-width: 200px; }
+  .q { display: grid; grid-template-columns: 54px minmax(0, 1fr) 150px; gap: 12px; background: var(--card-2); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  .q.missing { border-color: rgba(239,68,68,.45); }
+  @media (max-width: 700px) { .q { grid-template-columns: minmax(0, 1fr); } .q .val { justify-self: start; height: 34px; } .media .prev { max-width: 200px; } }
+  .q .val { font: 800 1.2rem var(--title); color: var(--accent); background: var(--blue); border-radius: 10px; height: 44px; display: grid; place-items: center; width: 54px; }
+  .q .fields { display: grid; gap: 8px; }
+  .q .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  @media (max-width: 560px) { .q .two { grid-template-columns: minmax(0, 1fr); } }
+  .media { display: grid; gap: 6px; align-content: start; }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
+  .seg button { background: none; border: 0; color: var(--muted); padding: 6px 2px; font: 600 .72rem var(--body); cursor: pointer; }
+  .seg button.on { background: var(--accent); color: #1a1405; }
+  .prev { aspect-ratio: 4 / 3; border-radius: 10px; background: #0b0f2e; overflow: hidden; display: grid; place-items: center; color: var(--muted); font-size: .72rem; text-align: center; container-type: inline-size; position: relative; }
+  .prev img { width: 100%; height: 100%; object-fit: cover; transition: filter .3s; }
+  .prev.blur img { filter: blur(calc(var(--b, 60) * .08cqw)); transform: scale(1.06); }
+  .prev:hover img { filter: none; transform: none; }
+  .chk { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); }
+  .chk input { width: auto; accent-color: var(--accent); }
+  .final-box { margin-top: 14px; }
+  .bar { position: sticky; bottom: 0; z-index: 20; margin-top: 18px; background: rgba(15,15,20,.92); backdrop-filter: blur(8px); border: 1px solid var(--line-2); border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .bar .st { font-size: .85rem; color: var(--muted); }
+  .bar .st.dirty { color: var(--accent); }
+  .empty-state { text-align: center; padding: 40px 16px; }
+  .empty-state h2 { justify-content: center; }
+  .add-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .share { font-size: .8rem; color: var(--muted); margin-top: 6px; word-break: break-all; }
+  .share code { color: var(--text); background: var(--card-2); border-radius: 6px; padding: 1px 6px; }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="page-head">
+      <span class="kicker"><i data-icon="pen-line"></i>Jeopardy</span>
+      <h1>Fragen-Editor</h1>
+      <p>Bau dir eigene Kategorien mit je fünf Fragen (100 bis 500 Punkte). Fragen können ein Bild oder eine Flagge haben, die im Spiel verschwommen erscheint. Gespeichert wird auf dem Server, die Sets tauchen dann beim Erstellen eines Spiels unter „Meine Fragensets“ auf.</p>
+      <a class="btn ghost sm" href="/" style="margin-top:8px"><i data-icon="arrow-left"></i>Zurück zum Spiel</a>
+    </header>
+
+    <div class="layout">
+      <aside class="side">
+        <div class="box">
+          <h2><i data-icon="list"></i>Meine Fragensets</h2>
+          <div class="sets" id="sets"></div>
+          <button class="btn gold sm" type="button" id="new-set" style="width:100%;justify-content:center;margin-top:10px"><i data-icon="plus"></i>Neues Set</button>
+        </div>
+        <div class="box">
+          <h2><i data-icon="share-2"></i>Set eines Kollegen</h2>
+          <p class="muted" style="margin:0 0 8px">Mit der Set-ID kannst du fremde Sets zum Spielen hinzufügen (ändern kann sie nur, wer sie erstellt hat).</p>
+          <form class="row2" id="add-form"><input id="add-id" placeholder="Set-ID" maxlength="10" autocomplete="off"><button class="btn sm" type="submit">Hinzufügen</button></form>
+        </div>
+        <div class="box">
+          <h2><i data-icon="file-text"></i>Sichern</h2>
+          <div class="row2"><button class="btn ghost sm" type="button" id="export" style="flex:1;justify-content:center">Exportieren</button><label class="btn ghost sm" style="flex:1;justify-content:center;cursor:pointer">Importieren<input type="file" id="import" accept="application/json,.json" hidden></label></div>
+        </div>
+      </aside>
+
+      <section>
+        <div class="box empty-state" id="empty">
+          <h2><i data-icon="pen-line"></i>Noch kein Set geöffnet</h2>
+          <p class="muted">Leg links ein neues Set an oder öffne ein bestehendes.</p>
+          <button class="btn gold" type="button" id="new-set-2"><i data-icon="plus"></i>Neues Set</button>
+        </div>
+
+        <div id="edit" hidden>
+          <div class="box">
+            <label class="f">Name des Sets<input id="set-name" maxlength="60" placeholder="z. B. Büro-Quiz Oktober"></label>
+            <div class="share" id="share"></div>
+            <p class="muted" id="readonly" hidden style="margin:10px 0 0">Dieses Set gehört jemand anderem. Du kannst es spielen und als Kopie speichern, aber nicht direkt ändern.</p>
+          </div>
+          <div id="cats"></div>
+          <div class="add-row">
+            <button class="btn" type="button" id="add-cat"><i data-icon="plus"></i>Kategorie</button>
+            <button class="btn ghost" type="button" id="add-flags"><i data-icon="flag"></i>Flaggen-Kategorie würfeln</button>
+          </div>
+          <div class="box final-box">
+            <h2><i data-icon="trophy"></i>Finalfrage (optional)</h2>
+            <p class="muted" style="margin:0 0 10px">Wird im Finale verwendet, wenn eine Kategorie aus diesem Set im Spiel ist. Ohne Finalfrage kommt eine eingebaute.</p>
+            <div style="display:grid;gap:8px">
+              <label class="f">Kategorie<input id="fin-cat" maxlength="40" placeholder="z. B. Weltgeschichte"></label>
+              <label class="f">Hinweis<textarea id="fin-clue" maxlength="300"></textarea></label>
+              <label class="f">Antwort<input id="fin-answer" maxlength="150" placeholder="Was ist …?"></label>
+            </div>
+          </div>
+          <div class="bar">
+            <span class="st" id="status">Nicht gespeichert</span>
+            <div class="row2">
+              <button class="btn ghost sm" type="button" id="del-set"><i data-icon="x"></i>Set löschen</button>
+              <button class="btn gold" type="button" id="save"><i data-icon="check"></i>Speichern</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <datalist id="countries"></datalist>
+  <footer class="bigh-footer">Jeopardy · Fragen-Editor · Flaggen: flag-icons (MIT)</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const icon = (n) => BIGH.icon(n);
+    const LIST = 'bigh-jeopardy-sets';
+    const FLAG_CLUE = 'Welches Land hat diese Flagge?';
+    const EXTRA = { 'gb-eng': 'England', 'gb-sct': 'Schottland', 'gb-wls': 'Wales' };
+
+    async function api(method, path, body) {
+      let r;
+      try { r = await fetch('/api/jeopardy' + path, { method, cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }); }
+      catch (e) { throw new Error('Server nicht erreichbar'); }
+      let d = {};
+      try { d = await r.json(); } catch (e) { d = {}; }
+      if (!r.ok) { const err = new Error(d.error || 'Fehler ' + r.status); err.status = r.status; throw err; }
+      return d;
+    }
+    const getList = () => { try { return JSON.parse(localStorage.getItem(LIST) || '[]'); } catch (e) { return []; } };
+    const setList = (l) => { try { localStorage.setItem(LIST, JSON.stringify(l)); } catch (e) { BIGH.toast('Browser-Speicher nicht verfügbar'); } };
+
+    // ---------- Flaggen ----------
+    let FLAGS = [], NAME_BY_CODE = {}, CODE_BY_NAME = {};
+    const dn = (() => { try { return new Intl.DisplayNames(['de'], { type: 'region' }); } catch (e) { return null; } })();
+    const flagName = (c) => EXTRA[c] || (dn ? dn.of(c.toUpperCase()) : c.toUpperCase());
+    fetch('/flags/index.json').then((r) => r.json()).then((codes) => {
+      FLAGS = codes;
+      codes.forEach((c) => { const n = flagName(c); NAME_BY_CODE[c] = n; CODE_BY_NAME[n.toLowerCase()] = c; });
+      $('countries').innerHTML = codes.map((c) => NAME_BY_CODE[c]).sort((a, b) => a.localeCompare(b, 'de')).map((n) => '<option value="' + esc(n) + '">').join('');
+      if (cur) renderCats();
+    }).catch(() => {});
+    // Artikel für „Was ist …?“ bei Ländern mit Artikel
+    const WITH_ART = { ch: 'die Schweiz', us: 'die USA', tr: 'die Türkei', nl: 'die Niederlande', ae: 'die Vereinigten Arabischen Emirate', ph: 'die Philippinen', sc: 'die Seychellen', mv: 'die Malediven', va: 'die Vatikanstadt', cz: 'Tschechien', gb: 'das Vereinigte Königreich', bs: 'die Bahamas', ua: 'die Ukraine', sk: 'die Slowakei', mn: 'die Mongolei', cf: 'die Zentralafrikanische Republik', do: 'die Dominikanische Republik', km: 'die Komoren', lb: 'der Libanon', iq: 'der Irak', ir: 'der Iran', ye: 'der Jemen', sd: 'der Sudan', td: 'der Tschad', ne: 'der Niger', cd: 'die Demokratische Republik Kongo', va: 'die Vatikanstadt', ws: 'Samoa', ss: 'der Südsudan', fm: 'Mikronesien' };
+    // Für „Würfeln“ nur bekannte Länder, damit es fair bleibt (über die Suche gehen alle Flaggen)
+    const KNOWN = 'ad ae af al am ao ar at au az ba bd be bg bh bo br bt by ca cd ch cl cm cn co cr cu cy cz de dk do dz ec ee eg es et fi fj fr gb ge gh gr gt hn hr ht hu id ie il in iq ir is it jm jo jp ke kg kh kp kr kw kz la lb li lk lt lu lv ly ma mc md me mg mk ml mn mt mx my mz na ng ni nl no np nz om pa pe pg ph pk pl pt py qa ro rs ru rw sa sc se sg si sk sn so sv sy th tn tr tt tw tz ua ug us uy uz va ve vn ye za zm zw'.split(' ');
+    const flagAnswer = (c) => 'Was ist ' + (WITH_ART[c] || flagName(c)) + '?';
+
+    // ---------- Zustand ----------
+    let cur = null, dirty = false, saving = false;
+    const emptyQ = () => ({ clue: '', answer: '', hint: '', img: '', blur: true });
+    const emptyCat = (name) => ({ name: name || '', qs: [0, 1, 2, 3, 4].map(emptyQ) });
+    const complete = (q) => (q.clue || q.img) && q.answer;
+    function markDirty() { dirty = true; status(); }
+    function status(text) {
+      const s = $('status');
+      if (text) { s.textContent = text; s.className = 'st'; return; }
+      s.textContent = dirty ? 'Ungespeicherte Änderungen' : (cur && cur.id ? 'Gespeichert' : 'Nicht gespeichert');
+      s.className = 'st' + (dirty ? ' dirty' : '');
+    }
+    window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+    // ---------- Liste ----------
+    function renderList() {
+      const box = $('sets');
+      const list = getList();
+      box.innerHTML = '';
+      if (!list.length) { box.innerHTML = '<p class="muted" style="margin:0">Noch keine Sets.</p>'; return; }
+      list.forEach((it) => {
+        const row = document.createElement('div');
+        row.className = 'set-row' + (cur && cur.id === it.id ? ' on' : '');
+        row.innerHTML = '<div><b>' + esc(it.name || 'Ohne Namen') + '</b><small>' + (it.key ? 'Mein Set' : 'Von jemand anderem') + ' · ' + esc(it.id) + '</small></div>';
+        const rm = document.createElement('button'); rm.type = 'button'; rm.title = 'Aus der Liste entfernen'; rm.innerHTML = icon('x');
+        rm.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!confirm(it.key ? 'Nur aus deiner Liste entfernen? (Zum endgültigen Löschen das Set öffnen und „Set löschen“ wählen.)' : 'Aus deiner Liste entfernen?')) return;
+          setList(getList().filter((x) => x.id !== it.id));
+          if (cur && cur.id === it.id) closeEditor();
+          renderList();
+        });
+        row.appendChild(rm);
+        row.addEventListener('click', () => openSet(it.id));
+        box.appendChild(row);
+      });
+    }
+    async function openSet(id) {
+      if (dirty && !confirm('Ungespeicherte Änderungen verwerfen?')) return;
+      try {
+        const s = await api('GET', '/sets/' + id);
+        const it = getList().find((x) => x.id === id) || {};
+        cur = { id: s.id, key: it.key || null, name: s.name, cats: s.cats, final: s.final || { cat: '', clue: '', answer: '' } };
+        dirty = false;
+        showEditor();
+        history.replaceState(null, '', '#' + id);
+      } catch (e) {
+        BIGH.toast(e.message);
+        if (e.status === 404) { setList(getList().filter((x) => x.id !== id)); renderList(); }
+      }
+    }
+    function newSet() {
+      if (dirty && !confirm('Ungespeicherte Änderungen verwerfen?')) return;
+      cur = { id: null, key: null, name: '', cats: [emptyCat('')], final: { cat: '', clue: '', answer: '' } };
+      dirty = false;
+      showEditor();
+      history.replaceState(null, '', location.pathname);
+      setTimeout(() => $('set-name').focus(), 50);
+    }
+    function closeEditor() { cur = null; dirty = false; $('edit').hidden = true; $('empty').hidden = false; history.replaceState(null, '', location.pathname); }
+    $('new-set').addEventListener('click', newSet);
+    $('new-set-2').addEventListener('click', newSet);
+
+    // ---------- Editor ----------
+    function showEditor() {
+      $('empty').hidden = true; $('edit').hidden = false;
+      $('set-name').value = cur.name;
+      $('fin-cat').value = cur.final.cat || ''; $('fin-clue').value = cur.final.clue || ''; $('fin-answer').value = cur.final.answer || '';
+      const own = !cur.id || !!cur.key;
+      $('readonly').hidden = own;
+      $('save').lastChild.textContent = own ? 'Speichern' : 'Als Kopie speichern';
+      $('del-set').hidden = !(cur.id && cur.key);
+      $('share').innerHTML = cur.id ? 'Set-ID zum Teilen: <code>' + esc(cur.id) + '</code>' : '';
+      renderCats();
+      renderList();
+      status();
+    }
+    $('set-name').addEventListener('input', (e) => { cur.name = e.target.value; markDirty(); });
+    [['fin-cat', 'cat'], ['fin-clue', 'clue'], ['fin-answer', 'answer']].forEach(([id, k]) => $(id).addEventListener('input', (e) => { cur.final[k] = e.target.value; markDirty(); }));
+
+    function renderCats() {
+      const box = $('cats');
+      const open = new Set([...box.querySelectorAll('details.cat')].map((d, i) => (d.open ? i : -1)));
+      box.innerHTML = '';
+      cur.cats.forEach((c, ci) => box.appendChild(catEl(c, ci, open.size ? open.has(ci) : ci === 0)));
+      BIGH.hydrateIcons && BIGH.hydrateIcons(box);
+      $('add-cat').disabled = $('add-flags').disabled = cur.cats.length >= 12;
+    }
+    function badge(c) {
+      const n = c.qs.filter(complete).length;
+      return '<span class="badge' + (n === 5 && c.name ? ' ok' : '') + '">' + (n === 5 && c.name ? 'spielbereit' : (c.name ? '' : 'Name fehlt · ') + n + '/5 Fragen') + '</span>';
+    }
+    function catEl(c, ci, open) {
+      const d = document.createElement('details');
+      d.className = 'cat'; d.open = open;
+      const sum = document.createElement('summary');
+      sum.innerHTML = icon('chevron-right') + '<b>' + esc(c.name || 'Kategorie ' + (ci + 1)) + '</b>' + badge(c);
+      d.appendChild(sum);
+      const body = document.createElement('div'); body.className = 'cat-body';
+      const tools = document.createElement('div'); tools.className = 'cat-tools';
+      const nameL = document.createElement('label'); nameL.className = 'f'; nameL.textContent = 'Name der Kategorie';
+      const name = document.createElement('input'); name.maxLength = 40; name.value = c.name; name.placeholder = 'z. B. Flaggen Südamerika';
+      name.addEventListener('input', () => { c.name = name.value; sum.querySelector('b').textContent = c.name || 'Kategorie ' + (ci + 1); sum.querySelector('.badge').outerHTML = badge(c); markDirty(); });
+      nameL.appendChild(name);
+      const btn = (ic, title, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ghost sm'; b.innerHTML = icon(ic) + title; b.addEventListener('click', fn); return b; };
+      tools.append(nameL,
+        btn('flag', 'Leere mit Flaggen füllen', () => { fillFlags(c, false); renderCats(); markDirty(); }),
+        btn('arrow-up', 'Hoch', () => { if (ci > 0) { [cur.cats[ci - 1], cur.cats[ci]] = [cur.cats[ci], cur.cats[ci - 1]]; renderCats(); markDirty(); } }),
+        btn('x', 'Löschen', () => { if (confirm('Kategorie „' + (c.name || ci + 1) + '“ löschen?')) { cur.cats.splice(ci, 1); renderCats(); markDirty(); } }));
+      body.appendChild(tools);
+      c.qs.forEach((q, qi) => body.appendChild(qEl(c, q, qi, sum)));
+      d.appendChild(body);
+      return d;
+    }
+    function qEl(c, q, qi, sum) {
+      const row = document.createElement('div');
+      row.className = 'q' + (complete(q) ? '' : ' missing');
+      const upd = () => { row.classList.toggle('missing', !complete(q)); sum.querySelector('.badge').outerHTML = badge(c); markDirty(); };
+      const val = document.createElement('div'); val.className = 'val'; val.textContent = (qi + 1) * 100;
+      const f = document.createElement('div'); f.className = 'fields';
+      const mk = (tag, label, key, ph, max) => {
+        const l = document.createElement('label'); l.className = 'f'; l.textContent = label;
+        const i = document.createElement(tag); i.value = q[key] || ''; i.placeholder = ph; i.maxLength = max;
+        i.addEventListener('input', () => { q[key] = i.value; upd(); });
+        l.appendChild(i); return [l, i];
+      };
+      const [clueL] = mk('textarea', 'Hinweis (wird vorgelesen)', 'clue', 'z. B. Diese Stadt ist die Hauptstadt von Frankreich.', 300);
+      const two = document.createElement('div'); two.className = 'two';
+      const [ansL, ansI] = mk('input', 'Antwort (sieht nur der Host)', 'answer', 'Was ist Paris?', 150);
+      const [hintL] = mk('input', 'Tipp für den Tipp-Joker (optional)', 'hint', 'z. B. Stadt der Liebe', 150);
+      two.append(ansL, hintL);
+      f.append(clueL, two);
+      // Bild
+      const m = document.createElement('div'); m.className = 'media';
+      const mode = q.img ? (q.img.startsWith('flag:') ? 'flag' : 'url') : 'none';
+      const seg = document.createElement('div'); seg.className = 'seg';
+      const prev = document.createElement('div'); prev.className = 'prev';
+      const inp = document.createElement('input');
+      const chk = document.createElement('label'); chk.className = 'chk';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = q.blur;
+      cb.addEventListener('change', () => { q.blur = cb.checked; drawPrev(); markDirty(); });
+      chk.append(cb, document.createTextNode('im Spiel verschwommen'));
+      let m0 = mode;
+      function drawPrev() {
+        prev.classList.toggle('blur', !!q.img && q.blur);
+        prev.hidden = m0 === 'none';
+        prev.innerHTML = q.img ? '<img src="' + esc(q.img.startsWith('flag:') ? '/flags/' + q.img.slice(5) + '.svg' : q.img) + '" alt="" referrerpolicy="no-referrer">' : (m0 === 'none' ? 'Kein Bild' : 'Vorschau');
+        if (q.img) prev.title = q.blur ? 'Mit der Maus drüberfahren zeigt das Bild scharf' : '';
+      }
+      function setMode(md) {
+        m0 = md;
+        seg.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.m === md));
+        inp.hidden = md === 'none'; chk.hidden = md === 'none';
+        if (md === 'none') { q.img = ''; }
+        if (md === 'flag') { inp.setAttribute('list', 'countries'); inp.placeholder = 'Land suchen …'; inp.value = q.img.startsWith('flag:') ? NAME_BY_CODE[q.img.slice(5)] || '' : ''; if (!q.img.startsWith('flag:')) q.img = ''; }
+        if (md === 'url') { inp.removeAttribute('list'); inp.placeholder = 'https://…/bild.jpg'; inp.value = q.img && !q.img.startsWith('flag:') ? q.img : ''; if (q.img.startsWith('flag:')) q.img = ''; }
+        drawPrev();
+      }
+      [['none', 'Kein Bild'], ['flag', 'Flagge'], ['url', 'Bild-URL']].forEach(([md, l]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.dataset.m = md; b.textContent = l;
+        b.addEventListener('click', () => { setMode(md); upd(); });
+        seg.appendChild(b);
+      });
+      inp.addEventListener('input', () => {
+        if (m0 === 'flag') {
+          const code = CODE_BY_NAME[inp.value.trim().toLowerCase()];
+          const before = q.img;
+          q.img = code ? 'flag:' + code : '';
+          // Hinweis und Antwort automatisch ausfüllen, wenn leer oder noch automatisch
+          if (code) {
+            const auto = (v) => !v || v === FLAG_CLUE || /^Was (ist|sind) /.test(v) && before && v === flagAnswer(before.slice(5));
+            if (!q.clue) { q.clue = FLAG_CLUE; f.querySelector('textarea').value = q.clue; }
+            if (auto(q.answer)) { q.answer = flagAnswer(code); ansI.value = q.answer; }
+          }
+        } else q.img = inp.value.trim();
+        drawPrev(); upd();
+      });
+      m.append(seg, inp, prev, chk);
+      setMode(mode);
+      row.append(val, f, m);
+      return row;
+    }
+    function fillFlags(c, all) {
+      const used = new Set(cur.cats.flatMap((x) => x.qs.map((q) => q.img)).filter(Boolean));
+      const pool = KNOWN.filter((x) => FLAGS.includes(x) && !used.has('flag:' + x));
+      c.qs.forEach((q) => {
+        if (!all && complete(q)) return;
+        if (!pool.length) return;
+        const code = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+        Object.assign(q, { clue: FLAG_CLUE, answer: flagAnswer(code), hint: '', img: 'flag:' + code, blur: true });
+      });
+    }
+    $('add-cat').addEventListener('click', () => { cur.cats.push(emptyCat('')); renderCats(); const d = $('cats').lastElementChild; d.open = true; d.querySelector('input').focus(); markDirty(); });
+    $('add-flags').addEventListener('click', () => {
+      if (!FLAGS.length) { BIGH.toast('Flaggen werden noch geladen'); return; }
+      const c = emptyCat('Flaggen-Mix ' + (cur.cats.filter((x) => /^Flaggen-Mix/.test(x.name)).length + 1));
+      fillFlags(c, true);
+      cur.cats.push(c); renderCats(); $('cats').lastElementChild.open = true; markDirty();
+      BIGH.toast('5 zufällige Flaggen eingefügt. Einzelne kannst du einfach ändern.');
+    });
+
+    // ---------- Speichern ----------
+    const payload = () => ({ name: cur.name.trim(), cats: cur.cats, final: cur.final });
+    $('save').addEventListener('click', async () => {
+      if (saving) return;
+      if (!cur.name.trim()) { BIGH.toast('Gib dem Set zuerst einen Namen'); $('set-name').focus(); return; }
+      saving = true; status('Speichere …');
+      try {
+        let s;
+        if (cur.id && cur.key) s = await api('POST', '/sets/' + cur.id, { key: cur.key, set: payload() });
+        else {
+          s = await api('POST', '/sets', { set: payload() });
+          cur.id = s.id; cur.key = s.key;
+        }
+        const list = getList().filter((x) => x.id !== cur.id);
+        list.unshift({ id: cur.id, key: cur.key, name: cur.name.trim() });
+        setList(list);
+        dirty = false;
+        showEditor();
+        history.replaceState(null, '', '#' + cur.id);
+        const ready = s.playable.filter(Boolean).length;
+        BIGH.toast('Gespeichert. ' + ready + (ready === 1 ? ' Kategorie ist' : ' Kategorien sind') + ' spielbereit.');
+        BIGH.sfx && BIGH.sfx('coin');
+      } catch (e) { BIGH.toast(e.message); status(); }
+      saving = false;
+    });
+    $('del-set').addEventListener('click', async () => {
+      if (!cur.id || !cur.key || !confirm('Set „' + cur.name + '“ endgültig löschen? Das geht nicht rückgängig.')) return;
+      try {
+        await api('POST', '/sets/' + cur.id + '/delete', { key: cur.key });
+        setList(getList().filter((x) => x.id !== cur.id));
+        closeEditor(); renderList();
+        BIGH.toast('Gelöscht.');
+      } catch (e) { BIGH.toast(e.message); }
+    });
+    // Strg+S speichert
+    document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 's' && cur) { e.preventDefault(); $('save').click(); } });
+
+    // ---------- Fremdes Set, Export, Import ----------
+    $('add-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = $('add-id').value.trim().toLowerCase();
+      if (!/^[a-f0-9]{10}$/.test(id)) { BIGH.toast('Eine Set-ID hat 10 Zeichen (0–9, a–f)'); return; }
+      try {
+        const s = await api('GET', '/sets/' + id);
+        const list = getList();
+        if (!list.some((x) => x.id === id)) list.push({ id, key: null, name: s.name });
+        setList(list); $('add-id').value = '';
+        renderList(); openSet(id);
+      } catch (err) { BIGH.toast(err.message); }
+    });
+    $('export').addEventListener('click', async () => {
+      const list = getList();
+      if (!list.length) { BIGH.toast('Keine Sets zum Exportieren'); return; }
+      try {
+        const r = await api('GET', '/sets?ids=' + list.map((x) => x.id).join(','));
+        const data = { type: 'jeopardy-sets', exported: new Date().toISOString(), sets: r.sets.map((s) => ({ name: s.name, cats: s.cats, final: s.final })) };
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+        a.download = 'jeopardy-fragen.json'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      } catch (e) { BIGH.toast(e.message); }
+    });
+    $('import').addEventListener('change', async (e) => {
+      const file = e.target.files[0]; e.target.value = '';
+      if (!file) return;
+      try {
+        const data = JSON.parse(await file.text());
+        const items = Array.isArray(data.sets) ? data.sets : [data];
+        let n = 0;
+        for (const set of items) {
+          const s = await api('POST', '/sets', { set: { name: set.name, cats: set.cats || [], final: set.final || {} } });
+          const list = getList(); list.unshift({ id: s.id, key: s.key, name: s.name }); setList(list); n++;
+        }
+        renderList();
+        BIGH.toast(n + (n === 1 ? ' Set importiert' : ' Sets importiert'));
+      } catch (err) { BIGH.toast('Import fehlgeschlagen: ' + err.message); }
+    });
+
+    renderList();
+    const h = location.hash.slice(1);
+    if (/^[a-f0-9]{10}$/.test(h)) openSet(h);
+  })();
+  </script>
+</body>
+</html>

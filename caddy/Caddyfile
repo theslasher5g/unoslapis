@@ -29,6 +29,13 @@
 # Gästebuch, Bewertungen, Karte, Wordle- und Spiel-Rangliste, Casino, Jeopardy: Seite von nginx, /api/* vom Backend
 guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, game.{$DOMAIN}, casino.{$DOMAIN}, jeopardy.{$DOMAIN} {
 	import common
+	# Fragensets aus dem Jeopardy-Editor sind grösser
+	handle /api/jeopardy/* {
+		request_body {
+			max_size 140KB
+		}
+		reverse_proxy guestbook:3000
+	}
 	handle /api/* {
 		request_body {
 			max_size 8KB
