@@ -95,7 +95,7 @@
 
   /* ---------- Board ---------- */
   .board { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 6px; background: #050820; border-radius: 18px; padding: 8px; border: 1px solid rgba(97,118,255,.3); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
-  .board .cat { background: var(--blue); border-radius: 10px; min-height: 64px; display: grid; place-items: center; text-align: center; padding: 6px; font: 700 .82rem/1.15 var(--title); text-transform: uppercase; letter-spacing: .03em; color: #fff; overflow-wrap: anywhere; hyphens: auto; }
+  .board .cat { background: var(--blue); border-radius: 10px; min-height: 64px; display: grid; place-items: center; text-align: center; padding: 6px; font: 700 .82rem/1.15 var(--title); text-transform: uppercase; letter-spacing: .03em; color: #fff; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
   .board .tile { background: linear-gradient(180deg, var(--blue), var(--blue-2)); border: 0; border-radius: 10px; aspect-ratio: 16 / 10; display: grid; place-items: center; font: 800 clamp(1rem, 3vw, 2rem) var(--title); color: var(--accent); text-shadow: 0 2px 0 rgba(0,0,0,.45); position: relative; transition: transform .15s, filter .15s; }
   .board .tile.used { background: rgba(29,42,138,.25); color: transparent; text-shadow: none; }
   button.tile:not(.used) { cursor: pointer; }
@@ -104,7 +104,7 @@
   .board .tile.picked { outline: 3px solid var(--accent); }
   @media (max-width: 600px) {
     .board { gap: 4px; padding: 5px; border-radius: 12px; }
-    .board .cat { min-height: 52px; font-size: .58rem; padding: 3px; border-radius: 7px; }
+    .board .cat { min-height: 52px; font-size: .52rem; letter-spacing: 0; padding: 3px 2px; border-radius: 7px; }
     .board .tile { border-radius: 7px; aspect-ratio: 1 / .85; }
   }
 
@@ -290,7 +290,7 @@
       <details class="rules"><summary>So funktioniert es</summary>
         <ul>
           <li>Der Host wählt eine Frage auf dem Board und liest den Hinweis vor. Die Antwort sollte in Frageform kommen („Was ist …?“), aber am Ende entscheidet der Host.</li>
-          <li>Erst wenn der Host den Buzzer freigibt, darf gebuzzert werden. Wer zu früh drückt, ist eine Sekunde gesperrt.</li>
+          <li>Sobald der Host ein Feld wählt, ist der Buzzer frei. Wer zuerst drückt, darf antworten. Alle sehen das Board mit Kategorien und Punkten auf dem Handy.</li>
           <li>Richtig: Punkte gibt es in Höhe des Feldwerts. Falsch: gleich viele Punkte weg, und der Buzzer ist für alle anderen wieder frei.</li>
           <li>Hinter manchen Feldern steckt ein <b>Daily Double</b>: Nur eine Person spielt, setzt selbst einen Einsatz (bis zu ihrem Punktestand, mindestens bis 500) und antwortet ohne Buzzer.</li>
           <li><b>Finale:</b> Alle mit Punkten setzen geheim einen Einsatz, sehen dann den Hinweis und tippen ihre Antwort innerhalb von 45 Sekunden ins Handy.</li>
@@ -527,7 +527,17 @@
       v.innerHTML = '';
       if (st.phase === 'lobby') v.appendChild(viewLobby(st));
       else if (st.phase === 'board') v.appendChild(st.role === 'player' ? viewPlayerBoard(st) : viewBoard(st));
-      else if (st.phase === 'question') v.appendChild(st.role === 'player' ? viewPlayerQ(st) : viewQuestion(st));
+      else if (st.phase === 'question') {
+        v.appendChild(st.role === 'player' ? viewPlayerQ(st) : viewQuestion(st));
+        if (st.role === 'player') {
+          // Board unter dem Buzzer, aktuelles Feld markiert
+          const bw = viewBoard(st); bw.style.marginTop = '14px';
+          const cells = bw.querySelector('.board').children, cols = st.board.length;
+          const cell = cells[cols + st.q.r * cols + st.q.c];
+          if (cell) cell.classList.add('picked');
+          v.appendChild(bw);
+        }
+      }
       else if (st.phase === 'final') v.appendChild(st.role === 'player' ? viewPlayerFinal(st) : viewFinal(st));
       else if (st.phase === 'end') v.appendChild(viewEnd(st));
       renderScores(st);
@@ -750,7 +760,7 @@
         if (q.status !== 'reveal') btn('ghost', 'eye-off', q.results.length || q.status === 'open' ? 'Niemand / Auflösen' : 'Auflösen', () => act('reveal'));
         else btn('gold big', 'arrow-right', st.left > 1 ? 'Zurück zum Board' : 'Zum Board (letzte Frage)', () => act('next'));
         card.appendChild(ctl);
-        card.appendChild(el('div', 'keys', 'Tastatur: Leertaste = Buzzer frei · R = richtig · F = falsch · Enter = weiter'));
+        card.appendChild(el('div', 'keys', 'Tastatur: R = richtig · F = falsch · Enter = weiter'));
       }
       return card;
     }
@@ -768,11 +778,12 @@
     function viewPlayerBoard(st) {
       const wrap = el('div');
       wrap.appendChild(meHead(st));
-      const w = el('div', 'wait-card', '<b>' + esc(st.host) + ' wählt die nächste Frage …</b>' + (st.control === st.me ? 'Du hast die letzte Frage geholt. Sag laut, welches Feld du willst!' : st.control ? esc(nm(st, st.control)) + ' darf das nächste Feld aussuchen.' : 'Mach dich bereit.'));
-      const mb = el('div', 'mini-board'); mb.style.setProperty('--cols', st.board.length);
-      for (let r = 0; r < 5; r++) st.board.forEach((c) => mb.appendChild(el('i', c.tiles[r].used ? 'used' : '')));
-      w.appendChild(mb);
+      const w = el('div', 'wait-card', '<b>' + esc(st.host) + ' wählt die nächste Frage …</b>' + (st.control === st.me ? 'Du hast die letzte Frage geholt. Sag laut, welches Feld du willst!' : st.control ? esc(nm(st, st.control)) + ' darf das nächste Feld aussuchen.' : 'Der Buzzer ist frei, sobald eine Frage gewählt ist.'));
+      w.style.padding = '14px';
       wrap.appendChild(w);
+      const b = viewBoard(st);
+      b.style.marginTop = '12px';
+      wrap.appendChild(b);
       wrap.appendChild(jokerRow(st));
       return wrap;
     }

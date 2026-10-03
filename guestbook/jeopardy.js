@@ -191,11 +191,12 @@ module.exports = function createJeopardy({ send, clean, clientIp, dataDir }) {
     if (!t || t.used) return 'Diese Frage gibt es nicht mehr';
     r.phase = 'question';
     r.q = {
-      c, r: row, value: t.v, status: t.dd ? 'dd' : 'reading', openedAt: 0, buzzer: null, buzzAt: 0, buzzes: [],
+      c, r: row, value: t.v, status: t.dd ? 'dd' : 'open', openedAt: Date.now(), buzzer: null, buzzAt: 0, buzzes: [],
       locked: [], frozen: {}, doubled: [], shielded: [], hinted: [], early: {}, results: [],
       dd: t.dd ? { pid: r.control && player(r, r.control) ? r.control : null, wager: null } : null
     };
-    say(r, t.dd ? pick(LINES.dd) : col.name + ' für ' + t.v + '.');
+    // Normale Fragen: Buzzer ist sofort frei, sobald der Host das Feld gewählt hat
+    say(r, t.dd ? pick(LINES.dd) : col.name + ' für ' + t.v + '. Buzzer frei!');
     return null;
   }
   const tile = (r) => r.board[r.q.c].tiles[r.q.r];
