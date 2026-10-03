@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Big H Jeopardy</title>
+<meta name="description" content="Big H Jeopardy: Quizshow für bis zu 7 Spieler. Der Host wählt die Fragen, alle anderen buzzern mit dem Handy.">
+<meta name="theme-color" content="#0b1033">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d2a8a'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23f5cc3c'>H</text></svg>">
+<link rel="stylesheet" href="/shared/style.css">
+<style>
+  :root { --accent: #f5cc3c; --blue: #1d2a8a; --blue-2: #142067; --blue-3: #0b1033; --ok: #22c55e; --bad: #ef4444; --ice: #7dd3fc; }
+  body { background: radial-gradient(1000px 520px at 50% -180px, rgba(61,84,255,.22), transparent 70%), var(--bg); }
+  .wrap { width: min(1180px, 100% - 32px); }
+  .page-head { text-align: center; padding-bottom: 18px; }
+  .page-head h1 span { color: var(--accent); }
+  .page-head p { margin-inline: auto; }
+  .btn.gold { background: var(--accent); color: #1a1405; }
+  .btn.green { background: var(--ok); color: #04210f; }
+  .btn.red { background: var(--bad); color: #fff; }
+  .btn.sm { padding: 7px 12px; font-size: .85rem; }
+  .btn.big { padding: 14px 20px; font-size: 1.05rem; justify-content: center; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  [hidden] { display: none !important; }
+
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .box h2, .box h3 { font: 600 1.1rem var(--title); margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+  .box > p { color: var(--muted); font-size: .9rem; margin: 0 0 14px; }
+  .field { display: grid; gap: 6px; margin-bottom: 12px; font-size: .85rem; color: var(--muted); }
+  .field input { background: var(--card-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 12px; padding: 11px 12px; font: 500 1rem var(--body); width: 100%; outline: none; }
+  .field input:focus { border-color: var(--accent); }
+  .code-in { text-transform: uppercase; letter-spacing: .35em; font: 700 1.4rem var(--title) !important; text-align: center; }
+
+  /* ---------- Start ---------- */
+  .home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; }
+  @media (max-width: 820px) { .home { grid-template-columns: minmax(0, 1fr); } }
+  .rooms { display: grid; gap: 8px; margin-top: 14px; }
+  .room { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; text-align: left; color: var(--text); font: inherit; width: 100%; }
+  .room:hover { border-color: var(--accent); }
+  .room .cd { font: 700 1rem var(--title); letter-spacing: .15em; color: var(--accent); }
+  .room b { display: block; font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .room small { color: var(--muted); font-size: .78rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .none { color: var(--muted); font-size: .88rem; padding: 14px; text-align: center; border: 1px dashed var(--line-2); border-radius: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip-btn { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 999px; padding: 6px 12px; font: 500 .82rem var(--body); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .chip-btn .icon { width: 14px; height: 14px; }
+  .chip-btn.on { background: rgba(245,204,60,.16); border-color: var(--accent); color: var(--accent); }
+  .chip-btn.preset { border-style: dashed; }
+  .grp { font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin: 10px 0 6px; }
+  .cat-count { font-size: .85rem; color: var(--muted); margin: 4px 0 12px; }
+  .cat-count b { color: var(--text); }
+  details.rules { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; margin-top: 16px; font-size: .92rem; color: #cfcfd6; }
+  details.rules summary { cursor: pointer; font-weight: 600; color: var(--text); }
+  details.rules ul { margin: 10px 0 0; padding-left: 18px; line-height: 1.65; }
+  .jk-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 12px; }
+  .jk-legend div { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: .85rem; }
+  .jk-legend b { display: flex; align-items: center; gap: 6px; color: var(--text); margin-bottom: 2px; }
+  .tv-row { display: flex; gap: 8px; margin-top: 12px; }
+  .tv-row input { flex: 1; min-width: 0; }
+
+  /* ---------- Kopfzeile im Spiel ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .codechip { display: inline-flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line-2); border-radius: 14px; padding: 6px 8px 6px 14px; }
+  .codechip small { color: var(--muted); font-size: .72rem; display: block; }
+  .codechip b { font: 700 1.25rem/1 var(--title); letter-spacing: .2em; color: var(--accent); }
+  .codechip button { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 10px; width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; }
+  .role-tag { font-size: .78rem; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; }
+  .ticker { display: flex; align-items: center; gap: 10px; background: linear-gradient(90deg, rgba(245,204,60,.12), transparent); border: 1px solid rgba(245,204,60,.25); border-radius: 14px; padding: 9px 14px; margin-bottom: 14px; font-size: .92rem; min-height: 44px; }
+  .ticker .av { width: 28px; height: 28px; border-radius: 50%; background: url('/shared/img/bigh.jpg') center/cover, var(--blue); flex: none; border: 2px solid var(--accent); }
+  .ticker b { color: var(--accent); font-weight: 600; margin-right: 4px; }
+  .ticker.pop { animation: tick .45s ease; }
+  @keyframes tick { from { transform: translateY(-4px); opacity: .3; } }
+
+  /* ---------- Punktestand ---------- */
+  .scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 14px; }
+  .sc { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 9px 12px 9px 16px; overflow: hidden; }
+  .sc::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c); }
+  .sc .nm { font: 600 .86rem var(--body); display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .sc .nm .dot { width: 7px; height: 7px; border-radius: 50%; background: #52525b; flex: none; }
+  .sc .nm .dot.on { background: var(--ok); }
+  .sc .pts { font: 700 1.35rem/1.1 var(--title); font-variant-numeric: tabular-nums; }
+  .sc .pts.neg { color: var(--bad); }
+  .sc .jk { display: flex; gap: 3px; margin-top: 4px; }
+  .sc .jk span { width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; background: rgba(255,255,255,.08); color: var(--accent); }
+  .sc .jk span.used { opacity: .25; color: var(--muted); }
+  .sc .jk .icon { width: 11px; height: 11px; }
+  .sc.ctrl { border-color: rgba(245,204,60,.6); }
+  .sc .ctrl-tag { position: absolute; top: 6px; right: 8px; font-size: .62rem; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
+  .sc.buzzing { box-shadow: 0 0 0 2px var(--c), 0 0 26px color-mix(in srgb, var(--c) 45%, transparent); }
+  .sc .adj { display: flex; gap: 4px; margin-top: 6px; }
+  .sc .adj button { flex: 1; background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 8px; padding: 3px 0; font: 600 .74rem var(--body); cursor: pointer; }
+  .sc .adj button:hover { border-color: var(--accent); }
+  .sc .kick { position: absolute; top: 6px; right: 6px; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px; }
+
+  /* ---------- Board ---------- */
+  .board { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 6px; background: #050820; border-radius: 18px; padding: 8px; border: 1px solid rgba(97,118,255,.3); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+  .board .cat { background: var(--blue); border-radius: 10px; min-height: 64px; display: grid; place-items: center; text-align: center; padding: 6px; font: 700 .82rem/1.15 var(--title); text-transform: uppercase; letter-spacing: .03em; color: #fff; overflow-wrap: anywhere; hyphens: auto; }
+  .board .tile { background: linear-gradient(180deg, var(--blue), var(--blue-2)); border: 0; border-radius: 10px; aspect-ratio: 16 / 10; display: grid; place-items: center; font: 800 clamp(1rem, 3vw, 2rem) var(--title); color: var(--accent); text-shadow: 0 2px 0 rgba(0,0,0,.45); position: relative; transition: transform .15s, filter .15s; }
+  .board .tile.used { background: rgba(29,42,138,.25); color: transparent; text-shadow: none; }
+  button.tile:not(.used) { cursor: pointer; }
+  button.tile:not(.used):hover { transform: scale(1.04); filter: brightness(1.2); }
+  .board .tile.dd::after { content: 'DD'; position: absolute; top: 5px; right: 6px; font: 700 .55rem var(--body); color: rgba(255,255,255,.55); letter-spacing: .05em; text-shadow: none; }
+  .board .tile.picked { outline: 3px solid var(--accent); }
+  @media (max-width: 600px) {
+    .board { gap: 4px; padding: 5px; border-radius: 12px; }
+    .board .cat { min-height: 52px; font-size: .58rem; padding: 3px; border-radius: 7px; }
+    .board .tile { border-radius: 7px; aspect-ratio: 1 / .85; }
+  }
+
+  /* ---------- Frage ---------- */
+  .qcard { background: radial-gradient(ellipse at 50% 0, #2a3bb5, var(--blue) 45%, var(--blue-2)); border-radius: 22px; padding: clamp(18px, 4vw, 40px); text-align: center; color: #fff; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); animation: zoom .35s cubic-bezier(.2,.8,.2,1); }
+  @keyframes zoom { from { transform: scale(.85); opacity: 0; } }
+  .qcard .meta { font: 600 .82rem var(--body); text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.75); display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .qcard .meta b { color: var(--accent); }
+  .qcard .clue { font: 700 clamp(1.25rem, 3.6vw, 2.4rem)/1.3 var(--title); margin: 18px auto 6px; max-width: 900px; text-wrap: balance; text-transform: uppercase; letter-spacing: .01em; }
+  .qcard .sol { margin: 16px auto 0; max-width: 700px; background: rgba(0,0,0,.28); border: 1px dashed rgba(255,255,255,.35); border-radius: 14px; padding: 10px 14px; font-size: 1.05rem; }
+  .qcard .sol small { display: block; font-size: .72rem; color: rgba(255,255,255,.65); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
+  .qcard .sol.revealed { background: rgba(34,197,94,.18); border: 1px solid rgba(34,197,94,.6); border-style: solid; }
+  .qcard .sol.blur b { filter: blur(8px); cursor: pointer; }
+  .qcard .hint { margin-top: 10px; font-size: .88rem; color: #fde68a; }
+  .dd-banner { font: 900 clamp(2rem, 8vw, 4.6rem)/1 var(--title); color: var(--accent); text-transform: uppercase; letter-spacing: .02em; text-shadow: 0 4px 0 rgba(0,0,0,.4); margin: 16px 0 6px; animation: ddspin .8s cubic-bezier(.2,.8,.2,1); }
+  @keyframes ddspin { from { transform: rotate(-200deg) scale(.1); } }
+  .who { display: inline-flex; align-items: center; gap: 10px; background: rgba(0,0,0,.3); border-radius: 999px; padding: 8px 16px 8px 8px; margin-top: 14px; font: 700 1.2rem var(--title); }
+  .who i { width: 28px; height: 28px; border-radius: 50%; background: var(--c); display: block; box-shadow: 0 0 18px var(--c); }
+  .who small { font: 500 .8rem var(--body); color: rgba(255,255,255,.7); }
+  .runners { font-size: .8rem; color: rgba(255,255,255,.7); margin-top: 6px; }
+  .flags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .flags span { display: inline-flex; align-items: center; gap: 5px; background: rgba(0,0,0,.3); border-radius: 999px; padding: 3px 10px; font-size: .75rem; }
+  .flags .icon { width: 12px; height: 12px; }
+  .status-line { margin-top: 14px; font-size: .95rem; color: rgba(255,255,255,.85); }
+  .status-line .open { color: #86efac; font-weight: 700; }
+  .host-ctl { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .host-ctl .btn { min-width: 150px; justify-content: center; }
+  .pickers { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  .pickers button { background: rgba(0,0,0,.3); border: 2px solid var(--c); color: #fff; border-radius: 999px; padding: 6px 14px; font: 600 .9rem var(--body); cursor: pointer; }
+  .pickers button.on { background: var(--c); color: #111; }
+  .results { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .results span { border-radius: 999px; padding: 3px 10px; font: 600 .8rem var(--body); }
+  .results .ok { background: rgba(34,197,94,.25); color: #bbf7d0; } .results .no { background: rgba(239,68,68,.25); color: #fecaca; }
+  .keys { font-size: .74rem; color: rgba(255,255,255,.5); margin-top: 8px; }
+
+  /* ---------- Spieler (Handy) ---------- */
+  .me-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; border-left: 6px solid var(--c); }
+  .me-head b { font: 700 1.05rem var(--title); }
+  .me-head small { display: block; color: var(--muted); font-size: .76rem; }
+  .me-head .pts { font: 800 1.8rem/1 var(--title); font-variant-numeric: tabular-nums; }
+  .me-head .pts.neg { color: var(--bad); }
+  .pq { margin-top: 12px; background: linear-gradient(180deg, var(--blue), var(--blue-2)); border-radius: 18px; padding: 16px; color: #fff; text-align: center; }
+  .pq .meta { font: 600 .74rem var(--body); text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.7); }
+  .pq .meta b { color: var(--accent); }
+  .pq .clue { font: 700 1.08rem/1.35 var(--title); margin-top: 8px; }
+  .pq .hint { margin-top: 10px; background: rgba(253,230,138,.12); border: 1px solid rgba(253,230,138,.35); border-radius: 10px; padding: 8px 10px; color: #fde68a; font-size: .88rem; }
+  .pq .sol { margin-top: 10px; background: rgba(34,197,94,.18); border: 1px solid rgba(34,197,94,.5); border-radius: 10px; padding: 8px 10px; font-size: .92rem; }
+  .buzz-wrap { display: grid; place-items: center; padding: 22px 0 10px; }
+  .buzzer { width: min(68vw, 270px); aspect-ratio: 1; border-radius: 50%; border: 0; cursor: pointer; font: 900 clamp(1.6rem, 8vw, 2.4rem)/1.05 var(--title); color: #fff; text-transform: uppercase; letter-spacing: .04em; position: relative; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; background: radial-gradient(circle at 50% 35%, #6b7280, #3f3f46 60%, #27272a); box-shadow: 0 12px 0 #18181b, 0 20px 40px rgba(0,0,0,.5), inset 0 -8px 20px rgba(0,0,0,.35); transition: transform .06s, box-shadow .06s; display: grid; place-items: center; padding: 12%; }
+  .buzzer small { display: block; font: 600 .82rem/1.3 var(--body); text-transform: none; letter-spacing: 0; margin-top: 6px; opacity: .85; }
+  .buzzer:active { transform: translateY(8px); box-shadow: 0 4px 0 #18181b, 0 8px 18px rgba(0,0,0,.5), inset 0 -8px 20px rgba(0,0,0,.35); }
+  .buzzer.live { background: radial-gradient(circle at 50% 35%, #ff6b6b, #dc2626 60%, #991b1b); box-shadow: 0 12px 0 #7f1d1d, 0 0 60px rgba(239,68,68,.55), inset 0 -8px 20px rgba(0,0,0,.3); animation: pulse 1s ease-in-out infinite; }
+  .buzzer.live:active { box-shadow: 0 4px 0 #7f1d1d, 0 0 30px rgba(239,68,68,.4); }
+  .buzzer.mine { background: radial-gradient(circle at 50% 35%, #4ade80, #16a34a 60%, #14532d); box-shadow: 0 12px 0 #14532d, 0 0 60px rgba(34,197,94,.5); }
+  .buzzer.frozen { background: radial-gradient(circle at 50% 35%, #e0f2fe, #7dd3fc 55%, #0369a1); color: #0c4a6e; box-shadow: 0 12px 0 #075985, 0 0 50px rgba(125,211,252,.5); }
+  .buzzer.early { animation: shake .35s; background: radial-gradient(circle at 50% 35%, #fbbf24, #b45309 60%, #78350f); box-shadow: 0 12px 0 #78350f; }
+  .buzzer.other { background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 80%, #fff), var(--c) 60%, #18181b); box-shadow: 0 12px 0 #18181b; }
+  @keyframes pulse { 50% { box-shadow: 0 12px 0 #7f1d1d, 0 0 90px rgba(239,68,68,.8), inset 0 -8px 20px rgba(0,0,0,.3); } }
+  @keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+  .jokers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
+  .joker { background: var(--card); border: 1px solid var(--line-2); border-radius: 14px; padding: 9px 4px; color: var(--text); cursor: pointer; display: grid; justify-items: center; gap: 4px; font: 600 .74rem var(--body); }
+  .joker .icon { width: 20px; height: 20px; color: var(--accent); }
+  .joker:disabled { opacity: .35; cursor: not-allowed; }
+  .joker.used { text-decoration: line-through; }
+  .joker:not(:disabled):hover { border-color: var(--accent); }
+  .wait-card { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 16px; text-align: center; color: var(--muted); }
+  .wait-card b { display: block; color: var(--text); font: 600 1.1rem var(--title); margin-bottom: 4px; }
+  .wager { margin-top: 12px; background: var(--card); border: 1px solid var(--line-2); border-radius: 16px; padding: 16px; text-align: center; }
+  .wager .amt { font: 800 2.4rem/1 var(--title); color: var(--accent); font-variant-numeric: tabular-nums; margin: 6px 0 10px; }
+  .wager input[type=range] { width: 100%; accent-color: var(--accent); }
+  .wager .quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
+  .wager .quick button { background: var(--card-2); border: 1px solid var(--line-2); color: var(--text); border-radius: 999px; padding: 5px 12px; font: 600 .8rem var(--body); cursor: pointer; }
+  .wager textarea { width: 100%; min-height: 70px; background: var(--card-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 12px; padding: 10px; font: 500 1rem var(--body); resize: vertical; }
+  .mini-board { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 3px; margin-top: 12px; }
+  .mini-board i { aspect-ratio: 1.6; border-radius: 4px; background: var(--blue); display: block; }
+  .mini-board i.used { background: rgba(29,42,138,.25); }
+
+  /* ---------- Lobby / Finale / Ende ---------- */
+  .lobby-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .lobby-grid { grid-template-columns: minmax(0, 1fr); } }
+  .bigcode { text-align: center; padding: 18px 10px; }
+  .bigcode small { color: var(--muted); display: block; }
+  .bigcode b { display: block; font: 800 clamp(3rem, 12vw, 5.5rem)/1 var(--title); letter-spacing: .18em; color: var(--accent); margin: 8px 0; padding-left: .18em; }
+  .bigcode .url { font-size: .95rem; color: var(--text); word-break: break-all; }
+  .plist { display: grid; gap: 6px; }
+  .plist .pl { display: flex; align-items: center; gap: 10px; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; border-left: 5px solid var(--c); animation: zoom .3s ease; }
+  .plist .pl b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .plist .pl button { background: none; border: 0; color: var(--muted); cursor: pointer; }
+  .plist .empty { border: 1px dashed var(--line-2); border-radius: 12px; padding: 8px 12px; color: var(--muted); font-size: .85rem; }
+  .final-list { display: grid; gap: 6px; margin-top: 14px; text-align: left; }
+  .final-list .fr { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 10px; align-items: center; background: rgba(0,0,0,.25); border-radius: 12px; padding: 8px 12px; }
+  .final-list .fr i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+  .final-list .fr small { color: rgba(255,255,255,.7); }
+  .final-list .fr.cur { outline: 2px solid var(--accent); }
+  .countdown { font: 800 3rem/1 var(--title); color: var(--accent); margin-top: 12px; font-variant-numeric: tabular-nums; }
+  .podium { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin: 20px 0 10px; }
+  .podium .st { width: min(30%, 170px); text-align: center; }
+  .podium .st b { display: block; font: 700 1rem var(--title); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .podium .st small { display: block; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .podium .blk { margin-top: 8px; border-radius: 12px 12px 0 0; background: linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 30%, #111)); display: grid; place-items: start center; padding-top: 10px; font: 800 2rem var(--title); color: rgba(0,0,0,.55); }
+  .podium .p1 .blk { height: 150px; } .podium .p2 .blk { height: 105px; } .podium .p3 .blk { height: 75px; }
+  .awards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 16px; }
+  .awards div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  .awards small { color: var(--accent); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; }
+  .awards b { display: block; font: 700 1.05rem var(--title); }
+  .awards span { color: var(--muted); font-size: .84rem; }
+  .ranks { display: grid; gap: 6px; margin-top: 12px; }
+
+  /* Overlay: Ziel zum Einfrieren */
+  .sheet { position: fixed; inset: 0; z-index: 90; background: rgba(5,5,12,.75); display: none; grid-template-columns: minmax(0, 1fr); place-items: end center; padding: 16px; }
+  .sheet.show { display: grid; }
+  .sheet .card { width: min(420px, 100%); background: var(--card); border: 1px solid var(--line-2); border-radius: 20px; padding: 18px; animation: up .25s ease; }
+  @keyframes up { from { transform: translateY(30px); opacity: 0; } }
+  .sheet h3 { margin: 0 0 4px; font: 700 1.15rem var(--title); display: flex; gap: 8px; align-items: center; }
+  .sheet p { margin: 0 0 12px; color: var(--muted); font-size: .88rem; }
+  .sheet .targets { display: grid; gap: 6px; }
+  .sheet .targets button { display: flex; align-items: center; gap: 10px; background: var(--card-2); border: 1px solid var(--line-2); border-left: 5px solid var(--c); border-radius: 12px; padding: 12px; color: var(--text); font: 600 1rem var(--body); cursor: pointer; text-align: left; }
+  .flash { position: fixed; inset: 0; pointer-events: none; z-index: 70; opacity: 0; }
+  .flash.go { animation: flash .6s ease; }
+  @keyframes flash { 20% { opacity: .35; } }
+
+  /* Bildschirm-Modus */
+  body.ingame .bigh-back { display: none !important; }
+  .buzzer.frozen { font-size: clamp(1.2rem, 6.4vw, 1.9rem); letter-spacing: 0; }
+  body.tv .page-head, body.tv .bigh-footer, body.tv .bigh-back { display: none !important; }
+  body.tv .wrap { width: min(1600px, 100% - 32px); padding-top: 16px; }
+  body.tv .board .cat { font-size: 1.05rem; min-height: 84px; }
+  body.tv .qcard .clue { font-size: clamp(1.8rem, 4.2vw, 3.4rem); }
+  body.tv .scores { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+  body.tv .sc .pts { font-size: 1.8rem; }
+</style>
+</head>
+<body data-back>
+  <main class="wrap">
+    <header class="page-head" id="head">
+      <span class="kicker"><i data-icon="megaphone"></i>Die Quizshow</span>
+      <h1>Big H <span>Jeopardy</span></h1>
+      <p>Einer ist Host, kennt alle Lösungen und wählt die Fragen. Bis zu sieben Spieler buzzern mit dem Handy. Wer zuerst drückt, darf antworten.</p>
+    </header>
+
+    <!-- ================= START ================= -->
+    <section id="home" hidden>
+      <div class="home">
+        <div class="box">
+          <h2><i data-icon="log-in"></i>Mitspielen</h2>
+          <p>Code vom Host eingeben oder unten ein offenes Spiel antippen.</p>
+          <form id="join-form" autocomplete="off">
+            <label class="field">Spiel-Code<input id="j-code" class="code-in" maxlength="4" inputmode="text" autocapitalize="characters" placeholder="ABCD" required></label>
+            <label class="field">Dein Name<input id="j-name" maxlength="18" placeholder="z. B. Mausi" required></label>
+            <button class="btn gold big" type="submit" style="width:100%"><i data-icon="hand"></i>Beitreten</button>
+          </form>
+          <div class="grp" style="margin-top:18px">Offene Spiele</div>
+          <div class="rooms" id="rooms"><div class="none">Lade …</div></div>
+        </div>
+        <div class="box">
+          <h2><i data-icon="crown"></i>Host werden</h2>
+          <p>Du moderierst, siehst die Lösungen und entscheidest, ob eine Antwort richtig ist. Wähle 3 bis 6 Kategorien.</p>
+          <form id="host-form" autocomplete="off">
+            <label class="field">Dein Name<input id="h-name" maxlength="18" placeholder="z. B. Timo" required></label>
+            <div class="grp">Vorlagen</div>
+            <div class="chips" id="presets"></div>
+            <div class="grp">Big H</div>
+            <div class="chips" id="cats-bigh"></div>
+            <div class="grp">Allgemein</div>
+            <div class="chips" id="cats-mix"></div>
+            <div class="cat-count" id="cat-count"></div>
+            <button class="btn gold big" type="submit" style="width:100%" id="h-go"><i data-icon="play"></i>Spiel erstellen</button>
+          </form>
+          <div class="grp" style="margin-top:18px">Bildschirm-Modus (TV oder Beamer, ohne Lösungen)</div>
+          <form class="tv-row" id="tv-form"><input id="tv-code" class="code-in field" maxlength="4" placeholder="CODE" style="background:var(--card-2);border:1px solid var(--line-2);border-radius:12px;color:var(--text);padding:8px"><button class="btn" type="submit"><i data-icon="monitor"></i>Zeigen</button></form>
+        </div>
+      </div>
+      <details class="rules"><summary>So funktioniert es</summary>
+        <ul>
+          <li>Der Host wählt eine Frage auf dem Board und liest den Hinweis vor. Die Antwort sollte in Frageform kommen („Was ist …?“), aber am Ende entscheidet der Host.</li>
+          <li>Erst wenn der Host den Buzzer freigibt, darf gebuzzert werden. Wer zu früh drückt, ist eine Sekunde gesperrt.</li>
+          <li>Richtig: Punkte gibt es in Höhe des Feldwerts. Falsch: gleich viele Punkte weg, und der Buzzer ist für alle anderen wieder frei.</li>
+          <li>Hinter manchen Feldern steckt ein <b>Daily Double</b>: Nur eine Person spielt, setzt selbst einen Einsatz (bis zu ihrem Punktestand, mindestens bis 500) und antwortet ohne Buzzer.</li>
+          <li><b>Finale:</b> Alle mit Punkten setzen geheim einen Einsatz, sehen dann den Hinweis und tippen ihre Antwort innerhalb von 45 Sekunden ins Handy.</li>
+        </ul>
+        <div class="jk-legend">
+          <div><b><i data-icon="zap"></i>Doppelt</b>Die nächste Antwort zählt doppelt, im Guten wie im Schlechten. Vor dem Buzzern aktivieren.</div>
+          <div><b><i data-icon="shield"></i>Schild</b>Eine falsche Antwort kostet bei dieser Frage keine Punkte.</div>
+          <div><b><i data-icon="snowflake"></i>Einfrieren</b>Sperrt den Buzzer eines anderen Spielers für diese Frage.</div>
+          <div><b><i data-icon="lightbulb"></i>Tipp</b>Big H flüstert dir einen Hinweis aufs Handy. Nur du siehst ihn.</div>
+        </div>
+        <p style="margin:10px 0 0;color:var(--muted)">Jeder Joker kann pro Spiel einmal eingesetzt werden.</p>
+      </details>
+    </section>
+
+    <!-- ================= SPIEL ================= -->
+    <section id="game" hidden>
+      <div class="topbar">
+        <div class="codechip"><div><small>Spiel-Code</small><b id="g-code"></b></div><button type="button" id="copy-link" title="Link kopieren" aria-label="Link kopieren"><i data-icon="copy"></i></button></div>
+        <span class="role-tag" id="role-tag"></span>
+      </div>
+      <div class="ticker" id="ticker" aria-live="polite"><span class="av"></span><div><b>Big H:</b><span id="line"></span></div></div>
+      <div id="view"></div>
+      <div class="scores" id="scores"></div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap" id="foot-acts"></div>
+    </section>
+  </main>
+
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t"><div class="card"><h3 id="sheet-t"><i data-icon="snowflake"></i>Wen einfrieren?</h3><p>Diese Person kann bei dieser Frage nicht mehr buzzern.</p><div class="targets" id="targets"></div><button class="btn ghost" type="button" id="sheet-x" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button></div></div>
+  <div class="flash" id="flash"></div>
+
+  <footer class="bigh-footer">Big H Jeopardy · jeopardy.unoslapis.ch · Fragen frei erfunden, Punkte wertlos</footer>
+
+  <script src="/shared/fun.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const sfx = (n) => BIGH.sfx && BIGH.sfx(n);
+    const fmt = (n) => (n < 0 ? '−' : '') + Math.abs(Math.round(n)).toLocaleString('de-CH');
+    const icon = (n) => BIGH.icon(n);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const JOKERS = [['double', 'zap', 'Doppelt'], ['shield', 'shield', 'Schild'], ['freeze', 'snowflake', 'Einfrieren'], ['hint', 'lightbulb', 'Tipp']];
+    const STORE = 'bigh-jeopardy';
+    const vibrate = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) { /* egal */ } };
+
+    // ---------- Sitzung ----------
+    let S = { code: null, token: null, role: null };
+    try { S = Object.assign(S, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) { /* egal */ }
+    const saveS = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) { /* egal */ } };
+
+    async function api(method, path, body, noToken) {
+      let r;
+      try {
+        r = await fetch('/api/jeopardy' + path, { method, cache: 'no-store', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token && !noToken ? { 'X-Jeopardy': S.token } : {}), body: body ? JSON.stringify(body) : undefined });
+      } catch (e) { const err = new Error('Server nicht erreichbar'); err.status = 0; throw err; }
+      let d = {};
+      try { d = await r.json(); } catch (e) { d = {}; }
+      if (!r.ok) { const err = new Error(d.error || 'Fehler ' + r.status); err.status = r.status; throw err; }
+      return d;
+    }
+
+    // ---------- Start-Bildschirm ----------
+    let INFO = null, chosen = [];
+    async function loadHome() {
+      try {
+        INFO = await api('GET', '', null, true);
+        renderRooms(INFO.rooms);
+        if (!$('presets').children.length) buildCats();
+      } catch (e) { $('rooms').innerHTML = '<div class="none">Gerade nicht erreichbar.</div>'; }
+    }
+    let homeT = null;
+    function homeLoop() { clearTimeout(homeT); if (!$('home').hidden) loadHome().finally(() => { homeT = setTimeout(homeLoop, 5000); }); }
+    function renderRooms(list) {
+      const el = $('rooms');
+      el.innerHTML = '';
+      if (!list.length) { el.innerHTML = '<div class="none">Gerade läuft kein Spiel. Werde selbst Host!</div>'; return; }
+      list.forEach((r) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'room';
+        b.innerHTML = '<span class="cd">' + esc(r.code) + '</span><div><b>' + esc(r.host) + ' moderiert</b><small>' + r.players + '/' + r.max + ' Spieler' + (r.phase === 'lobby' ? ' · wartet' : ' · läuft') + (r.names.length ? ' · ' + esc(r.names.join(', ')) : '') + '</small></div>' + icon('arrow-right');
+        b.addEventListener('click', () => { $('j-code').value = r.code; $('j-name').focus(); sfx('click'); });
+        el.appendChild(b);
+      });
+    }
+    function buildCats() {
+      const box = { bigh: $('cats-bigh'), mix: $('cats-mix') };
+      INFO.categories.forEach((c) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn'; b.dataset.id = c.id; b.textContent = c.name;
+        b.addEventListener('click', () => {
+          if (chosen.includes(c.id)) chosen = chosen.filter((x) => x !== c.id);
+          else if (chosen.length < 6) chosen.push(c.id);
+          else { BIGH.toast('Maximal 6 Kategorien'); return; }
+          sfx('click'); syncCats();
+        });
+        box[c.group].appendChild(b);
+      });
+      INFO.presets.forEach((p, i) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'chip-btn preset'; b.innerHTML = icon('sparkles') + esc(p.name);
+        b.addEventListener('click', () => { chosen = p.cats.slice(); sfx('click'); syncCats(); });
+        $('presets').appendChild(b);
+        if (i === 0 && !chosen.length) chosen = p.cats.slice();
+      });
+      syncCats();
+    }
+    function syncCats() {
+      document.querySelectorAll('#cats-bigh .chip-btn, #cats-mix .chip-btn').forEach((b) => b.classList.toggle('on', chosen.includes(b.dataset.id)));
+      $('cat-count').innerHTML = '<b>' + chosen.length + '</b> von 3–6 Kategorien gewählt · ' + chosen.length * 5 + ' Fragen + Finale';
+      $('h-go').disabled = chosen.length < 3;
+    }
+    try { $('h-name').value = localStorage.getItem('bigh-jeopardy-name') || ''; $('j-name').value = $('h-name').value; } catch (e) { /* egal */ }
+    const rememberName = (n) => { try { localStorage.setItem('bigh-jeopardy-name', n); } catch (e) { /* egal */ } };
+
+    $('host-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $('h-name').value.trim();
+      try {
+        const r = await api('POST', '', { name, cats: chosen }, true);
+        rememberName(name);
+        S = { code: r.code, token: r.token, role: 'host' }; saveS();
+        sfx('tadum');
+        enter();
+      } catch (err) { BIGH.toast(err.message); }
+    });
+    $('join-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = $('j-code').value.trim().toUpperCase(), name = $('j-name').value.trim();
+      if (!/^[A-Z]{4}$/.test(code)) { BIGH.toast('Der Code hat 4 Buchstaben'); return; }
+      try {
+        const r = await api('POST', '/' + code + '/join', { name }, S.code !== code);
+        rememberName(name);
+        S = { code: r.code, token: r.token, role: 'player' }; saveS();
+        sfx('coin');
+        enter();
+      } catch (err) { BIGH.toast(err.message); }
+    });
+    $('j-code').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4); });
+    $('tv-code').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4); });
+    $('tv-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = $('tv-code').value.trim().toUpperCase();
+      if (!/^[A-Z]{4}$/.test(code)) { BIGH.toast('Der Code hat 4 Buchstaben'); return; }
+      location.hash = 'tv-' + code;
+    });
+
+    // ---------- Spiel ----------
+    const G = { st: null, prev: null, v: 0, poll: 0, tick: null, openSeen: 0, hideSol: false, earlyUntil: 0, lastLine: -1, music: null };
+    try { G.hideSol = localStorage.getItem('bigh-jeopardy-hide') === '1'; } catch (e) { /* egal */ }
+
+    function enter() {
+      $('home').hidden = true; $('game').hidden = false;
+      clearTimeout(homeT);
+      document.body.classList.toggle('tv', S.role === 'tv');
+      document.body.classList.add('ingame');
+      $('head').hidden = true;
+      if (location.hash.slice(1) !== (S.role === 'tv' ? 'tv-' : '') + S.code) history.replaceState(null, '', '#' + (S.role === 'tv' ? 'tv-' : '') + S.code);
+      G.v = 0; G.st = null; G.prev = null;
+      poll();
+    }
+    function leaveGame(msg) {
+      if (msg) BIGH.toast(msg);
+      G.poll++; clearInterval(G.tick); stopMusic();
+      if (S.role !== 'tv') { S = { code: null, token: null, role: null }; saveS(); }
+      history.replaceState(null, '', location.pathname);
+      document.body.classList.remove('tv', 'ingame');
+      $('game').hidden = true; $('home').hidden = false; $('head').hidden = false;
+      homeLoop();
+    }
+    async function poll() {
+      const my = ++G.poll;
+      while (my === G.poll) {
+        try {
+          const st = await api('GET', '/' + S.code + '?v=' + G.v, null, S.role === 'tv');
+          if (my !== G.poll) return;
+          render(st);
+        } catch (e) {
+          if (my !== G.poll) return;
+          if (e.status === 404 || e.status === 410) { leaveGame(e.message); return; }
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
+    }
+    async function act(action, body) {
+      try {
+        const st = await api('POST', '/' + S.code + '/' + action, body || {});
+        if (st && st.code) render(st);
+        return st;
+      } catch (e) { BIGH.toast(e.message); return null; }
+    }
+
+    const pOf = (st, id) => st.players.find((p) => p.id === id);
+    const meP = (st) => (st.me ? pOf(st, st.me) : null);
+    const nm = (st, id) => { const p = pOf(st, id); return p ? p.name : '?'; };
+
+    function render(st) {
+      const prev = G.st;
+      G.prev = prev; G.st = st; G.v = st.version;
+      if (S.role === 'player' && !st.me) { leaveGame('Du bist nicht mehr in diesem Spiel.'); return; }
+      $('g-code').textContent = st.code;
+      $('role-tag').textContent = st.role === 'host' ? 'Du bist Host' : st.role === 'tv' ? 'Bildschirm · moderiert von ' + st.host : 'Host: ' + st.host + (st.hostOnline ? '' : ' (offline)');
+      if (st.lineId !== G.lastLine) {
+        G.lastLine = st.lineId;
+        $('line').textContent = ' ' + st.line;
+        const t = $('ticker'); t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop');
+      }
+      effects(prev, st);
+      const v = $('view');
+      v.innerHTML = '';
+      if (st.phase === 'lobby') v.appendChild(viewLobby(st));
+      else if (st.phase === 'board') v.appendChild(st.role === 'player' ? viewPlayerBoard(st) : viewBoard(st));
+      else if (st.phase === 'question') v.appendChild(st.role === 'player' ? viewPlayerQ(st) : viewQuestion(st));
+      else if (st.phase === 'final') v.appendChild(st.role === 'player' ? viewPlayerFinal(st) : viewFinal(st));
+      else if (st.phase === 'end') v.appendChild(viewEnd(st));
+      renderScores(st);
+      renderFoot(st);
+      BIGH.hydrateIcons && BIGH.hydrateIcons(v);
+      // Uhr für Countdown und "seit x s offen"
+      clearInterval(G.tick);
+      if ((st.q && (st.q.status === 'open' || G.earlyUntil > Date.now())) || (st.fin && st.fin.step === 'answer')) G.tick = setInterval(tick, 200);
+      if (st.fin && st.fin.step === 'answer' && st.role !== 'player') startMusic(); else stopMusic();
+    }
+
+    // Töne und Vibration bei Zustandswechseln
+    function effects(prev, st) {
+      const q = st.q, pq = prev && prev.q;
+      const same = pq && q && pq.c === q.c && pq.r === q.r;
+      if (q && !same) { if (q.status === 'dd') { sfx('tadum'); } else sfx('reveal'); }
+      if (q && q.status === 'open' && (!same || pq.status !== 'open' || (q.locked.length !== pq.locked.length))) {
+        G.openSeen = Date.now() - (q.openFor || 0);
+        if (st.role === 'player') { const me = st.me; if (!q.locked.includes(me) && !q.frozen.includes(me)) { vibrate(60); flash('#22c55e'); } }
+        sfx('tick');
+      }
+      if (q && q.status === 'buzzed' && (!same || pq.status !== 'buzzed')) { sfx('buzz'); if (q.buzzer === st.me) vibrate([80, 40, 80]); }
+      if (q && same && q.results.length > pq.results.length) {
+        const last = q.results[q.results.length - 1];
+        sfx(last.correct ? 'right' : 'wrong');
+        if (last.pid === st.me) { vibrate(last.correct ? 100 : [200, 60, 200]); if (last.correct) BIGH.burst && BIGH.burst(); }
+      }
+      if (q && same && q.frozen.length > pq.frozen.length) { sfx('freeze'); if (q.frozen.includes(st.me) && !pq.frozen.includes(st.me)) { vibrate(300); flash('#7dd3fc'); } }
+      if (q && same && q.status === 'reveal' && pq.status !== 'reveal' && !q.results.some((r) => r.correct)) sfx('lose');
+      if (st.phase === 'final' && (!prev || prev.phase !== 'final')) sfx('jingle');
+      if (st.fin && prev && prev.fin && st.fin.step === 'reveal' && Object.keys(st.fin.judged).length > Object.keys(prev.fin.judged).length) {
+        const ids = Object.keys(st.fin.judged).filter((id) => !(id in prev.fin.judged));
+        ids.forEach((id) => sfx(st.fin.judged[id] ? 'right' : 'wrong'));
+      }
+      if (st.phase === 'end' && prev && prev.phase !== 'end') { sfx('bigwin'); BIGH.confettiRain && BIGH.confettiRain(); }
+      if (st.phase === 'board' && prev && prev.phase === 'lobby') sfx('tadum');
+    }
+    function flash(color) { const f = $('flash'); f.style.background = color; f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+
+    function tick() {
+      const st = G.st;
+      const el = document.querySelector('[data-open-for]');
+      if (el && st.q && st.q.status === 'open') el.textContent = ((Date.now() - G.openSeen) / 1000).toFixed(0) + ' s';
+      const cd = document.querySelector('[data-countdown]');
+      if (cd && st.fin && st.fin.step === 'answer') {
+        const left = Math.max(0, Math.ceil((G.finEnd - Date.now()) / 1000));
+        cd.textContent = left;
+        if (left <= 5 && left !== G.lastCd && left > 0) { G.lastCd = left; sfx('tick'); }
+      }
+      if (G.earlyUntil && Date.now() > G.earlyUntil) { G.earlyUntil = 0; render(G.st); }
+    }
+
+    // Denkmusik im Finale (nur Host/Bildschirm): ein ruhiger, eigener Loop
+    function startMusic() {
+      if (G.music || !BIGH.soundOn) return;
+      const notes = [523, 659, 587, 784, 523, 659, 587, 494, 523, 659, 587, 784, 880, 784, 659, 587];
+      let i = 0;
+      G.music = setInterval(() => { BIGH.beep && BIGH.beep(notes[i % notes.length], 0.18, 'triangle', 0.025); if (i % 4 === 0) BIGH.beep && BIGH.beep(notes[i % notes.length] / 2, 0.3, 'sine', 0.03); i++; }, 420);
+    }
+    function stopMusic() { clearInterval(G.music); G.music = null; }
+
+    // ---------- Lobby ----------
+    function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+    function joinUrl(st) { return location.origin + location.pathname + '#' + st.code; }
+    function viewLobby(st) {
+      const wrap = el('div', 'lobby-grid');
+      const left = el('div', 'box bigcode');
+      left.innerHTML = '<small>Geht auf</small><div class="url">' + esc(location.host) + '</div><small style="margin-top:10px">und gebt diesen Code ein</small><b>' + esc(st.code) + '</b>';
+      if (st.role === 'host') {
+        const tip = el('p', null, 'Tipp: Den Bildschirm-Modus auf dem TV oder Beamer öffnen, dann sehen alle das Board, aber nicht die Lösungen. Du behältst diese Seite für dich.');
+        tip.style.cssText = 'color:var(--muted);font-size:.85rem;margin:14px 0 10px';
+        const tv = el('a', 'btn ghost sm', icon('monitor') + 'Bildschirm-Modus öffnen');
+        tv.href = '#tv-' + st.code; tv.target = '_blank'; tv.rel = 'noopener';
+        left.append(tip, tv);
+      }
+      const right = el('div', 'box');
+      right.innerHTML = '<h3>' + icon('users') + 'Spieler <span style="color:var(--muted);font-weight:500">' + st.players.length + '/7</span></h3>';
+      const list = el('div', 'plist');
+      st.players.forEach((p) => {
+        const row = el('div', 'pl'); row.style.setProperty('--c', p.color);
+        row.innerHTML = '<b>' + esc(p.name) + (p.id === st.me ? ' (du)' : '') + '</b>';
+        if (st.role === 'host') { const k = el('button', null, icon('x')); k.title = 'Entfernen'; k.type = 'button'; k.addEventListener('click', () => act('kick', { pid: p.id })); row.appendChild(k); }
+        list.appendChild(row);
+      });
+      for (let i = st.players.length; i < 7; i++) list.appendChild(el('div', 'empty', 'Platz frei'));
+      right.appendChild(list);
+      const cats = el('p', null, '<b style="color:var(--text)">Kategorien:</b> ' + esc((st.catNames || []).join(' · ')));
+      cats.style.cssText = 'color:var(--muted);font-size:.86rem;margin:14px 0 0';
+      right.appendChild(cats);
+      if (st.role === 'host') {
+        const b = el('button', 'btn gold big', icon('play') + 'Spiel starten');
+        b.type = 'button'; b.style.cssText = 'width:100%;margin-top:14px'; b.disabled = !st.players.length;
+        b.addEventListener('click', () => act('start'));
+        right.appendChild(b);
+        if (!st.players.length) right.appendChild(el('p', null, 'Warte auf mindestens einen Spieler …')).style.cssText = 'color:var(--muted);font-size:.85rem;text-align:center;margin:8px 0 0';
+      } else if (st.role === 'player') {
+        const w = el('div', 'wait-card', '<b>Du bist drin!</b>Warte, bis ' + esc(st.host) + ' das Spiel startet. Dein Buzzer erscheint dann hier.');
+        right.appendChild(w);
+      }
+      wrap.append(left, right);
+      return wrap;
+    }
+
+    // ---------- Board (Host und Bildschirm) ----------
+    function viewBoard(st) {
+      const wrap = el('div');
+      const b = el('div', 'board'); b.style.setProperty('--cols', st.board.length);
+      st.board.forEach((c) => b.appendChild(el('div', 'cat', esc(c.name))));
+      for (let r = 0; r < 5; r++) {
+        st.board.forEach((c, ci) => {
+          const t = c.tiles[r];
+          const host = st.role === 'host';
+          const tile = el(host && !t.used ? 'button' : 'div', 'tile' + (t.used ? ' used' : '') + (t.dd ? ' dd' : ''), t.used ? '' : String(t.v));
+          if (host && !t.used) {
+            tile.type = 'button';
+            tile.setAttribute('aria-label', c.name + ' für ' + t.v);
+            tile.addEventListener('click', () => { sfx('click'); act('pick', { c: ci, r }); });
+          }
+          b.appendChild(tile);
+        });
+      }
+      wrap.appendChild(b);
+      if (st.role === 'host') {
+        const info = el('p', null, st.left ? 'Tippe auf ein Feld, um die Frage zu öffnen. Felder mit „DD“ sind Daily Doubles (nur du siehst das).' + (st.control ? ' Am Zug: <b style="color:var(--text)">' + esc(nm(st, st.control)) + '</b>.' : '') : '<b style="color:var(--text)">Alle Fragen gespielt.</b> Zeit für das Finale!');
+        info.style.cssText = 'color:var(--muted);font-size:.86rem;text-align:center;margin:12px 0 0';
+        wrap.appendChild(info);
+      }
+      return wrap;
+    }
+
+    function flagsHtml(st, q) {
+      const out = [];
+      q.doubled.forEach((id) => out.push('<span>' + icon('zap') + esc(nm(st, id)) + ' doppelt</span>'));
+      q.shielded.forEach((id) => out.push('<span>' + icon('shield') + esc(nm(st, id)) + ' Schild</span>'));
+      q.frozen.forEach((id) => out.push('<span style="color:var(--ice)">' + icon('snowflake') + esc(nm(st, id)) + ' eingefroren</span>'));
+      q.hinted.forEach((id) => out.push('<span>' + icon('lightbulb') + esc(nm(st, id)) + ' hat einen Tipp</span>'));
+      q.locked.forEach((id) => out.push('<span style="opacity:.7">' + icon('x') + esc(nm(st, id)) + ' raus</span>'));
+      return out.length ? '<div class="flags">' + out.join('') + '</div>' : '';
+    }
+    function resultsHtml(st, q) {
+      if (!q.results.length) return '';
+      return '<div class="results">' + q.results.map((r) => '<span class="' + (r.correct ? 'ok' : 'no') + '">' + esc(nm(st, r.pid)) + ' ' + (r.delta > 0 ? '+' : '') + fmt(r.delta) + '</span>').join('') + '</div>';
+    }
+    function whoHtml(st, pid, sub) {
+      const p = pOf(st, pid);
+      if (!p) return '';
+      return '<div class="who" style="--c:' + p.color + '"><i></i><span>' + esc(p.name) + (sub ? '<br><small>' + sub + '</small>' : '') + '</span></div>';
+    }
+
+    // ---------- Frage (Host und Bildschirm) ----------
+    function viewQuestion(st) {
+      const q = st.q, host = st.role === 'host';
+      const card = el('div', 'qcard');
+      let h = '<div class="meta"><span>' + esc(q.cat) + '</span><b>' + (q.dd && q.dd.wager ? 'Einsatz ' + fmt(q.dd.wager) : q.value) + '</b></div>';
+      if (q.dd && q.status === 'dd') {
+        h += '<div class="dd-banner">Daily Double</div>';
+        if (q.dd.pid) h += whoHtml(st, q.dd.pid, 'setzt gerade einen Einsatz …');
+        else h += '<div class="status-line">' + (host ? 'Wer spielt das Daily Double?' : 'Der Host wählt, wer spielt …') + '</div>';
+      } else {
+        h += '<div class="clue">' + esc(q.clue) + '</div>';
+      }
+      if (host && q.answer) {
+        const hidden = G.hideSol && q.status !== 'reveal';
+        h += '<div class="sol' + (q.status === 'reveal' ? ' revealed' : '') + (hidden ? ' blur' : '') + '" data-sol><small>' + (q.status === 'reveal' ? 'Lösung' : 'Lösung (nur für dich) · antippen zum ' + (G.hideSol ? 'Zeigen' : 'Verbergen')) + '</small><b>' + esc(q.answer) + '</b></div>';
+        if (q.hint && q.status !== 'reveal') h += '<div class="hint">Tipp-Joker: ' + esc(q.hint) + '</div>';
+      } else if (q.status === 'reveal' && q.answer) {
+        h += '<div class="sol revealed"><small>Lösung</small><b>' + esc(q.answer) + '</b></div>';
+      }
+      // Status
+      if (q.status === 'reading' && !q.dd) h += '<div class="status-line">' + (host ? 'Lies den Hinweis vor und gib dann den Buzzer frei.' : 'Gleich geht der Buzzer auf …') + '</div>';
+      if (q.status === 'reading' && q.dd) h += whoHtml(st, q.dd.pid, 'antwortet für ' + fmt(q.dd.wager) + ' Punkte');
+      if (q.status === 'open') h += '<div class="status-line"><span class="open">Buzzer frei!</span> · seit <span data-open-for>0 s</span></div>';
+      if (q.status === 'buzzed') {
+        const b = q.buzzes[0];
+        const mult = q.doubled.includes(q.buzzer) ? 2 : 1;
+        h += whoHtml(st, q.buzzer, (b && b.ms ? (b.ms / 1000).toFixed(2).replace('.', ',') + ' s · ' : '') + 'spielt um ' + fmt(q.value * mult) + (mult > 1 ? ' (doppelt)' : ''));
+        if (q.buzzes.length > 1) h += '<div class="runners">Knapp dahinter: ' + q.buzzes.slice(1).map((x) => esc(nm(st, x.pid)) + ' +' + (x.dt / 1000).toFixed(2).replace('.', ',') + ' s').join(', ') + '</div>';
+      }
+      h += flagsHtml(st, q) + resultsHtml(st, q);
+      card.innerHTML = h;
+      const sol = card.querySelector('[data-sol]');
+      if (sol && host && q.status !== 'reveal') sol.addEventListener('click', () => { G.hideSol = !G.hideSol; try { localStorage.setItem('bigh-jeopardy-hide', G.hideSol ? '1' : '0'); } catch (e) { /* egal */ } render(G.st); });
+
+      if (host) {
+        const ctl = el('div', 'host-ctl');
+        const btn = (cls, ic, txt, fn) => { const b = el('button', 'btn ' + cls, icon(ic) + txt); b.type = 'button'; b.addEventListener('click', fn); ctl.appendChild(b); return b; };
+        if (q.status === 'dd') {
+          const pk = el('div', 'pickers');
+          st.players.forEach((p) => {
+            const b = el('button', p.id === q.dd.pid ? 'on' : '', esc(p.name)); b.type = 'button'; b.style.setProperty('--c', p.color);
+            b.addEventListener('click', () => act('dd', { pid: p.id }));
+            pk.appendChild(b);
+          });
+          card.appendChild(pk);
+          if (q.dd.pid) {
+            const p = pOf(st, q.dd.pid);
+            const wrap = el('div', 'host-ctl');
+            const inp = el('input'); inp.type = 'number'; inp.min = 5; inp.max = q.maxWager; inp.value = Math.min(q.maxWager, Math.max(5, p ? p.score : 5));
+            inp.style.cssText = 'width:120px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;padding:8px;font:600 1rem var(--body)';
+            const b = el('button', 'btn ghost sm', 'Einsatz für ' + esc(p ? p.name : '') + ' setzen'); b.type = 'button';
+            b.addEventListener('click', () => act('ddwager', { amount: +inp.value }));
+            wrap.append(inp, b);
+            const n = el('div', 'keys', 'Normalerweise setzt die Person selbst auf dem Handy. Falls nicht: hier eintragen (max. ' + fmt(q.maxWager) + ').');
+            card.append(wrap, n);
+          }
+        }
+        if (q.status === 'reading' && !q.dd) btn('gold big', 'bell', 'Buzzer freigeben', () => act('open'));
+        if (q.status === 'buzzed' || (q.status === 'reading' && q.dd)) {
+          const pid = q.dd ? q.dd.pid : q.buzzer;
+          const val = q.dd ? q.dd.wager : q.value * (q.doubled.includes(pid) ? 2 : 1);
+          const shield = q.shielded.includes(pid);
+          btn('green big', 'circle-check', 'Richtig +' + fmt(val), () => act('judge', { correct: true }));
+          btn('red big', 'circle-x', 'Falsch ' + (shield ? '±0 (Schild)' : '−' + fmt(val)), () => act('judge', { correct: false }));
+        }
+        if (q.status !== 'reveal') btn('ghost', 'eye-off', q.results.length || q.status === 'open' ? 'Niemand / Auflösen' : 'Auflösen', () => act('reveal'));
+        else btn('gold big', 'arrow-right', st.left > 1 ? 'Zurück zum Board' : 'Zum Board (letzte Frage)', () => act('next'));
+        card.appendChild(ctl);
+        card.appendChild(el('div', 'keys', 'Tastatur: Leertaste = Buzzer frei · R = richtig · F = falsch · Enter = weiter'));
+      }
+      return card;
+    }
+
+    // ---------- Spieler: Board ----------
+    function viewPlayerBoard(st) {
+      const wrap = el('div');
+      wrap.appendChild(meHead(st));
+      const w = el('div', 'wait-card', '<b>' + esc(st.host) + ' wählt die nächste Frage …</b>' + (st.control === st.me ? 'Du hast die letzte Frage geholt. Sag laut, welches Feld du willst!' : st.control ? esc(nm(st, st.control)) + ' darf das nächste Feld aussuchen.' : 'Mach dich bereit.'));
+      const mb = el('div', 'mini-board'); mb.style.setProperty('--cols', st.board.length);
+      for (let r = 0; r < 5; r++) st.board.forEach((c) => mb.appendChild(el('i', c.tiles[r].used ? 'used' : '')));
+      w.appendChild(mb);
+      wrap.appendChild(w);
+      wrap.appendChild(jokerRow(st));
+      return wrap;
+    }
+    function meHead(st) {
+      const me = meP(st);
+      const h = el('div', 'me-head'); h.style.setProperty('--c', me.color);
+      const rank = [...st.players].sort((a, b) => b.score - a.score).findIndex((p) => p.id === me.id) + 1;
+      h.innerHTML = '<div><b>' + esc(me.name) + '</b><small>Platz ' + rank + ' von ' + st.players.length + '</small></div><div class="pts' + (me.score < 0 ? ' neg' : '') + '">' + fmt(me.score) + '</div>';
+      return h;
+    }
+
+    // ---------- Spieler: Frage mit Buzzer ----------
+    function viewPlayerQ(st) {
+      const q = st.q, me = meP(st), myId = st.me;
+      const wrap = el('div');
+      wrap.appendChild(meHead(st));
+      const pq = el('div', 'pq');
+      let h = '<div class="meta">' + esc(q.cat) + ' · <b>' + (q.dd && q.dd.wager ? 'Einsatz ' + fmt(q.dd.wager) : q.value) + '</b></div>';
+      if (q.clue) h += '<div class="clue">' + esc(q.clue) + '</div>';
+      else h += '<div class="clue" style="color:var(--accent);font-size:1.6rem">DAILY DOUBLE</div>';
+      if (q.hint) h += '<div class="hint">Big H flüstert: ' + esc(q.hint) + '</div>';
+      if (q.status === 'reveal' && q.answer) h += '<div class="sol">Lösung: <b>' + esc(q.answer) + '</b></div>';
+      pq.innerHTML = h;
+      wrap.appendChild(pq);
+
+      // Daily Double: Einsatz
+      if (q.dd && q.status === 'dd') {
+        if (q.dd.pid === myId) wrap.appendChild(wagerBox('Daily Double! Wie viel setzt du?', 'Mindestens 5, höchstens ' + fmt(q.maxWager) + '.', 5, q.maxWager, Math.min(q.maxWager, Math.max(5, Math.round(Math.max(me.score, 500) / 2 / 5) * 5)), (amt) => act('wager', { amount: amt })));
+        else wrap.appendChild(el('div', 'wait-card', '<b>Daily Double</b>' + (q.dd.pid ? esc(nm(st, q.dd.pid)) + ' setzt gerade.' : 'Der Host wählt, wer spielt.')));
+        wrap.appendChild(jokerRow(st));
+        return wrap;
+      }
+      if (q.dd) {
+        const mine = q.dd.pid === myId;
+        wrap.appendChild(el('div', 'buzz-wrap', '<div class="buzzer ' + (mine ? 'mine' : 'other') + '" style="--c:' + (pOf(st, q.dd.pid) || {}).color + '">' + (q.status === 'reveal' ? resultLabel(st, q) : mine ? 'Antworte!<small>Sag die Antwort laut</small>' : esc(nm(st, q.dd.pid)) + '<small>spielt das Daily Double</small>') + '</div>'));
+        wrap.appendChild(jokerRow(st));
+        return wrap;
+      }
+
+      // Buzzer
+      const locked = q.locked.includes(myId), frozen = q.frozen.includes(myId);
+      const early = G.earlyUntil > Date.now();
+      let cls = '', label = '';
+      if (q.status === 'reveal') { cls = 'other'; label = resultLabel(st, q); }
+      else if (frozen) { cls = 'frozen'; label = 'Eingefroren<small>von ' + esc(nm(st, (q.frozenBy || {})[myId])) + '</small>'; }
+      else if (locked) { cls = ''; label = 'Raus<small>Du hast schon geantwortet</small>'; }
+      else if (q.status === 'buzzed' && q.buzzer === myId) { cls = 'mine'; label = 'Du bist dran!<small>Sag die Antwort laut</small>'; }
+      else if (q.status === 'buzzed') { cls = 'other'; label = esc(nm(st, q.buzzer)) + '<small>war schneller</small>'; }
+      else if (early) { cls = 'early'; label = 'Zu früh!<small>kurz gesperrt</small>'; }
+      else if (q.status === 'open') { cls = 'live'; label = 'Buzz!'; }
+      else { cls = ''; label = 'Warte …<small>Nicht zu früh drücken!</small>'; }
+      const bw = el('div', 'buzz-wrap');
+      const b = el('button', 'buzzer ' + cls, label);
+      b.type = 'button';
+      if (cls === 'other' && q.buzzer) b.style.setProperty('--c', (pOf(st, q.buzzer) || {}).color || '#666');
+      if (q.status === 'reveal') b.style.setProperty('--c', '#3f3f46');
+      b.disabled = q.status === 'reveal' || locked || frozen || q.status === 'buzzed' && q.buzzer === myId;
+      b.addEventListener('pointerdown', (e) => { e.preventDefault(); doBuzz(); });
+      b.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); doBuzz(); } });
+      bw.appendChild(b);
+      wrap.appendChild(bw);
+      wrap.appendChild(jokerRow(st));
+      return wrap;
+    }
+    function resultLabel(st, q) {
+      const mine = q.results.filter((r) => r.pid === st.me);
+      const right = q.results.find((r) => r.correct);
+      if (mine.length) { const r = mine[mine.length - 1]; return (r.correct ? 'Richtig!' : 'Falsch') + '<small>' + (r.delta > 0 ? '+' : '') + fmt(r.delta) + ' Punkte</small>'; }
+      if (right) return esc(nm(st, right.pid)) + '<small>hat es gewusst</small>';
+      return 'Aufgelöst<small>Niemand hatte es</small>';
+    }
+    let buzzing = false;
+    async function doBuzz() {
+      const st = G.st, q = st && st.q;
+      if (!q || buzzing || q.status === 'reveal') return;
+      buzzing = true;
+      const ms = q.status === 'open' ? Date.now() - G.openSeen : 0;
+      if (q.status === 'open') sfx('buzz'); else vibrate(20);
+      try {
+        const r = await api('POST', '/' + S.code + '/buzz', { ms });
+        if (r.result && r.result.early) { G.earlyUntil = Date.now() + r.result.early; sfx('wrong'); vibrate([60, 40, 60]); }
+        if (r.result && r.result.late) BIGH.toast('Knapp! ' + (r.result.late / 1000).toFixed(2).replace('.', ',') + ' s zu langsam.');
+        render(r);
+      } catch (e) { if (!/Zu spät/.test(e.message)) BIGH.toast(e.message); }
+      buzzing = false;
+    }
+
+    // ---------- Joker ----------
+    function jokerRow(st) {
+      const me = meP(st), q = st.q;
+      const row = el('div', 'jokers');
+      const active = st.phase === 'question' && q && q.status !== 'reveal';
+      const preBuzz = active && !q.dd && ['reading', 'open'].includes(q.status) && !q.locked.includes(me.id) && !q.frozen.includes(me.id);
+      const ddMine = active && q.dd && q.dd.pid === me.id;
+      JOKERS.forEach(([type, ic, label]) => {
+        const has = me.jokers[type];
+        let ok = false;
+        if (type === 'double') ok = preBuzz && !q.doubled.includes(me.id);
+        if (type === 'shield') ok = (preBuzz || ddMine) && !q.shielded.includes(me.id);
+        if (type === 'freeze') ok = active && !q.dd && ['reading', 'open'].includes(q.status) && st.players.some((p) => p.id !== me.id && !q.locked.includes(p.id) && !q.frozen.includes(p.id));
+        if (type === 'hint') ok = active && (!q.dd || ddMine) && !q.hinted.includes(me.id);
+        const b = el('button', 'joker' + (has ? '' : ' used'), icon(ic) + '<span>' + label + '</span>');
+        b.type = 'button';
+        b.disabled = !has || !ok;
+        b.title = has ? (ok ? label + ' einsetzen' : 'Gerade nicht möglich') : 'Schon benutzt';
+        b.addEventListener('click', () => useJoker(type));
+        row.appendChild(b);
+      });
+      return row;
+    }
+    async function useJoker(type) {
+      const st = G.st;
+      if (type === 'freeze') {
+        const q = st.q;
+        const t = $('targets'); t.innerHTML = '';
+        st.players.filter((p) => p.id !== st.me && !q.locked.includes(p.id) && !q.frozen.includes(p.id)).forEach((p) => {
+          const b = el('button', null, esc(p.name) + ' <span style="margin-left:auto;color:var(--muted)">' + fmt(p.score) + '</span>'); b.type = 'button'; b.style.setProperty('--c', p.color);
+          b.addEventListener('click', async () => { $('sheet').classList.remove('show'); if (await act('joker', { type: 'freeze', target: p.id })) sfx('freeze'); });
+          t.appendChild(b);
+        });
+        $('sheet').classList.add('show');
+        return;
+      }
+      if (await act('joker', { type })) sfx(type === 'hint' ? 'shine' : 'coin');
+    }
+    $('sheet-x').addEventListener('click', () => $('sheet').classList.remove('show'));
+    $('sheet').addEventListener('click', (e) => { if (e.target.id === 'sheet') $('sheet').classList.remove('show'); });
+
+    function wagerBox(title, sub, min, max, def, onSend, step) {
+      const box = el('div', 'wager');
+      box.innerHTML = '<b style="font:700 1.1rem var(--title)">' + esc(title) + '</b><div style="color:var(--muted);font-size:.85rem">' + esc(sub) + '</div><div class="amt">' + fmt(def) + '</div>';
+      const r = el('input'); r.type = 'range'; r.min = min; r.max = max; r.step = step || 5; r.value = def;
+      const amt = box.querySelector('.amt');
+      const upd = () => { amt.textContent = fmt(+r.value); };
+      r.addEventListener('input', upd);
+      const quick = el('div', 'quick');
+      [['Minimum', min], ['Hälfte', Math.round(max / 2 / 5) * 5], ['Alles', max]].forEach(([l, v]) => { const b = el('button', null, l); b.type = 'button'; b.addEventListener('click', () => { r.value = v; upd(); sfx('click'); }); quick.appendChild(b); });
+      const go = el('button', 'btn gold big', icon('check') + 'Einsatz setzen'); go.type = 'button'; go.style.width = '100%';
+      go.addEventListener('click', () => { const v = +r.value === +r.max ? max : +r.value; onSend(v); });
+      box.append(r, quick, go);
+      return box;
+    }
+
+    // ---------- Finale ----------
+    function viewFinal(st) {
+      const f = st.fin, host = st.role === 'host';
+      const card = el('div', 'qcard');
+      let h = '<div class="meta"><span>Finale</span><b>' + esc(f.cat) + '</b></div>';
+      if (f.step === 'category') h += '<div class="dd-banner" style="font-size:clamp(1.6rem,6vw,3.4rem)">Final Jeopardy</div><div class="status-line">Kategorie: <b style="color:var(--accent)">' + esc(f.cat) + '</b>. Wer Punkte hat, setzt gleich einen Einsatz.</div>';
+      if (f.step === 'wager') h += '<div class="clue">' + esc(f.cat) + '</div><div class="status-line">Einsätze werden gesetzt …</div>';
+      if (f.step === 'answer' || f.step === 'reveal') h += '<div class="clue">' + esc(f.clue) + '</div>';
+      if (f.step === 'answer') { G.finEnd = Date.now() + f.deadlineIn; h += '<div class="countdown" data-countdown>' + Math.ceil(f.deadlineIn / 1000) + '</div>'; }
+      if (host && f.answer && f.step !== 'reveal') h += '<div class="sol' + (G.hideSol ? ' blur' : '') + '"><small>Lösung (nur für dich)</small><b>' + esc(f.answer) + '</b></div>';
+      if (f.step === 'reveal' && f.answer) h += '<div class="sol' + (host || !f.current ? ' revealed' : '') + '"><small>Lösung</small><b>' + esc(f.answer) + '</b></div>';
+      card.innerHTML = h;
+      const list = el('div', 'final-list');
+      f.players.forEach((id) => {
+        const p = pOf(st, id); if (!p) return;
+        const row = el('div', 'fr' + (f.current === id ? ' cur' : '')); row.style.setProperty('--c', p.color);
+        let right = '';
+        if (f.step === 'wager') right = f.wagered.includes(id) ? icon('check') + ' gesetzt' : '…';
+        else if (f.step === 'answer') right = f.answered.includes(id) ? icon('check') + ' geantwortet' : 'tippt …';
+        else if (f.step === 'reveal') {
+          const j = f.judged[id];
+          right = id in f.judged ? (j ? '<span style="color:#86efac">richtig +' : '<span style="color:#fca5a5">falsch −') + fmt(f.wagers[id] || 0) + '</span>' : (id in f.wagers ? 'Einsatz ' + fmt(f.wagers[id]) : '');
+        }
+        const ans = f.step === 'reveal' && (id in f.answers) ? '<small>„' + esc(f.answers[id] || '(leer)') + '“</small>' : (f.step === 'reveal' && (id in f.judged || id === f.current) ? '<small>(keine Antwort)</small>' : '');
+        row.innerHTML = '<i></i><div><b>' + esc(p.name) + '</b> <small>' + fmt(p.score) + '</small><br>' + ans + '</div><div style="text-align:right">' + right + '</div>';
+        if (host && f.step === 'reveal' && id === f.current) {
+          const btns = el('div', 'host-ctl'); btns.style.gridColumn = '1 / -1'; btns.style.marginTop = '6px';
+          const ok = el('button', 'btn green', icon('circle-check') + 'Richtig +' + fmt(f.wagers[id] || 0)); ok.type = 'button'; ok.addEventListener('click', () => act('finaljudge', { pid: id, correct: true }));
+          const no = el('button', 'btn red', icon('circle-x') + 'Falsch −' + fmt(f.wagers[id] || 0)); no.type = 'button'; no.addEventListener('click', () => act('finaljudge', { pid: id, correct: false }));
+          btns.append(ok, no); row.appendChild(btns);
+        }
+        list.appendChild(row);
+      });
+      card.appendChild(list);
+      if (host) {
+        const ctl = el('div', 'host-ctl');
+        const label = { category: 'Einsätze sammeln', wager: 'Hinweis zeigen und Uhr starten', answer: 'Antworten aufdecken', reveal: 'Siegerehrung' }[f.step];
+        const b = el('button', 'btn gold big', icon('arrow-right') + label); b.type = 'button';
+        if (f.step === 'reveal') b.disabled = !!f.current;
+        if (f.step === 'wager' && f.wagered.length < f.players.length) b.title = 'Wer nicht setzt, setzt 0';
+        b.addEventListener('click', () => act('finalnext'));
+        ctl.appendChild(b);
+        card.appendChild(ctl);
+      }
+      return card;
+    }
+    function viewPlayerFinal(st) {
+      const f = st.fin, me = meP(st);
+      const wrap = el('div');
+      wrap.appendChild(meHead(st));
+      const inIt = f.players.includes(me.id);
+      const pq = el('div', 'pq', '<div class="meta">Finale · <b>' + esc(f.cat) + '</b></div>' + (f.clue ? '<div class="clue">' + esc(f.clue) + '</div>' : '<div class="clue">Final Jeopardy</div>') + (f.step === 'reveal' && f.answer ? '<div class="sol">Lösung: <b>' + esc(f.answer) + '</b></div>' : ''));
+      wrap.appendChild(pq);
+      if (!inIt && f.step !== 'category') { wrap.appendChild(el('div', 'wait-card', '<b>Du schaust zu</b>Im Finale spielen nur Leute mit mehr als 0 Punkten. Nächstes Mal!')); return wrap; }
+      if (f.step === 'category') wrap.appendChild(el('div', 'wait-card', '<b>Kategorie: ' + esc(f.cat) + '</b>' + (me.score > 0 ? 'Überleg dir schon mal, wie viel du setzen willst.' : 'Mit 0 oder weniger Punkten bist du im Finale nur Zuschauer.')));
+      if (f.step === 'wager') {
+        if (f.wagered.includes(me.id)) wrap.appendChild(el('div', 'wait-card', '<b>Einsatz: ' + fmt(f.wagers[me.id]) + '</b>Warte auf die anderen. Du kannst ihn noch ändern.'));
+        wrap.appendChild(wagerBox(f.wagered.includes(me.id) ? 'Einsatz ändern' : 'Dein Einsatz', 'Zwischen 0 und ' + fmt(me.score) + '. Niemand sieht ihn vor der Auflösung.', 0, me.score, f.wagers[me.id] != null ? f.wagers[me.id] : Math.round(me.score / 2), async (amt) => { if (await act('wager', { amount: amt })) sfx('coin'); }, 1));
+      }
+      if (f.step === 'answer') {
+        G.finEnd = Date.now() + f.deadlineIn;
+        const box = el('div', 'wager');
+        box.innerHTML = '<div class="countdown" data-countdown style="margin:0 0 8px">' + Math.ceil(f.deadlineIn / 1000) + '</div>';
+        const ta = el('textarea'); ta.maxLength = 80; ta.placeholder = 'Was ist …?'; ta.value = G.draft != null ? G.draft : (f.answers[me.id] || '');
+        ta.addEventListener('input', () => { G.draft = ta.value; });
+        const go = el('button', 'btn gold big', icon('send') + (f.answered.includes(me.id) ? 'Antwort ändern' : 'Antwort abschicken')); go.type = 'button'; go.style.cssText = 'width:100%;margin-top:8px';
+        go.addEventListener('click', async () => { if (await act('answer', { text: ta.value })) { sfx('coin'); BIGH.toast('Antwort gespeichert'); } });
+        box.append(ta, go);
+        if (f.answered.includes(me.id)) box.appendChild(el('div', null, '<small style="color:var(--muted)">Gespeichert: „' + esc(f.answers[me.id]) + '“</small>'));
+        wrap.appendChild(box);
+        // Fokus behalten, wenn neu gerendert wird
+        setTimeout(() => { if (G.focusTa) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); } }, 0);
+        ta.addEventListener('focus', () => { G.focusTa = true; }); ta.addEventListener('blur', () => { G.focusTa = false; });
+      } else G.draft = null;
+      if (f.step === 'reveal') {
+        const j = f.judged[me.id];
+        wrap.appendChild(el('div', 'wait-card', me.id in f.judged ? '<b>' + (j ? 'Richtig! +' : 'Falsch. −') + fmt(f.wagers[me.id] || 0) + '</b>Deine Antwort: „' + esc(f.answers[me.id] || '–') + '“' : '<b>Auflösung läuft …</b>' + (f.current === me.id ? 'Jetzt bist du dran!' : 'Gleich kommst du.')));
+      }
+      return wrap;
+    }
+
+    // ---------- Ende ----------
+    function viewEnd(st) {
+      const wrap = el('div');
+      const ranked = [...st.players].sort((a, b) => b.score - a.score);
+      const pod = el('div', 'podium');
+      [1, 0, 2].forEach((i) => {
+        const p = ranked[i]; if (!p) return;
+        const s = el('div', 'st p' + (i + 1)); s.style.setProperty('--c', p.color);
+        s.innerHTML = '<b>' + esc(p.name) + '</b><small>' + fmt(p.score) + '</small><div class="blk">' + (i + 1) + '</div>';
+        pod.appendChild(s);
+      });
+      const box = el('div', 'box');
+      box.innerHTML = '<h2 style="justify-content:center">' + icon('trophy') + esc(ranked[0] ? ranked[0].name : '') + ' gewinnt!</h2>';
+      box.appendChild(pod);
+      if (ranked.length > 3) {
+        const rest = el('div', 'ranks');
+        ranked.slice(3).forEach((p, i) => { const r = el('div', 'pl'); r.style.cssText = '--c:' + p.color + ';display:flex;justify-content:space-between;background:var(--card-2);border-left:5px solid var(--c);border-radius:10px;padding:6px 12px'; r.innerHTML = '<span>' + (i + 4) + '. ' + esc(p.name) + '</span><b>' + fmt(p.score) + '</b>'; rest.appendChild(r); });
+        box.appendChild(rest);
+      }
+      wrap.appendChild(box);
+      if (st.awards && st.awards.length) {
+        const aw = el('div', 'awards');
+        st.awards.forEach((a) => aw.appendChild(el('div', null, '<small>' + esc(a.title) + '</small><b>' + esc(a.who) + '</b><span>' + esc(a.text) + '</span>')));
+        wrap.appendChild(aw);
+      }
+      if (st.role === 'host') {
+        const ctl = el('div', 'host-ctl');
+        const again = el('button', 'btn gold big', icon('rotate-ccw') + 'Revanche (neue Runde)'); again.type = 'button'; again.addEventListener('click', () => act('restart'));
+        ctl.appendChild(again);
+        wrap.appendChild(ctl);
+      }
+      return wrap;
+    }
+
+    // ---------- Punktestand ----------
+    function renderScores(st) {
+      const box = $('scores');
+      box.innerHTML = '';
+      const host = st.role === 'host';
+      const q = st.q;
+      const step = q ? q.value : 100;
+      st.players.forEach((p) => {
+        const c = el('div', 'sc' + (st.control === p.id ? ' ctrl' : '') + (q && q.buzzer === p.id && q.status === 'buzzed' ? ' buzzing' : ''));
+        c.style.setProperty('--c', p.color);
+        c.innerHTML = '<div class="nm"><span class="dot' + (p.online ? ' on' : '') + '"></span>' + esc(p.name) + (p.id === st.me ? ' (du)' : '') + '</div><div class="pts' + (p.score < 0 ? ' neg' : '') + '">' + fmt(p.score) + '</div>' +
+          '<div class="jk">' + JOKERS.map(([t, ic, l]) => '<span class="' + (p.jokers[t] ? '' : 'used') + '" title="' + l + (p.jokers[t] ? '' : ' (benutzt)') + '">' + icon(ic) + '</span>').join('') + '</div>' +
+          (st.control === p.id && st.phase !== 'lobby' ? '<span class="ctrl-tag">am Zug</span>' : '');
+        if (host && st.phase !== 'lobby') {
+          const adj = el('div', 'adj');
+          [[-step, '−' + step], [step, '+' + step]].forEach(([d, l]) => { const b = el('button', null, l); b.type = 'button'; b.title = 'Punkte korrigieren'; b.addEventListener('click', () => act('adjust', { pid: p.id, delta: d })); adj.appendChild(b); });
+          c.appendChild(adj);
+        }
+        box.appendChild(c);
+      });
+      box.hidden = st.phase === 'lobby' || !st.players.length;
+    }
+    function renderFoot(st) {
+      const f = $('foot-acts');
+      f.innerHTML = '';
+      const add = (cls, ic, txt, fn) => { const b = el('button', 'btn ' + cls, icon(ic) + txt); b.type = 'button'; b.addEventListener('click', fn); f.appendChild(b); };
+      if (st.role === 'host') {
+        if (st.phase === 'board') add(st.left ? 'ghost sm' : 'gold big', 'flag', 'Finale starten' + (st.left ? ' (' + st.left + ' Fragen übrig)' : ''), () => { if (!st.left || confirm('Es sind noch ' + st.left + ' Fragen übrig. Trotzdem ins Finale?')) act('final'); });
+        if (st.phase !== 'lobby') { const a = el('a', 'btn ghost sm', icon('monitor') + 'Bildschirm-Modus'); a.href = '#tv-' + st.code; a.target = '_blank'; a.rel = 'noopener'; f.appendChild(a); }
+        add('ghost sm', 'x', 'Spiel beenden', async () => { if (confirm('Spiel für alle beenden?')) { await act('close'); leaveGame(); } });
+      } else if (st.role === 'player') {
+        add('ghost sm', 'door-open', 'Spiel verlassen', async () => { if (confirm('Spiel verlassen? Deine Punkte gehen verloren.')) { await act('leave'); leaveGame(); } });
+      } else add('ghost sm', 'arrow-left', 'Bildschirm-Modus beenden', () => leaveGame());
+    }
+
+    // Host-Tastatur
+    document.addEventListener('keydown', (e) => {
+      const st = G.st;
+      if (!st || st.role !== 'host' || e.target.closest('input, textarea') || e.metaKey || e.ctrlKey) return;
+      const q = st.q;
+      if (st.phase === 'question' && q) {
+        if (e.key === ' ' && q.status === 'reading' && !q.dd) { e.preventDefault(); act('open'); }
+        else if ((e.key === 'r' || e.key === 'R') && (q.status === 'buzzed' || (q.dd && q.status === 'reading'))) act('judge', { correct: true });
+        else if ((e.key === 'f' || e.key === 'F') && (q.status === 'buzzed' || (q.dd && q.status === 'reading'))) act('judge', { correct: false });
+        else if (e.key === 'Enter' && q.status === 'reveal') act('next');
+      }
+    });
+    // Spieler: Leertaste = Buzzer (für Laptop)
+    document.addEventListener('keydown', (e) => {
+      const st = G.st;
+      if (!st || st.role !== 'player' || st.phase !== 'question' || e.target.closest('input, textarea, button')) return;
+      if (e.key === ' ') { e.preventDefault(); doBuzz(); }
+    });
+    $('copy-link').addEventListener('click', async () => {
+      const url = location.origin + location.pathname + '#' + (G.st ? G.st.code : S.code);
+      try { await navigator.clipboard.writeText(url); BIGH.toast('Link kopiert: ' + url); } catch (e) { BIGH.toast(url); }
+    });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('game').hidden) { G.v = 0; poll(); } });
+
+    // ---------- Einstieg ----------
+    function route() {
+      const h = decodeURIComponent(location.hash.slice(1)).toUpperCase();
+      const tv = h.match(/^TV-([A-Z]{4})$/);
+      if (tv) { S = { code: tv[1], token: null, role: 'tv' }; enter(); return; }
+      if (/^[A-Z]{4}$/.test(h)) {
+        // gespeicherte Sitzung für genau dieses Spiel? Dann direkt rein.
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { /* egal */ }
+        if (saved.code === h && saved.token) { S = saved; enter(); return; }
+        $('home').hidden = false; $('game').hidden = true;
+        $('j-code').value = h; setTimeout(() => $('j-name').focus(), 100);
+        homeLoop();
+        return;
+      }
+      if (S.code && S.token && S.role !== 'tv') { enter(); return; }
+      $('home').hidden = false; homeLoop();
+    }
+    window.addEventListener('hashchange', () => { if (!$('game').hidden && location.hash.slice(1).toUpperCase() === ((S.role === 'tv' ? 'TV-' : '') + S.code)) return; G.poll++; route(); });
+    route();
+  })();
+  </script>
+</body>
+</html>

@@ -154,7 +154,12 @@
     shine: () => { for (let i = 0; i < 10; i++) tone(1800 + Math.random() * 2400, i * 0.05, 0.15, 'sine', 0.018); },
     whoosh: () => noise(0, 0.5, 0.08, 'lowpass', 300, 3000),
     tadum: () => { tone(98, 0, 0.35, 'sine', 0.2); noise(0, 0.18, 0.06, 'lowpass', 400); tone(73.4, 0.42, 1.6, 'sine', 0.22); tone(146.8, 0.42, 1.4, 'triangle', 0.05); tone(110, 0.42, 1.5, 'sine', 0.08); },
-    jingle: () => [659, 784, 988, 784, 1319].forEach((f, i) => tone(f, i * 0.11, 0.2, 'triangle', 0.04))
+    jingle: () => [659, 784, 988, 784, 1319].forEach((f, i) => tone(f, i * 0.11, 0.2, 'triangle', 0.04)),
+    buzz: () => { tone(440, 0, 0.28, 'sawtooth', 0.05); tone(554, 0, 0.28, 'square', 0.025); },
+    right: () => { tone(880, 0, 0.12, 'triangle', 0.05); tone(1175, 0.1, 0.12, 'triangle', 0.05); tone(1760, 0.2, 0.35, 'triangle', 0.045); },
+    wrong: () => { tone(155, 0, 0.5, 'sawtooth', 0.05); tone(147, 0.02, 0.5, 'square', 0.03); },
+    freeze: () => { for (let i = 0; i < 6; i++) tone(2600 - i * 260, i * 0.04, 0.2, 'sine', 0.02); noise(0, 0.3, 0.05, 'highpass', 4000); },
+    reveal: () => [392, 523, 659].forEach((f, i) => tone(f, i * 0.07, 0.3, 'sine', 0.05))
   };
   function sfx(name) {
     if (!soundOn || !SFX[name]) return;

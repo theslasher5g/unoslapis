@@ -30,6 +30,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const createCasino = require('./casino');
+const createJeopardy = require('./jeopardy');
 
 const DATA_FILE = process.env.DATA_FILE || './entries.json';
 const DATA_DIR = path.dirname(DATA_FILE);
@@ -294,12 +295,14 @@ function handleDelete(req, res, c, id) {
 }
 
 const casino = createCasino({ dataDir: DATA_DIR, clean, send, clientIp });
+const jeopardy = createJeopardy({ send, clean, clientIp });
 
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const p = url.pathname.replace(/\/+$/, '');
 
   if (req.method === 'GET' && p === '/api/health') return send(res, 200, { ok: true });
+  if (p === '/api/jeopardy' || p.startsWith('/api/jeopardy/')) return jeopardy.handle(req, res, p, url).catch((e) => { console.error('Jeopardy-Fehler:', e); send(res, 500, { error: 'Interner Fehler' }); });
   if (p.startsWith('/api/casino/')) return casino.handle(req, res, p, url).catch((e) => { console.error('Casino-Fehler:', e); send(res, 500, { error: 'Interner Fehler' }); });
 
   const m = p.match(/^\/api\/(entries|reviews|cards|wordle|scores)(?:\/([a-f0-9]{12}))?$/);

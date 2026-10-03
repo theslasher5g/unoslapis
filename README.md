@@ -30,6 +30,7 @@ Eine Meme-Website für Big H alias **Alastor Lapis** (Steam & Valorant: `unoslap
 | `casino.unoslapis.ch/packs/` | **Crazy Cupcakes Booster-Packs** (Kurzadresse `packs.unoslapis.ch`): Packs mit Lapis-Talern kaufen (alle 4 h eins gratis), Karten einzeln aufdecken, 40 Sammelkarten im Pokémon-Stil mit Holo-Effekt, Sammelalbum, Doppelte verkaufen |
 | `casino.unoslapis.ch/duell/` | **Karten-Duell**: Team aus 3 eigenen Karten (max. 8 Punkte: ● 1, ◆ 2, ★ 3, ★★ 4, ✦ 5), rundenbasierter Kampf gegen Kollegen (mit optionalem Einsatz) oder Big H als Bot. Typ-Vorteile, Volltreffer, Verwirrung, Heilung, Sudden Death ab Runde 20, Duell-Rangliste |
 | `casino.unoslapis.ch/poker/` | **Poker**: Texas Hold'em (No Limit) mit bis zu 6 Spielern pro Tisch. Lobby mit offenen Tischen, Blinds 5/10, 25/50 oder 100/200, Buy-in 20–100 Big Blinds vom Casino-Konto (beim Aufstehen geht alles zurück). Side-Pots, Split-Pots, Showdown mit Handnamen, Bots zum Auffüllen (Big H, Mausi, …), Check/Fold-Vorauswahl, Chat, Poker-Rangliste. Gemischt und ausgewertet wird nur auf dem Server |
+| `jeopardy.unoslapis.ch` | **Big H Jeopardy**: Quizshow für bis zu 7 Spieler plus Host. Wer ein Spiel erstellt, ist Host: sieht die Lösungen, wählt die Fragen auf dem Board, gibt den Buzzer frei und bewertet mit Richtig/Falsch (bei Falsch ist der Buzzer für die anderen wieder frei). Spieler treten per 4-Buchstaben-Code oder aus der Lobby-Liste bei und buzzern mit dem Handy (Vibration, Reaktionszeit, Strafsekunde bei zu frühem Drücken). Pro Spieler je ein Joker: Doppelt, Schild, Einfrieren, Tipp. Daily Doubles mit Einsatz, Final Jeopardy mit geheimen Einsätzen und getippten Antworten, Siegerpodest mit Awards, Revanche. 13 Kategorien (6 über Big H, 7 allgemein), Bildschirm-Modus für TV/Beamer ohne Lösungen (`#tv-CODE`). Fragen stehen in `guestbook/jeopardy-data.js` |
 | `bigflix.unoslapis.ch` | **Bigflix**: Netflix-Parodie mit Profilauswahl, „Ta-dum“-Intro, Top 10, Serien mit Folgen, Meine Liste und Fake-Player mit „Schaust du noch?“ |
 | `game.unoslapis.ch` | **Flucht vor dem Gras**: Endlos-Runner mit Big H (sein Foto) als Spielfigur. Gras überspringen, unter Einladungen durch, Monster-Dosen sammeln. **Rangliste** im Backend (Allzeit + heute) |
 | `museum.unoslapis.ch` | **Big H Museum**: Ausstellung in vier Sälen mit Exponat-Schildern, Porträt im Goldrahmen, Vollbild-Ansicht und Audioguide (Sprachausgabe des Browsers) |
@@ -56,7 +57,7 @@ sites/
   dashboard/  dating/  overwatch/  b-day/  goon/  news/  girlfriend/
   linkedin/  nofap/  touchgrass/  waifu/  quotes/  guestbook/
   excuses/  horoskop/  merch/  discord/  wordle/  tinder/  bewertungen/
-  wrapped/  wiki/  karte/  casino/ (+ packs/, duell/, poker/)  game/  museum/  bigflix/
+  wrapped/  wiki/  karte/  casino/ (+ packs/, duell/, poker/)  jeopardy/  game/  museum/  bigflix/
 ```
 
 ## Deploy auf dem VPS
@@ -73,7 +74,7 @@ Alle Einträge zeigen auf die IP deines VPS:
 | A | `overwatch` | `<VPS-IP>` |
 | A | `b-day` | `<VPS-IP>` |
 | A | `goon` | `<VPS-IP>` |
-| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen`, `wrapped`, `wiki`, `karte`, `casino`, `game`, `museum`, `bigflix`, `packs` | `<VPS-IP>` (je ein Eintrag) |
+| A | `news`, `girlfriend`, `linkedin`, `nofap`, `touchgrass`, `waifu`, `quotes`, `guestbook`, `excuses`, `horoskop`, `merch`, `discord`, `wordle`, `tinder`, `bewertungen`, `wrapped`, `wiki`, `karte`, `casino`, `game`, `museum`, `bigflix`, `packs`, `jeopardy` | `<VPS-IP>` (je ein Eintrag) |
 
 **Einfacher:** ein Wildcard-Eintrag `A  *  <VPS-IP>` plus `A  @  <VPS-IP>`. Damit sind alle Subdomains inkl. `www` auf einmal erledigt.
 

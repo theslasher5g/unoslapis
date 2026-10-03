@@ -26,8 +26,8 @@
 	reverse_proxy web:80
 }
 
-# Gästebuch, Bewertungen, Karte, Wordle- und Spiel-Rangliste: Seite von nginx, /api/* vom Backend
-guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, game.{$DOMAIN}, casino.{$DOMAIN} {
+# Gästebuch, Bewertungen, Karte, Wordle- und Spiel-Rangliste, Casino, Jeopardy: Seite von nginx, /api/* vom Backend
+guestbook.{$DOMAIN}, bewertungen.{$DOMAIN}, karte.{$DOMAIN}, wordle.{$DOMAIN}, game.{$DOMAIN}, casino.{$DOMAIN}, jeopardy.{$DOMAIN} {
 	import common
 	handle /api/* {
 		request_body {
